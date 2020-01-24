@@ -5,7 +5,7 @@
 {% block heading %}Create / Update{% endblock %}
 
 {% block content %}
-    <form id="policy_form" method="post" action="." class="form">
+    <form id="condition_form" method="post" action="." class="form">
       {% csrf_token %}
       {% bootstrap_form form layout='horizontal' %}
       {% buttons %}

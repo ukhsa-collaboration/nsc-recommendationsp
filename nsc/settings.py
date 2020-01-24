@@ -59,7 +59,7 @@ class Common(Configuration):
         'bootstrap3',
         'django_extensions',
         'clear_cache',
-        'nsc.policy',
+        'nsc.core',
     ]
 
     MIDDLEWARE = [

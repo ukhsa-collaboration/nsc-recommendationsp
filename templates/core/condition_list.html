@@ -8,8 +8,8 @@
     <tr>
         <td>{{object}}</td>
         <td><a href="{{object.get_absolute_url}}">Details</a></td>
-        <td><a href="{% url 'policy:update' object.pk %}">Update</a></td>
-        <td><a href="{% url 'policy:delete' object.pk %}">Delete</a></td>
+        <td><a href="{% url 'core:condition:update' object.pk %}">Update</a></td>
+        <td><a href="{% url 'core:condition:delete' object.pk %}">Delete</a></td>
     </tr>
     {% empty %}
     <tr>
@@ -22,13 +22,13 @@
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
-                    <a href="{% url 'policy:list' %}?page={{page_obj.previous_page_number}}">previous</a>
+                    <a href="{% url 'core:condition:list' %}?page={{page_obj.previous_page_number}}">previous</a>
                 {% endif %}
                 <span class="page-current">
                     Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}.
                 </span>
                 {% if page_obj.has_next %}
-                    <a href="{% url 'policy:list' %}?page={{page_obj.next_page_number}}">next</a>
+                    <a href="{% url 'core:condition:list' %}?page={{page_obj.next_page_number}}">next</a>
                 {% endif %}
             </span>
         </div>
