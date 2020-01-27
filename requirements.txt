@@ -39,7 +39,7 @@ jedi==0.15.2              # via ipython
 kombu==4.6.7              # via celery
 lxml==4.4.2
 mccabe==0.6.1             # via flake8
-model-mommy==2.0.0
+model-bakery==1.1.0
 more-itertools==8.1.0     # via zipp
 paramiko==2.7.1           # via fabric
 parso==0.5.2              # via jedi

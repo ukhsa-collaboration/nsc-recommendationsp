@@ -7,7 +7,7 @@ psycopg2
 raven
 WebTest
 django-webtest
-model-mommy
+model_bakery
 django-debug-toolbar
 django-model-utils
 django-redis
