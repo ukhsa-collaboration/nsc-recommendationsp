@@ -59,6 +59,7 @@ class Common(Configuration):
         'bootstrap3',
         'django_extensions',
         'clear_cache',
+        'simple_history',
         'nsc.core',
     ]
 
@@ -72,6 +73,7 @@ class Common(Configuration):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'debug_toolbar.middleware.DebugToolbarMiddleware',
+        'simple_history.middleware.HistoryRequestMiddleware',
     ]
 
     ROOT_URLCONF = 'nsc.urls'
@@ -101,8 +103,19 @@ class Common(Configuration):
     # http://django-configurations.readthedocs.org/en/latest/values/#configurations.values.DatabaseURLValue
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': getenv('DATABASE_NAME', PROJECT_NAME),
+            'USER': getenv('DATABASE_USER', PROJECT_NAME),
+            'PASSWORD': getenv('DATABASE_PASSWORD', PROJECT_NAME),
+            'HOST': getenv('DATABASE_HOST', 'localhost'),
+            'PORT': getenv('DATABASE_PORT', 5432),
         }
     }
 
