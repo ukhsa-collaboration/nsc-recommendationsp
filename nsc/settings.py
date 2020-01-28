@@ -211,12 +211,45 @@ class Common(Configuration):
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
 
-class Dev(Common):
+class Webpack:
+    """
+    Use as mixin for Dev configuration
+    """
+    # If static content is being served through the webpack dev server.
+    # Needs template context processor for template support.
+    WEBPACK_DEV_HOST = getenv('WEBPACK_DEV_HOST', 'localhost')
+    WEBPACK_DEV_PORT = int(getenv('WEBPACK_DEV_PORT', '8080'))
+    WEBPACK_DEV_URL = f'http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/'
+
+    @property
+    def LOGGING(self):
+        LOGGING = super().LOGGING
+        LOGGING['loggers']['nsc.context_processors'] = {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        }
+        return LOGGING
+
+    @property
+    def TEMPLATES(self):
+        """
+        Add a context processor to enable webpack dev server
+        """
+        TEMPLATES = super().TEMPLATES
+        TEMPLATES[0]['OPTIONS']['context_processors'].append(
+            'nsc.context_processors.webpack_dev_url',
+        )
+        return TEMPLATES
+
+
+class Dev(Webpack, Common):
     DEBUG = True
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = '/tmp/app-emails'
     INTERNAL_IPS = ['127.0.0.1', ]
-    ALLOWED_HOSTS = ['nsc.local', 'localhost']
+    ALLOWED_HOSTS = ['*']
+
 
 class Deployed(RedisCache, Common):
     """

@@ -5,8 +5,15 @@ build/
 *.egg*
 *~
 *.log
+*.sqlite3
+
+node_modules
+static/dist/*
 
 .*
 !.gitignore
+!.gitkeep
+!.nvmrc
+!.yvmrc
 
 ssh-config
