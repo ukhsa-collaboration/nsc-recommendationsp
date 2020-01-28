@@ -20,7 +20,7 @@ class AgeGroupFilter(SimpleListFilter):
     parameter_name = 'ages'
 
     def lookups(self, request, model_admin):
-        return Condition.AGE_GROUP_CHOICES
+        return Condition.AGE_GROUPS
 
     def choices(self, changelist):
         yield {

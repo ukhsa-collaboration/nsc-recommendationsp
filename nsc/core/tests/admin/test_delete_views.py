@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from model_bakery import baker
 
-from nsc.core.models import Condition
+from nsc.core.models import Condition, Policy
 from nsc.core.utils.admin import get_delete_url, get_delete_models
 
 
@@ -29,6 +29,7 @@ class AdminDeleteViewTests(TestCase):
     def test_delete_views(self):
         instances = {
             'Condition': baker.make(Condition),
+            'Policy': baker.make(Policy),
         }
 
         # remaining = [model for model in self.models

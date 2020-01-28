@@ -23,4 +23,5 @@ whitenoise
 invoke
 fabric
 celery
+requests
 lxml

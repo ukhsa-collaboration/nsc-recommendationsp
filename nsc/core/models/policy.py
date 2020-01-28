@@ -3,35 +3,28 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
-from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
-from nsc.core.fields import ChoiceArrayField
 
-
-class Condition(TimeStampedModel):
-
-    AGE_GROUPS = Choices(
-        ('antenatal', _('Antenatal')),
-        ('newborn', _('Newborn')),
-        ('child', _('Child')),
-        ('adult', _('Adult')),
-        ('all', _('All ages')),
-    )
+class Policy(TimeStampedModel):
 
     name = models.CharField(verbose_name=_('name'), max_length=256)
     slug = models.SlugField(verbose_name=_('slug'), max_length=256, unique=True)
 
-    ages = ChoiceArrayField(models.CharField(
-        verbose_name=_('age groups'), choices=AGE_GROUPS, max_length=50))
+    is_active = models.BooleanField(verbose_name=_('is_active'), default=True)
+    is_screened = models.BooleanField(verbose_name=_('is_screened'), null=True, blank=True)
 
     description = models.TextField(verbose_name=_('description'))
     markup = models.TextField(verbose_name=_('markup'))
+
+    condition = models.OneToOneField(
+        'core.Condition', verbose_name=_('condition'), on_delete=models.PROTECT)
 
     history = HistoricalRecords()
 
     class Meta:
         ordering = ('name', 'pk', )
+        verbose_name_plural = _('policies')
 
     def __str__(self):
         return self.name

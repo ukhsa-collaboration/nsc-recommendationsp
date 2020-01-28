@@ -13,30 +13,31 @@ from django.utils.text import slugify
 LEGACY_SITE = "https://legacyscreening.phe.org.uk"
 TIMESTAMP = timezone.now().isoformat()
 
+
 def run():
-    save_conditions(scrape_condition_list())
+    save_policies(scrape_policy_list())
 
 
 def save_fixture(name, data):
-    with open('fixtures/conditions.json', 'w') as fixture_file:
+    with open('fixtures/%s' % name, 'w') as fixture_file:
         json.dump(data, fixture_file, indent=4)
 
 
-def save_conditions(data):
-    save_fixture('conditions.json', data)
+def save_policies(data):
+    save_fixture('policies.json', data)
 
 
-def scrape_condition_list():
+def scrape_policy_list():
     response = requests.get(LEGACY_SITE + '/screening-recommendations.php')
     response.raise_for_status()
-    return _scrape_list(response.text)
+    return _scrape_policy_list(response.text)
 
 
-def _scrape_list(contents):
+def _scrape_policy_list(contents):
     soup = BeautifulSoup(contents, "lxml")
     results = []
     for idx, row in enumerate(_scrape_rows(soup)):
-        results.append(_scrape_row(row, idx + 1))
+        results.extend(_scrape_row(row, idx + 1))
     return results
 
 
@@ -47,32 +48,48 @@ def _scrape_rows(node):
 def _scrape_row(node, pk):
     cells = node.find_all('td')
 
-    values = {
-        'model': 'core.condition',
-        'pk': pk,
-        'fields': {
-            'created': TIMESTAMP,
-            'modified': TIMESTAMP,
-            'is_active': True,
-            'name': _scrape_condition_name(cells[1]),
-            'ages': _scrape_condition_ages(cells[2]),
-            'is_screened': _scrape_recommendation(cells[5])
-        }
-    }
+    name = _scrape_policy_name(cells[1])
+    slug = slugify(name)
 
-    values['fields']['slug'] = slugify(values['fields']['name'])
+    values = [
+        {
+            'model': 'core.condition',
+            'pk': pk,
+            'fields': {
+                'created': TIMESTAMP,
+                'modified': TIMESTAMP,
+                'name': name,
+                'slug': slug,
+                'ages': _scrape_policy_ages(cells[2]),
+                'description': '<h1>%s</h1>' % name,
+                'markup': '# %s' % name
+            }
+        },
+        {
+            'model': 'core.policy',
+            'pk': pk,
+            'fields': {
+                'created': TIMESTAMP,
+                'modified': TIMESTAMP,
+                'name': name,
+                'slug': slug,
+                'is_active': True,
+                'is_screened': _scrape_policy_recommendation(cells[5]),
+                'description': '<h1>%s</h1>' % name,
+                'markup': '# %s' % name,
+                'condition': pk
+            }
+        }
+    ]
 
     return values
 
-def _scrape_condition_name(node):
+
+def _scrape_policy_name(node):
     return node.find('a').text.strip()
 
 
-def _scrape_condition_url(node):
-    return LEGACY_SITE + node.find('a')['href'].strip()
-
-
-def _scrape_condition_ages(node):
+def _scrape_policy_ages(node):
     text = node.text.strip().lower()
 
     if ' and ' in text:
@@ -83,7 +100,7 @@ def _scrape_condition_ages(node):
     return text.split()
 
 
-def _scrape_recommendation(node):
+def _scrape_policy_recommendation(node):
     node = node.find('img')
     if node:
         return 'not recommended' not in node['title']

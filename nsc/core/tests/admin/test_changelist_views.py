@@ -16,8 +16,6 @@ class AdminChangelistViewTests(TestCase):
 
     def get_view(self, model):
         url = get_changelist_url(model)
-        if model.__name__ == 'UserHistory':
-            url += '?user=%s' % self.user.username
         return self.client.get(url, follow=False)
 
     def setUp(self):

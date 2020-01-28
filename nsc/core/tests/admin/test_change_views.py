@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from model_bakery import baker
 
-from nsc.core.models import Condition
+from nsc.core import models
 from nsc.core.utils.admin import get_change_url, get_change_models
 
 
@@ -35,7 +35,8 @@ class AdminChangeViewTests(TestCase):
 
     def test_change_views(self):
         instances = {
-            'Condition': baker.make(Condition),
+            'Condition': baker.make(models.Condition),
+            'Policy': baker.make(models.Policy),
         }
 
         # remaining = [model for model in self.models
