@@ -2,12 +2,12 @@ pip-tools
 ipython
 ipdb
 flake8
-Django
+Django>=2.1,<3.0
 psycopg2
 raven
 WebTest
 django-webtest
-model-mommy
+model_bakery
 django-debug-toolbar
 django-model-utils
 django-redis
@@ -16,9 +16,12 @@ django-bootstrap3
 django-vanilla-views
 django-extensions
 django-clear-cache
+django-simple-history
 uwsgi
 django-configurations
 whitenoise
 invoke
 fabric
 celery
+requests
+lxml
