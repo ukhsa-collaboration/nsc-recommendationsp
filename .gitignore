@@ -16,4 +16,5 @@ static/dist/*
 !.nvmrc
 !.yvmrc
 
+dev-docker-compose.yml
 ssh-config
