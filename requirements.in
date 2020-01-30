@@ -1,27 +1,21 @@
-pip-tools
-ipython
-ipdb
-flake8
-Django>=2.1,<3.0
-psycopg2
-raven
-WebTest
-django-webtest
-model_bakery
-django-debug-toolbar
+#
+# Project requirements
+#
+
+# Core Django functionality
+django>=2.2,<3.0
+django-configurations
+django-clear-cache
+django-extensions
 django-model-utils
 django-redis
-hiredis
-django-bootstrap3
 django-vanilla-views
-django-extensions
-django-clear-cache
-django-simple-history
-uwsgi
-django-configurations
+hiredis
+psycopg2-binary
 whitenoise
-invoke
-fabric
+
+# Project specific
 celery
-requests
+django-simple-history
 lxml
+requests

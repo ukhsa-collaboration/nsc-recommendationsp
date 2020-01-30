@@ -1,0 +1,22 @@
+#
+# Development requirements
+#
+-r requirements.in
+
+# Dev tools
+ipython
+ipdb
+pip-tools
+django-debug-toolbar
+
+# Testing
+django-webtest
+doc8
+flake8
+model-bakery
+
+# Deployment
+fabric
+invoke
+raven
+uwsgi
