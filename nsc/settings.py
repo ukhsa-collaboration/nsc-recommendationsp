@@ -56,7 +56,6 @@ class Common(Configuration):
         'django.contrib.staticfiles',
         'raven.contrib.django.raven_compat',
         'debug_toolbar',
-        'bootstrap3',
         'django_extensions',
         'clear_cache',
         'simple_history',
@@ -101,13 +100,6 @@ class Common(Configuration):
     # Database
     # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
     # http://django-configurations.readthedocs.org/en/latest/values/#configurations.values.DatabaseURLValue
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -230,9 +222,12 @@ class Webpack:
     """
     # If static content is being served through the webpack dev server.
     # Needs template context processor for template support.
-    WEBPACK_DEV_HOST = getenv('WEBPACK_DEV_HOST', 'localhost')
+    WEBPACK_DEV_HOST = getenv('WEBPACK_DEV_HOST', '{host}')
     WEBPACK_DEV_PORT = int(getenv('WEBPACK_DEV_PORT', '8080'))
-    WEBPACK_DEV_URL = f'http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/'
+    WEBPACK_DEV_URL = getenv(
+        'WEBPACK_DEV_URL',
+        f'http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/',
+    )
 
     @property
     def LOGGING(self):
