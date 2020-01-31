@@ -7,12 +7,15 @@ django>=2.2,<3.0
 django-configurations
 django-clear-cache
 django-extensions
+django-filter
 django-model-utils
 django-redis
 django-vanilla-views
 hiredis
 psycopg2-binary
+raven
 whitenoise
+uwsgi
 
 # Project specific
 celery

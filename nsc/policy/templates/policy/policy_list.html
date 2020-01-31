@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block heading %}UK NSC Recommendations{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      <div class="filter-box">
+        <form>
+
+          <h2 class="govuk-heading-m">
+            {% trans 'Filter conditions by:' %}
+          </h2>
+
+          {% include 'policy/search_form_text.html' with field=form.condition %}
+          {% include 'policy/search_form_radio.html' with field=form.affects %}
+          {% include 'policy/search_form_radio.html' with field=form.screen %}
+
+          <button type="submit" class="govuk-button search-b-button">
+            {% trans 'Search' %}
+          </button>
+
+          <a href="{% url 'policy:list' %}"
+             class="govuk-link govuk-link--no-visited-state">{% trans 'Clear search' %}</a>
+
+        </form>
+      </div>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header">{% trans 'Condition' %}</th>
+          <th class="govuk-table__header">{% trans 'Who it affects' %}</th>
+          <th class="govuk-table__header">{% trans 'Recommended' %}</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for object in object_list %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><a
+                href="{{ object.get_absolute_url }}">{{ object.name }}</a></td>
+            <td class="govuk-table__cell">{{ object.condition.ages_display }}</td>
+            <td class="govuk-table__cell">{{ object.recommendation }}</td>
+          </tr>
+          {% empty %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell" colspan="3"><p>{%  trans 'No matching conditions found.' %}</p></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% if is_paginated %}
+        <nav role="navigation" aria-label="Pagination">
+          <div class="pagination__summary">
+            {% with start=page_obj.start_index end=page_obj.end_index count=paginator.count %}
+              {% blocktrans %}Showing {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}
+            {% endwith %}
+          </div>
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="pagination__item">
+                <a class="pagination__link"
+                   href="{% url 'policy:list' %}?page={{ page_obj.previous_page_number }}"
+                   aria-label="Previous page">
+                  <span aria-hidden="true" role="presentation">&laquo; </span>{% trans 'Previous' %}</a>
+              </li>
+            {% endif %}
+
+            {% for i in paginator.page_range %}
+              {% if page_obj.number == i %}
+                <li class="pagination__item">
+                  <a class="pagination__link current" href="{% url 'policy:list' %}?page={{ i }}"
+                     aria-current="true" aria-label="Page {{ i }}, current page">{{ i }}</a>
+                </li>
+              {% else %}
+                <li class="pagination__item">
+                  <a class="pagination__link" href="{% url 'policy:list' %}?page={{ i }}"
+                     aria-label="Page {{ i }}">{{ i }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li class="pagination__item">
+                <a class="pagination__link"
+                   href="{% url 'policy:list' %}?page={{ page_obj.next_page_number }}"
+                   aria-label="Next page">{% trans 'Next' %}
+                  <span aria-hidden="true" role="presentation"> &raquo;</span></a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+
+  </div>
+
+{% endblock %}

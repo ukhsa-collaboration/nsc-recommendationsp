@@ -1,25 +1,10 @@
 [
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 1,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Abdominal Aortic Aneurysm",
-            "slug": "abdominal-aortic-aneurysm",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Abdominal Aortic Aneurysm</h1>",
-            "markup": "# Abdominal Aortic Aneurysm"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 1,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Abdominal Aortic Aneurysm",
             "slug": "abdominal-aortic-aneurysm",
             "is_active": true,
@@ -30,26 +15,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 2,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Alcohol Misuse",
-            "slug": "alcohol-misuse",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Alcohol Misuse</h1>",
-            "markup": "# Alcohol Misuse"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 2,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Alcohol Misuse",
             "slug": "alcohol-misuse",
             "is_active": true,
@@ -60,26 +30,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 3,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Amino acid metabolism disorders",
-            "slug": "amino-acid-metabolism-disorders",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Amino acid metabolism disorders</h1>",
-            "markup": "# Amino acid metabolism disorders"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 3,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Amino acid metabolism disorders",
             "slug": "amino-acid-metabolism-disorders",
             "is_active": true,
@@ -90,86 +45,41 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 4,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Anaemia",
-            "slug": "anaemia",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Anaemia</h1>",
-            "markup": "# Anaemia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 4,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Anaemia",
             "slug": "anaemia",
             "is_active": true,
-            "is_screened": null,
+            "is_screened": false,
             "description": "<h1>Anaemia</h1>",
             "markup": "# Anaemia",
             "condition": 4
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 5,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Asymptomatic bacteriuria",
-            "slug": "asymptomatic-bacteriuria",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Asymptomatic bacteriuria</h1>",
-            "markup": "# Asymptomatic bacteriuria"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 5,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Asymptomatic bacteriuria",
             "slug": "asymptomatic-bacteriuria",
             "is_active": true,
-            "is_screened": null,
+            "is_screened": false,
             "description": "<h1>Asymptomatic bacteriuria</h1>",
             "markup": "# Asymptomatic bacteriuria",
             "condition": 5
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 6,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Atrial Fibrillation",
-            "slug": "atrial-fibrillation",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Atrial Fibrillation</h1>",
-            "markup": "# Atrial Fibrillation"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 6,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Atrial Fibrillation",
             "slug": "atrial-fibrillation",
             "is_active": true,
@@ -180,26 +90,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 7,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Autism",
-            "slug": "autism",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Autism</h1>",
-            "markup": "# Autism"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 7,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Autism",
             "slug": "autism",
             "is_active": true,
@@ -210,26 +105,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 8,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Bacterial vaginosis",
-            "slug": "bacterial-vaginosis",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Bacterial vaginosis</h1>",
-            "markup": "# Bacterial vaginosis"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 8,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Bacterial vaginosis",
             "slug": "bacterial-vaginosis",
             "is_active": true,
@@ -240,26 +120,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 9,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Biliary atresia",
-            "slug": "biliary-atresia",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Biliary atresia</h1>",
-            "markup": "# Biliary atresia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 9,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Biliary atresia",
             "slug": "biliary-atresia",
             "is_active": true,
@@ -270,26 +135,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 10,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Biotinidase deficiency",
-            "slug": "biotinidase-deficiency",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Biotinidase deficiency</h1>",
-            "markup": "# Biotinidase deficiency"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 10,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Biotinidase deficiency",
             "slug": "biotinidase-deficiency",
             "is_active": true,
@@ -300,26 +150,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 11,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Bladder Cancer",
-            "slug": "bladder-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Bladder Cancer</h1>",
-            "markup": "# Bladder Cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 11,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Bladder Cancer",
             "slug": "bladder-cancer",
             "is_active": true,
@@ -330,26 +165,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 12,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Blood group & RhD status and red cell alloantibodies",
-            "slug": "blood-group-rhd-status-and-red-cell-alloantibodies",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Blood group & RhD status and red cell alloantibodies</h1>",
-            "markup": "# Blood group & RhD status and red cell alloantibodies"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 12,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Blood group & RhD status and red cell alloantibodies",
             "slug": "blood-group-rhd-status-and-red-cell-alloantibodies",
             "is_active": true,
@@ -360,26 +180,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 13,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Bowel Cancer",
-            "slug": "bowel-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Bowel Cancer</h1>",
-            "markup": "# Bowel Cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 13,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Bowel Cancer",
             "slug": "bowel-cancer",
             "is_active": true,
@@ -390,26 +195,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 14,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Breast Cancer",
-            "slug": "breast-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Breast Cancer</h1>",
-            "markup": "# Breast Cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 14,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Breast Cancer",
             "slug": "breast-cancer",
             "is_active": true,
@@ -420,26 +210,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 15,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Cervical Cancer",
-            "slug": "cervical-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Cervical Cancer</h1>",
-            "markup": "# Cervical Cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 15,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Cervical Cancer",
             "slug": "cervical-cancer",
             "is_active": true,
@@ -450,26 +225,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 16,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Chlamydia (adult)",
-            "slug": "chlamydia-adult",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Chlamydia (adult)</h1>",
-            "markup": "# Chlamydia (adult)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 16,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Chlamydia (adult)",
             "slug": "chlamydia-adult",
             "is_active": true,
@@ -480,26 +240,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 17,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Chlamydia (pregnancy)",
-            "slug": "chlamydia-pregnancy",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Chlamydia (pregnancy)</h1>",
-            "markup": "# Chlamydia (pregnancy)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 17,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Chlamydia (pregnancy)",
             "slug": "chlamydia-pregnancy",
             "is_active": true,
@@ -510,26 +255,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 18,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Coeliac Disease",
-            "slug": "coeliac-disease",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Coeliac Disease</h1>",
-            "markup": "# Coeliac Disease"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 18,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Coeliac Disease",
             "slug": "coeliac-disease",
             "is_active": true,
@@ -540,26 +270,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 19,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Congenital adrenal hyperplasia",
-            "slug": "congenital-adrenal-hyperplasia",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Congenital adrenal hyperplasia</h1>",
-            "markup": "# Congenital adrenal hyperplasia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 19,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Congenital adrenal hyperplasia",
             "slug": "congenital-adrenal-hyperplasia",
             "is_active": true,
@@ -570,26 +285,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 20,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Congenital cataracts",
-            "slug": "congenital-cataracts",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Congenital cataracts</h1>",
-            "markup": "# Congenital cataracts"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 20,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Congenital cataracts",
             "slug": "congenital-cataracts",
             "is_active": true,
@@ -600,26 +300,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 21,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Congenital heart disease",
-            "slug": "congenital-heart-disease",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Congenital heart disease</h1>",
-            "markup": "# Congenital heart disease"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 21,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Congenital heart disease",
             "slug": "congenital-heart-disease",
             "is_active": true,
@@ -630,26 +315,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 22,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Congenital hypothyroidism",
-            "slug": "congenital-hypothyroidism",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Congenital hypothyroidism</h1>",
-            "markup": "# Congenital hypothyroidism"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 22,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Congenital hypothyroidism",
             "slug": "congenital-hypothyroidism",
             "is_active": true,
@@ -660,26 +330,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 23,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "COPD",
-            "slug": "copd",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>COPD</h1>",
-            "markup": "# COPD"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 23,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "COPD",
             "slug": "copd",
             "is_active": true,
@@ -690,26 +345,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 24,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Cryptorchidism",
-            "slug": "cryptorchidism",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Cryptorchidism</h1>",
-            "markup": "# Cryptorchidism"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 24,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Cryptorchidism",
             "slug": "cryptorchidism",
             "is_active": true,
@@ -720,26 +360,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 25,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Cystic fibrosis (newborn)",
-            "slug": "cystic-fibrosis-newborn",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Cystic fibrosis (newborn)</h1>",
-            "markup": "# Cystic fibrosis (newborn)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 25,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Cystic fibrosis (newborn)",
             "slug": "cystic-fibrosis-newborn",
             "is_active": true,
@@ -750,26 +375,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 26,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Cystic fibrosis (pregnancy)",
-            "slug": "cystic-fibrosis-pregnancy",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Cystic fibrosis (pregnancy)</h1>",
-            "markup": "# Cystic fibrosis (pregnancy)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 26,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Cystic fibrosis (pregnancy)",
             "slug": "cystic-fibrosis-pregnancy",
             "is_active": true,
@@ -780,26 +390,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 27,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Cytomegalovirus",
-            "slug": "cytomegalovirus",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Cytomegalovirus</h1>",
-            "markup": "# Cytomegalovirus"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 27,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Cytomegalovirus",
             "slug": "cytomegalovirus",
             "is_active": true,
@@ -810,26 +405,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 28,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Dementia",
-            "slug": "dementia",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Dementia</h1>",
-            "markup": "# Dementia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 28,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Dementia",
             "slug": "dementia",
             "is_active": true,
@@ -840,26 +420,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 29,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Dental Disease",
-            "slug": "dental-disease",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Dental Disease</h1>",
-            "markup": "# Dental Disease"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 29,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Dental Disease",
             "slug": "dental-disease",
             "is_active": true,
@@ -870,26 +435,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 30,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Depression",
-            "slug": "depression",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Depression</h1>",
-            "markup": "# Depression"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 30,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Depression",
             "slug": "depression",
             "is_active": true,
@@ -900,26 +450,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 31,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Development & Behaviour",
-            "slug": "development-behaviour",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Development & Behaviour</h1>",
-            "markup": "# Development & Behaviour"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 31,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Development & Behaviour",
             "slug": "development-behaviour",
             "is_active": true,
@@ -930,26 +465,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 32,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Developmental dislocation of the hip",
-            "slug": "developmental-dislocation-of-the-hip",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Developmental dislocation of the hip</h1>",
-            "markup": "# Developmental dislocation of the hip"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 32,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Developmental dislocation of the hip",
             "slug": "developmental-dislocation-of-the-hip",
             "is_active": true,
@@ -960,26 +480,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 33,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Diabetes",
-            "slug": "diabetes",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Diabetes</h1>",
-            "markup": "# Diabetes"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 33,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Diabetes",
             "slug": "diabetes",
             "is_active": true,
@@ -990,26 +495,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 34,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Diabetic Retinopathy",
-            "slug": "diabetic-retinopathy",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Diabetic Retinopathy</h1>",
-            "markup": "# Diabetic Retinopathy"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 34,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Diabetic Retinopathy",
             "slug": "diabetic-retinopathy",
             "is_active": true,
@@ -1020,1467 +510,731 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 35,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Domestic Violence",
-            "slug": "domestic-violence",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Domestic Violence</h1>",
-            "markup": "# Domestic Violence"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 35,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Domestic Violence",
-            "slug": "domestic-violence",
-            "is_active": true,
-            "is_screened": false,
-            "description": "<h1>Domestic Violence</h1>",
-            "markup": "# Domestic Violence",
-            "condition": 35
-        }
-    },
-    {
-        "model": "core.condition",
-        "pk": 36,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Domestic violence (pregnancy)",
-            "slug": "domestic-violence-pregnancy",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Domestic violence (pregnancy)</h1>",
-            "markup": "# Domestic violence (pregnancy)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 36,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Domestic violence (pregnancy)",
-            "slug": "domestic-violence-pregnancy",
-            "is_active": true,
-            "is_screened": false,
-            "description": "<h1>Domestic violence (pregnancy)</h1>",
-            "markup": "# Domestic violence (pregnancy)",
-            "condition": 36
-        }
-    },
-    {
-        "model": "core.condition",
-        "pk": 37,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Down's syndrome",
-            "slug": "downs-syndrome",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Down's syndrome</h1>",
-            "markup": "# Down's syndrome"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 37,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Down's syndrome",
             "slug": "downs-syndrome",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Down's syndrome</h1>",
             "markup": "# Down's syndrome",
-            "condition": 37
+            "condition": 35
         }
     },
     {
-        "model": "core.condition",
-        "pk": 38,
+        "model": "policy.policy",
+        "pk": 36,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Duchenne muscular dystrophy",
-            "slug": "duchenne-muscular-dystrophy",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Duchenne muscular dystrophy</h1>",
-            "markup": "# Duchenne muscular dystrophy"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 38,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Duchenne muscular dystrophy",
             "slug": "duchenne-muscular-dystrophy",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Duchenne muscular dystrophy</h1>",
             "markup": "# Duchenne muscular dystrophy",
-            "condition": 38
+            "condition": 36
         }
     },
     {
-        "model": "core.condition",
-        "pk": 39,
+        "model": "policy.policy",
+        "pk": 37,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Familial Hypercholesterolaemia (adult)",
-            "slug": "familial-hypercholesterolaemia-adult",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Familial Hypercholesterolaemia (adult)</h1>",
-            "markup": "# Familial Hypercholesterolaemia (adult)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 39,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Familial Hypercholesterolaemia (adult)",
             "slug": "familial-hypercholesterolaemia-adult",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Familial Hypercholesterolaemia (adult)</h1>",
             "markup": "# Familial Hypercholesterolaemia (adult)",
-            "condition": 39
+            "condition": 37
         }
     },
     {
-        "model": "core.condition",
-        "pk": 40,
+        "model": "policy.policy",
+        "pk": 38,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Familial Hypercholesterolaemia (child)",
-            "slug": "familial-hypercholesterolaemia-child",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Familial Hypercholesterolaemia (child)</h1>",
-            "markup": "# Familial Hypercholesterolaemia (child)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 40,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Familial Hypercholesterolaemia (child)",
             "slug": "familial-hypercholesterolaemia-child",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Familial Hypercholesterolaemia (child)</h1>",
             "markup": "# Familial Hypercholesterolaemia (child)",
-            "condition": 40
+            "condition": 38
         }
     },
     {
-        "model": "core.condition",
-        "pk": 41,
+        "model": "policy.policy",
+        "pk": 39,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Fatty-acid oxidation disorders",
-            "slug": "fatty-acid-oxidation-disorders",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Fatty-acid oxidation disorders</h1>",
-            "markup": "# Fatty-acid oxidation disorders"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 41,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Fatty-acid oxidation disorders",
             "slug": "fatty-acid-oxidation-disorders",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Fatty-acid oxidation disorders</h1>",
             "markup": "# Fatty-acid oxidation disorders",
-            "condition": 41
+            "condition": 39
         }
     },
     {
-        "model": "core.condition",
-        "pk": 42,
+        "model": "policy.policy",
+        "pk": 40,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Fetal anomalies",
-            "slug": "fetal-anomalies",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Fetal anomalies</h1>",
-            "markup": "# Fetal anomalies"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 42,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Fetal anomalies",
             "slug": "fetal-anomalies",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Fetal anomalies</h1>",
             "markup": "# Fetal anomalies",
-            "condition": 42
+            "condition": 40
         }
     },
     {
-        "model": "core.condition",
-        "pk": 43,
+        "model": "policy.policy",
+        "pk": 41,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "FMAIT",
-            "slug": "fmait",
-            "ages": [
-                "antenatal",
-                "newborn"
-            ],
-            "description": "<h1>FMAIT</h1>",
-            "markup": "# FMAIT"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 43,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "FMAIT",
             "slug": "fmait",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>FMAIT</h1>",
             "markup": "# FMAIT",
-            "condition": 43
+            "condition": 41
         }
     },
     {
-        "model": "core.condition",
-        "pk": 44,
+        "model": "policy.policy",
+        "pk": 42,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Fragile X",
-            "slug": "fragile-x",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Fragile X</h1>",
-            "markup": "# Fragile X"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 44,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Fragile X",
             "slug": "fragile-x",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Fragile X</h1>",
             "markup": "# Fragile X",
-            "condition": 44
+            "condition": 42
         }
     },
     {
-        "model": "core.condition",
-        "pk": 45,
+        "model": "policy.policy",
+        "pk": 43,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "GA1",
-            "slug": "ga1",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>GA1</h1>",
-            "markup": "# GA1"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 45,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "GA1",
             "slug": "ga1",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>GA1</h1>",
             "markup": "# GA1",
-            "condition": 45
+            "condition": 43
         }
     },
     {
-        "model": "core.condition",
-        "pk": 46,
+        "model": "policy.policy",
+        "pk": 44,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Galactosaemia",
-            "slug": "galactosaemia",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Galactosaemia</h1>",
-            "markup": "# Galactosaemia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 46,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Galactosaemia",
             "slug": "galactosaemia",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Galactosaemia</h1>",
             "markup": "# Galactosaemia",
-            "condition": 46
+            "condition": 44
         }
     },
     {
-        "model": "core.condition",
-        "pk": 47,
+        "model": "policy.policy",
+        "pk": 45,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Gaucher disease",
-            "slug": "gaucher-disease",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Gaucher disease</h1>",
-            "markup": "# Gaucher disease"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 47,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Gaucher disease",
             "slug": "gaucher-disease",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Gaucher disease</h1>",
             "markup": "# Gaucher disease",
-            "condition": 47
+            "condition": 45
         }
     },
     {
-        "model": "core.condition",
-        "pk": 48,
+        "model": "policy.policy",
+        "pk": 46,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Genital Herpes",
-            "slug": "genital-herpes",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Genital Herpes</h1>",
-            "markup": "# Genital Herpes"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 48,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Genital Herpes",
             "slug": "genital-herpes",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Genital Herpes</h1>",
             "markup": "# Genital Herpes",
-            "condition": 48
+            "condition": 46
         }
     },
     {
-        "model": "core.condition",
-        "pk": 49,
+        "model": "policy.policy",
+        "pk": 47,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Gestational diabetes",
-            "slug": "gestational-diabetes",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Gestational diabetes</h1>",
-            "markup": "# Gestational diabetes"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 49,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Gestational diabetes",
             "slug": "gestational-diabetes",
             "is_active": true,
-            "is_screened": null,
+            "is_screened": false,
             "description": "<h1>Gestational diabetes</h1>",
             "markup": "# Gestational diabetes",
-            "condition": 49
+            "condition": 47
         }
     },
     {
-        "model": "core.condition",
-        "pk": 50,
+        "model": "policy.policy",
+        "pk": 48,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Glaucoma",
-            "slug": "glaucoma",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Glaucoma</h1>",
-            "markup": "# Glaucoma"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 50,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Glaucoma",
             "slug": "glaucoma",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Glaucoma</h1>",
             "markup": "# Glaucoma",
-            "condition": 50
+            "condition": 48
         }
     },
     {
-        "model": "core.condition",
-        "pk": 51,
+        "model": "policy.policy",
+        "pk": 49,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Group B Streptococcus",
-            "slug": "group-b-streptococcus",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Group B Streptococcus</h1>",
-            "markup": "# Group B Streptococcus"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 51,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Group B Streptococcus",
             "slug": "group-b-streptococcus",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Group B Streptococcus</h1>",
             "markup": "# Group B Streptococcus",
-            "condition": 51
+            "condition": 49
         }
     },
     {
-        "model": "core.condition",
-        "pk": 52,
+        "model": "policy.policy",
+        "pk": 50,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Growth",
-            "slug": "growth",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Growth</h1>",
-            "markup": "# Growth"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 52,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Growth",
             "slug": "growth",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Growth</h1>",
             "markup": "# Growth",
-            "condition": 52
+            "condition": 50
         }
     },
     {
-        "model": "core.condition",
-        "pk": 53,
+        "model": "policy.policy",
+        "pk": 51,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Haemochromatosis",
-            "slug": "haemochromatosis",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Haemochromatosis</h1>",
-            "markup": "# Haemochromatosis"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 53,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Haemochromatosis",
             "slug": "haemochromatosis",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Haemochromatosis</h1>",
             "markup": "# Haemochromatosis",
-            "condition": 53
+            "condition": 51
         }
     },
     {
-        "model": "core.condition",
-        "pk": 54,
+        "model": "policy.policy",
+        "pk": 52,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "HCU",
-            "slug": "hcu",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>HCU</h1>",
-            "markup": "# HCU"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 54,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "HCU",
             "slug": "hcu",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>HCU</h1>",
             "markup": "# HCU",
-            "condition": 54
+            "condition": 52
         }
     },
     {
-        "model": "core.condition",
-        "pk": 55,
+        "model": "policy.policy",
+        "pk": 53,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hearing (child)",
-            "slug": "hearing-child",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Hearing (child)</h1>",
-            "markup": "# Hearing (child)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 55,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hearing (child)",
             "slug": "hearing-child",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Hearing (child)</h1>",
             "markup": "# Hearing (child)",
-            "condition": 55
+            "condition": 53
         }
     },
     {
-        "model": "core.condition",
-        "pk": 56,
+        "model": "policy.policy",
+        "pk": 54,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hearing (newborn)",
-            "slug": "hearing-newborn",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Hearing (newborn)</h1>",
-            "markup": "# Hearing (newborn)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 56,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hearing (newborn)",
             "slug": "hearing-newborn",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Hearing (newborn)</h1>",
             "markup": "# Hearing (newborn)",
-            "condition": 56
+            "condition": 54
         }
     },
     {
-        "model": "core.condition",
-        "pk": 57,
+        "model": "policy.policy",
+        "pk": 55,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hearing Loss (adult)",
-            "slug": "hearing-loss-adult",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Hearing Loss (adult)</h1>",
-            "markup": "# Hearing Loss (adult)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 57,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hearing Loss (adult)",
             "slug": "hearing-loss-adult",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Hearing Loss (adult)</h1>",
             "markup": "# Hearing Loss (adult)",
-            "condition": 57
+            "condition": 55
         }
     },
     {
-        "model": "core.condition",
-        "pk": 58,
+        "model": "policy.policy",
+        "pk": 56,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hepatitis B",
-            "slug": "hepatitis-b",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Hepatitis B</h1>",
-            "markup": "# Hepatitis B"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 58,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hepatitis B",
             "slug": "hepatitis-b",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Hepatitis B</h1>",
             "markup": "# Hepatitis B",
-            "condition": 58
+            "condition": 56
         }
     },
     {
-        "model": "core.condition",
-        "pk": 59,
+        "model": "policy.policy",
+        "pk": 57,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hepatitis B and C among ethnic minorities",
-            "slug": "hepatitis-b-and-c-among-ethnic-minorities",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Hepatitis B and C among ethnic minorities</h1>",
-            "markup": "# Hepatitis B and C among ethnic minorities"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 59,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hepatitis B and C among ethnic minorities",
             "slug": "hepatitis-b-and-c-among-ethnic-minorities",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Hepatitis B and C among ethnic minorities</h1>",
             "markup": "# Hepatitis B and C among ethnic minorities",
-            "condition": 59
+            "condition": 57
         }
     },
     {
-        "model": "core.condition",
-        "pk": 60,
+        "model": "policy.policy",
+        "pk": 58,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hepatitis C (pregnancy)",
-            "slug": "hepatitis-c-pregnancy",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Hepatitis C (pregnancy)</h1>",
-            "markup": "# Hepatitis C (pregnancy)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 60,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hepatitis C (pregnancy)",
             "slug": "hepatitis-c-pregnancy",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Hepatitis C (pregnancy)</h1>",
             "markup": "# Hepatitis C (pregnancy)",
-            "condition": 60
+            "condition": 58
         }
     },
     {
-        "model": "core.condition",
-        "pk": 61,
+        "model": "policy.policy",
+        "pk": 59,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "HTLV",
-            "slug": "htlv",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>HTLV</h1>",
-            "markup": "# HTLV"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 61,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "HTLV",
             "slug": "htlv",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>HTLV</h1>",
             "markup": "# HTLV",
-            "condition": 61
+            "condition": 59
         }
     },
     {
-        "model": "core.condition",
-        "pk": 62,
+        "model": "policy.policy",
+        "pk": 60,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Human immunodeficiency virus",
-            "slug": "human-immunodeficiency-virus",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Human immunodeficiency virus</h1>",
-            "markup": "# Human immunodeficiency virus"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 62,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Human immunodeficiency virus",
             "slug": "human-immunodeficiency-virus",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Human immunodeficiency virus</h1>",
             "markup": "# Human immunodeficiency virus",
-            "condition": 62
+            "condition": 60
         }
     },
     {
-        "model": "core.condition",
-        "pk": 63,
+        "model": "policy.policy",
+        "pk": 61,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hypertension (adult)",
-            "slug": "hypertension-adult",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Hypertension (adult)</h1>",
-            "markup": "# Hypertension (adult)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 63,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hypertension (adult)",
             "slug": "hypertension-adult",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Hypertension (adult)</h1>",
             "markup": "# Hypertension (adult)",
-            "condition": 63
+            "condition": 61
         }
     },
     {
-        "model": "core.condition",
-        "pk": 64,
+        "model": "policy.policy",
+        "pk": 62,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Hypertension (child)",
-            "slug": "hypertension-child",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Hypertension (child)</h1>",
-            "markup": "# Hypertension (child)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 64,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Hypertension (child)",
             "slug": "hypertension-child",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Hypertension (child)</h1>",
             "markup": "# Hypertension (child)",
-            "condition": 64
+            "condition": 62
         }
     },
     {
-        "model": "core.condition",
-        "pk": 65,
+        "model": "policy.policy",
+        "pk": 63,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Iron Deficiency Anaemia",
-            "slug": "iron-deficiency-anaemia",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Iron Deficiency Anaemia</h1>",
-            "markup": "# Iron Deficiency Anaemia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 65,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Iron Deficiency Anaemia",
             "slug": "iron-deficiency-anaemia",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Iron Deficiency Anaemia</h1>",
             "markup": "# Iron Deficiency Anaemia",
-            "condition": 65
+            "condition": 63
         }
     },
     {
-        "model": "core.condition",
-        "pk": 66,
+        "model": "policy.policy",
+        "pk": 64,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "IVA",
-            "slug": "iva",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>IVA</h1>",
-            "markup": "# IVA"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 66,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "IVA",
             "slug": "iva",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>IVA</h1>",
             "markup": "# IVA",
-            "condition": 66
+            "condition": 64
         }
     },
     {
-        "model": "core.condition",
-        "pk": 67,
+        "model": "policy.policy",
+        "pk": 65,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Kernicterus",
-            "slug": "kernicterus",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Kernicterus</h1>",
-            "markup": "# Kernicterus"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 67,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Kernicterus",
             "slug": "kernicterus",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Kernicterus</h1>",
             "markup": "# Kernicterus",
-            "condition": 67
+            "condition": 65
         }
     },
     {
-        "model": "core.condition",
-        "pk": 68,
+        "model": "policy.policy",
+        "pk": 66,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Kidney disease",
-            "slug": "kidney-disease",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Kidney disease</h1>",
-            "markup": "# Kidney disease"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 68,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Kidney disease",
             "slug": "kidney-disease",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Kidney disease</h1>",
             "markup": "# Kidney disease",
-            "condition": 68
+            "condition": 66
         }
     },
     {
-        "model": "core.condition",
-        "pk": 69,
+        "model": "policy.policy",
+        "pk": 67,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "LCHADD",
-            "slug": "lchadd",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>LCHADD</h1>",
-            "markup": "# LCHADD"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 69,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "LCHADD",
             "slug": "lchadd",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>LCHADD</h1>",
             "markup": "# LCHADD",
-            "condition": 69
+            "condition": 67
         }
     },
     {
-        "model": "core.condition",
-        "pk": 70,
+        "model": "policy.policy",
+        "pk": 68,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Lead Poisoning",
-            "slug": "lead-poisoning",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Lead Poisoning</h1>",
-            "markup": "# Lead Poisoning"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 70,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Lead Poisoning",
             "slug": "lead-poisoning",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Lead Poisoning</h1>",
             "markup": "# Lead Poisoning",
-            "condition": 70
+            "condition": 68
         }
     },
     {
-        "model": "core.condition",
-        "pk": 71,
+        "model": "policy.policy",
+        "pk": 69,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Lung cancer",
-            "slug": "lung-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Lung cancer</h1>",
-            "markup": "# Lung cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 71,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Lung cancer",
             "slug": "lung-cancer",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Lung cancer</h1>",
             "markup": "# Lung cancer",
-            "condition": 71
+            "condition": 69
         }
     },
     {
-        "model": "core.condition",
-        "pk": 72,
+        "model": "policy.policy",
+        "pk": 70,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "MCADD",
-            "slug": "mcadd",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>MCADD</h1>",
-            "markup": "# MCADD"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 72,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "MCADD",
             "slug": "mcadd",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>MCADD</h1>",
             "markup": "# MCADD",
-            "condition": 72
+            "condition": 70
         }
     },
     {
-        "model": "core.condition",
-        "pk": 73,
+        "model": "policy.policy",
+        "pk": 71,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "MPS1",
-            "slug": "mps1",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>MPS1</h1>",
-            "markup": "# MPS1"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 73,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "MPS1",
             "slug": "mps1",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>MPS1</h1>",
             "markup": "# MPS1",
-            "condition": 73
+            "condition": 71
         }
     },
     {
-        "model": "core.condition",
-        "pk": 74,
+        "model": "policy.policy",
+        "pk": 72,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "MSUD",
-            "slug": "msud",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>MSUD</h1>",
-            "markup": "# MSUD"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 74,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "MSUD",
             "slug": "msud",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>MSUD</h1>",
             "markup": "# MSUD",
-            "condition": 74
+            "condition": 72
         }
     },
     {
-        "model": "core.condition",
-        "pk": 75,
+        "model": "policy.policy",
+        "pk": 73,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Neural tube defect",
-            "slug": "neural-tube-defect",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Neural tube defect</h1>",
-            "markup": "# Neural tube defect"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 75,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Neural tube defect",
             "slug": "neural-tube-defect",
             "is_active": true,
             "is_screened": true,
             "description": "<h1>Neural tube defect</h1>",
             "markup": "# Neural tube defect",
-            "condition": 75
+            "condition": 73
         }
     },
     {
-        "model": "core.condition",
-        "pk": 76,
+        "model": "policy.policy",
+        "pk": 74,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Neuroblastoma",
-            "slug": "neuroblastoma",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Neuroblastoma</h1>",
-            "markup": "# Neuroblastoma"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 76,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Neuroblastoma",
             "slug": "neuroblastoma",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Neuroblastoma</h1>",
             "markup": "# Neuroblastoma",
-            "condition": 76
+            "condition": 74
         }
     },
     {
-        "model": "core.condition",
-        "pk": 77,
+        "model": "policy.policy",
+        "pk": 75,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Obesity",
-            "slug": "obesity",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Obesity</h1>",
-            "markup": "# Obesity"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 77,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Obesity",
             "slug": "obesity",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Obesity</h1>",
             "markup": "# Obesity",
-            "condition": 77
+            "condition": 75
         }
     },
     {
-        "model": "core.condition",
-        "pk": 78,
+        "model": "policy.policy",
+        "pk": 76,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Oral Cancer",
-            "slug": "oral-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Oral Cancer</h1>",
-            "markup": "# Oral Cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 78,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Oral Cancer",
             "slug": "oral-cancer",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Oral Cancer</h1>",
             "markup": "# Oral Cancer",
-            "condition": 78
+            "condition": 76
         }
     },
     {
-        "model": "core.condition",
-        "pk": 79,
+        "model": "policy.policy",
+        "pk": 77,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Organic acid oxidation disorders",
-            "slug": "organic-acid-oxidation-disorders",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Organic acid oxidation disorders</h1>",
-            "markup": "# Organic acid oxidation disorders"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 79,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Organic acid oxidation disorders",
             "slug": "organic-acid-oxidation-disorders",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Organic acid oxidation disorders</h1>",
             "markup": "# Organic acid oxidation disorders",
-            "condition": 79
+            "condition": 77
         }
     },
     {
-        "model": "core.condition",
-        "pk": 80,
+        "model": "policy.policy",
+        "pk": 78,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Osteoporosis",
-            "slug": "osteoporosis",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Osteoporosis</h1>",
-            "markup": "# Osteoporosis"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 80,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Osteoporosis",
             "slug": "osteoporosis",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Osteoporosis</h1>",
             "markup": "# Osteoporosis",
-            "condition": 80
+            "condition": 78
         }
     },
     {
-        "model": "core.condition",
-        "pk": 81,
+        "model": "policy.policy",
+        "pk": 79,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Ovarian cancer",
-            "slug": "ovarian-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Ovarian cancer</h1>",
-            "markup": "# Ovarian cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 81,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Ovarian cancer",
             "slug": "ovarian-cancer",
             "is_active": true,
             "is_screened": false,
             "description": "<h1>Ovarian cancer</h1>",
             "markup": "# Ovarian cancer",
+            "condition": 79
+        }
+    },
+    {
+        "model": "policy.policy",
+        "pk": 80,
+        "fields": {
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
+            "name": "Partner violence",
+            "slug": "partner-violence",
+            "is_active": true,
+            "is_screened": false,
+            "description": "<h1>Partner violence</h1>",
+            "markup": "# Partner violence",
+            "condition": 80
+        }
+    },
+    {
+        "model": "policy.policy",
+        "pk": 81,
+        "fields": {
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
+            "name": "Partner violence in pregnancy",
+            "slug": "partner-violence-in-pregnancy",
+            "is_active": true,
+            "is_screened": false,
+            "description": "<h1>Partner violence in pregnancy</h1>",
+            "markup": "# Partner violence in pregnancy",
             "condition": 81
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 82,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Parvovirus",
-            "slug": "parvovirus",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Parvovirus</h1>",
-            "markup": "# Parvovirus"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 82,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Parvovirus",
             "slug": "parvovirus",
             "is_active": true,
-            "is_screened": null,
+            "is_screened": false,
             "description": "<h1>Parvovirus</h1>",
             "markup": "# Parvovirus",
             "condition": 82
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 83,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "PKU",
-            "slug": "pku",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>PKU</h1>",
-            "markup": "# PKU"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 83,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "PKU",
             "slug": "pku",
             "is_active": true,
@@ -2491,56 +1245,26 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 84,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Placenta praevia",
-            "slug": "placenta-praevia",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Placenta praevia</h1>",
-            "markup": "# Placenta praevia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 84,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Placenta praevia",
             "slug": "placenta-praevia",
             "is_active": true,
-            "is_screened": null,
+            "is_screened": false,
             "description": "<h1>Placenta praevia</h1>",
             "markup": "# Placenta praevia",
             "condition": 84
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 85,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Postnatal depression",
-            "slug": "postnatal-depression",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Postnatal depression</h1>",
-            "markup": "# Postnatal depression"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 85,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Postnatal depression",
             "slug": "postnatal-depression",
             "is_active": true,
@@ -2551,56 +1275,26 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 86,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Pre-eclampsia",
-            "slug": "pre-eclampsia",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Pre-eclampsia</h1>",
-            "markup": "# Pre-eclampsia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 86,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Pre-eclampsia",
             "slug": "pre-eclampsia",
             "is_active": true,
-            "is_screened": null,
+            "is_screened": false,
             "description": "<h1>Pre-eclampsia</h1>",
             "markup": "# Pre-eclampsia",
             "condition": 86
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 87,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Preterm labour",
-            "slug": "preterm-labour",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Preterm labour</h1>",
-            "markup": "# Preterm labour"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 87,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Preterm labour",
             "slug": "preterm-labour",
             "is_active": true,
@@ -2611,26 +1305,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 88,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Prostate Cancer",
-            "slug": "prostate-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Prostate Cancer</h1>",
-            "markup": "# Prostate Cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 88,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Prostate Cancer",
             "slug": "prostate-cancer",
             "is_active": true,
@@ -2641,26 +1320,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 89,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Psychiatric illness",
-            "slug": "psychiatric-illness",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Psychiatric illness</h1>",
-            "markup": "# Psychiatric illness"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 89,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Psychiatric illness",
             "slug": "psychiatric-illness",
             "is_active": true,
@@ -2671,26 +1335,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 90,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Rubella susceptibility",
-            "slug": "rubella-susceptibility",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Rubella susceptibility</h1>",
-            "markup": "# Rubella susceptibility"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 90,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Rubella susceptibility",
             "slug": "rubella-susceptibility",
             "is_active": true,
@@ -2701,26 +1350,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 91,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "SCID",
-            "slug": "scid",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>SCID</h1>",
-            "markup": "# SCID"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 91,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "SCID",
             "slug": "scid",
             "is_active": true,
@@ -2731,26 +1365,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 92,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Scoliosis",
-            "slug": "scoliosis",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Scoliosis</h1>",
-            "markup": "# Scoliosis"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 92,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Scoliosis",
             "slug": "scoliosis",
             "is_active": true,
@@ -2761,26 +1380,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 93,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Sickle cell and Thalassaemia",
-            "slug": "sickle-cell-and-thalassaemia",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Sickle cell and Thalassaemia</h1>",
-            "markup": "# Sickle cell and Thalassaemia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 93,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Sickle cell and Thalassaemia",
             "slug": "sickle-cell-and-thalassaemia",
             "is_active": true,
@@ -2791,26 +1395,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 94,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Sickle Cell Disease (newborn)",
-            "slug": "sickle-cell-disease-newborn",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Sickle Cell Disease (newborn)</h1>",
-            "markup": "# Sickle Cell Disease (newborn)"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 94,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Sickle Cell Disease (newborn)",
             "slug": "sickle-cell-disease-newborn",
             "is_active": true,
@@ -2821,27 +1410,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 95,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "SMA",
-            "slug": "sma",
-            "ages": [
-                "antenatal",
-                "newborn"
-            ],
-            "description": "<h1>SMA</h1>",
-            "markup": "# SMA"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 95,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "SMA",
             "slug": "sma",
             "is_active": true,
@@ -2852,26 +1425,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 96,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Speech & Language Delay",
-            "slug": "speech-language-delay",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Speech & Language Delay</h1>",
-            "markup": "# Speech & Language Delay"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 96,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Speech & Language Delay",
             "slug": "speech-language-delay",
             "is_active": true,
@@ -2882,26 +1440,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 97,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Stillbirth",
-            "slug": "stillbirth",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Stillbirth</h1>",
-            "markup": "# Stillbirth"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 97,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Stillbirth",
             "slug": "stillbirth",
             "is_active": true,
@@ -2912,26 +1455,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 98,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Stomach cancer",
-            "slug": "stomach-cancer",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Stomach cancer</h1>",
-            "markup": "# Stomach cancer"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 98,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Stomach cancer",
             "slug": "stomach-cancer",
             "is_active": true,
@@ -2942,26 +1470,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 99,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Sudden Cardiac Death",
-            "slug": "sudden-cardiac-death",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Sudden Cardiac Death</h1>",
-            "markup": "# Sudden Cardiac Death"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 99,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Sudden Cardiac Death",
             "slug": "sudden-cardiac-death",
             "is_active": true,
@@ -2972,26 +1485,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 100,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Syphilis",
-            "slug": "syphilis",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Syphilis</h1>",
-            "markup": "# Syphilis"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 100,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Syphilis",
             "slug": "syphilis",
             "is_active": true,
@@ -3002,26 +1500,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 101,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "T18 and T13",
-            "slug": "t18-and-t13",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>T18 and T13</h1>",
-            "markup": "# T18 and T13"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 101,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "T18 and T13",
             "slug": "t18-and-t13",
             "is_active": true,
@@ -3032,26 +1515,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 102,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Thrombophilia",
-            "slug": "thrombophilia",
-            "ages": [
-                "all"
-            ],
-            "description": "<h1>Thrombophilia</h1>",
-            "markup": "# Thrombophilia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 102,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Thrombophilia",
             "slug": "thrombophilia",
             "is_active": true,
@@ -3062,26 +1530,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 103,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Thyroid disease",
-            "slug": "thyroid-disease",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Thyroid disease</h1>",
-            "markup": "# Thyroid disease"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 103,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Thyroid disease",
             "slug": "thyroid-disease",
             "is_active": true,
@@ -3092,26 +1545,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 104,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Toxoplasmosis",
-            "slug": "toxoplasmosis",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Toxoplasmosis</h1>",
-            "markup": "# Toxoplasmosis"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 104,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Toxoplasmosis",
             "slug": "toxoplasmosis",
             "is_active": true,
@@ -3122,26 +1560,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 105,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Tyrosinaemia",
-            "slug": "tyrosinaemia",
-            "ages": [
-                "newborn"
-            ],
-            "description": "<h1>Tyrosinaemia</h1>",
-            "markup": "# Tyrosinaemia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 105,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Tyrosinaemia",
             "slug": "tyrosinaemia",
             "is_active": true,
@@ -3152,26 +1575,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 106,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Varicella susceptibility",
-            "slug": "varicella-susceptibility",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Varicella susceptibility</h1>",
-            "markup": "# Varicella susceptibility"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 106,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Varicella susceptibility",
             "slug": "varicella-susceptibility",
             "is_active": true,
@@ -3182,26 +1590,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 107,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Vasa praevia",
-            "slug": "vasa-praevia",
-            "ages": [
-                "antenatal"
-            ],
-            "description": "<h1>Vasa praevia</h1>",
-            "markup": "# Vasa praevia"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 107,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Vasa praevia",
             "slug": "vasa-praevia",
             "is_active": true,
@@ -3212,26 +1605,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 108,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Vascular risk",
-            "slug": "vascular-risk",
-            "ages": [
-                "adult"
-            ],
-            "description": "<h1>Vascular risk</h1>",
-            "markup": "# Vascular risk"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 108,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Vascular risk",
             "slug": "vascular-risk",
             "is_active": true,
@@ -3242,26 +1620,11 @@
         }
     },
     {
-        "model": "core.condition",
+        "model": "policy.policy",
         "pk": 109,
         "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
-            "name": "Vision Defects",
-            "slug": "vision-defects",
-            "ages": [
-                "child"
-            ],
-            "description": "<h1>Vision Defects</h1>",
-            "markup": "# Vision Defects"
-        }
-    },
-    {
-        "model": "core.policy",
-        "pk": 109,
-        "fields": {
-            "created": "2020-01-28T19:13:50.373672+00:00",
-            "modified": "2020-01-28T19:13:50.373672+00:00",
+            "created": "2020-01-30T15:17:54.735948+00:00",
+            "modified": "2020-01-30T15:17:54.735948+00:00",
             "name": "Vision Defects",
             "slug": "vision-defects",
             "is_active": true,

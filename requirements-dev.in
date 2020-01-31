@@ -18,5 +18,3 @@ model-bakery
 # Deployment
 fabric
 invoke
-raven
-uwsgi

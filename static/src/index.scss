@@ -1,3 +1,5 @@
 $govuk-assets-path: "/static/dist/govuk/";
 
 @import "govuk-frontend/govuk/all";
+
+@import "layout";
