@@ -9,6 +9,7 @@ admin.autodiscover()
 
 urlpatterns = [
     path(r'', TemplateView.as_view(template_name='home.html')),
+    path(r'policy/', include('nsc.policy.urls', namespace='policy')),
     path(r'admin/', admin.site.urls),
 ]
 

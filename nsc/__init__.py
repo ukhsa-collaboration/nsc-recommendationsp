@@ -1,5 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
+import random
+
 from model_bakery import baker
 
 # This will make sure the app is always imported when
@@ -15,10 +17,14 @@ __all__ = ('celery_app',)
 # function that can be used to generate fake data. Ideally we should use the
 # choices used on the model but that runs the risk of circular dependencies
 # unless the choices are factored out but that makes things more obscure /
-# complicated than necessary so we just use a hard-wired default value.
+# complicated than necessary so we just use a random selection from a list
+# of hard-wired values.
+
+all_ages = ['{antenatal}', '{newborn}', '{child}', '{adult}', '{all}']
+
 
 def generate_ages():
-    return '{all}'
+    return random.choice(all_ages)
 
 
 baker.generators.add('nsc.condition.fields.ChoiceArrayField', 'nsc.generate_ages')

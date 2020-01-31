@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block back %}
+  <a href="{% url 'policy:list' %}" class="govuk-back-link">{% trans 'Back' %}</a>
+{% endblock %}
+
+{% block heading %}{{object.name}}{% endblock %}
+
+{% block content %}
+{% endblock %}
+

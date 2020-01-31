@@ -60,6 +60,9 @@ class Common(Configuration):
         'django_extensions',
         'clear_cache',
         'simple_history',
+        'django_filters',
+        'nsc.condition',
+        'nsc.policy',
     ]
 
     MIDDLEWARE = [
