@@ -40,9 +40,5 @@ class Policy(TimeStampedModel):
         return reverse('policy:detail', kwargs={'slug': self.slug})
 
     @property
-    def age_groups(self):
-        return self.condition.ages
-
-    @property
     def recommendation(self):
         return _('Recommended') if self.is_screened else _('Not recommended')
