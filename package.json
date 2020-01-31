@@ -4,7 +4,7 @@
   "description": "",
   "main": "static/src/index.js",
   "scripts": {
-    "watch": "webpack-dev-server --mode development",
+    "watch": "webpack-dev-server --host 0 --mode development",
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
