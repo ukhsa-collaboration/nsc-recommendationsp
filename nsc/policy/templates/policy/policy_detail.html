@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block back %}
-  <a href="{{ referrer }}" class="govuk-back-link">{% trans 'Back' %}</a>
+  <a id="referer-link-id" href="{{ referer }}" class="govuk-back-link">{% trans 'Back' %}</a>
 {% endblock %}
 
 {% block heading %}{{object.name}}{% endblock %}

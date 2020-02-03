@@ -23,5 +23,5 @@ class PolicyDetail(DetailView):
     lookup_field = 'slug'
 
     def get_context_data(self, **kwargs):
-        referrer = self.request.META.get('HTTP_REFERER', reverse('policy:list'))
-        return super().get_context_data(referrer=referrer)
+        referer = self.request.META.get('HTTP_REFERER', reverse('policy:list'))
+        return super().get_context_data(referer=referer)
