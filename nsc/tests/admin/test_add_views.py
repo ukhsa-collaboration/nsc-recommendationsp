@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from nsc.utils.admin import get_add_url, get_add_models
+from nsc.utils.admin import get_add_models, get_add_url
 
 
 class AdminAddViewTests(TestCase):
@@ -10,9 +10,10 @@ class AdminAddViewTests(TestCase):
     Tests to verify the admin add views are displayed without error.
 
     """
+
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+        cls.user = User.objects.create_superuser("admin", "admin@example.com", "admin")
 
     def get_view(self, model):
         return self.client.get(get_add_url(model), follow=False)

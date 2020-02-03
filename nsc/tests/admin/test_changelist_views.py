@@ -10,9 +10,10 @@ class AdminChangelistViewTests(TestCase):
     Tests to verify the admin changelist views are displayed without error.
 
     """
+
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+        cls.user = User.objects.create_superuser("admin", "admin@example.com", "admin")
 
     def get_view(self, model):
         url = get_changelist_url(model)
