@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
 from .filters import PolicyFilter
@@ -20,3 +21,7 @@ class PolicyList(ListView):
 class PolicyDetail(DetailView):
     model = Policy
     lookup_field = 'slug'
+
+    def get_context_data(self, **kwargs):
+        referrer = self.request.META.get('HTTP_REFERER', reverse('policy:list'))
+        return super().get_context_data(referrer=referrer)
