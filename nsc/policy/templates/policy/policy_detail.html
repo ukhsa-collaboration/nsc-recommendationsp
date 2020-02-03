@@ -9,7 +9,7 @@
 
 {% block content %}
 <h2 class="govuk-heading-m">{{ object.condition.name }}</h2>
-{{ object.condition.description|safe }}
+{{ object.condition.description_html|safe }}
 
 {% endblock %}
 

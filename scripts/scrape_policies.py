@@ -27,7 +27,7 @@ def run():
         obj.is_active = entry['is_active']
         obj.is_screened = entry['is_screened']
         # Todo re-enable to scrape content
-        obj.markup = ''  # get_description(page)
+        obj.description = ''  # get_description(page)
 
         if obj.condition:
             assert obj.condition.slug == obj.slug

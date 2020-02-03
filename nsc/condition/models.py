@@ -27,7 +27,7 @@ class Condition(TimeStampedModel):
         verbose_name=_('age groups'), choices=AGE_GROUPS, max_length=50))
 
     description = models.TextField(verbose_name=_('description'))
-    markup = models.TextField(verbose_name=_('markup'))
+    description_html = models.TextField(verbose_name=_('HTML description'))
 
     history = HistoricalRecords()
 
@@ -41,5 +41,5 @@ class Condition(TimeStampedModel):
         return ', '.join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
 
     def save(self, **kwargs):
-        self.description = markdown.markdown(self.markup, extensions=['attr_list'])
+        self.description_html = markdown.markdown(self.description, extensions=['attr_list'])
         super().save(**kwargs)

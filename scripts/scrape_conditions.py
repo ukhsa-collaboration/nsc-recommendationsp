@@ -24,7 +24,7 @@ def run():
 
         obj.name = entry['name']
         obj.ages = entry['ages']
-        obj.markup = get_description(page)
+        obj.description = get_description(page)
         obj.save()
 
 
