@@ -28,8 +28,8 @@ class Condition(TimeStampedModel):
         )
     )
 
-    description = models.TextField(verbose_name=_('description'))
-    description_html = models.TextField(verbose_name=_('HTML description'))
+    description = models.TextField(verbose_name=_("description"))
+    description_html = models.TextField(verbose_name=_("HTML description"))
 
     history = HistoricalRecords()
 
@@ -40,7 +40,7 @@ class Condition(TimeStampedModel):
         return self.name
 
     def ages_display(self):
-        return ', '.join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
+        return ", ".join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
 
     def save(self, **kwargs):
         self.description_html = convert(self.description)

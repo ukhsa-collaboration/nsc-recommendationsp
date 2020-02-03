@@ -5,29 +5,21 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('condition', '0001_initial'),
-    ]
+    dependencies = [("condition", "0001_initial")]
 
     operations = [
         migrations.RenameField(
-            model_name='condition',
-            old_name='description',
-            new_name='description_html'
+            model_name="condition", old_name="description", new_name="description_html"
         ),
         migrations.RenameField(
-            model_name='condition',
-            old_name='markup',
-            new_name='description'
+            model_name="condition", old_name="markup", new_name="description"
         ),
         migrations.RenameField(
-            model_name='historicalcondition',
-            old_name='description',
-            new_name='description_html'
+            model_name="historicalcondition",
+            old_name="description",
+            new_name="description_html",
         ),
         migrations.RenameField(
-            model_name='historicalcondition',
-            old_name='markup',
-            new_name='description'
+            model_name="historicalcondition", old_name="markup", new_name="description"
         ),
     ]

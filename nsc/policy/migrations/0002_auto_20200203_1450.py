@@ -5,29 +5,21 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('policy', '0001_initial'),
-    ]
+    dependencies = [("policy", "0001_initial")]
 
     operations = [
         migrations.RenameField(
-            model_name='historicalpolicy',
-            old_name='description',
-            new_name='description_html'
+            model_name="historicalpolicy",
+            old_name="description",
+            new_name="description_html",
         ),
         migrations.RenameField(
-            model_name='historicalpolicy',
-            old_name='markup',
-            new_name='description'
+            model_name="historicalpolicy", old_name="markup", new_name="description"
         ),
         migrations.RenameField(
-            model_name='policy',
-            old_name='description',
-            new_name='description_html'
+            model_name="policy", old_name="description", new_name="description_html"
         ),
         migrations.RenameField(
-            model_name='policy',
-            old_name='markup',
-            new_name='description'
+            model_name="policy", old_name="markup", new_name="description"
         ),
     ]

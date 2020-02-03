@@ -113,17 +113,17 @@ class PolicyDetailTests(WebTest):
         """
         instance = baker.make(Policy)
         response = self.app.get(instance.get_absolute_url())
-        self.assertEqual(response.context['object'], instance)
+        self.assertEqual(response.context["object"], instance)
 
     def test_back_link(self):
         """
         Test the back link returns to the previous page. This ensures that
         search results are not lost.
         """
-        instance = baker.make(Policy, name='condition', condition__ages='{child}')
-        form = self.app.get(reverse('policy:list')).form
-        form['affects'] = 'child'
+        instance = baker.make(Policy, name="condition", condition__ages="{child}")
+        form = self.app.get(reverse("policy:list")).form
+        form["affects"] = "child"
         results = form.submit()
         detail = results.click(href=instance.get_absolute_url())
-        referer = detail.click(linkid='referer-link-id')
+        referer = detail.click(linkid="referer-link-id")
         self.assertEqual(results.request.url, referer.request.url)
