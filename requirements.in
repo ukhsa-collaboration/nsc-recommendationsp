@@ -21,4 +21,5 @@ uwsgi
 celery
 django-simple-history
 lxml
+markdown
 requests

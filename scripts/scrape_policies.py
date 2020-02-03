@@ -7,67 +7,46 @@ import json
 import requests
 
 from bs4 import BeautifulSoup
-from django.utils import timezone
-from django.utils.text import slugify
 
-SITE = "https://legacyscreening.phe.org.uk/"
-TIMESTAMP = timezone.now().isoformat()
+from nsc.condition.models import Condition
+from nsc.policy.models import Policy
 
 
 def run():
-    save_data(scrape_contents(get_page('screening-recommendations.php')))
+    index = load_index()
+    for entry in index:
+        # Todo re-enable to scrape content
+        # page = get_page(entry['url'])
+
+        try:
+            obj = Policy.objects.get(slug=entry['slug'])
+        except Policy.DoesNotExist:
+            obj = Policy(slug=entry['slug'])
+
+        obj.name = entry['name']
+        obj.is_active = entry['is_active']
+        obj.is_screened = entry['is_screened']
+        # Todo re-enable to scrape content
+        obj.description = ''  # get_description(page)
+
+        if obj.condition:
+            assert obj.condition.slug == obj.slug
+        else:
+            obj.condition = Condition.objects.get(slug=obj.slug)
+
+        obj.save()
 
 
-def get_page(path):
-    response = requests.get(SITE + path)
+def load_index():
+    with open('fixtures/legacy_index.json', 'r') as fp:
+        return json.load(fp)
+
+
+def get_page(url):
+    response = requests.get(url)
     response.raise_for_status()
-    return response
+    return BeautifulSoup(response.text, "lxml")
 
 
-def save_data(data):
-    with open('fixtures/policies.json', 'w') as fixture_file:
-        json.dump(data, fixture_file, indent=4)
-
-
-def scrape_contents(response):
-    results = []
-    soup = BeautifulSoup(response.text, "lxml")
-    for idx, row in enumerate(scrape_rows(soup)):
-        results.append(scrape_row(row, idx + 1))
-    return results
-
-
-def scrape_rows(node):
-    return node.find('div', {'id': 'policyListArea'}).find_all('tr')
-
-
-def scrape_row(node, pk):
-    fields = node.find_all('td')
-
-    name = get_name(fields[1])
-    slug = slugify(name)
-    recommendation = get_recommendation(fields[6])
-
-    return {
-        'model': 'policy.policy',
-        'pk': pk,
-        'fields': {
-            'created': TIMESTAMP,
-            'modified': TIMESTAMP,
-            'name': name,
-            'slug': slug,
-            'is_active': True,
-            'is_screened': recommendation,
-            'description': '<h1>%s</h1>' % name,
-            'markup': '# %s' % name,
-            'condition': pk
-        }
-    }
-
-
-def get_name(node):
-    return node.find('a').text.strip()
-
-
-def get_recommendation(node):
-    return 'not recommended' not in node.text
+def get_description(node):
+    return ''

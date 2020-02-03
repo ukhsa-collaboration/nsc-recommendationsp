@@ -6,6 +6,7 @@ from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.condition.fields import ChoiceArrayField
+from nsc.utils.markdown import convert
 
 
 class Condition(TimeStampedModel):
@@ -27,8 +28,8 @@ class Condition(TimeStampedModel):
         )
     )
 
-    description = models.TextField(verbose_name=_("description"))
-    markup = models.TextField(verbose_name=_("markup"))
+    description = models.TextField(verbose_name=_('description'))
+    description_html = models.TextField(verbose_name=_('HTML description'))
 
     history = HistoricalRecords()
 
@@ -39,4 +40,8 @@ class Condition(TimeStampedModel):
         return self.name
 
     def ages_display(self):
-        return ", ".join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
+        return ', '.join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
+
+    def save(self, **kwargs):
+        self.description_html = convert(self.description)
+        super().save(**kwargs)

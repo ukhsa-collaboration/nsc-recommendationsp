@@ -8,5 +8,6 @@ class PolicyAdmin(admin.ModelAdmin):
 
     list_display = ("name", "is_screened", "is_active")
     list_filter = ("is_screened", "is_active")
-
     search_fields = ("name",)
+
+    readonly_fields = ('slug', 'description_html', )

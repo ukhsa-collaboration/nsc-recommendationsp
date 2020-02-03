@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
+from nsc.utils.markdown import convert
+
 
 class PolicyManager(models.Manager):
     def active(self):
@@ -19,8 +21,8 @@ class Policy(TimeStampedModel):
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
     is_screened = models.BooleanField(verbose_name=_("is_screened"), default=False)
 
-    description = models.TextField(verbose_name=_("description"))
-    markup = models.TextField(verbose_name=_("markup"))
+    description = models.TextField(verbose_name=_('description'))
+    description_html = models.TextField(verbose_name=_('HTML description'))
 
     condition = models.OneToOneField(
         "condition.Condition", verbose_name=_("condition"), on_delete=models.PROTECT
@@ -41,4 +43,8 @@ class Policy(TimeStampedModel):
 
     @property
     def recommendation(self):
-        return _("Recommended") if self.is_screened else _("Not recommended")
+        return _('Recommended') if self.is_screened else _('Not recommended')
+
+    def save(self, **kwargs):
+        self.description_html = convert(self.description)
+        super().save(**kwargs)
