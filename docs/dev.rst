@@ -120,3 +120,15 @@ We recommend using editor plugins to apply these at the point of saving Python f
 .. _black: https://github.com/python/black#the-black-code-style
 .. _flake8: https://pypi.org/project/flake8/
 .. _isort: https://github.com/timothycrosley/isort
+
+
+Documentation
+=============
+
+The documentation uses sphinx_, with doc8_ for linting. Build with::
+
+    doc8
+    sphinx-build docs docs/_build
+
+.. _sphinx: https://www.sphinx-doc.org/
+.. _doc8: https://pypi.org/project/doc8/

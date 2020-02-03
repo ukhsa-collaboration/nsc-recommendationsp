@@ -25,7 +25,7 @@ node_modules
 static/dist/*
 
 # Sphinx docs
-build/
+docs/_build/
 
 # Uploaded files
 media/

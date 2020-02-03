@@ -21,6 +21,9 @@ pytest-django
 pytest-isort
 pytest-flake8
 
+# Documentation
+sphinx
+sphinx_rtd_theme
 
 # Deployment
 fabric
