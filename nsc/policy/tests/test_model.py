@@ -1,5 +1,4 @@
 from django_webtest import WebTest
-
 from model_bakery import baker
 
 from nsc.utils.models import is_fetched
@@ -8,7 +7,6 @@ from ..models import Policy
 
 
 class PolicyModelTest(WebTest):
-
     def test_factory_create(self):
         """
         Test that we can create an instance via our object factory.
@@ -32,4 +30,4 @@ class PolicyModelTest(WebTest):
         """
         baker.make(Policy, is_active=True)
         policy = Policy.objects.active().first()
-        self.assertTrue(is_fetched(policy, 'condition'))
+        self.assertTrue(is_fetched(policy, "condition"))

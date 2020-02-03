@@ -7,7 +7,7 @@ from .models import Condition
 @admin.register(Condition)
 class ConditionAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'ages_display')
-    list_filter = (AgeGroupFilter, )
+    list_display = ("name", "ages_display")
+    list_filter = (AgeGroupFilter,)
 
-    search_fields = ('name',)
+    search_fields = ("name",)

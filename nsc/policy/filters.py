@@ -1,8 +1,7 @@
-from django_filters import FilterSet, CharFilter, Filter
+from django_filters import CharFilter, Filter, FilterSet
 
 
 class YesNoFilter(Filter):
-
     def filter(self, qs, value):
         if value is None:
             return qs
@@ -16,6 +15,6 @@ class YesNoFilter(Filter):
 
 class PolicyFilter(FilterSet):
 
-    condition = CharFilter(field_name='name', lookup_expr='icontains')
-    affects = CharFilter(field_name='condition__ages', lookup_expr='icontains')
-    screen = YesNoFilter(field_name='is_screened')
+    condition = CharFilter(field_name="name", lookup_expr="icontains")
+    affects = CharFilter(field_name="condition__ages", lookup_expr="icontains")
+    screen = YesNoFilter(field_name="is_screened")

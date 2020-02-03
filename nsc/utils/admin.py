@@ -6,22 +6,26 @@ from nsc.utils.models import all_subclasses
 
 
 def get_add_url(model):
-    meta = getattr(model, '_meta')
+    meta = getattr(model, "_meta")
     return reverse("admin:%s_%s_add" % (meta.app_label, meta.model_name))
 
 
 def get_change_url(instance):
-    meta = getattr(instance, '_meta')
-    return reverse("admin:%s_%s_change" % (meta.app_label, meta.model_name), args=(instance.pk,))
+    meta = getattr(instance, "_meta")
+    return reverse(
+        "admin:%s_%s_change" % (meta.app_label, meta.model_name), args=(instance.pk,)
+    )
 
 
 def get_delete_url(instance):
-    meta = getattr(instance, '_meta')
-    return reverse("admin:%s_%s_delete" % (meta.app_label, meta.model_name), args=(instance.pk,))
+    meta = getattr(instance, "_meta")
+    return reverse(
+        "admin:%s_%s_delete" % (meta.app_label, meta.model_name), args=(instance.pk,)
+    )
 
 
 def get_changelist_url(model):
-    meta = getattr(model, '_meta')
+    meta = getattr(model, "_meta")
     return reverse("admin:%s_%s_changelist" % (meta.app_label, meta.model_name))
 
 
@@ -31,7 +35,7 @@ def get_models(site):
 
 def get_add_models(site, user):
     results = []
-    registry = getattr(site, '_registry')
+    registry = getattr(site, "_registry")
     for model in get_models(site):
         request = RequestFactory().get(get_add_url(model))
         request.user = user
@@ -42,7 +46,7 @@ def get_add_models(site, user):
 
 def get_change_models(site, user):
     results = []
-    registry = getattr(site, '_registry')
+    registry = getattr(site, "_registry")
     for model in get_models(site):
         request = RequestFactory().get(get_add_url(model))
         request.user = user
@@ -53,7 +57,7 @@ def get_change_models(site, user):
 
 def get_delete_models(site, user):
     results = []
-    registry = getattr(site, '_registry')
+    registry = getattr(site, "_registry")
     for model in get_models(site):
         request = RequestFactory().get(get_delete_url(model))
         request.user = user

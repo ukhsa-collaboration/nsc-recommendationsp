@@ -6,7 +6,7 @@ from model_bakery import baker
 
 from nsc.condition.models import Condition
 from nsc.policy.models import Policy
-from nsc.utils.admin import get_change_url, get_change_models
+from nsc.utils.admin import get_change_models, get_change_url
 
 
 class AdminChangeViewTests(TestCase):
@@ -21,9 +21,10 @@ class AdminChangeViewTests(TestCase):
           force the user to be set explicitly so test data is setup correctly.
 
     """
+
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+        cls.user = User.objects.create_superuser("admin", "admin@example.com", "admin")
 
     def get_view(self, instance):
         return self.client.get(get_change_url(instance), follow=False)
@@ -35,10 +36,7 @@ class AdminChangeViewTests(TestCase):
         self.client.logout()
 
     def test_change_views(self):
-        instances = {
-            'Condition': baker.make(Condition),
-            'Policy': baker.make(Policy),
-        }
+        instances = {"Condition": baker.make(Condition), "Policy": baker.make(Policy)}
 
         # remaining = [model for model in self.models
         #              if admin.site._registry[model].has_change_permission(self.request) and
@@ -46,8 +44,11 @@ class AdminChangeViewTests(TestCase):
         #
         # print(remaining)
 
-        models = [model for model in get_change_models(admin.site, self.user)
-                  if model.__name__ in instances]
+        models = [
+            model
+            for model in get_change_models(admin.site, self.user)
+            if model.__name__ in instances
+        ]
 
         for model in models:
             with self.subTest(model=model):

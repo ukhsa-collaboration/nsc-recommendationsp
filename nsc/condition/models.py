@@ -11,29 +11,32 @@ from nsc.condition.fields import ChoiceArrayField
 class Condition(TimeStampedModel):
 
     AGE_GROUPS = Choices(
-        ('antenatal', _('Antenatal')),
-        ('newborn', _('Newborn')),
-        ('child', _('Child')),
-        ('adult', _('Adult')),
-        ('all', _('All ages')),
+        ("antenatal", _("Antenatal")),
+        ("newborn", _("Newborn")),
+        ("child", _("Child")),
+        ("adult", _("Adult")),
+        ("all", _("All ages")),
     )
 
-    name = models.CharField(verbose_name=_('name'), max_length=256)
-    slug = models.SlugField(verbose_name=_('slug'), max_length=256, unique=True)
+    name = models.CharField(verbose_name=_("name"), max_length=256)
+    slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
 
-    ages = ChoiceArrayField(models.CharField(
-        verbose_name=_('age groups'), choices=AGE_GROUPS, max_length=50))
+    ages = ChoiceArrayField(
+        models.CharField(
+            verbose_name=_("age groups"), choices=AGE_GROUPS, max_length=50
+        )
+    )
 
-    description = models.TextField(verbose_name=_('description'))
-    markup = models.TextField(verbose_name=_('markup'))
+    description = models.TextField(verbose_name=_("description"))
+    markup = models.TextField(verbose_name=_("markup"))
 
     history = HistoricalRecords()
 
     class Meta:
-        ordering = ('name', 'pk', )
+        ordering = ("name", "pk")
 
     def __str__(self):
         return self.name
 
     def ages_display(self):
-        return ', '.join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
+        return ", ".join(str(Condition.AGE_GROUPS[age]) for age in self.ages)

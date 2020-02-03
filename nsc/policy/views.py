@@ -1,8 +1,8 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView, ListView
 
 from .filters import PolicyFilter
-from .models import Policy
 from .forms import PolicySearchForm
+from .models import Policy
 
 
 class PolicyList(ListView):
@@ -19,4 +19,4 @@ class PolicyList(ListView):
 
 class PolicyDetail(DetailView):
     model = Policy
-    lookup_field = 'slug'
+    lookup_field = "slug"
