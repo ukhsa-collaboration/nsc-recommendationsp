@@ -9,8 +9,8 @@ These commands assume you have checked out the project and are in the root of th
 repository.
 
 
-Running with docker
-===================
+Running locally with docker
+===========================
 
 The default ``dev-docker-compose.yml`` will run Django and node in their own
 containers::
@@ -35,8 +35,8 @@ To just use docker to build the static resources::
     docker-compose -f dev-docker-compose.yml run -e STATIC_MODE=build static
 
 
-Running manually
-================
+Running locally without docker
+==============================
 
 We recommend using:
 
@@ -92,3 +92,31 @@ When the static resources are being served from a webpack development server (us
 it, enabling hot module replacement. If you serve it from a different host or port you
 can tell Django by setting the environment variables ``WEBPACK_DEV_HOST`` and
 ``WEBPACK_DEV_PORT``, eg ``WEBPACK_DEV_HOST=192.168.1.72 ./manage.py runserver 0:8000``.
+
+
+Running tests
+=============
+
+Once you've installed ``requirements-dev.txt`` into a virtual environment, run::
+
+    pytest
+
+This will run all the tests and linting tools, and provide a coverage report on the
+console and in the dir ``htmlcov``.
+
+
+Development standards
+=====================
+
+This project uses black_, flake8_ and isort_ to enforce consistent python styles. These
+are checked automatically by ``pytest``. To use them to automatically reformat your
+code::
+
+    black nsc
+    isort -rc nsc
+
+We recommend using editor plugins to apply these at the point of saving Python files.
+
+.. _black: https://github.com/python/black#the-black-code-style
+.. _flake8: https://pypi.org/project/flake8/
+.. _isort: https://github.com/timothycrosley/isort
