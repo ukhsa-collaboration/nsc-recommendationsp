@@ -92,3 +92,23 @@ When the static resources are being served from a webpack development server (us
 it, enabling hot module replacement. If you serve it from a different host or port you
 can tell Django by setting the environment variables ``WEBPACK_DEV_HOST`` and
 ``WEBPACK_DEV_PORT``, eg ``WEBPACK_DEV_HOST=192.168.1.72 ./manage.py runserver 0:8000``.
+
+Initialising the database
+-------------------------
+There is a set of django-extensions scripts that can be used to scrape data from the
+existing National Screening Committee (legacy) `web site <https://legacyscreening.phe.org.uk/screening-recommendations.php>`_.
+
+* First generate an index containing the list of pages for each condition screened::
+
+    python manage.py runscript generate_legacy_index
+
+* Then run the various scripts to scrape and load the data::
+
+    python manage.py runscript scrape_conditions
+    python manage.py runscript scrape_policies
+
+The order is important since there are foreign keys to keep in order.
+
+Scraping data from the legacy site is just a temporary measure duing the initial
+phases of development. Once the models and content have been finalised the database
+will be dumped to generate a final fixtures file.
