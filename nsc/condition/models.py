@@ -1,3 +1,5 @@
+import markdown
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -37,3 +39,7 @@ class Condition(TimeStampedModel):
 
     def ages_display(self):
         return ', '.join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
+
+    def save(self, **kwargs):
+        self.description = markdown.markdown(self.markup, extensions=['attr_list'])
+        super().save(**kwargs)

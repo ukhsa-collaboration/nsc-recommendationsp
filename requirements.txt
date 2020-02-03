@@ -23,6 +23,7 @@ idna==2.8                 # via requests
 importlib-metadata==1.4.0  # via kombu
 kombu==4.6.7              # via celery
 lxml==4.4.2
+markdown==3.1.1
 more-itertools==8.1.0     # via zipp
 psycopg2-binary==2.8.4
 pytz==2019.3              # via celery, django

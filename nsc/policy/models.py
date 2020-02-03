@@ -1,3 +1,5 @@
+import markdown
+
 from django.urls import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -42,3 +44,7 @@ class Policy(TimeStampedModel):
     @property
     def recommendation(self):
         return _('Recommended') if self.is_screened else _('Not recommended')
+
+    def save(self, **kwargs):
+        self.description = markdown.markdown(self.markup, extensions=['attr_list'])
+        super().save(**kwargs)
