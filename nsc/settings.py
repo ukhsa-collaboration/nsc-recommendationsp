@@ -152,6 +152,7 @@ class Common(Configuration):
     ]
 
     # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    WHITENOISE_ROOT = join(BASE_DIR, 'public')
 
     FIXTURE_DIRS = [
         join(BASE_DIR, 'fixtures')
