@@ -1,11 +1,11 @@
-import markdown
-
 from django.urls import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
+
+from nsc.utils.markdown import convert
 
 
 class PolicyManager(models.Manager):
@@ -46,5 +46,5 @@ class Policy(TimeStampedModel):
         return _('Recommended') if self.is_screened else _('Not recommended')
 
     def save(self, **kwargs):
-        self.description_html = markdown.markdown(self.description, extensions=['attr_list'])
+        self.description_html = convert(self.description)
         super().save(**kwargs)

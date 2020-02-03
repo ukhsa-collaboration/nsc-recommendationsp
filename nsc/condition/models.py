@@ -1,5 +1,3 @@
-import markdown
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -8,6 +6,7 @@ from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.condition.fields import ChoiceArrayField
+from nsc.utils.markdown import convert
 
 
 class Condition(TimeStampedModel):
@@ -41,5 +40,5 @@ class Condition(TimeStampedModel):
         return ', '.join(str(Condition.AGE_GROUPS[age]) for age in self.ages)
 
     def save(self, **kwargs):
-        self.description_html = markdown.markdown(self.description, extensions=['attr_list'])
+        self.description_html = convert(self.description)
         super().save(**kwargs)
