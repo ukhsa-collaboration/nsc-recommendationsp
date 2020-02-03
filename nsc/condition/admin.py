@@ -11,3 +11,5 @@ class ConditionAdmin(admin.ModelAdmin):
     list_filter = (AgeGroupFilter, )
 
     search_fields = ('name',)
+
+    readonly_fields = ('slug', 'description_html', )
