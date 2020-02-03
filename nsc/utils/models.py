@@ -42,30 +42,42 @@ def get_model_fields(model):
 
 
 def is_pk(field):
-    return hasattr(field, 'primary_key') and field.primary_key is True
+    return hasattr(field, "primary_key") and field.primary_key is True
 
 
 def is_fk(field):
-    return field.is_relation and \
-        not field.many_to_many and field.many_to_one and \
-        not field.one_to_many and not field.one_to_one
+    return (
+        field.is_relation
+        and not field.many_to_many
+        and field.many_to_one
+        and not field.one_to_many
+        and not field.one_to_one
+    )
 
 
 def is_reverse_fk(field):
-    return field.is_relation and \
-        not field.many_to_many and not field.many_to_one and \
-        field.one_to_many and not field.one_to_one
+    return (
+        field.is_relation
+        and not field.many_to_many
+        and not field.many_to_one
+        and field.one_to_many
+        and not field.one_to_one
+    )
 
 
 def is_one_to_one(field):
-    return field.is_relation and \
-        not field.many_to_many and not field.many_to_one and \
-        not field.one_to_many and field.one_to_one
+    return (
+        field.is_relation
+        and not field.many_to_many
+        and not field.many_to_one
+        and not field.one_to_many
+        and field.one_to_one
+    )
 
 
 def is_text_field(field):
     name = field.__class__.__name__
-    return name == 'TextField' or name == 'CharField'
+    return name == "TextField" or name == "CharField"
 
 
 def is_allowed(field, value):
@@ -79,9 +91,10 @@ def is_allowed(field, value):
 
 
 def is_fetched(obj, relation_name):
-    return relation_name in getattr(obj, '_state').fields_cache
+    return relation_name in getattr(obj, "_state").fields_cache
 
 
 def all_subclasses(cls):
-    return set(cls.__subclasses__()).union([
-        s for c in cls.__subclasses__() for s in all_subclasses(c)])
+    return set(cls.__subclasses__()).union(
+        [s for c in cls.__subclasses__() for s in all_subclasses(c)]
+    )

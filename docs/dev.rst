@@ -9,8 +9,8 @@ These commands assume you have checked out the project and are in the root of th
 repository.
 
 
-Running with docker
-===================
+Running locally with docker
+===========================
 
 The default ``dev-docker-compose.yml`` will run Django and node in their own
 containers::
@@ -35,8 +35,8 @@ To just use docker to build the static resources::
     docker-compose -f dev-docker-compose.yml run -e STATIC_MODE=build static
 
 
-Running manually
-================
+Running locally without docker
+==============================
 
 We recommend using:
 
@@ -93,10 +93,14 @@ it, enabling hot module replacement. If you serve it from a different host or po
 can tell Django by setting the environment variables ``WEBPACK_DEV_HOST`` and
 ``WEBPACK_DEV_PORT``, eg ``WEBPACK_DEV_HOST=192.168.1.72 ./manage.py runserver 0:8000``.
 
+
 Initialising the database
--------------------------
+=========================
+
 There is a set of django-extensions scripts that can be used to scrape data from the
-existing National Screening Committee (legacy) `web site <https://legacyscreening.phe.org.uk/screening-recommendations.php>`_.
+existing National Screening Committee `legacy website`_.
+
+.. _legacy website: https://legacyscreening.phe.org.uk/screening-recommendations.php
 
 * First generate an index containing the list of pages for each condition screened::
 
@@ -109,6 +113,49 @@ existing National Screening Committee (legacy) `web site <https://legacyscreenin
 
 The order is important since there are foreign keys to keep in order.
 
+(If running Django using docker, replace ``python`` in the above commands with
+``docker-compose exec django``).
+
 Scraping data from the legacy site is just a temporary measure duing the initial
 phases of development. Once the models and content have been finalised the database
 will be dumped to generate a final fixtures file.
+
+
+Running tests
+=============
+
+Once you've installed ``requirements-dev.txt`` into a virtual environment, run::
+
+    pytest
+
+This will run all the tests and linting tools, and provide a coverage report on the
+console and in the dir ``htmlcov``.
+
+
+Development standards
+=====================
+
+This project uses black_, flake8_ and isort_ to enforce consistent python styles. These
+are checked automatically by ``pytest``. To use them to automatically reformat your
+code::
+
+    black nsc
+    isort -rc nsc
+
+We recommend using editor plugins to apply these at the point of saving Python files.
+
+.. _black: https://github.com/python/black#the-black-code-style
+.. _flake8: https://pypi.org/project/flake8/
+.. _isort: https://github.com/timothycrosley/isort
+
+
+Documentation
+=============
+
+The documentation uses sphinx_, with doc8_ for linting. Build with::
+
+    doc8
+    sphinx-build docs docs/_build
+
+.. _sphinx: https://www.sphinx-doc.org/
+.. _doc8: https://pypi.org/project/doc8/

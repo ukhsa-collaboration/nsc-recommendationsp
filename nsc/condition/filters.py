@@ -16,23 +16,26 @@ class AgeGroupFilter(SimpleListFilter):
           None mean 'not set' or 'all ages'.
 
     """
-    title = _('Age Groups')
-    parameter_name = 'ages'
+
+    title = _("Age Groups")
+    parameter_name = "ages"
 
     def lookups(self, request, model_admin):
         return Condition.AGE_GROUPS
 
     def choices(self, changelist):
         yield {
-            'selected': self.value() is None,
-            'query_string': changelist.get_query_string(remove=[self.parameter_name]),
-            'display': _('Any age group'),
+            "selected": self.value() is None,
+            "query_string": changelist.get_query_string(remove=[self.parameter_name]),
+            "display": _("Any age group"),
         }
         for lookup, title in self.lookup_choices:
             yield {
-                'selected': self.value() == str(lookup),
-                'query_string': changelist.get_query_string({self.parameter_name: lookup}),
-                'display': title,
+                "selected": self.value() == str(lookup),
+                "query_string": changelist.get_query_string(
+                    {self.parameter_name: lookup}
+                ),
+                "display": title,
             }
 
     def queryset(self, request, queryset):

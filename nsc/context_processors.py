@@ -7,6 +7,7 @@ import socket
 from django.conf import settings
 from django.http.request import split_domain_port
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -15,12 +16,10 @@ def webpack_dev_url(request):
     If webpack dev server is running, add HMR context processor so template can
     switch script import to HMR URL
     """
-    if not getattr(settings, 'WEBPACK_DEV_URL', None):
+    if not getattr(settings, "WEBPACK_DEV_URL", None):
         return {}
 
-    data = {
-        "host": split_domain_port(request._get_raw_host())[0]
-    }
+    data = {"host": split_domain_port(request._get_raw_host())[0]}
 
     hmr_socket = socket.socket()
     try:
@@ -30,13 +29,13 @@ def webpack_dev_url(request):
 
     except socket.error:
         # No HMR server
-        logger.warning('Webpack dev server not found\n')
+        logger.warning("Webpack dev server not found\n")
         return {}
 
     finally:
         hmr_socket.close()
 
     # HMR server found
-    logger.info('Webpack dev server found, HMR enabled\n')
+    logger.info("Webpack dev server found, HMR enabled\n")
 
-    return {'WEBPACK_DEV_URL': settings.WEBPACK_DEV_URL.format(**data)}
+    return {"WEBPACK_DEV_URL": settings.WEBPACK_DEV_URL.format(**data)}

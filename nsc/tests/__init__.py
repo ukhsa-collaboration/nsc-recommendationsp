@@ -2,6 +2,7 @@ import random
 
 from model_bakery import baker
 
+
 # A custom ArrayField was used to model the ages field on the Condition model
 # so a better default widget would be available. While model bakery supports
 # ArrayField it can't customized versions so we have to add a generator
@@ -11,11 +12,11 @@ from model_bakery import baker
 # complicated than necessary so we just use a random selection from a list
 # of hard-wired values.
 
-all_ages = ['{antenatal}', '{newborn}', '{child}', '{adult}', '{all}']
+all_ages = ["{antenatal}", "{newborn}", "{child}", "{adult}", "{all}"]
 
 
 def generate_ages():
     return random.choice(all_ages)
 
 
-baker.generators.add('nsc.condition.fields.ChoiceArrayField', 'nsc.tests.generate_ages')
+baker.generators.add("nsc.condition.fields.ChoiceArrayField", "nsc.tests.generate_ages")
