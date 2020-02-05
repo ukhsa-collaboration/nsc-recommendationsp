@@ -1,5 +1,6 @@
 import random
 
+import pytest
 from model_bakery import baker
 
 
@@ -19,4 +20,26 @@ def generate_ages():
     return random.choice(all_ages)
 
 
-baker.generators.add("nsc.condition.fields.ChoiceArrayField", "nsc.tests.generate_ages")
+baker.generators.add(
+    "nsc.condition.fields.ChoiceArrayField", "nsc.conftest.generate_ages"
+)
+
+
+@pytest.fixture
+def django_app_form(db, django_app):
+    """
+    Wrapper for django_app fixture - GET a form, fill it out and POST it back
+
+    Usage:
+
+        def test(django_app_form):
+            response = django_app_form(url, field=value)
+    """
+
+    def get_and_post(url, **form_args):
+        form = django_app.get(url).form
+        for field, value in form_args.items():
+            form[field] = value
+        return form.submit()
+
+    return get_and_post
