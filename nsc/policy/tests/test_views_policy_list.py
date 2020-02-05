@@ -12,25 +12,6 @@ pytestmark = pytest.mark.django_db
 policy_list_url = reverse("policy:list")
 
 
-@pytest.fixture
-def django_search(db, django_app):
-    def search(url, **form_args):
-        """
-        Search the given URL with the specified form arguments
-        """
-        form = django_app.get(url).form
-        for field, value in form_args.items():
-            form[field] = value
-        return form.submit()
-
-    return search
-
-
-@pytest.fixture
-def policy_search(django_search):
-    return lambda **form_args: django_search(policy_list_url, **form_args)
-
-
 def test_list_view(django_app):
     """
     Test that the list view returns the list of policies.
@@ -72,59 +53,59 @@ def test_search_form_blank(django_app):
     assert form["screen"].value is None
 
 
-def test_search_on_condition_name(policy_search):
+def test_search_on_condition_name(django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
     baker.make(Policy, name="condition")
-    response = policy_search(condition="other")
+    response = django_app_form(policy_list_url, condition="other")
     assert not response.context["object_list"]
 
 
-def test_search_on_age_affected(policy_search):
+def test_search_on_age_affected(django_app_form):
     """
     Test the list of policies can be filtered by the age of those affected.
     """
     baker.make(Policy, condition__ages="{adult}")
-    response = policy_search(affects="child")
+    response = django_app_form(policy_list_url, affects="child")
     assert not response.context["object_list"]
 
 
-def test_search_on_recommendation(policy_search):
+def test_search_on_recommendation(django_app_form):
     """
     Test the list of policies can be filtered by whether the condition is
     screened for or not.
     """
     baker.make(Policy, is_screened=False)
-    response = policy_search(screen="yes")
+    response = django_app_form(policy_list_url, screen="yes")
     assert not response.context["object_list"]
 
 
-def test_search_form_shows_condition_term(policy_search):
+def test_search_form_shows_condition_term(django_app_form):
     """
     Test when the search results are shown the form shows the entered condition name.
     """
-    form = policy_search(condition="name").form
+    form = django_app_form(policy_list_url, condition="name").form
     assert form["condition"].value == "name"
     assert form["affects"].value is None
     assert form["screen"].value is None
 
 
-def test_search_form_shows_affects_term(policy_search):
+def test_search_form_shows_affects_term(django_app_form):
     """
     Test when the search results are shown the form shows the selected age.
     """
-    form = policy_search(affects="child").form
+    form = django_app_form(policy_list_url, affects="child").form
     assert form["condition"].value == ""
     assert form["affects"].value == "child"
     assert form["screen"].value is None
 
 
-def test_search_form_shows_screen_term(policy_search):
+def test_search_form_shows_screen_term(django_app_form):
     """
     Test when the search results are shown the form shows the selected recommendation.
     """
-    form = policy_search(screen="no").form
+    form = django_app_form(policy_list_url, screen="no").form
     assert form["condition"].value == ""
     assert form["affects"].value is None
     assert form["screen"].value == "no"
