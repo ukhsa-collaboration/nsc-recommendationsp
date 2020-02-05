@@ -1,0 +1,31 @@
+{% load i18n %}
+
+<div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
+  <fieldset class="govuk-fieldset" role="group" aria-describedby="{{ field.name }}-hint {{ field.name }}-error">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--{% if label_size %}{{ label_size }}{% else %}s{% endif %}">
+      <label for="{{ field.id_for_label}}">
+          {{ field.label }}
+      </label>
+    </legend>
+    {% if field.errors %}
+      <span id="{{ field.name }}-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ field.errors.0 }}
+      </span>
+    {% endif %}
+    {% if field.help_text %}
+      <span id="{{ field.name }}-hint" class="govuk-hint">
+        {{ field.help_text }}
+      </span>
+    {% endif %}
+    <div class="govuk-radios govuk-radios--small">
+      {% for radio in field %}
+        <div class="govuk-radios__item">
+          {{ radio.tag }}
+          <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
+            {{ radio.choice_label }}
+          </label>
+        </div>
+      {% endfor %}
+    </div>
+  </fieldset>
+</div>

@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Recommendation' %}
+</h2>
+
+{% if policy.is_screened %}
+  <div class="govuk-body">
+    {% trans 'Screening for this condition is recommended.' %}
+  </div>
+{% else %}
+  <div class="govuk-body">
+    {% trans 'Screening is not currently recommended for this condition.' %}
+  </div>
+{% endif %}
+
+{{ policy.policy_html|safe }}

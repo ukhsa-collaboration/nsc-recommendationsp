@@ -1,0 +1,25 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Organisations interested in' %} {{ policy.name }}
+</h2>
+
+<p class="govuk-body">
+  {% trans 'These organisations have expressed interest in this recommendation and may submit responses to evidence reviews.' %}
+</p>
+
+<h3 class="govuk-heading-s">
+  {% trans 'List of organisations' %}
+</h3>
+
+<ul class="govuk-list">
+  {% for organisation in policy.organisations %}
+    <li>
+      <a class="govuk-link" href="{{ organisation.url }}">{{ organisation.name }}</a>
+    </li>
+  {% empty %}
+    <li>
+      {% trans 'There are no organisations at this time' %}
+    </li>
+  {% endfor %}
+</ul>
