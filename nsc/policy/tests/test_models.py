@@ -3,19 +3,27 @@ from model_bakery import baker
 
 from nsc.utils.models import is_fetched
 
-from ..models import Policy
+from ..models import Condition, Policy
 
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
 
 
-def test_factory_create():
+def test_factory_create_policy():
     """
     Test that we can create an instance via our object factory.
     """
     instance = baker.make(Policy)
     assert isinstance(instance, Policy)
+
+
+def test_factory_create_condition():
+    """
+    Test that we can create an instance via our object factory.
+    """
+    instance = baker.make(Condition)
+    assert isinstance(instance, Condition)
 
 
 def test_active():

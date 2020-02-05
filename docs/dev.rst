@@ -106,17 +106,15 @@ existing National Screening Committee `legacy website`_.
 
     python manage.py runscript generate_legacy_index
 
-* Then run the various scripts to scrape and load the data::
+* Then run the script to scrape and load the data::
 
-    python manage.py runscript scrape_conditions
     python manage.py runscript scrape_policies
 
-The order is important since there are foreign keys to keep in order.
 
 (If running Django using docker, replace ``python`` in the above commands with
 ``docker-compose exec django``).
 
-Scraping data from the legacy site is just a temporary measure duing the initial
+Scraping data from the legacy site is just a temporary measure during the initial
 phases of development. Once the models and content have been finalised the database
 will be dumped to generate a final fixtures file.
 
