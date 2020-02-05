@@ -4,41 +4,35 @@ Scraper extracting the list of NSC policies from the legacy web site.
 """
 
 import json
+import re
 import requests
 
 from bs4 import BeautifulSoup
 
-from nsc.condition.models import Condition
 from nsc.policy.models import Policy
 
 
 def run():
     index = load_index()
     for entry in index:
-        # Todo re-enable to scrape content
-        # page = get_page(entry['url'])
+        page = get_page(entry["url"])
 
         try:
-            obj = Policy.objects.get(slug=entry['slug'])
+            obj = Policy.objects.get(slug=entry["slug"])
         except Policy.DoesNotExist:
-            obj = Policy(slug=entry['slug'])
+            obj = Policy(slug=entry["slug"])
 
-        obj.name = entry['name']
-        obj.is_active = entry['is_active']
-        obj.is_screened = entry['is_screened']
-        # Todo re-enable to scrape content
-        obj.description = ''  # get_description(page)
-
-        if obj.condition:
-            assert obj.condition.slug == obj.slug
-        else:
-            obj.condition = Condition.objects.get(slug=obj.slug)
+        obj.name = entry["name"]
+        obj.is_active = entry["is_active"]
+        obj.is_screened = entry["is_screened"]
+        obj.ages = entry["ages"]
+        obj.condition = get_condition(page)
 
         obj.save()
 
 
 def load_index():
-    with open('fixtures/legacy_index.json', 'r') as fp:
+    with open("fixtures/legacy_index.json", "r") as fp:
         return json.load(fp)
 
 
@@ -48,5 +42,25 @@ def get_page(url):
     return BeautifulSoup(response.text, "lxml")
 
 
-def get_description(node):
-    return ''
+def get_condition(node):
+
+    content = []
+
+    regex = re.compile(r"^More about .*")
+    node = node.find("h3", string=regex)
+    node = node.next_sibling
+
+    while node.name != "h3":
+        link = node.find("a")
+        if link is None:
+            text = node.text.strip()
+            text += "\n{: class=govuk-body }"
+            content.append(text)
+        else:
+            link_url = link["href"]
+            content.append(
+                '\n[%s](%s){: class="govuk-link"}' % ("Read more on NHS UK", link_url)
+            )
+        node = node.find_next_sibling()
+
+    return "\n".join(content)

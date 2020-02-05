@@ -1,19 +1,31 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
+from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.utils.markdown import convert
 
+from .fields import ChoiceArrayField
+
 
 class PolicyManager(models.Manager):
     def active(self):
-        return self.filter(is_active=True).select_related("condition")
+        return self.filter(is_active=True)
 
 
 class Policy(TimeStampedModel):
+
+    AGE_GROUPS = Choices(
+        ("antenatal", _("Antenatal")),
+        ("newborn", _("Newborn")),
+        ("child", _("Child")),
+        ("adult", _("Adult")),
+        ("all", _("All ages")),
+    )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
@@ -21,12 +33,17 @@ class Policy(TimeStampedModel):
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
     is_screened = models.BooleanField(verbose_name=_("is_screened"), default=False)
 
-    description = models.TextField(verbose_name=_("description"))
-    description_html = models.TextField(verbose_name=_("HTML description"))
-
-    condition = models.OneToOneField(
-        "condition.Condition", verbose_name=_("condition"), on_delete=models.PROTECT
+    ages = ChoiceArrayField(
+        models.CharField(
+            verbose_name=_("age groups"), choices=AGE_GROUPS, max_length=50
+        )
     )
+
+    condition = models.TextField(verbose_name=_("condition"))
+    condition_html = models.TextField(verbose_name=_("HTML condition"))
+
+    policy = models.TextField(verbose_name=_("policy"))
+    policy_html = models.TextField(verbose_name=_("HTML policy"))
 
     history = HistoricalRecords()
     objects = PolicyManager()
@@ -41,10 +58,15 @@ class Policy(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("policy:detail", kwargs={"slug": self.slug})
 
-    @property
-    def recommendation(self):
+    def recommendation_display(self):
         return _("Recommended") if self.is_screened else _("Not recommended")
 
+    def ages_display(self):
+        return ", ".join(str(Policy.AGE_GROUPS[age]) for age in self.ages)
+
     def save(self, **kwargs):
-        self.description_html = convert(self.description)
+        if not self.slug:
+            self.slug = slugify(self.name)
+        self.condition_html = convert(self.condition)
+        self.policy_html = convert(self.policy)
         super().save(**kwargs)
