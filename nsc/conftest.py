@@ -19,4 +19,6 @@ def generate_ages():
     return random.choice(all_ages)
 
 
-baker.generators.add("nsc.condition.fields.ChoiceArrayField", "nsc.tests.generate_ages")
+baker.generators.add(
+    "nsc.condition.fields.ChoiceArrayField", "nsc.conftest.generate_ages"
+)
