@@ -21,9 +21,12 @@ containers::
 Modify ``dev-docker-compose.yml`` to disable services if you'd prefer to run some
 manually outside a container during development.
 
-To perform a command in a running container:
+To perform a command in a running container use the ``exec`` command; for example::
 
-    docker-compose exec django ./manage.py createsuperuser
+    docker-compose -f dev-docker-compose.yml exec django ./manage.py createsuperuser
+
+where ``django`` is the container name. Commands in the documentation will omit this
+prefix.
 
 
 Building static only
@@ -112,7 +115,7 @@ existing National Screening Committee `legacy website`_.
 
 
 (If running Django using docker, replace ``python`` in the above commands with
-``docker-compose exec django``).
+``docker-compose -f dev-docker-compose.yml exec django``).
 
 Scraping data from the legacy site is just a temporary measure during the initial
 phases of development. Once the models and content have been finalised the database
@@ -122,12 +125,19 @@ will be dumped to generate a final fixtures file.
 Running tests
 =============
 
-Once you've installed ``requirements-dev.txt`` into a virtual environment, run::
+To run tests and linting checks locally, ensure the containers are running, then run::
 
     pytest
 
-This will run all the tests and linting tools, and provide a coverage report on the
-console and in the dir ``htmlcov``.
+A summary coverage report will be printed to the console, with an HTML report at
+``htmlcov/index.html``.
+
+By default the test database will be reused across test sessions to reduce
+initialisation time. If the test database to becomes corrupted (for example, if you
+roll back migrations, or start seeing unexpected migration issues) you can force
+recreation with::
+
+    pytest --create-db
 
 
 Development standards
