@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Supporting documents' %}
+</h2>
+
+<ul class="govuk-list">
+  {% for document in policy.documents %}
+    <li>
+      <a class="govuk-link" href="{{ document.url }}">{{ document.name }}</a>
+    </li>
+  {% empty %}
+    <li>
+      {% trans 'There are no supporting documents at this time' %}
+    </li>
+  {% endfor %}
+</ul>

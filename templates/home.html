@@ -2,7 +2,30 @@
 
 {% block title_spacer %}{% endblock %}
 
-{% block heading %}Home{% endblock %}
+{% block title %}
+  {% block page_title %}
+    Development
+  {% endblock %}
+{% endblock %}
 
 {% block content %}
+
+<div class="link-menu">
+  <a href="{% url 'condition:list' %}" class="govuk-link">
+    Public Policy List
+  </a>
+</div>
+
+<div class="link-menu">
+  <a href="{% url 'admin' %}" class="govuk-link">
+    Admin Home Page
+  </a>
+</div>
+
+<div class="link-menu">
+  <a href="{% url 'policy:list' %}" class="govuk-link">
+    Admin Policy List
+  </a>
+</div>
+
 {% endblock content %}

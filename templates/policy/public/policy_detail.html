@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {{ policy.name }}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  {% include "policy/public/summary.html" %}
+  {% include "policy/public/condition.html" %}
+  {% include "policy/public/documents.html" %}
+  {% include "policy/public/organisations.html" %}
+{% endblock %}
+

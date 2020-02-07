@@ -1,27 +1,80 @@
+import datetime
+import re
+
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from nsc.condition.models import Condition
+from .models import Policy
 
 
-class PolicySearchForm(forms.Form):
+class SearchForm(forms.Form):
 
-    condition = forms.CharField(label=_("Search by condition name"), required=False)
+    name = forms.CharField(label=_("Search by condition name"), required=False)
 
-    affects = forms.TypedChoiceField(
-        label=_("Who the condition affects"),
-        choices=Condition.AGE_GROUPS,
-        widget=forms.RadioSelect,
-        required=False,
+    name.widget.attrs.update({"class": "govuk-input"})
+
+
+class PolicyForm(forms.ModelForm):
+
+    next_review = forms.CharField(
+        label=_(" Expected next review start date "), required=False
     )
 
-    screen = forms.TypedChoiceField(
-        label=_("Current recommendation"),
-        choices=(("yes", _("Yes")), ("no", _("No"))),
-        widget=forms.RadioSelect,
-        required=False,
-    )
+    class Meta:
+        model = Policy
+        fields = ["next_review", "condition"]
 
-    condition.widget.attrs.update({"class": "govuk-input", "style": "width: 80%"})
-    affects.widget.attrs.update({"class": "govuk-radios__input"})
-    screen.widget.attrs.update({"class": "govuk-radios__input"})
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.fields["next_review"].help_text = _(
+            "Enter the year in which the policy will be reviewed next"
+        )
+        self.fields["next_review"].widget.attrs.update(
+            {
+                "class": "govuk-input  govuk-input--width-4",
+                "aria-describedby": "next-review-hint",
+            }
+        )
+
+        if self.instance.next_review:
+            self.initial["next_review"] = self.instance.next_review.year
+
+        # Make the condition field optional so we can correctly report
+        # validations errors using GDS markup and suppress errors being
+        # reported in popovers.
+
+        self.fields["condition"].required = False
+        self.fields["condition"].label = _("More about %s" % self.instance.name)
+        self.fields["condition"].help_text = _("Use markdown to format the text")
+        self.fields["condition"].widget = forms.Textarea()
+        self.fields["condition"].widget.attrs.update(
+            {"class": "govuk-textarea", "aria-describedby": "condition-hint"}
+        )
+
+    def clean_next_review(self):
+        value = self.cleaned_data["next_review"]
+
+        if not value:
+            return value
+
+        if re.match(r"\d{4}", value) is None:
+            raise ValidationError(_("Please enter a valid year"))
+
+        value = int(value)
+
+        if value < datetime.date.today().year:
+            raise ValidationError(_("The next review cannot be in the past"))
+
+        return datetime.date(year=value, month=1, day=1)
+
+    def clean(self):
+        data = self.cleaned_data
+
+        if not data["condition"]:
+            return self.add_error(
+                "condition", _("The description of the condition cannot be empty")
+            )
+
+        return data

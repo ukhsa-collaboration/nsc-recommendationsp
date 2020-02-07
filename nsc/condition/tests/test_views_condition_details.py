@@ -15,7 +15,7 @@ def test_detail_view(django_app):
     Test that we can view an instance via the detail view.
     """
     instance = baker.make(Policy)
-    response = django_app.get(reverse("policy:edit", kwargs={"slug": instance.slug}))
+    response = django_app.get(instance.get_absolute_url())
     assert response.context["policy"] == instance
 
 
@@ -25,9 +25,9 @@ def test_back_link(django_app):
     are not lost.
     """
     instance = baker.make(Policy, name="condition", ages="{child}")
-    form = django_app.get(reverse("policy:list")).form
-    form["name"] = "condition"
+    form = django_app.get(reverse("condition:list")).form
+    form["affects"] = "child"
     results = form.submit()
-    detail = results.click(href=instance.get_admin_url())
+    detail = results.click(href=instance.get_absolute_url())
     referer = detail.click(linkid="back-link-id")
     assert results.request.url == referer.request.url

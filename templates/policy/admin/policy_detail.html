@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block heading %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">
+        {% block title %}
+          {{ policy.name }}
+        {% endblock %}
+      </h1>
+    </div>
+    <div class="govuk-grid-column-one-third">
+      <div class="start-review">
+        <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button">
+          {% trans 'Edit Policy' %}
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  {% include "policy/admin/recommendation.html" %}
+  {% include "policy/admin/last_review.html" %}
+  {% include "policy/admin/next_review.html" %}
+  {% include "policy/admin/documents.html" %}
+  {% include "policy/admin/condition.html" %}
+  {% include "policy/admin/review_history.html" %}
+  {% include "policy/admin/organisations.html" %}
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'admin' as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}{% trans 'Policy Pages' %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="filter-box">
+        <form>
+          {% include "widgets/text_input.html" with field=form.name %}
+
+          <button type="submit" class="govuk-button search-b-button">
+            {% trans 'Search' %}
+          </button>
+
+          <a href="{% url 'condition:list' %}" class="govuk-link govuk-link--no-visited-state">
+             {% trans 'Clear search' %}
+          </a>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header">
+            {% trans 'Condition' %}
+          </th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for object in object_list %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a href="{{ object.get_admin_url }}">
+                {{ object.name }}
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <p>{%  trans 'No matching conditions found.' %}</p>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+      {% if is_paginated %}
+        {% include 'widgets/pagination.html' %}
+      {% endif %}
+
+    </div>
+  </div>
+
+{% endblock %}
