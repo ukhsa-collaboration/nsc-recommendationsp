@@ -12,9 +12,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
@@ -76,7 +74,7 @@ class Migration(migrations.Migration):
                 ("policy", models.TextField(verbose_name="policy")),
                 ("policy_html", models.TextField(verbose_name="HTML policy")),
             ],
-            options={"verbose_name_plural": "policies", "ordering": ("name", "pk"),},
+            options={"verbose_name_plural": "policies", "ordering": ("name", "pk")},
         ),
         migrations.CreateModel(
             name="HistoricalPolicy",

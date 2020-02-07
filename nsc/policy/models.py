@@ -32,6 +32,8 @@ class Policy(TimeStampedModel):
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
     is_screened = models.BooleanField(verbose_name=_("is_screened"), default=False)
+    last_review = models.DateField(verbose_name=_("last review"), null=True, blank=True)
+    next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
 
     ages = ChoiceArrayField(
         models.CharField(
@@ -56,17 +58,37 @@ class Policy(TimeStampedModel):
         return self.name
 
     def get_absolute_url(self):
+        # ToDo replace this with get_public_url
+        return reverse("condition:detail", kwargs={"slug": self.slug})
+
+    def get_admin_url(self):
         return reverse("policy:detail", kwargs={"slug": self.slug})
+
+    def get_edit_url(self):
+        return reverse("policy:edit", kwargs={"slug": self.slug})
 
     def recommendation_display(self):
         return _("Recommended") if self.is_screened else _("Not recommended")
 
+    def last_review_display(self):
+        return (
+            self.last_review.strftime("%b %Y")
+            if self.last_review
+            else _("This policy has not been reviewed")
+        )
+
+    def next_review_display(self):
+        return (
+            self.next_review.strftime("%Y")
+            if self.next_review
+            else _("No review has been scheduled")
+        )
+
     def ages_display(self):
         return ", ".join(str(Policy.AGE_GROUPS[age]) for age in self.ages)
 
-    def save(self, **kwargs):
+    def clean(self):
         if not self.slug:
             self.slug = slugify(self.name)
         self.condition_html = convert(self.condition)
         self.policy_html = convert(self.policy)
-        super().save(**kwargs)

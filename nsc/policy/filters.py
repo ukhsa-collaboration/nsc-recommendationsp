@@ -1,6 +1,8 @@
 from django.contrib.admin.filters import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 
+from django_filters import CharFilter, FilterSet
+
 from .models import Policy
 
 
@@ -43,3 +45,8 @@ class AgeGroupFilter(SimpleListFilter):
         if lookup_value:
             queryset = queryset.filter(ages__contains=[lookup_value])
         return queryset
+
+
+class SearchFilter(FilterSet):
+
+    name = CharFilter(field_name="name", lookup_expr="icontains")

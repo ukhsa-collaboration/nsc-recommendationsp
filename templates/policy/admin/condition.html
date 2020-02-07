@@ -1,0 +1,7 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'More about' %} {{ policy.name }}
+</h2>
+
+{{ policy.condition_html|safe }}
