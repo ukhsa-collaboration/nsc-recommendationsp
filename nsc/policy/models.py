@@ -12,7 +12,7 @@ from nsc.utils.markdown import convert
 from .fields import ChoiceArrayField
 
 
-class PolicyManager(models.Manager):
+class PolicyQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
 
@@ -48,7 +48,7 @@ class Policy(TimeStampedModel):
     policy_html = models.TextField(verbose_name=_("HTML policy"))
 
     history = HistoricalRecords()
-    objects = PolicyManager()
+    objects = PolicyQuerySet.as_manager()
 
     class Meta:
         ordering = ("name", "pk")
@@ -57,8 +57,7 @@ class Policy(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        # ToDo replace this with get_public_url
+    def get_public_url(self):
         return reverse("condition:detail", kwargs={"slug": self.slug})
 
     def get_admin_url(self):
