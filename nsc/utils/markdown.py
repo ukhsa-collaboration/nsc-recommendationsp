@@ -1,6 +1,5 @@
-from bs4 import BeautifulSoup
-
 import markdown
+from bs4 import BeautifulSoup
 
 
 _conversions = {
