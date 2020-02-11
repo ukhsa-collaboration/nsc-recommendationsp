@@ -1,0 +1,17 @@
+// Alerts are not included in the current GDS but there are several proposals
+// in the community backlog, https://github.com/alphagov/govuk-design-system-backlog/issues/2
+
+ul.nsc-alerts {
+
+  font-family: 'Inter UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  list-style: none;
+  margin: 0 0 govuk-spacing(1) 0;
+  padding: govuk-spacing(0);
+
+  li {
+    background-color: #2cc36b;
+    padding: govuk-spacing(2);
+  }
+}
