@@ -5,14 +5,46 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from model_utils import Choices
+
 from .models import Policy
 
 
 class SearchForm(forms.Form):
 
+    REVIEW_STATUS_CHOICES = Choices(
+        ("due_for_review", _("Due to be reviewed")),
+        ("in_review", _("In review")),
+        ("in_consultation", _("In consultation")),
+        ("post_consultation", _("Post consultation")),
+    )
+
+    YES_NO_CHOICES = Choices(("yes", _("Yes")), ("no", _("No")))
+
     name = forms.CharField(label=_("Search by condition name"), required=False)
 
-    name.widget.attrs.update({"class": "govuk-input"})
+    status = forms.TypedChoiceField(
+        label=_("Status of the recommendation"),
+        choices=REVIEW_STATUS_CHOICES,
+        widget=forms.RadioSelect,
+        required=False,
+    )
+
+    screen = forms.TypedChoiceField(
+        label=_("Current recommendation"),
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect,
+        required=False,
+    )
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.fields["name"].widget.attrs.update(
+            {"class": "govuk-input", "style": "width: 80%"}
+        )
+        self.fields["status"].widget.attrs.update({"class": "govuk-radios__input"})
+        self.fields["screen"].widget.attrs.update({"class": "govuk-radios__input"})
 
 
 class PolicyForm(forms.ModelForm):
@@ -57,7 +89,7 @@ class PolicyForm(forms.ModelForm):
         value = self.cleaned_data["next_review"]
 
         if not value:
-            return value
+            return None
 
         if re.match(r"\d{4}", value) is None:
             raise ValidationError(_("Please enter a valid year"))
