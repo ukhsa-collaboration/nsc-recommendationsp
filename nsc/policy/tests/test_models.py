@@ -54,7 +54,7 @@ def test_condition_markdown_conversion():
     """
     instance = baker.make(Policy, condition="# Heading", condition_html="")
     instance.clean()
-    assert instance.condition_html == "<h1>Heading</h1>"
+    assert instance.condition_html == '<h1 class="govuk-heading-xl">Heading</h1>'
 
 
 def test_policy_markdown_conversion():
@@ -63,4 +63,4 @@ def test_policy_markdown_conversion():
     """
     instance = baker.make(Policy, policy="# Heading", policy_html="")
     instance.clean()
-    assert instance.policy_html == "<h1>Heading</h1>"
+    assert instance.policy_html == '<h1 class="govuk-heading-xl">Heading</h1>'
