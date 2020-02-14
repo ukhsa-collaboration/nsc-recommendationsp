@@ -145,7 +145,7 @@ class Common(Configuration):
     MEDIA_ROOT = join(BASE_DIR, "media")
 
     # Additional locations of static files
-    STATICFILES_DIRS = [join(BASE_DIR, "static"), join(BASE_DIR, "node_modules")]
+    STATICFILES_DIRS = [join(BASE_DIR, "frontend", "dist")]
 
     # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     WHITENOISE_ROOT = join(BASE_DIR, "public")

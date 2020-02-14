@@ -11,7 +11,8 @@ const embedLimit = 10 * 1024;
 
 const devServerPort = 8080;
 
-const pathDist = 'static/dist'
+const pathRoot = 'frontend';
+const pathDist = `${pathRoot}/dist`;
 const pathDistGov = path.resolve(__dirname, pathDist, 'govuk');
 
 
@@ -64,7 +65,7 @@ const moduleRuleScss = {
 */
 const config = {
   entry: {
-    'index': ['./static/src/index.js', './static/src/index.scss'],
+    'index': [`./${pathRoot}/src/index.js`, `./${pathRoot}/src/index.scss`],
   },
   output: {
     path: path.resolve(__dirname, pathDist),
@@ -104,7 +105,7 @@ const config = {
     }),
     new CopyPlugin(
       [
-        // Copy GOV.UK assets into the static path without modifying
+        // Copy GOV.UK assets into the dist path without modifying
         {
           context: path.resolve(__dirname, 'node_modules/govuk-frontend/govuk/assets'),
           from: '**/*',

@@ -17,7 +17,7 @@
   <link rel="apple-touch-icon" href="{% static "dist/govuk/images/govuk-apple-touch-icon.png" %}">
 
   {% if not WEBPACK_DEV_URL %}
-  <link rel="stylesheet" href="{% static "dist/index.css" %}">
+  <link rel="stylesheet" href="{% static "index.css" %}">
   {% endif %}
 
   <meta property="og:image" content="{% static "dist/govuk/images/govuk-opengraph-image.png" %}">
@@ -89,9 +89,9 @@
   </footer>
 
   {% if WEBPACK_DEV_URL %}
-  <script src="{{ WEBPACK_DEV_URL }}static/dist/index.js"></script>
+  <script src="{{ WEBPACK_DEV_URL }}frontend/dist/index.js"></script>
   {% else %}
-  <script src="{% static "dist/index.js" %}"></script>
+  <script src="{% static "index.js" %}"></script>
   {% endif %}
 
   {% block extra_script %}{% endblock %}

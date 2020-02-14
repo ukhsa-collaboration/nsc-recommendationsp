@@ -22,7 +22,7 @@ htmlcov/
 
 # Frontend build
 node_modules
-static/dist/*
+frontend/dist/*
 
 # Sphinx docs
 docs/_build/
@@ -30,5 +30,5 @@ docs/_build/
 # Uploaded files
 media/
 
-# Whitenoise's collected static
+# Non-deployment path for collectstatic
 static_root/
