@@ -29,13 +29,13 @@ where ``django`` is the container name. Commands in the documentation will omit 
 prefix.
 
 
-Building static only
---------------------
+Building frontend only
+----------------------
 
-To just use docker to build the static resources::
+To just use docker to build the frontend resources::
 
-    docker-compose -f dev-docker-compose.yml build static
-    docker-compose -f dev-docker-compose.yml run -e STATIC_MODE=build static
+    docker-compose -f dev-docker-compose.yml build frontend
+    docker-compose -f dev-docker-compose.yml run -e FRONTEND_MODE=build frontend
 
 
 Running locally without docker
@@ -63,8 +63,8 @@ Create a superuser and load the basic fixtures::
     ./manage.py createsuperuser
 
 
-Static
-------
+Frontend
+--------
 
 Install the project dependencies::
 
@@ -74,7 +74,7 @@ Install the project dependencies::
     yvm use
     yarn install
 
-Static resources can be built in one of three ways:
+Frontend resources can be built in one of three ways:
 
 * Serve from a local webpack development server (recommended when working on
   the frontend)::
@@ -90,11 +90,14 @@ Static resources can be built in one of three ways:
 
     npm run build
 
-When the static resources are being served from a webpack development server (using
+When the frontend resources are being served from a webpack development server (using
 ``watch``), the Django development server will automatically detect and switch to use
 it, enabling hot module replacement. If you serve it from a different host or port you
 can tell Django by setting the environment variables ``WEBPACK_DEV_HOST`` and
 ``WEBPACK_DEV_PORT``, eg ``WEBPACK_DEV_HOST=192.168.1.72 ./manage.py runserver 0:8000``.
+
+For deployment the resources are built into ``frontend/dist/``, which is then included
+in the list of dirs checked by ``collectstatic``.
 
 
 Initialising the database
