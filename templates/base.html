@@ -56,6 +56,15 @@
 
   <div class="govuk-width-container ">
     <main class="govuk-main-wrapper " id="main-content" role="main">
+
+      {% block messages %}
+        <ul class="nsc-alerts">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endblock %}
+
       {% block back %}{% endblock %}
 
       {% block heading %}

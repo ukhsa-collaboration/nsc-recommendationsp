@@ -2,11 +2,23 @@
 {% load i18n %}
 
 {% block back %}
-  {% include 'widgets/back_link.html' %}
+  {% if not preview %}
+    {% trans "Back to policy" as back_title %}
+    {% include 'widgets/back_link.html' with back_url=object.get_admin_url %}
+  {% endif %}
 {% endblock %}
 
 {% block title %}
-  {% block page_title %}{{ form.instance.name }}{% endblock %}
+  {{ form.instance.name }}
+{% endblock %}
+
+{% block heading %}
+  {% if preview %}
+    <span class="govuk-caption-l">{% trans 'Policy preview' %}</span>
+  {%  endif %}
+  <h1 class="govuk-heading-l">
+    {% block page_title %}{{ form.instance.name }}{% endblock %}
+  </h1>
 {% endblock %}
 
 {% block content %}
@@ -22,10 +34,13 @@
 
     {% with policy=form.instance %}
       {% if preview %}
-        {% include 'policy/public/summary.html' %}
-        {% include "policy/public/condition.html" %}
-        {% include "policy/public/documents.html" %}
-        {% include 'policy/public/organisations.html' %}
+        {% include "policy/admin/recommendation.html" %}
+        {% include "policy/admin/last_review.html" %}
+        {% include "policy/admin/next_review.html" %}
+        {% include "policy/admin/documents.html" %}
+        {% include "policy/admin/condition.html" %}
+        {% include "policy/admin/review_history.html" %}
+        {% include "policy/admin/organisations.html" %}
         {{ form.next_review.as_hidden }}
         {{ form.condition.as_hidden }}
       {% else %}
@@ -42,6 +57,9 @@
     {% if preview %}
       <button type="submit" class="govuk-button" name="publish" value="publish">
         {% trans 'Publish' %}
+      </button>
+      <button type="submit" class="govuk-button govuk-button--secondary" name="edit" value="edit">
+        {% trans 'Back to edit policy' %}
       </button>
     {% else %}
       <button type="submit" class="govuk-button" name="preview" value="preview">
