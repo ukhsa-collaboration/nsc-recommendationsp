@@ -2,7 +2,7 @@
   "name": "nsc",
   "version": "0.0.0",
   "description": "",
-  "main": "static/src/index.js",
+  "main": "frontend/src/index.js",
   "scripts": {
     "watch": "webpack-dev-server --host 0 --mode development",
     "dev": "webpack --mode development",

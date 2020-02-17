@@ -145,7 +145,7 @@ class Common(Configuration):
     MEDIA_ROOT = join(BASE_DIR, "media")
 
     # Additional locations of static files
-    STATICFILES_DIRS = [join(BASE_DIR, "static"), join(BASE_DIR, "node_modules")]
+    STATICFILES_DIRS = [join(BASE_DIR, "frontend", "dist")]
 
     # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     WHITENOISE_ROOT = join(BASE_DIR, "public")
@@ -216,7 +216,7 @@ class Webpack:
     WEBPACK_DEV_HOST = getenv("WEBPACK_DEV_HOST", "{host}")
     WEBPACK_DEV_PORT = int(getenv("WEBPACK_DEV_PORT", "8080"))
     WEBPACK_DEV_URL = getenv(
-        "WEBPACK_DEV_URL", f"http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/"
+        "WEBPACK_DEV_URL", f"http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/static/"
     )
 
     @property

@@ -24,12 +24,12 @@ services:
     ports:
       - "6379:6379"
 
-  static:
+  frontend:
     build:
       context: ./
-      dockerfile: "./containers/static/Dockerfile"
+      dockerfile: "./containers/frontend/Dockerfile"
     environment:
-    - STATIC_MODE=watch
+    - FRONTEND_MODE=watch
     ports:
       - "8080:8080"
     volumes:
