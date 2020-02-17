@@ -77,6 +77,7 @@ const config = {
   devtool: 'source-map',
   devServer: {
     contentBase: path.resolve(__dirname, pathDist),
+    contentBasePublicPath: '/static/',
     hot: true,
     disableHostCheck: true,
     port: devServerPort,
