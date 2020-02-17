@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block back %}
+  {% url "policy:list" as back_url %}
+  {% trans "Back to all conditions" as back_title %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
@@ -15,11 +17,9 @@
       </h1>
     </div>
     <div class="govuk-grid-column-one-third">
-      <div class="start-review">
-        <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button">
-          {% trans 'Edit Policy' %}
-        </a>
-      </div>
+      <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button" style="float:right">
+        {% trans 'Edit information' %}
+      </a>
     </div>
   </div>
 {% endblock %}

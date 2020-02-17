@@ -5,8 +5,8 @@ Scraper extracting the list of NSC policies from the legacy web site.
 
 import json
 import re
-import requests
 
+import requests
 from bs4 import BeautifulSoup
 
 from nsc.policy.models import Policy
@@ -27,6 +27,8 @@ def run():
         obj.is_screened = entry["is_screened"]
         obj.ages = entry["ages"]
         obj.condition = get_condition(page)
+
+        obj.clean()
 
         obj.save()
 
@@ -54,13 +56,10 @@ def get_condition(node):
         link = node.find("a")
         if link is None:
             text = node.text.strip()
-            text += "\n{: class=govuk-body }"
             content.append(text)
         else:
             link_url = link["href"]
-            content.append(
-                '\n[%s](%s){: class="govuk-link"}' % ("Read more on NHS UK", link_url)
-            )
+            content.append("\n[%s](%s)" % ("Read more on NHS UK", link_url))
         node = node.find_next_sibling()
 
     return "\n".join(content)

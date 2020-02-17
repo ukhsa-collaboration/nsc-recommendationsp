@@ -47,7 +47,7 @@
         {% for object in object_list %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><a
-                href="{{ object.get_absolute_url }}">{{ object.name }}</a></td>
+                href="{{ object.get_public_url }}">{{ object.name }}</a></td>
             <td class="govuk-table__cell">{{ object.ages_display }}</td>
             <td class="govuk-table__cell">{{ object.recommendation_display }}</td>
           </tr>
