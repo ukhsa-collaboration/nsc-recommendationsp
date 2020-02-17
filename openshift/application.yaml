@@ -1,0 +1,541 @@
+# Openshift template
+#
+# Builds webpack resources in a disposable nodejs container, which are then added to the
+# final Django container.
+kind: Template
+apiVersion: v1
+metadata:
+  name: django-webpack
+  annotations:
+    openshift.io/display-name: Django webpack
+    description: Django site using PostgreSQL with frontend resources built by webpack
+    openshift.io/long-description: This template builds webpack resources in a
+      disposable nodejs container before they are moved into a python container for
+      deployment alongside a PostgreSQL database using persistent storage.
+    tags: django, webpack
+    iconClass: icon-django
+labels:
+  template: "django-webpack"
+  app: "django-webpack"
+message: |-
+  The following service(s) have been created in your project:
+  ${NAME}, ${DATABASE_SERVICE_NAME}, ${REDIS_SERVICE_NAME}.
+objects:
+#
+# ImageStreams
+#
+#   nodejs -> $NAME-webpack-build + python -> $NAME
+#
+# webpack-build: image based on nodejs which runs webpack
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-webpack-build"
+#
+# $NAME: image based on python with source from webpack-build
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    # Final container which will run the Django project
+    name: "${NAME}"
+#
+# BuildConfigs
+#
+# Build $NAME-webpack-build
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-webpack-build"
+    annotations:
+      description: Defines how to build the webpack builder
+  spec:
+    source:
+      type: Git
+      git:
+        uri: ${SOURCE_REPOSITORY_URL}
+        ref: ${SOURCE_REPOSITORY_REF}
+      contextDir: ${CONTEXT_DIR}
+      # TODO: Remove - only used for local development against temporary gitolite repo
+      sourceSecret:
+        name: "gitolite-auth"
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: nodejs:${NODE_VERSION}
+        incremental: true
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${NAME}-webpack-build:latest"
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+    #- type: GitHub
+    #    github:
+    #    secret: ${GITHUB_WEBHOOK_SECRET}
+#
+# Build django-webpack using webpack-build as a source
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+    annotations:
+      description: Defines how to build the Django application
+      template.alpha.openshift.io/wait-for-ready: "true"
+  spec:
+    source:
+      type: Git
+      git:
+        uri: "${SOURCE_REPOSITORY_URL}"
+        ref: "${SOURCE_REPOSITORY_REF}"
+      # TODO: Remove - only used for local development against temporary gitolite repo
+      sourceSecret:
+        name: "gitolite-auth"
+      contextDir: "${CONTEXT_DIR}"
+      images:
+        - from:
+            kind: ImageStreamTag
+            name: "${NAME}-webpack-build:latest"
+          paths:
+            - destinationDir: frontend/dist
+              sourcePath: /opt/app-root/src/frontend/dist
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: python:${PYTHON_VERSION}
+        env:
+        - name: PIP_INDEX_URL
+          value: "${PIP_INDEX_URL}"
+        incremental: true
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${NAME}:latest"
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+    - type: ImageChange
+      imageChange:
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}-webpack-build:latest"
+    # Before we push this to the registry, check everything works as it should
+    postCommit:
+      script: "pytest"
+#
+# PersistentVolumeClaim
+#
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: "${DATABASE_SERVICE_NAME}"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: "${VOLUME_CAPACITY}"
+#
+# DeploymentConfig
+#
+# Django application
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+    annotations:
+      description: Defines how to deploy the application server
+      template.alpha.openshift.io/wait-for-ready: "true"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - django-webpack
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}:latest"
+    replicas: 1
+    selector:
+      name: "${NAME}"
+    template:
+      metadata:
+        name: "${NAME}"
+        labels:
+          name: "${NAME}"
+      spec:
+        containers:
+        - name: django-webpack
+          image: " "
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 3
+            httpGet:
+              path: "/health"
+              port: 8080
+          livenessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 30
+            httpGet:
+              path: "/health"
+              port: 8080
+          env:
+          - name: DATABASE_SERVICE_NAME
+            value: "${DATABASE_SERVICE_NAME}"
+          - name: DATABASE_NAME
+            value: "${DATABASE_NAME}"
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: database-user
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: database-password
+          - name: APP_CONFIG
+            value: "${APP_CONFIG}"
+          - name: DJANGO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: django-secret-key
+          resources:
+            limits:
+              memory: "${MEMORY_LIMIT}"
+#
+# PostgreSQL
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${DATABASE_SERVICE_NAME}"
+    annotations:
+      description: Defines how to deploy the database
+      template.alpha.openshift.io/wait-for-ready: "true"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: postgresql:${POSTGRESQL_VERSION}
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${DATABASE_SERVICE_NAME}"
+    template:
+      metadata:
+        name: "${DATABASE_SERVICE_NAME}"
+        labels:
+          name: "${DATABASE_SERVICE_NAME}"
+      spec:
+        volumes:
+        - name: "${DATABASE_SERVICE_NAME}-data"
+          persistentVolumeClaim:
+            claimName: "${DATABASE_SERVICE_NAME}"
+        containers:
+        - name: postgresql
+          image: " "
+          ports:
+          - containerPort: 5432
+          env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: database-user
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: database-password
+          - name: POSTGRESQL_DATABASE
+            value: "${DATABASE_NAME}"
+          volumeMounts:
+          - name: "${DATABASE_SERVICE_NAME}-data"
+            mountPath: "/var/lib/pgsql/data"
+          readinessProbe:
+            timeoutSeconds: 1
+            initialDelaySeconds: 5
+            exec:
+              command:
+              - "/usr/libexec/check-container"
+          livenessProbe:
+            timeoutSeconds: 10
+            initialDelaySeconds: 120
+            exec:
+              command:
+              - "/usr/libexec/check-container"
+              - "--live"
+          resources:
+            limits:
+              memory: "${MEMORY_POSTGRESQL_LIMIT}"
+#
+# Redis
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${REDIS_SERVICE_NAME}"
+    annotations:
+      description: Defines how to deploy redis
+      template.alpha.openshift.io/wait-for-ready: "true"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: redis:${REDIS_VERSION}
+    replicas: 1
+    selector:
+      name: "${REDIS_SERVICE_NAME}"
+    template:
+      metadata:
+        labels:
+          name: "${REDIS_SERVICE_NAME}"
+      spec:
+        containers:
+        - image: redis
+          name: redis
+          ports:
+          - containerPort: 6379
+            protocol: TCP
+          resources:
+            limits:
+              memory: "${MEMORY_REDIS_LIMIT}"
+          readinessProbe:
+            exec:
+              command:
+              - "/bin/sh"
+              - "-i"
+              - "-c"
+              - test "$(redis-cli -h 127.0.0.1 ping)" == "PONG"
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          livenessProbe:
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 1
+#
+# Services
+#
+# Django application
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "${DATABASE_SERVICE_NAME}",
+        "kind": "Service"}]'
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      app: "${NAME}"
+#
+# PostgreSQL
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${DATABASE_SERVICE_NAME}"
+    annotations:
+      description: Exposes the database server
+  spec:
+    ports:
+    - name: postgresql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+    selector:
+      name: "${DATABASE_SERVICE_NAME}"
+#
+# Redis
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${REDIS_SERVICE_NAME}"
+  spec:
+    ports:
+    - name: 6379-redis
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
+    selector:
+      deploymentconfig: "${REDIS_SERVICE_NAME}"
+
+#
+# Route
+#
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+  spec:
+    host: "${APPLICATION_DOMAIN}"
+    to:
+      kind: Service
+      name: "${NAME}"
+#
+# Secrets
+#
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+  stringData:
+    database-user: "${DATABASE_USER}"
+    database-password: "${DATABASE_PASSWORD}"
+    django-secret-key: "${DJANGO_SECRET_KEY}"
+#
+# Parameters
+#
+parameters:
+- name: NAME
+  description: The name assigned to all objects defined in this template
+  displayName: Name
+  required: true
+  value: django-webpack
+- name: NAMESPACE
+  displayName: Namespace
+  required: true
+  description: The OpenShift Namespace where the ImageStream resides.
+  value: openshift
+#
+# Versions
+- name: PYTHON_VERSION
+  displayName: Version of Python Image
+  description: Version of Python image to be used (3.6 or latest).
+  value: "3.6"
+  required: true
+- name: POSTGRESQL_VERSION
+  displayName: Version of PostgreSQL Image
+  description: Version of PostgreSQL image to be used (10 or latest).
+  value: "10"
+  required: true
+- name: REDIS_VERSION
+  displayName: Version of Redis Image
+  description: Version of Redis image to be used
+  value: "5"
+  required: true
+- name: NODE_VERSION
+  displayName: Version of Node Image
+  description: Version of Node image to be used (12 or latest).
+  value: "10"
+  required: true
+#
+# Resource management
+- name: MEMORY_LIMIT
+  displayName: Memory Limit
+  required: true
+  description: Maximum amount of memory the Django container can use.
+  value: 512Mi
+- name: MEMORY_POSTGRESQL_LIMIT
+  displayName: Memory Limit (PostgreSQL)
+  required: true
+  description: Maximum amount of memory the PostgreSQL container can use.
+  value: 512Mi
+- name: MEMORY_REDIS_LIMIT
+  displayName: Memory Limit (Redis)
+  required: true
+  description: Maximum amount of memory the Redis container can use.
+  value: 512Mi
+- name: VOLUME_CAPACITY
+  displayName: Volume Capacity
+  description: Volume space available for data, e.g. 512Mi, 2Gi
+  value: 1Gi
+  required: true
+#
+# Git and repository
+- name: SOURCE_REPOSITORY_URL
+  displayName: Git Repository URL
+  required: true
+  description: The URL of the repository with your application source code.
+  #value: "https://github.com/wildfish/phe-nsc"
+- name: SOURCE_REPOSITORY_REF
+  displayName: Git Reference
+  description: Set this to a branch name, tag or other ref of your repository if you
+    are not using the default branch.
+- name: CONTEXT_DIR
+  displayName: Context Directory
+  description: Set this to the relative path to your project if it is not in the root
+    of your repository.
+- name: APPLICATION_DOMAIN
+  displayName: Application Hostname
+  description: The exposed hostname that will route to the Django service, if left
+    blank a value will be defaulted.
+  value: ''
+- name: GITHUB_WEBHOOK_SECRET
+  displayName: GitHub Webhook Secret
+  description: Github trigger secret.  A difficult to guess string encoded as part
+    of the webhook URL.  Not encrypted.
+  generate: expression
+  from: "[a-zA-Z0-9]{40}"
+#
+# Postgresql
+- name: DATABASE_SERVICE_NAME
+  displayName: Database Service Name
+  required: true
+  value: postgresql
+- name: DATABASE_NAME
+  displayName: Database Name
+  required: true
+  value: default
+- name: DATABASE_USER
+  displayName: Database Username
+  required: true
+  value: django
+- name: DATABASE_PASSWORD
+  displayName: Database User Password
+  generate: expression
+  from: "[a-zA-Z0-9]{16}"
+#
+# Redis
+- name: REDIS_SERVICE_NAME
+  displayName: Redis Service Name
+  required: true
+  value: redis
+#
+# Django app
+- name: APP_CONFIG
+  displayName: Application Configuration File Path
+  description: Relative path to Gunicorn configuration file (optional).
+- name: DJANGO_SECRET_KEY
+  displayName: Django Secret Key
+  description: Set this to a long random string.
+  generate: expression
+  from: "[\\w]{50}"
+- name: PIP_INDEX_URL
+  displayName: Custom PyPi Index URL
+  description: The custom PyPi index URL
+  value: ''
