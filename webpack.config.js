@@ -78,6 +78,7 @@ const config = {
   devServer: {
     contentBase: path.resolve(__dirname, pathDist),
     contentBasePublicPath: '/static/',
+    publicPath: '/static/',
     hot: true,
     disableHostCheck: true,
     port: devServerPort,

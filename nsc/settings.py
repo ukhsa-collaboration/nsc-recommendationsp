@@ -216,7 +216,7 @@ class Webpack:
     WEBPACK_DEV_HOST = getenv("WEBPACK_DEV_HOST", "{host}")
     WEBPACK_DEV_PORT = int(getenv("WEBPACK_DEV_PORT", "8080"))
     WEBPACK_DEV_URL = getenv(
-        "WEBPACK_DEV_URL", f"http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/"
+        "WEBPACK_DEV_URL", f"http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/static/"
     )
 
     @property
