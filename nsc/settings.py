@@ -60,7 +60,6 @@ class Common(Configuration):
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "raven.contrib.django.raven_compat",
-        "debug_toolbar",
         "django_extensions",
         "clear_cache",
         "simple_history",
@@ -78,7 +77,6 @@ class Common(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
     ]
 
@@ -248,6 +246,22 @@ class Dev(Webpack, Common):
     INTERNAL_IPS = ["127.0.0.1"]
     ALLOWED_HOSTS = ["*"]
 
+    @property
+    def INSTALLED_APPS(self):
+        INSTALLED_APPS = super().INSTALLED_APPS
+        INSTALLED_APPS.extend(
+            ["debug_toolbar",]
+        )
+        return INSTALLED_APPS
+
+    @property
+    def MIDDLEWARE(self):
+        MIDDLEWARE = super().MIDDLEWARE
+        MIDDLEWARE.extend(
+            ["debug_toolbar.middleware.DebugToolbarMiddleware",]
+        )
+        return MIDDLEWARE
+
 
 class Test(Dev):
     """
@@ -257,19 +271,27 @@ class Test(Dev):
     pass
 
 
+class Misconfigured(Common):
+    """
+    Default configuration to enforce explicit configuration selection
+    """
+
+    @classmethod
+    def pre_setup(cls):
+        super().pre_setup()
+        raise ValueError("Deployment is missing a DJANGO_CONFIGURATION env var")
+
+
 class Deployed(RedisCache, Common):
     """
     Settings which are for a non local deployment, served behind nginx.
     """
 
-    # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
-    # ever turned on when run with a WSGI server
-    DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
     PUBLIC_ROOT = join(BASE_DIR, "../public/")
     STATIC_ROOT = join(PUBLIC_ROOT, "static")
     MEDIA_ROOT = join(PUBLIC_ROOT, "media")
     COMPRESS_OUTPUT_DIR = ""
+    ALLOWED_HOSTS = ["*"]
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.sendgrid.net"
