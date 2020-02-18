@@ -5,7 +5,7 @@
 </h2>
 
 <ul class="govuk-list">
-  {% for document in policy.documents %}
+  {% for document in policy.documents.all %}
     <li>
       <a class="govuk-link" href="{{ document.url }}">{{ document.name }}</a>
     </li>

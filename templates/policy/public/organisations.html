@@ -13,7 +13,7 @@
 </h3>
 
 <ul class="govuk-list">
-  {% for organisation in policy.organisations %}
+  {% for organisation in policy.organisations.all %}
     <li>
       <a class="govuk-link" href="{{ organisation.url }}">{{ organisation.name }}</a>
     </li>
