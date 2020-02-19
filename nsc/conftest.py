@@ -41,23 +41,3 @@ def django_app_form(db, django_app):
         return form.submit()
 
     return get_and_post
-
-
-@pytest.fixture
-def set_session_variable(django_app):
-    """
-    Set a variable in the client session.
-
-    Django-webtest does not support sessions out of the box. This fixes that.
-    See, https://github.com/django-webtest/django-webtest/issues/68
-
-    """
-
-    def _set_var(key, value):
-        django_app.set_cookie("sessionid", "initial")
-        session = django_app.session
-        session[key] = value
-        session.save()
-        django_app.set_cookie("sessionid", session.session_key)
-
-    return _set_var

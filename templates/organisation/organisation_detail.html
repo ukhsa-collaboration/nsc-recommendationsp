@@ -29,7 +29,7 @@
       {% if not object.contacts.all %}{% trans 'There are no contacts for this organisation' %}{% endif %}
     </dd>
     <dd class="govuk-summary-list__actions">
-      <a class="govuk-link" href="{% url "contact:add" %}">
+      <a class="govuk-link" href="{% url "contact:add" org_pk=object.pk %}">
         {% trans 'Add new' %}<span class="govuk-visually-hidden">{% trans "Contact" %}</span>
       </a>
     </dd>

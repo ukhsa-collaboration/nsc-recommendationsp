@@ -9,9 +9,8 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(organisation, set_session_variable, django_app):
-    set_session_variable("organisation", organisation.pk)
-    return django_app.get(reverse("contact:add"))
+def response(organisation, django_app):
+    return django_app.get(reverse("contact:add", kwargs={"org_pk": organisation.pk}))
 
 
 @pytest.fixture

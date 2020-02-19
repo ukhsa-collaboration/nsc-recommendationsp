@@ -24,14 +24,12 @@ class ContactAdd(generic.CreateView):
         initial = super().get_initial()
 
         if self.request.method == "GET":
-            initial["organisation"] = Organisation.objects.get(
-                pk=self.request.session["organisation"]
-            )
+            initial["organisation"] = Organisation.objects.get(pk=self.kwargs["org_pk"])
 
         return initial
 
     def get_context_data(self, **kwargs):
-        organisation = Organisation.objects.get(pk=self.request.session["organisation"])
+        organisation = Organisation.objects.get(pk=self.kwargs["org_pk"])
         return super().get_context_data(organisation=organisation, **kwargs)
 
 
