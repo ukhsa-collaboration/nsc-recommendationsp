@@ -34,10 +34,9 @@ class PathValue:
             value_cls (configurations.value.Value): Value class to instantiate
             **kwargs (dict): Arguments for the Value class
 
-        Defaults:
-
-            environ=False: Don't check the environ by default. Set to True to use an
-                environ variable over the value from disk
+        By default the Value class will be instantiated with ``environ=False``, so that
+        the environ is not checked. Set to ``True`` to prefer an environ variable (if
+        set) over the value from disk.
         """
         self.path = Path(path)
         self.value_cls = value_cls
