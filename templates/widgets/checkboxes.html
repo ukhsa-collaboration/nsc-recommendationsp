@@ -1,6 +1,6 @@
 {% load i18n %}
 
-{% if field and not field.is_hidden %}
+{% if field %}
   <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
     <fieldset class="govuk-fieldset" role="group" aria-describedby="{{ field.name }}-hint {{ field.name }}-error">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--{% if label_size %}{{ label_size }}{% else %}s{% endif %}">
@@ -18,7 +18,16 @@
           {{ field.help_text }}
         </span>
       {% endif %}
-      {{ field }}
+      <div class="govuk-checkboxes">
+        {% for checkbox in field %}
+          <div class="govuk-checkboxes__item">
+            {{ checkbox.tag }}
+            <label class="govuk-label govuk-checkboxes__label" for="{{ checkbox.id_for_label }}">
+              {{ checkbox.choice_label }}
+            </label>
+          </div>
+        {% endfor %}
+      </div>
     </fieldset>
   </div>
 {% endif %}

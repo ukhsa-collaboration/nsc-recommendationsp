@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'admin' as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block heading %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">
+        {% block title %}
+          {% trans 'Stakeholders' %}
+        {% endblock %}
+      </h1>
+    </div>
+    <div class="govuk-grid-column-one-third">
+      <a id="edit-link-id" href="{% url 'organisation:add' %}" role="button" class="govuk-button" style="float:right">
+        {% trans 'Add new stakeholder' %}
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      <div class="filter-box">
+        <form>
+
+          <h2 class="govuk-heading-m">
+            {% trans 'Filter stakeholders by:' %}
+          </h2>
+
+          {% include 'widgets/text_input.html' with field=form.name %}
+          {% include 'widgets/text_input.html' with field=form.condition %}
+
+          <button type="submit" class="govuk-button search-b-button">
+            {% trans 'Search' %}
+          </button>
+
+          <a href="{% url 'condition:list' %}"
+             class="govuk-link govuk-link--no-visited-state">{% trans 'Clear search' %}</a>
+
+        </form>
+      </div>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header">{% trans 'Name' %}</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for object in object_list %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a href="{{ object.get_detail_url }}">{{ object.name }}</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell" colspan="3"><p>{%  trans 'No matching organisations found.' %}</p></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% if is_paginated %}
+        {% include 'widgets/pagination.html' %}
+      {% endif %}
+    </div>
+
+  </div>
+
+{% endblock %}
