@@ -19,7 +19,7 @@ class PathValue:
         Given the following::
 
             class Config(PathConfiguration):
-                SECRET = Path("/run/secrets", values.Value)
+                SECRET = PathValue("/run/secrets", values.Value)
 
         the value will be loaded from ``/run/secrets/DJANGO_SECRET``
     """
