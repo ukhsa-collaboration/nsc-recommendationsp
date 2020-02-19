@@ -28,11 +28,11 @@
     {% include "widgets/radio_buttons.html" with field=form.is_public size='m' %}
 
     {% for formset in form.formsets %}
-      <div id="formset_wrapper" class="fastview formset__root" data-fastview-formset="{{ formset.prefix }}">
+      <div id="formset_wrapper" class="formset__root" data-nsc-formset="{{ formset.prefix }}">
 
         {{ formset.management_form }}
 
-        <fieldset class="govuk-fieldset" id="emptyform_wrapper" style="display: none" data-fastview-formset-template="{{ formset.empty_form.prefix }}">
+        <fieldset class="govuk-fieldset" id="emptyform_wrapper" style="display: none" data-nsc-formset-template="{{ formset.empty_form.prefix }}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
               <h1 class="govuk-fieldset__heading">
                 {% trans 'Contact' %}
@@ -63,7 +63,7 @@
           </fieldset>
 
         {% for formset_form in formset %}
-          <fieldset class="govuk-fieldset" data-fastview-formset-form="{{ formset_form.prefix }}">
+          <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
               <h1 class="govuk-fieldset__heading">
                 {% trans 'Contact' %}
@@ -95,7 +95,7 @@
         {% endfor %}
 
         <div class="govuk-body">
-          <button id="add-contact" type="button" class="govuk-button govuk-button--secondary" data-fastview-formset-add="">
+          <button id="add-contact" type="button" class="govuk-button govuk-button--secondary" data-nsc-formset-add="">
             {% trans 'Add Contact' %}
           </button>
         </div>

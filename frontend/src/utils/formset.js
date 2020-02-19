@@ -2,10 +2,10 @@
  * Formset management
  */
 
-const defaultDataFormset = 'fastview-formset';
-const defaultDataForm = 'fastview-formset-form';
-const defaultDataTemplate = 'fastview-formset-template';
-const defaultDataAddButton = 'fastview-formset-add';
+const defaultDataFormset = 'nsc-formset';
+const defaultDataForm = 'nsc-formset-form';
+const defaultDataTemplate = 'nsc-formset-template';
+const defaultDataAddButton = 'nsc-formset-add';
 
 class Form {
   /**
