@@ -50,9 +50,8 @@ class PathValue:
         # create a fake instance. Set environ=True to ensure it does not resolve
         # immediately.
         value_instance = value_cls(environ=True)
-        self.kwargs.update(
-            {k: getattr(value_instance, k) for k in ["environ_name", "environ_prefix"]}
-        )
+        self.kwargs["environ_name"] = value_instance.environ_name
+        self.kwargs["environ_prefix"] = value_instance.environ_prefix
 
         # Update with any overrides we've received
         self.kwargs.update(kwargs)
