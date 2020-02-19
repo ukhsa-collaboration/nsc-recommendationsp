@@ -1,4 +1,4 @@
-from nsc.utils import markdown
+from .. import markdown
 
 
 def test_heading_level_one_conversion():

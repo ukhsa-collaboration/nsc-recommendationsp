@@ -1,55 +1,34 @@
-from os import environ, getenv
-from os.path import abspath, dirname, join
-from sys import argv
+from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-from configurations import Configuration
+from configurations import Configuration, values
+
+from .utils.configurations import PathConfiguration, PathValue
 
 
-BASE_DIR = dirname(dirname(abspath(__file__)))
+# Common settings
+BASE_DIR = Path(__file__).absolute().parent.parent
 PROJECT_NAME = "nsc"
-PROJECT_ENVIRONMENT_SLUG = "{}_{}".format(
-    PROJECT_NAME, environ.get("DJANGO_CONFIGURATION").lower()
-)
-
-# Detect if we are running tests.  Is this really the best way?
-IN_TESTS = "test" in argv
-
-
-class RedisCache(object):
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://{}:{}/1".format(
-                getenv("REDIS_SERVICE_HOST", "127.0.0.1"),
-                getenv("REDIS_SERVICE_PORT", 6379),
-            ),
-            "KEY_PREFIX": "{}_".format(PROJECT_ENVIRONMENT_SLUG),
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "PARSER_CLASS": "redis.connection.HiredisParser",
-                # You may want this. See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
-                # 'IGNORE_EXCEPTIONS': True, # see
-            },
-        }
-    }
-    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "default"
+CONFIGURATION = values.Value(environ_name="CONFIGURATION", environ_required=True)
 
 
 class Common(Configuration):
-    ADMINS = (("Django Admin", "richard@wildfish.com"),)
+    # Name of the configuration class in use
+    PROJECT_ENVIRONMENT_SLUG = "{}_{}".format(PROJECT_NAME, CONFIGURATION.lower())
+
+    # DJANGO_ADMINS="User One,user1@example.com;User Two,user2@example.com"
+    ADMINS = values.SingleNestedTupleValue()
 
     MANAGERS = ADMINS
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = "hqv8JcfTG6dkTTALY8MhaHTnKqSdhCG1CX8R4c8cc4nc0mUeCfnTiHobzlmGbcr5"
+    SECRET_KEY = values.Value(PROJECT_NAME)
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = values.ListValue(["*"])
 
     INSTALLED_APPS = [
         "django.contrib.admin",
@@ -89,7 +68,7 @@ class Common(Configuration):
     TEMPLATES = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
-            "DIRS": [join(BASE_DIR, "templates")],
+            "DIRS": [BASE_DIR / "templates"],
             "APP_DIRS": True,
             "OPTIONS": {
                 "context_processors": [
@@ -107,16 +86,13 @@ class Common(Configuration):
     # Database
     # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
     # http://django-configurations.readthedocs.org/en/latest/values/#configurations.values.DatabaseURLValue
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": getenv("DATABASE_NAME", PROJECT_NAME),
-            "USER": getenv("DATABASE_USER", PROJECT_NAME),
-            "PASSWORD": getenv("DATABASE_PASSWORD", PROJECT_NAME),
-            "HOST": getenv("DATABASE_HOST", "localhost"),
-            "PORT": getenv("DATABASE_PORT", 5432),
-        }
-    }
+    DATABASES = values.DatabaseURLValue(
+        f"postgres://{PROJECT_NAME}:{PROJECT_NAME}@localhost:5432/{PROJECT_NAME}"
+    )
+
+    # Cache
+    # https://pypi.org/project/django-cache-url/
+    CACHES = values.CacheURLValue(f"locmem://{PROJECT_NAME}")
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -141,18 +117,18 @@ class Common(Configuration):
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/1.11/howto/static-files/
     STATIC_URL = "/static/"
-    STATIC_ROOT = join(BASE_DIR, "static")
+    STATIC_ROOT = BASE_DIR / "static"
 
     MEDIA_URL = "/media/"
-    MEDIA_ROOT = join(BASE_DIR, "media")
+    MEDIA_ROOT = BASE_DIR / "media"
 
     # Additional locations of static files
-    STATICFILES_DIRS = [join(BASE_DIR, "frontend", "dist")]
+    STATICFILES_DIRS = [BASE_DIR / "frontend" / "dist"]
 
     # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    WHITENOISE_ROOT = join(BASE_DIR, "public")
+    WHITENOISE_ROOT = BASE_DIR / "public"
 
-    FIXTURE_DIRS = [join(BASE_DIR, "fixtures")]
+    FIXTURE_DIRS = [BASE_DIR / "fixtures"]
 
     LOGGING = {
         "version": 1,
@@ -215,11 +191,9 @@ class Webpack:
 
     # If static content is being served through the webpack dev server.
     # Needs template context processor for template support.
-    WEBPACK_DEV_HOST = getenv("WEBPACK_DEV_HOST", "{host}")
-    WEBPACK_DEV_PORT = int(getenv("WEBPACK_DEV_PORT", "8080"))
-    WEBPACK_DEV_URL = getenv(
-        "WEBPACK_DEV_URL", f"http://{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/static/"
-    )
+    WEBPACK_DEV_HOST = values.Value("{host}")
+    WEBPACK_DEV_PORT = values.IntegerValue(8080)
+    WEBPACK_DEV_URL = values.Value(f"//{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/static/")
 
     @property
     def LOGGING(self):
@@ -248,7 +222,6 @@ class Dev(Webpack, Common):
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
-    ALLOWED_HOSTS = ["*"]
 
 
 class Test(Dev):
@@ -259,18 +232,33 @@ class Test(Dev):
     pass
 
 
-class Deployed(RedisCache, Common):
+class Deployed(PathConfiguration):
     """
     Settings which are for a non local deployment, served behind nginx.
     """
+
+    SECRETS_DIR = values.Value(
+        "/run/secrets", environ_name="SECRETS_DIR", environ_prefix=None
+    )
+
+    # Some values are not optional in a deployed environment
+    ALLOWED_HOSTS = values.Value(environ_required=True)
+    SECRET_KEY = PathValue(SECRETS_DIR, values.Value)
+    DATABASES = PathValue(SECRETS_DIR, values.DatabaseURLValue)
+
+    # Change default cache
+    CACHES = PathValue(SECRETS_DIR, values.CacheURLValue)
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_CACHE_ALIAS = "default"
 
     # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
     # ever turned on when run with a WSGI server
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-    PUBLIC_ROOT = join(BASE_DIR, "../public/")
-    STATIC_ROOT = join(PUBLIC_ROOT, "static")
-    MEDIA_ROOT = join(PUBLIC_ROOT, "media")
+    # New paths
+    PUBLIC_ROOT = BASE_DIR.parent / "public"
+    STATIC_ROOT = PUBLIC_ROOT / "static"
+    MEDIA_ROOT = PUBLIC_ROOT / "media"
     COMPRESS_OUTPUT_DIR = ""
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -284,30 +272,10 @@ class Deployed(RedisCache, Common):
 
 
 class Stage(Deployed):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": getenv("POSTGRES_USER", ""),
-            "USER": getenv("POSTGRES_USER", ""),
-            "PASSWORD": getenv("POSTGRES_PASSWORD", "password"),
-            "HOST": getenv("POSTGRES_SERVICE_HOST", "localhost"),
-        }
-    }
+    pass
 
 
 class Prod(Deployed):
     DEBUG = False
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": getenv("POSTGRES_USER", ""),
-            "USER": getenv("POSTGRES_USER", ""),
-            "PASSWORD": getenv("POSTGRES_PASSWORD", "password"),
-            "HOST": getenv("POSTGRES_SERVICE_HOST", "localhost"),
-        }
-    }
-
-    ALLOWED_HOSTS = [".example.com"]  # add deployment domain here
 
     RAVEN_CONFIG = {"dsn": ""}
