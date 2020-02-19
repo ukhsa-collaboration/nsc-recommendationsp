@@ -6,11 +6,13 @@
 django>=2.2,<3.0
 django-configurations
 django-clear-cache
+django-cache-url
 django-extensions
 django-filter
 django-model-utils
 django-redis
 django-vanilla-views
+dj-database-url
 hiredis
 psycopg2-binary
 raven

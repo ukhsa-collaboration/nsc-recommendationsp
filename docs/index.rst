@@ -7,6 +7,7 @@ UK NSC Project Documentation
    :caption: Contents:
 
    dev
+   deployment
 
 
 Indices and tables

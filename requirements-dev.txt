@@ -22,6 +22,8 @@ click==7.0                # via black, pip-tools
 coverage==5.0.3           # via pytest-cov
 cryptography==2.8         # via paramiko
 decorator==4.4.1          # via ipython, traitlets
+dj-database-url==0.5.0
+django-cache-url==3.1.1
 django-clear-cache==0.3
 django-configurations==2.2
 django-debug-toolbar==2.1
