@@ -45,6 +45,8 @@ class Common(Configuration):
         "simple_history",
         "django_filters",
         "nsc.condition",
+        "nsc.contact",
+        "nsc.organisation",
         "nsc.policy",
     ]
 
@@ -115,7 +117,7 @@ class Common(Configuration):
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/1.11/howto/static-files/
     STATIC_URL = "/static/"
-    STATIC_ROOT = BASE_DIR / "static_root"
+    STATIC_ROOT = BASE_DIR / "static"
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"

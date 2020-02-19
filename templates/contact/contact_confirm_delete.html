@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with object.organisation.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% include 'widgets/back_link.html' with back_url=object.organisation.get_detail_url %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Delete contact" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <dl class="govuk-summary-list">
+    {% include "widgets/summary_text.html" with key='Name' value=object.name %}
+    {% include "widgets/summary_text.html" with key='Email' value=object.email %}
+    {% include "widgets/summary_text.html" with key='Phone number' value=object.phone %}
+  </dl>
+
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
+      <p>
+        {% trans 'Are you sure you want to delete this contact?'%}
+      </p>
+      <button type="submit" class="govuk-button govuk-button--warning" name="submit" value="submit">
+        {% trans 'Yes, delete' %}
+      </button>
+    </form>
+  </div>
+
+{% endblock %}
+
