@@ -20,6 +20,7 @@ django-filter
 django-model-utils
 
 # Project specific
+beautifulsoup4
 celery
 django-simple-history
 lxml

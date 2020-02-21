@@ -39,8 +39,8 @@ objects:
     DJANGO_SECRET_DIR: "/run/secrets/common"
     DJANGO_ADMINS: ""
     DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
-    REDIS_HOST: "${REDIS_SERVICE_NAME}"
-    REDIS_PORT: "6379"
+    DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
+    DJANGO_REDIS_PORT: "6379"
 #
 # Secrets
 #
@@ -558,8 +558,8 @@ parameters:
   description: Relative path to Gunicorn configuration file (optional).
   value: ""
 - name: DJANGO_CONFIGURATION
-  displayName: Django settings configuration
-  description: The class name of the Django configuration to use
+  displayName: Django Configuration
+  description: The name of the Django settings configuration to use (Stage or Prod)
   required: true
 - name: DJANGO_SECRET_KEY
   displayName: Django Secret Key
