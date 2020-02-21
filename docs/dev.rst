@@ -136,9 +136,8 @@ A summary coverage report will be printed to the console, with an HTML report at
 ``htmlcov/index.html``.
 
 By default the test database will be reused across test sessions to reduce
-initialisation time. If the test database to becomes corrupted (for example, if you
-roll back migrations, or start seeing unexpected migration issues) you can force
-recreation with::
+initialisation time. When you make schema changes or if the test database becomes
+corrupted, you will need to force database recreation::
 
     pytest --create-db
 

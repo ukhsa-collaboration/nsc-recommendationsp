@@ -11,6 +11,8 @@ admin.autodiscover()
 urlpatterns = [
     path(r"", TemplateView.as_view(template_name="home.html"), name="home"),
     path(r"condition/", include("nsc.condition.urls", namespace="condition")),
+    path(r"contact/", include("nsc.contact.urls", namespace="contact")),
+    path(r"organisation/", include("nsc.organisation.urls", namespace="organisation")),
     path(r"policy/", include("nsc.policy.urls", namespace="policy")),
     path(r"admin/", TemplateView.as_view(template_name="admin.html"), name="admin"),
     path(r"admin/db/", admin.site.urls),
