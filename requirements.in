@@ -2,22 +2,22 @@
 # Project requirements
 #
 
-# Core Django functionality
+# Core Django and deployment
 django>=2.2,<3.0
 django-configurations
 django-clear-cache
-django-cache-url
-django-extensions
-django-filter
-django-model-utils
 django-redis
-django-vanilla-views
-dj-database-url
+envdir
+gunicorn
 hiredis
 psycopg2-binary
 raven
 whitenoise
-uwsgi
+
+# General Django apps
+django-extensions
+django-filter
+django-model-utils
 
 # Project specific
 celery

@@ -22,6 +22,34 @@ message: |-
   ${NAME}, ${DATABASE_SERVICE_NAME}, ${REDIS_SERVICE_NAME}.
 objects:
 #
+# ConfigMap
+#
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+  data:
+    DATABASE_HOST: "${DATABASE_SERVICE_NAME}"
+    DATABASE_PORT: 5432
+    DATABASE_NAME: "${DATABASE_NAME}"
+    APP_CONFIG: "${APP_CONFIG}"
+    DJANGO_SECRET_DIR: "/run/secrets/common"
+    DJANGO_ADMINS: ""
+    DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
+    REDIS_HOST: "${REDIS_SERVICE_NAME}"
+    REDIS_PORT: 6379
+#
+# Secrets
+#
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+  stringData:
+    database-user: "${DATABASE_USER}"
+    database-password: "${DATABASE_PASSWORD}"
+    django-secret-key: "${DJANGO_SECRET_KEY}"
+#
 # ImageStreams
 #
 #   nodejs -> $NAME-webpack-build + python -> $NAME
@@ -125,9 +153,6 @@ objects:
         from:
           kind: ImageStreamTag
           name: "${NAME}-webpack-build:latest"
-    # Before we push this to the registry, check everything works as it should
-    postCommit:
-      script: "pytest"
 #
 # PersistentVolumeClaim
 #
@@ -192,30 +217,22 @@ objects:
               path: "/health"
               port: 8080
           env:
-          - name: DATABASE_SERVICE_NAME
+          - name: DATABASE_HOST
             value: "${DATABASE_SERVICE_NAME}"
           - name: DATABASE_NAME
             value: "${DATABASE_NAME}"
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: "${NAME}"
-                key: database-user
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: "${NAME}"
-                key: database-password
-          - name: APP_CONFIG
-            value: "${APP_CONFIG}"
-          - name: DJANGO_SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: "${NAME}"
-                key: django-secret-key
+          - name: DJANGO_CONFIG_DIR
+            value: "/run/configs/common"
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
+          volumeMounts:
+          - name: config-common
+            mountPath: "/run/configs/common"
+        volumes:
+        - configMap:
+            name: "${NAME}"
+          name: config-common
 #
 # PostgreSQL
 - kind: DeploymentConfig
@@ -270,6 +287,7 @@ objects:
                 key: database-password
           - name: POSTGRESQL_DATABASE
             value: "${DATABASE_NAME}"
+            # ++ TODO
           volumeMounts:
           - name: "${DATABASE_SERVICE_NAME}-data"
             mountPath: "/var/lib/pgsql/data"
@@ -407,17 +425,6 @@ objects:
       kind: Service
       name: "${NAME}"
 #
-# Secrets
-#
-- kind: Secret
-  apiVersion: v1
-  metadata:
-    name: "${NAME}"
-  stringData:
-    database-user: "${DATABASE_USER}"
-    database-password: "${DATABASE_PASSWORD}"
-    django-secret-key: "${DJANGO_SECRET_KEY}"
-#
 # Parameters
 #
 parameters:
@@ -481,7 +488,7 @@ parameters:
   displayName: Git Repository URL
   required: true
   description: The URL of the repository with your application source code.
-  #value: "https://github.com/wildfish/phe-nsc"
+  value: "https://github.com/PublicHealthEngland/nsc-recommendations"
 - name: SOURCE_REPOSITORY_REF
   displayName: Git Reference
   description: Set this to a branch name, tag or other ref of your repository if you
@@ -530,6 +537,7 @@ parameters:
 - name: APP_CONFIG
   displayName: Application Configuration File Path
   description: Relative path to Gunicorn configuration file (optional).
+  value: ""
 - name: DJANGO_SECRET_KEY
   displayName: Django Secret Key
   description: Set this to a long random string.
