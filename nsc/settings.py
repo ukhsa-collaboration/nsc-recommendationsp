@@ -285,9 +285,9 @@ class Test(Dev):
     pass
 
 
-class Openshift(Common):
+class Build(Common):
     """
-    Settings for use in openshift containers
+    Settings for use when building containers for deployment
     """
 
     # New paths
@@ -296,17 +296,7 @@ class Openshift(Common):
     MEDIA_ROOT = PUBLIC_ROOT / "media"
 
 
-class Build(Openshift):
-    """
-    Minimum viable config for use during image build phase
-    """
-
-    DATABASES = {
-        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
-    }
-
-
-class Deployed(Openshift):
+class Deployed(Build):
     """
     Settings which are for a non-local deployment
     """
