@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'condition:consultation' condition.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans 'Submit your consultation comments' %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <h2 class="govuk-heading-m">
+    {% trans 'About you' %}
+  </h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {{ form.non_field_errors }}
+
+    {{ form.errors }}
+
+    {% include "widgets/text_input.html" with field=form.name %}
+    {% include "widgets/text_input.html" with field=form.email %}
+    {% include "widgets/text_input.html" with field=form.organisation %}
+    {% include "widgets/text_input.html" with field=form.role %}
+    {% include "widgets/radio_buttons.html" with field=form.publish size='m' %}
+
+    <h2 class="govuk-heading-m">
+      {% trans 'Consultation comments' %}
+    </h2>
+
+    <p class="govuk-body">
+      {% trans 'You can input your feedback directly into the box below or upload it as a document.' %}
+    </p>
+
+    {% include "widgets/text_input.html" with field=form.comments %}
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="submit" value="submit">
+        {% trans 'Send consultation feedback' %}
+      </button>
+    </div>
+
+  </form>
+{% endblock %}

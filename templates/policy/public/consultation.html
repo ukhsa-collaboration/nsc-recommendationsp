@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with condition.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% url 'condition:detail' condition.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    Take part in a public consultation
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+<p class="govuk-body">
+{% blocktrans with name=condition.name start=review.consulation_start end=review_consultation_end %}
+A public consultation for {{ name }} was opened on the {{ start }} and will close
+on the {{ end }}. Responses received after this time will not be considered in the
+consultation process.
+{% endblocktrans %}
+</p>
+
+<p class="govuk-body">
+{% url 'review:detail' review.slug as url %}
+{% blocktrans %}
+You can take part in a consultation in two ways, first download the <a href="{{ url }}">evidence review document</a>
+then either:
+{% endblocktrans %}
+</p>
+
+<div class="govuk-body">
+  <ol>
+    <li>
+      {% url 'condition:submission' condition.slug as slug %}
+      {% blocktrans %}
+      Send your comments using the <a href="{{ slug }}">online form</a>.
+      {% endblocktrans %}
+    </li>
+    <li>
+      {% blocktrans with end=review.consultation_end %}
+      Download and complete the <a href="">response form</a>, and email it to
+      <a href="mailto:screening.evidence@nhs.net">screening.evidence@nhs.net</a> before {{ end }}
+      {% endblocktrans %}
+    </li>
+  </ol>
+</div>
+
+<h2 class="govuk-heading-m">
+  {% trans 'How consultations work' %}
+</h2>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  Find out more about the consultation process by reading the
+  <a href="">UK NSC's evidence review process</a>.
+  {% endblocktrans %}
+</p>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  Evidence provided in response to this consultation may be subject to publication.
+  {% endblocktrans %}
+</p>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  <a href="">Read more about the UK NSC's confidentiality policy</a>
+  {% endblocktrans %}
+</p>
+
+<div class="govuk-inset-text">
+  {% blocktrans %}
+  Helpdesk phone number: 020 3682 0890
+  {% endblocktrans %}
+</div>
+
+{% endblock %}
