@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with object.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% url 'review:detail' object.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    Confirm stakeholders to be notified of consultation opening
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {{ form.non_field_errors }}
+
+    {% include "widgets/checkboxes.html" with field=form.organisations %}
+
+    <div class="link-menu govuk-body">
+      <a href="{% url 'review:organisation' object.slug %}" class="govuk-link">
+        add a stakeholder to be notified
+      </a>
+    </div>
+
+    <button type="submit" class="govuk-button" name="save" value="save">
+      {% trans 'Save and continue' %}
+    </button>
+
+  </form>
+
+{% endblock %}
+

@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<div class="govuk-form-group{% if date.errors %} govuk-form-group--error{% endif %}">
+  <fieldset class="govuk-dateset" role="group" aria-describedby="{{ date.name }}-hint {{ date.name }}-error">
+    <legend class="govuk-dateset__legend govuk-dateset__legend--{% if label_size %}{{ label_size }}{% else %}s{% endif %}">
+      <label for="{{ date.id_for_label}}">
+          {{ date.label }}
+      </label>
+    </legend>
+    {% if date.errors %}
+      <span id="{{ date.name }}-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ date.errors.0 }}
+      </span>
+    {% endif %}
+    {% if date.help_text %}
+      <span id="{{ date.name }}-hint" class="govuk-hint">
+        {{ date.help_text }}
+      </span>
+    {% endif %}
+    <div class="govuk-date-input" id="{{ date.id_for_label}}">
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ day.id_for_label }}">
+            {{ day.label }}
+          </label>
+          {{ day }}
+        </div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ month.id_for_label }}">
+            {{ month.label }}
+          </label>
+          {{ month }}
+        </div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ year.id_for_label }}">
+            {{ year.label }}
+          </label>
+          {{ year }}
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</div>

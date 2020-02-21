@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url "home" as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {{ review.name }}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <ul class="app-task-list govuk-body">
+    <li>
+      <h2 class="app-task-list__section">
+        Preconsultation
+      </h2>
+      <ul class="app-task-list__items">
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:add-policy-document' review.slug %}" aria-describedby="relevant-documents">
+              Add relevant documents
+            </a>
+          </span>
+          <strong class="govuk-tag app-task-list__task-completed" id="relevent-documents-completed">{{ review.relevent_documents_added }}</strong>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h2 class="app-task-list__section">
+        Consultation
+      </h2>
+      <ul class="app-task-list__items">
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:add-review-document' review.slug %}" aria-describedby="external-review-completed">
+              Upload external review document
+            </a>
+          </span>
+          <strong class="govuk-tag app-task-list__task-completed" id="external-review-completed">{{ review.external_review_added }}</strong>
+        </li>
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:dates' object.slug %}" aria-describedby="consultation-dates-completed">
+              Confirm dates of consultation
+            </a>
+          </span>
+          <strong class="govuk-tag app-task-list__task-completed" id="consultation-dates-completed">{{ review.consultation_dates_set }}</strong>
+        </li>
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:organisations' object.slug %}" aria-describedby="stakeholders-notified">
+              Confirm stakeholders to be notified
+            </a>
+          <strong class="govuk-tag app-task-list__task-completed" id="stakeholders-notified">{{ review.stakeholders_notified }}</strong>
+          </span>
+        </li>
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:consultation' object.slug %}" aria-describedby="consultation-opened">
+              Open consultation
+            </a>
+          </span>
+          <strong class="govuk-tag app-task-list__task-completed" id="consultation-opened">{{ review.consulation_opened }}</strong>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h2 class="app-task-list__section">
+        Post-consultation
+      </h2>
+      <ul class="app-task-list__items">
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:recommendation' object.slug %}" aria-describedby="recommendation-set">
+              Documents and recommendation
+            </a>
+          </span>
+          <strong class="govuk-tag app-task-list__task-completed" id="recommendation-set">{{ review.recomendation_set }}</strong>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="link-menu">
+    <a href="{% url 'review:cancel' review.slug %}" class="govuk-link">
+      Cancel review
+    </a>
+  </div>
+
+{% endblock %}
