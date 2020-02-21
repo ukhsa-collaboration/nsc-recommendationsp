@@ -306,6 +306,7 @@ class Deployed(Build):
     # Some values are not optional in a deployed environment
     ALLOWED_HOSTS = values.Value(environ_required=True)
     SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
+    DATABASE_USER = get_secret("DATABASE_USER")
     DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
 
     # Change default cache
