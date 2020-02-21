@@ -32,6 +32,7 @@ objects:
     DATABASE_HOST: "${DATABASE_SERVICE_NAME}"
     DATABASE_PORT: 5432
     DATABASE_NAME: "${DATABASE_NAME}"
+    APP_MODULE: "${APP_MODULE}"
     APP_CONFIG: "${APP_CONFIG}"
     DJANGO_SECRET_DIR: "/run/secrets/common"
     DJANGO_ADMINS: ""
@@ -46,9 +47,9 @@ objects:
   metadata:
     name: "${NAME}"
   stringData:
-    database-user: "${DATABASE_USER}"
-    database-password: "${DATABASE_PASSWORD}"
-    django-secret-key: "${DJANGO_SECRET_KEY}"
+    DATABASE_USER: "${DATABASE_USER}"
+    DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+    DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY}"
 #
 # ImageStreams
 #
@@ -217,10 +218,6 @@ objects:
               path: "/health"
               port: 8080
           env:
-          - name: DATABASE_HOST
-            value: "${DATABASE_SERVICE_NAME}"
-          - name: DATABASE_NAME
-            value: "${DATABASE_NAME}"
           - name: DJANGO_CONFIG_DIR
             value: "/run/configs/common"
           resources:
@@ -229,10 +226,17 @@ objects:
           volumeMounts:
           - name: config-common
             mountPath: "/run/configs/common"
+            readOnly: true
+          - name: secret-common
+            mountPath: "/run/secrets/common"
+            readOnly: true
         volumes:
-        - configMap:
+        - name: config-common
+          configMap:
             name: "${NAME}"
-          name: config-common
+        - name: secret-common
+          secret:
+            secretName: "${NAME}"
 #
 # PostgreSQL
 - kind: DeploymentConfig
@@ -279,15 +283,17 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: "${NAME}"
-                key: database-user
+                key: DATABASE_USER
           - name: POSTGRESQL_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: "${NAME}"
-                key: database-password
+                key: DATABASE_PASSWORD
           - name: POSTGRESQL_DATABASE
-            value: "${DATABASE_NAME}"
-            # ++ TODO
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: DATABASE_NAME
           volumeMounts:
           - name: "${DATABASE_SERVICE_NAME}-data"
             mountPath: "/var/lib/pgsql/data"
@@ -534,6 +540,10 @@ parameters:
   value: redis
 #
 # Django app
+- name: APP_MODULE
+  displayName: Application Module
+  description: Module for Gunicorn WSGI application object
+  value: "nsc.wsgi"
 - name: APP_CONFIG
   displayName: Application Configuration File Path
   description: Relative path to Gunicorn configuration file (optional).
