@@ -12,22 +12,25 @@ BASE_DIR = Path(__file__).absolute().parent.parent
 PROJECT_NAME = "nsc"
 CONFIGURATION = values.Value(environ_name="CONFIGURATION", environ_required=True)
 CONFIG_DIR = values.Value(environ_name="CONFIG_DIR")
-SECRET_DIR = values.Value(environ_name="SECRET_DIR")
 
 
 def get_secret(name, cast=str):
     """
     Get a secret from disk
     """
-    if not SECRET_DIR:
-        raise ImproperlyConfigured("DJANGO_SECRET_DIR not found in env")
+    # We don't want this to be called unless we're in a configuration which uses it
+    def _lookup(self):
+        if not self.SECRET_DIR:
+            raise ImproperlyConfigured("DJANGO_SECRET_DIR not found in env")
 
-    file = Path(SECRET_DIR) / name
-    if not file.exists():
-        raise ImproperlyConfigured(f"Secret {file} not found")
+        file = Path(self.SECRET_DIR) / name
+        if not file.exists():
+            raise ImproperlyConfigured(f"Secret {file} not found")
 
-    value = file.read_text().strip()
-    return cast(value)
+        value = file.read_text().strip()
+        return cast(value)
+
+    return property(_lookup)
 
 
 class Common(Configuration):
@@ -282,21 +285,33 @@ class Test(Dev):
     pass
 
 
-class Misconfigured(Common):
+class Openshift(Common):
     """
-    Default configuration to enforce explicit configuration selection
+    Settings for use in openshift containers
     """
 
-    @classmethod
-    def pre_setup(cls):
-        super().pre_setup()
-        raise ImproperlyConfigured("DJANGO_CONFIGURATION not found in env")
+    # New paths
+    PUBLIC_ROOT = BASE_DIR.parent / "public"
+    STATIC_ROOT = PUBLIC_ROOT / "static"
+    MEDIA_ROOT = PUBLIC_ROOT / "media"
 
 
-class Deployed(Common):
+class Build(Openshift):
     """
-    Settings which are for a non local deployment, served behind nginx.
+    Minimum viable config for use during image build phase
     """
+
+    DATABASES = {
+        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+    }
+
+
+class Deployed(Openshift):
+    """
+    Settings which are for a non-local deployment
+    """
+
+    SECRET_DIR = values.Value(environ_required=True)
 
     # Some values are not optional in a deployed environment
     ALLOWED_HOSTS = values.Value(environ_required=True)
@@ -325,14 +340,7 @@ class Deployed(Common):
     # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
     # ever turned on when run with a WSGI server
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
-    # New paths
-    PUBLIC_ROOT = BASE_DIR.parent / "public"
-    STATIC_ROOT = PUBLIC_ROOT / "static"
-    MEDIA_ROOT = PUBLIC_ROOT / "media"
-
     COMPRESS_OUTPUT_DIR = ""
-    ALLOWED_HOSTS = ["*"]
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.sendgrid.net"
