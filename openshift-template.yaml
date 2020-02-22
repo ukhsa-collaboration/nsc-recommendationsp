@@ -2,6 +2,8 @@
 #
 # Builds webpack resources in a disposable nodejs container, which are then added to the
 # final Django container.
+#
+# TODO: Remove sections for local dev
 kind: Template
 apiVersion: v1
 metadata:
@@ -104,6 +106,7 @@ objects:
     triggers:
     - type: ConfigChange
     - type: ImageChange
+    # TODO: Add this if needed
     #- type: GitHub
     #    github:
     #    secret: ${GITHUB_WEBHOOK_SECRET}
@@ -131,8 +134,8 @@ objects:
             kind: ImageStreamTag
             name: "${NAME}-webpack-build:latest"
           paths:
-            - destinationDir: frontend/dist
-              sourcePath: /opt/app-root/src/frontend/dist
+            - sourcePath: /opt/app-root/src/frontend/dist
+              destinationDir: frontend
     strategy:
       type: Source
       sourceStrategy:
@@ -213,20 +216,32 @@ objects:
             timeoutSeconds: 3
             initialDelaySeconds: 3
             httpGet:
-              path: "/health"
+              path: "/health/"
               port: 8080
           livenessProbe:
             timeoutSeconds: 3
             initialDelaySeconds: 30
             httpGet:
-              path: "/health"
+              path: "/health/"
               port: 8080
+          # Minimal env vars to get the project running - once started, settings will
+          # look in the mounted DJANGO_CONFIG_DIR
           env:
           - name: DJANGO_CONFIGURATION
             valueFrom:
               configMapKeyRef:
                 name: "${NAME}"
                 key: DJANGO_CONFIGURATION
+          - name: APP_MODULE
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: APP_MODULE
+          - name: APP_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: APP_CONFIG
           - name: DJANGO_CONFIG_DIR
             value: "/run/configs/common"
           resources:
@@ -395,7 +410,7 @@ objects:
       port: 8080
       targetPort: 8080
     selector:
-      app: "${NAME}"
+      name: "${NAME}"
 #
 # PostgreSQL
 - kind: Service
@@ -425,8 +440,7 @@ objects:
       port: 6379
       targetPort: 6379
     selector:
-      deploymentconfig: "${REDIS_SERVICE_NAME}"
-
+      name: "${REDIS_SERVICE_NAME}"
 #
 # Route
 #
@@ -435,7 +449,8 @@ objects:
   metadata:
     name: "${NAME}"
   spec:
-    host: "${APPLICATION_DOMAIN}"
+    # TODO: Uncomment this when domain is known
+    #host: "${APPLICATION_DOMAIN}"
     to:
       kind: Service
       name: "${NAME}"
