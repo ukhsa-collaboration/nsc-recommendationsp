@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,6 +16,10 @@ from .fields import ChoiceArrayField
 class PolicyQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
+
+    def review_due(self):
+        year = date.today().year
+        return self.filter(next_review__year=year)
 
 
 class Policy(TimeStampedModel):
@@ -77,11 +82,13 @@ class Policy(TimeStampedModel):
         )
 
     def next_review_display(self):
-        return (
-            self.next_review.strftime("%Y")
-            if self.next_review
-            else _("No review has been scheduled")
-        )
+        today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        if self.next_review is None:
+            return _("No review has been scheduled")
+        if self.next_review < today:
+            return _("Overdue")
+        else:
+            return self.next_review.strftime("%b %Y")
 
     def ages_display(self):
         return ", ".join(str(Policy.AGE_GROUPS[age]) for age in self.ages)

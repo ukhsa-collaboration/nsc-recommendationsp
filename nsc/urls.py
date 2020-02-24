@@ -5,15 +5,17 @@ from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from nsc.review.views import ReviewStatusView
 
 admin.autodiscover()
 
 urlpatterns = [
-    path(r"", TemplateView.as_view(template_name="home.html"), name="home"),
+    path(r"", ReviewStatusView.as_view(), name="home"),
     path(r"condition/", include("nsc.condition.urls", namespace="condition")),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
     path(r"organisation/", include("nsc.organisation.urls", namespace="organisation")),
     path(r"policy/", include("nsc.policy.urls", namespace="policy")),
+    path(r"review/", include("nsc.review.urls", namespace="review")),
     path(r"admin/", TemplateView.as_view(template_name="admin.html"), name="admin"),
     path(r"admin/db/", admin.site.urls),
     path(r"health/", lambda request: HttpResponse()),

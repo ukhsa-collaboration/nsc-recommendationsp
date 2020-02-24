@@ -25,4 +25,5 @@ celery
 django-simple-history
 lxml
 markdown
+python-dateutil
 requests

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with object.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% url 'review:detail' object.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% trans "Do you want to open this consultation now?" %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
+
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+
+      {{ form.non_field_errors }}
+
+      {% include "widgets/radio_buttons.html" with field=form.open_now label_size='l' %}
+      {% include "widgets/date_input.html" with date=form.consultation_start year=form.year month=form.month day=form.day label_size='m'%}
+
+      <button type="submit" class="govuk-button" name="submit" value="submit">
+        {% trans 'Save and continue' %}
+      </button>
+    </form>
+  </div>
+
+{% endblock %}

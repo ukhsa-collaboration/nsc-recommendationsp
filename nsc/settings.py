@@ -74,8 +74,10 @@ class Common(Configuration):
         "django_filters",
         "nsc.condition",
         "nsc.contact",
+        "nsc.document",
         "nsc.organisation",
         "nsc.policy",
+        "nsc.review",
     ]
 
     MIDDLEWARE = [
