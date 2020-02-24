@@ -1,7 +1,6 @@
-from datetime import date
-
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -83,7 +82,7 @@ class Policy(TimeStampedModel):
         )
 
     def next_review_display(self):
-        today = date.today()
+        today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
         if self.next_review is None:
             return _("No review has been scheduled")
         if self.next_review < today:
