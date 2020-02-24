@@ -355,7 +355,7 @@ objects:
       imageChangeParams:
         automatic: true
         containerNames:
-        - postgresql
+        - redis
         from:
           kind: ImageStreamTag
           namespace: "${NAMESPACE}"
@@ -369,8 +369,8 @@ objects:
           name: "${REDIS_SERVICE_NAME}"
       spec:
         containers:
-        - image: redis
-          name: redis
+        - name: redis
+          image: " "
           ports:
           - containerPort: 6379
             protocol: TCP
@@ -483,7 +483,7 @@ parameters:
 - name: REDIS_VERSION
   displayName: Version of Redis Image
   description: Version of Redis image to be used
-  value: "5"
+  value: "latest"
   required: true
 - name: NODE_VERSION
   displayName: Version of Node Image
