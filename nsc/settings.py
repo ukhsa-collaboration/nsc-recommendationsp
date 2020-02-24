@@ -1,19 +1,48 @@
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
+import envdir
 from configurations import Configuration, values
-
-from .utils.configurations import PathConfiguration, PathValue
 
 
 # Common settings
 BASE_DIR = Path(__file__).absolute().parent.parent
 PROJECT_NAME = "nsc"
 CONFIGURATION = values.Value(environ_name="CONFIGURATION", environ_required=True)
+CONFIG_DIR = values.Value(environ_name="CONFIG_DIR")
+
+
+def get_secret(name, cast=str):
+    """
+    Get a secret from disk
+    """
+    # We don't want this to be called unless we're in a configuration which uses it
+    def _lookup(self):
+        if not self.SECRET_DIR:
+            raise ImproperlyConfigured("DJANGO_SECRET_DIR not found in env")
+
+        file = Path(self.SECRET_DIR) / name
+        if not file.exists():
+            raise ImproperlyConfigured(f"Secret {file} not found")
+
+        value = file.read_text().strip()
+        return cast(value)
+
+    return property(_lookup)
 
 
 class Common(Configuration):
+    @classmethod
+    def pre_setup(cls):
+        """
+        If specified, add config dir and secret dir to environment
+        """
+        if CONFIG_DIR:
+            envdir.Env(CONFIG_DIR)
+        super().pre_setup()
+
     # Name of the configuration class in use
     PROJECT_ENVIRONMENT_SLUG = "{}_{}".format(PROJECT_NAME, CONFIGURATION.lower())
 
@@ -39,7 +68,6 @@ class Common(Configuration):
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "raven.contrib.django.raven_compat",
-        "debug_toolbar",
         "django_extensions",
         "clear_cache",
         "simple_history",
@@ -59,7 +87,6 @@ class Common(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
     ]
 
@@ -86,13 +113,27 @@ class Common(Configuration):
     # Database
     # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
     # http://django-configurations.readthedocs.org/en/latest/values/#configurations.values.DatabaseURLValue
-    DATABASES = values.DatabaseURLValue(
-        f"postgres://{PROJECT_NAME}:{PROJECT_NAME}@localhost:5432/{PROJECT_NAME}"
-    )
+    DATABASE_HOST = values.Value("localhost", environ_prefix=None)
+    DATABASE_PORT = values.Value(5432, environ_prefix=None)
+    DATABASE_NAME = values.Value(PROJECT_NAME, environ_prefix=None)
+    DATABASE_USER = values.Value(PROJECT_NAME, environ_prefix=None)
+    DATABASE_PASSWORD = values.Value(PROJECT_NAME, environ_prefix=None)
 
-    # Cache
-    # https://pypi.org/project/django-cache-url/
-    CACHES = values.CacheURLValue(f"locmem://{PROJECT_NAME}")
+    @property
+    def DATABASES(self):
+        """
+        Build the databases object here to allow subclasses to override specific values
+        """
+        return {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql_psycopg2",
+                "HOST": self.DATABASE_HOST,
+                "PORT": self.DATABASE_PORT,
+                "NAME": self.DATABASE_NAME,
+                "USER": self.DATABASE_USER,
+                "PASSWORD": self.DATABASE_PASSWORD,
+            }
+        }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -223,6 +264,18 @@ class Dev(Webpack, Common):
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
 
+    @property
+    def INSTALLED_APPS(self):
+        INSTALLED_APPS = super().INSTALLED_APPS
+        INSTALLED_APPS.append("debug_toolbar")
+        return INSTALLED_APPS
+
+    @property
+    def MIDDLEWARE(self):
+        MIDDLEWARE = super().MIDDLEWARE
+        MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+        return MIDDLEWARE
+
 
 class Test(Dev):
     """
@@ -232,33 +285,52 @@ class Test(Dev):
     pass
 
 
-class Deployed(PathConfiguration):
+class Build(Common):
     """
-    Settings which are for a non local deployment, served behind nginx.
+    Settings for use when building containers for deployment
     """
 
-    SECRETS_DIR = values.Value(
-        "/run/secrets", environ_name="SECRETS_DIR", environ_prefix=None
-    )
+    # New paths
+    PUBLIC_ROOT = BASE_DIR.parent / "public"
+    STATIC_ROOT = PUBLIC_ROOT / "static"
+    MEDIA_ROOT = PUBLIC_ROOT / "media"
+
+
+class Deployed(Build):
+    """
+    Settings which are for a non-local deployment
+    """
+
+    SECRET_DIR = values.Value(environ_required=True)
 
     # Some values are not optional in a deployed environment
     ALLOWED_HOSTS = values.Value(environ_required=True)
-    SECRET_KEY = PathValue(SECRETS_DIR, values.Value)
-    DATABASES = PathValue(SECRETS_DIR, values.DatabaseURLValue)
+    SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
+    DATABASE_USER = get_secret("DATABASE_USER")
+    DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
 
     # Change default cache
-    CACHES = PathValue(SECRETS_DIR, values.CacheURLValue)
+    REDIS_HOST = values.Value(environ_required=True)
+    REDIS_PORT = values.IntegerValue(6379)
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+            "KEY_PREFIX": "{}_".format(Common.PROJECT_ENVIRONMENT_SLUG),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "PARSER_CLASS": "redis.connection.HiredisParser",
+                # You may want this. See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+                # 'IGNORE_EXCEPTIONS': True, # see
+            },
+        }
+    }
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
     SESSION_CACHE_ALIAS = "default"
 
     # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
     # ever turned on when run with a WSGI server
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
-    # New paths
-    PUBLIC_ROOT = BASE_DIR.parent / "public"
-    STATIC_ROOT = PUBLIC_ROOT / "static"
-    MEDIA_ROOT = PUBLIC_ROOT / "media"
     COMPRESS_OUTPUT_DIR = ""
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

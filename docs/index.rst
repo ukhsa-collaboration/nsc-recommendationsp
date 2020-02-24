@@ -6,8 +6,9 @@ UK NSC Project Documentation
    :maxdepth: 2
    :caption: Contents:
 
-   dev
+   development
    deployment
+   settings
 
 
 Indices and tables

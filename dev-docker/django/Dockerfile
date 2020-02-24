@@ -6,8 +6,8 @@ WORKDIR /build
 # Build process dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        gcc \
-        libc6-dev \
+    gcc \
+    libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Full python requirements to support development
@@ -16,4 +16,4 @@ RUN pip install -r requirements-dev.txt
 
 # Run Django
 WORKDIR /project
-CMD ["/project/containers/django/run.sh"]
+CMD ["/project/dev-docker/django/run.sh"]
