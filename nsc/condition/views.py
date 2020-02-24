@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.views.generic import DetailView, ListView, TemplateView, FormView
+from django.views.generic import DetailView, FormView, ListView, TemplateView
 
 from nsc.policy.models import Policy
 
