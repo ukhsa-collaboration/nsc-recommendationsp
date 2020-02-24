@@ -27,7 +27,7 @@ services:
   frontend:
     build:
       context: ./
-      dockerfile: "./containers/frontend/Dockerfile"
+      dockerfile: "./dev-docker/frontend/Dockerfile"
     environment:
     - FRONTEND_MODE=watch
     ports:
@@ -38,7 +38,7 @@ services:
   django:
     build:
       context: ./
-      dockerfile: "./containers/django/Dockerfile"
+      dockerfile: "./dev-docker/django/Dockerfile"
     environment:
       DJANGO_CONFIGURATION: Dev
       DATABASE_HOST: postgres

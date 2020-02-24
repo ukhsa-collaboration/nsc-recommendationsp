@@ -6,4 +6,4 @@ FROM node:12.14.1-slim
 ENV FRONTEND_MODE watch
 
 # Leave the entrypoint to npm install each time, so it goes into the project volume
-CMD ["/project/containers/frontend/run.sh"]
+CMD ["/project/dev-docker/frontend/run.sh"]
