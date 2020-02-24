@@ -89,9 +89,10 @@ Adding a setting
 
 For non-secrets:
 
-#. Add a default to the ``Common`` configuration, using the appropriate `value class`_
+#. Add a default to the ``Common`` configuration, using the appropriate `value class`_.
 
-#. If it required for deployments, redefine it in the ``Deployed`` configuration.
+#. If it is optional for development but required for deployment, redefine it in the
+   ``Deployed`` configuration with the argument ``environ_required=True``.
 
 #. Add an entry to the ``ConfigMap`` in ``openshift-template.yaml``, with a default
    value from the ``parameters`` if appropriate.
@@ -99,10 +100,9 @@ For non-secrets:
 
 For secrets:
 
-#. Add a default to the ``Common`` configuration, using the appropriate `value class`_
+#. Add a default to the ``Common`` configuration, using the appropriate `value class`_.
 
-#. Add the secret to the ``Deployed`` in the ``Deployed`` configuration using
-   ``self.get_secret()``.
+#. Add the secret to the ``Deployed`` configuration using ``get_secret(...)``.
 
 #. Add an entry to the ``Secret`` in ``openshift-template.yaml``, with a default
    value from the ``parameters`` if appropriate.
