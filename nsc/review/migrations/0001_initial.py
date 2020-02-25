@@ -102,7 +102,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name_plural": "reviews", "ordering": ("name", "pk"),},
+            options={"verbose_name_plural": "reviews", "ordering": ("name", "pk")},
         ),
         migrations.CreateModel(
             name="HistoricalReview",

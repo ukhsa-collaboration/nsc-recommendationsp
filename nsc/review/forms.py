@@ -1,17 +1,16 @@
 from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import HiddenInput
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
-from .models import Review
 from ..organisation.models import Organisation
 from ..policy.models import Policy
+from .models import Review
 
 
 class SearchForm(forms.Form):
@@ -102,24 +101,7 @@ class ReviewForm(forms.ModelForm):
 class ReviewDatesForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = [
-            "name",
-        ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-
-class ReviewOrganisationsForm(forms.ModelForm):
-    class Meta:
-        model = Review
-        fields = [
-            "name",
-        ]
+        fields = ["name"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -132,9 +114,7 @@ class ReviewOrganisationsForm(forms.ModelForm):
 class ReviewAddOrganisationForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = [
-            "name",
-        ]
+        fields = ["name"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

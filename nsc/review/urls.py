@@ -1,7 +1,8 @@
 from django.urls import path
 
+from ..document.views import ContinueView, PolicyDocumentView, ReviewDocumentView
 from . import views
-from ..document.views import PolicyDocumentView, ReviewDocumentView, ContinueView
+
 
 urlpatterns = [
     path(r"", views.ReviewList.as_view(), name="list"),
