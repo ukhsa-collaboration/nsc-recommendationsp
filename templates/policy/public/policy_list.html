@@ -24,12 +24,14 @@
           {% include 'widgets/radio_buttons.html' with field=form.affects %}
           {% include 'widgets/radio_buttons.html' with field=form.screen %}
 
-          <button type="submit" class="govuk-button search-b-button">
+          <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
             {% trans 'Search' %}
           </button>
 
           <a href="{% url 'condition:list' %}"
-             class="govuk-link govuk-link--no-visited-state">{% trans 'Clear search' %}</a>
+             class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">
+              {% trans 'Clear search' %}
+          </a>
 
         </form>
       </div>
