@@ -1,17 +1,18 @@
 from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import HiddenInput
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
-from .models import Review
+from nsc.utils.datetime import get_today
+
 from ..organisation.models import Organisation
 from ..policy.models import Policy
+from .models import Review
 
 
 class SearchForm(forms.Form):
@@ -197,7 +198,7 @@ class ReviewConsultationForm(forms.ModelForm):
         data = self.cleaned_data
 
         if data["open_now"]:
-            start = date.today()
+            start = get_today()
         else:
             start = date(data["year"], data["month"], data["day"])
 

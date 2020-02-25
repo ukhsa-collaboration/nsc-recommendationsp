@@ -2,6 +2,8 @@ from datetime import date
 
 import pytest
 
+from nsc.utils.datetime import get_today
+
 from ..forms import PolicyForm
 
 
@@ -28,9 +30,9 @@ def test_condition_validation(condition, expected):
         (" ", True),  # The next review can be empty
         ("20", False),  # The next review must be 4 digits
         ("2O2O", False),  # The next review must only contain digits
-        (date.today().year - 1, False),  # The next review cannot be in the past
-        (date.today().year, True),  # The next review can be this year
-        (date.today().year + 1, True),  # The next review can be in the future
+        (get_today().year - 1, False),  # The next review cannot be in the past
+        (get_today().year, True),  # The next review can be this year
+        (get_today().year + 1, True),  # The next review can be in the future
     ],
 )
 def test_next_review_validation(next_review, expected):
