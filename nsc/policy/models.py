@@ -84,7 +84,7 @@ class Policy(TimeStampedModel):
         )
 
     def next_review_display(self):
-        today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = timezone.localtime(timezone.now()).date()
         if self.next_review is None:
             return _("No review has been scheduled")
         if self.next_review < today:
