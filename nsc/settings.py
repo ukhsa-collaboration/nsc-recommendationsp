@@ -1,29 +1,69 @@
+from os import environ
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 import envdir
-from configurations import Configuration, values
+from configurations import Configuration
 
 
 # Common settings
 BASE_DIR = Path(__file__).absolute().parent.parent
 PROJECT_NAME = "nsc"
-CONFIGURATION = values.Value(environ_name="CONFIGURATION", environ_required=True)
-CONFIG_DIR = values.Value(environ_name="CONFIG_DIR")
+CONFIGURATION = environ["DJANGO_CONFIGURATION"]
+CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
+SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
+
+
+def get_env(name, default=None, required=False, cast=str):
+    """
+    Get an environment variable
+
+    Arguments::
+
+        name (str): Name of environment variable
+        default (Any): default value
+        required (bool): If True, raises an ImproperlyConfigured error if not defined
+        cast (Callable): function to call with extracted string value.
+            Not applied to defaults.
+    """
+
+    def _lookup(self):
+        value = environ.get(name)
+
+        if value is None and default:
+            return default
+
+        if value is None and required:
+            raise ImproperlyConfigured(f"{name} not found in env")
+
+        return cast(value)
+
+    return property(_lookup)
 
 
 def get_secret(name, cast=str):
     """
     Get a secret from disk
+
+    Secrets should be available as the content of `<SECRET_DIR>/<name>`
+
+    All secrets are required
+
+    Arguments::
+
+        name (str): Name of environment variable
+        cast (Callable): function to call on extracted string value
     """
     # We don't want this to be called unless we're in a configuration which uses it
     def _lookup(self):
-        if not self.SECRET_DIR:
-            raise ImproperlyConfigured("DJANGO_SECRET_DIR not found in env")
+        if SECRET_DIR:
+            raise ImproperlyConfigured(
+                f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
+            )
 
-        file = Path(self.SECRET_DIR) / name
+        file = Path(SECRET_DIR) / name
         if not file.exists():
             raise ImproperlyConfigured(f"Secret {file} not found")
 
@@ -33,11 +73,22 @@ def get_secret(name, cast=str):
     return property(_lookup)
 
 
+def csv_to_list(value):
+    """
+    Convert a comma separated list of values into a list.
+
+    Convenience function for use with get_env() and get_secret() ``cast`` argument.
+    """
+    if value is None:
+        return []
+    return value.split(",")
+
+
 class Common(Configuration):
     @classmethod
     def pre_setup(cls):
         """
-        If specified, add config dir and secret dir to environment
+        If specified, add config dir to environment
         """
         if CONFIG_DIR:
             envdir.Env(CONFIG_DIR)
@@ -46,18 +97,33 @@ class Common(Configuration):
     # Name of the configuration class in use
     PROJECT_ENVIRONMENT_SLUG = "{}_{}".format(PROJECT_NAME, CONFIGURATION.lower())
 
-    # DJANGO_ADMINS="User One,user1@example.com;User Two,user2@example.com"
-    ADMINS = values.SingleNestedTupleValue()
+    @property
+    def ADMINS(self):
+        """
+        Look up DJANGO_ADMINS and split into list of (name, email) tuples
+
+        Separate name and email with commas, name+email pairs with semicolons, eg::
+
+            DJANGO_ADMINS="User One,user1@example.com;User Two,user2@example.com"
+        """
+        value = environ.get("DJANGO_ADMINS")
+        if not value:
+            return []
+
+        pairs = value.split(";")
+        return [pair.rsplit(",", 1) for pair in pairs]
 
     MANAGERS = ADMINS
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = values.Value(PROJECT_NAME)
+    SECRET_KEY = get_env("DJANGO_SECRET_KEY", default=PROJECT_NAME)
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
-    ALLOWED_HOSTS = values.ListValue(["*"])
+    # Comma separated list of hosts; for exmaple:
+    #   DJANGO_ALLOWED_HOSTS=host1.example.com,host2.example.com
+    ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, default=["*"])
 
     INSTALLED_APPS = [
         "django.contrib.admin",
@@ -114,12 +180,11 @@ class Common(Configuration):
 
     # Database
     # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-    # http://django-configurations.readthedocs.org/en/latest/values/#configurations.values.DatabaseURLValue
-    DATABASE_HOST = values.Value("localhost", environ_prefix=None)
-    DATABASE_PORT = values.Value(5432, environ_prefix=None)
-    DATABASE_NAME = values.Value(PROJECT_NAME, environ_prefix=None)
-    DATABASE_USER = values.Value(PROJECT_NAME, environ_prefix=None)
-    DATABASE_PASSWORD = values.Value(PROJECT_NAME, environ_prefix=None)
+    DATABASE_HOST = get_env("DATABASE_HOST", default="localhost")
+    DATABASE_PORT = get_env("DATABASE_PORT", default=5432, cast=int)
+    DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
+    DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
+    DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
 
     @property
     def DATABASES(self):
@@ -234,9 +299,15 @@ class Webpack:
 
     # If static content is being served through the webpack dev server.
     # Needs template context processor for template support.
-    WEBPACK_DEV_HOST = values.Value("{host}")
-    WEBPACK_DEV_PORT = values.IntegerValue(8080)
-    WEBPACK_DEV_URL = values.Value(f"//{WEBPACK_DEV_HOST}:{WEBPACK_DEV_PORT}/static/")
+    WEBPACK_DEV_HOST = get_env("WEBPACK_DEV_HOST", default="{host}")
+    WEBPACK_DEV_PORT = get_env("WEBPACK_DEV_PORT", default=8080, cast=int)
+
+    @property
+    def WEBPACK_DEV_URL(self):
+        value = environ.get("WEBPACK_DEV_URL")
+        if value:
+            return value
+        return f"//{self.WEBPACK_DEV_HOST}:{self.WEBPACK_DEV_PORT}/static/"
 
     @property
     def LOGGING(self):
@@ -303,30 +374,34 @@ class Deployed(Build):
     Settings which are for a non-local deployment
     """
 
-    SECRET_DIR = values.Value(environ_required=True)
+    # Redefine values which are not optional in a deployed environment
+    ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
-    # Some values are not optional in a deployed environment
-    ALLOWED_HOSTS = values.Value(environ_required=True)
+    # Look up secrets from the secret store
     SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
     DATABASE_USER = get_secret("DATABASE_USER")
     DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
 
     # Change default cache
-    REDIS_HOST = values.Value(environ_required=True)
-    REDIS_PORT = values.IntegerValue(6379)
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
-            "KEY_PREFIX": "{}_".format(Common.PROJECT_ENVIRONMENT_SLUG),
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "PARSER_CLASS": "redis.connection.HiredisParser",
-                # You may want this. See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
-                # 'IGNORE_EXCEPTIONS': True, # see
-            },
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", required=True)
+    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PARSER_CLASS": "redis.connection.HiredisParser",
+                    # See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+                    # 'IGNORE_EXCEPTIONS': True,
+                },
+            }
         }
-    }
+
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
     SESSION_CACHE_ALIAS = "default"
 
