@@ -20,7 +20,7 @@ def get_env(name, default=None, required=False, cast=str):
     """
     Get an environment variable
 
-    Arguments::
+    Arguments:
 
         name (str): Name of environment variable
         default (Any): default value
@@ -32,7 +32,7 @@ def get_env(name, default=None, required=False, cast=str):
     def _lookup(self):
         value = environ.get(name)
 
-        if value is None and default:
+        if value is None and default is not None:
             return default
 
         if value is None and required:
@@ -51,7 +51,7 @@ def get_secret(name, cast=str):
 
     All secrets are required
 
-    Arguments::
+    Arguments:
 
         name (str): Name of environment variable
         cast (Callable): function to call on extracted string value
