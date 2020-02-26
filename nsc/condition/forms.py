@@ -22,7 +22,7 @@ class SearchForm(forms.Form):
         required=False,
     )
 
-    name.widget.attrs.update({"class": "govuk-input", "style": "width: 80%"})
+    name.widget.attrs.update({"class": "govuk-input"})
     affects.widget.attrs.update({"class": "govuk-radios__input"})
     screen.widget.attrs.update({"class": "govuk-radios__input"})
 
