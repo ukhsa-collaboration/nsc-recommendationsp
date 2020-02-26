@@ -4,7 +4,7 @@ from .models import Review
 
 
 @admin.register(Review)
-class PolicyAdmin(admin.ModelAdmin):
+class ReviewAdmin(admin.ModelAdmin):
 
     list_display = ("name", "status")
     list_filter = ("status",)

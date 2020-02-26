@@ -43,7 +43,7 @@ class Review(TimeStampedModel):
         default=STATUS_CHOICES.pre_consultation,
     )
     review_type = models.CharField(
-        verbose_name=_("type of review"), choices=TYPE_CHOICES, max_length=50,
+        verbose_name=_("type of review"), choices=TYPE_CHOICES, max_length=50
     )
     consultation_start = models.DateField(
         verbose_name=_("consultation start date"), null=True, blank=True

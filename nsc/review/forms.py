@@ -103,24 +103,7 @@ class ReviewForm(forms.ModelForm):
 class ReviewDatesForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = [
-            "name",
-        ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-
-class ReviewOrganisationsForm(forms.ModelForm):
-    class Meta:
-        model = Review
-        fields = [
-            "name",
-        ]
+        fields = ["name"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -133,9 +116,7 @@ class ReviewOrganisationsForm(forms.ModelForm):
 class ReviewAddOrganisationForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = [
-            "name",
-        ]
+        fields = ["name"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
