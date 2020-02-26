@@ -10,6 +10,7 @@ from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
+from nsc.utils.datetime import get_today
 from nsc.utils.markdown import convert
 
 from .fields import ChoiceArrayField
@@ -20,7 +21,7 @@ class PolicyQuerySet(models.QuerySet):
         return self.filter(is_active=True)
 
     def review_due(self):
-        year = date.today().year
+        year = get_today().year
         return self.filter(next_review__year=year)
 
 
@@ -84,7 +85,7 @@ class Policy(TimeStampedModel):
         )
 
     def next_review_display(self):
-        today = timezone.localtime(timezone.now()).date()
+        today = get_today()
         if self.next_review is None:
             return _("No review has been scheduled")
         if self.next_review < today:

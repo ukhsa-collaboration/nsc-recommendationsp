@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
+from nsc.utils.datetime import get_today
+
 from ..organisation.models import Organisation
 from ..policy.models import Policy
 from .models import Review
@@ -177,7 +179,7 @@ class ReviewConsultationForm(forms.ModelForm):
         data = self.cleaned_data
 
         if data["open_now"]:
-            start = date.today()
+            start = get_today()
         else:
             start = date(data["year"], data["month"], data["day"])
 

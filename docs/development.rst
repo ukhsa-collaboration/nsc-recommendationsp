@@ -2,8 +2,8 @@
 Development
 ===========
 
-This project uses Python 3.6, and specifies its node and yarn versions in `.nvmrc` and
-`.yvmrc` respectively.
+This project uses Python 3.6, and specifies its node and yarn versions in ``.nvmrc`` and
+``.yvmrc`` respectively.
 
 These commands assume you have checked out the project and are in the root of the
 repository.
@@ -121,8 +121,7 @@ existing National Screening Committee `legacy website`_.
 ``docker-compose -f dev-docker-compose.yml exec django``).
 
 Scraping data from the legacy site is just a temporary measure during the initial
-phases of development. Once the models and content have been finalised the database
-will be dumped to generate a final fixtures file.
+phases of development.
 
 
 Running tests

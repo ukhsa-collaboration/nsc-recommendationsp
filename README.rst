@@ -1,10 +1,9 @@
-=======
-PHE NSC
-=======
+=======================================================
+PHE National Screening Committee Recommendations (Beta)
+=======================================================
 
-To run locally::
+Commenced January 2020
 
-    cp dev-docker-compose.yml.default dev-docker-compose.yml
-    docker-compose -f dev-docker-compose.yml up
+Product Owner: Adrian.Byrtus@phe.gov.uk
 
-See ``docs/dev.rst`` for more details.
+For developer information see the project documentation in ``docs``.

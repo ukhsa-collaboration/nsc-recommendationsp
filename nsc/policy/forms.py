@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from model_utils import Choices
 
+from nsc.utils.datetime import get_today
+
 from .models import Policy
 
 
@@ -96,7 +98,7 @@ class PolicyForm(forms.ModelForm):
 
         value = int(value)
 
-        if value < datetime.date.today().year:
+        if value < get_today().year:
             raise ValidationError(_("The next review cannot be in the past"))
 
         return datetime.date(year=value, month=1, day=1)

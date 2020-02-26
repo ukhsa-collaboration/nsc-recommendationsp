@@ -11,7 +11,7 @@ parameters. Most defaults should be acceptable; the key settings to update are:
 
 * **Git reference**: set this to the tag or branch in git for this deployment
 * **Application hostname**: the url for this deployment
-* **Django configuration**:
+* **Django configuration**: the :doc:`settings <settings>` class for deployment
 
-The project can be configured further using ConfigMap and Secret objects as detailed in
-:doc:`settings`.
+The project can be configured further using ``ConfigMap`` and ``Secret`` OpenShift
+objects as detailed in :doc:`settings`.

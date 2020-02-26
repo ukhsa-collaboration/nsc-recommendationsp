@@ -26,35 +26,31 @@ Settings
 Environment variables
 ---------------------
 
-.. list-table::
-    :header-rows: 1
+.. envvar:: DJANGO_CONFIGURATION
 
-    * - Variable
-      - Description
+    Select the configuration to use; one of ``Dev``, ``Test``, ``Stage`` or ``Prod``
 
-
-    * - ``DJANGO_CONFIGURATION``
-      - Select the configuration to use; one of ``Dev``, ``Test``, ``Stage`` or ``Prod``
-
-        Equivalent to ``manage.py <cmd> --configuration=<config>``
+    Equivalent to ``manage.py <cmd> --configuration=<config>``
 
 
-    * - ``DJANGO_ALLOWED_HOSTS``
+.. envvar:: DJANGO_ALLOWED_HOSTS
 
-      - A comma separated list of allowed hosts. Must be set for deployed
-        configurations.
+    A comma separated list of allowed hosts. Must be set for deployed
+    configurations.
 
-        Example::
+    Example::
 
-            DJANGO_ALLOWED_HOSTS="example.com,example.net"
+        DJANGO_ALLOWED_HOSTS="example.com,example.net"
 
-    * - ``DATABASE_HOST``, ``DATABASE_PORT``, ``DATABASE_NAME``
 
-      - Details of the PostgreSQL database. User and password are set as secrets
+.. envvar:: DATABASE_HOST, DATABASE_PORT, DATABASE_NAME
 
-    * - ``DJANGO_SECRETS_DIR``
+    Details of the PostgreSQL database. User and password are set as secrets
 
-      - Path to dir which contains configuration secrets for deployed configurations.
+
+.. envvar:: DJANGO_SECRETS_DIR
+
+    Path to dir which contains configuration secrets for deployed configurations.
 
 
 Secrets
@@ -67,21 +63,14 @@ These are optional for other configurations (ie ``Dev`` and ``Test``), and shoul
 be set there using environment variables.
 
 
-.. list-table::
-    :header-rows: 1
+.. envvar:: DJANGO_SECRET_KEY
 
-    * - Variable
-      - Description
+    Secret key.
 
 
-    * - ``DJANGO_SECRET_KEY``
+.. envvar:: DATABASE_USER, DATABASE_PASSWORD
 
-      - Secret key.
-
-
-    * - ``DATABASE_USER``, ``DATABASE_PASSWORD``
-
-      - PostgreSQL login credentials
+    PostgreSQL login credentials
 
 
 Adding a setting
