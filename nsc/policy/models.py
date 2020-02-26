@@ -1,8 +1,6 @@
-from datetime import date
-
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -23,6 +21,11 @@ class PolicyQuerySet(models.QuerySet):
     def review_due(self):
         year = get_today().year
         return self.filter(next_review__year=year)
+
+    def search(self, keywords):
+        return self.filter(
+            Q(name__icontains=keywords) | Q(keywords__icontains=keywords)
+        )
 
 
 class Policy(TimeStampedModel):
@@ -54,6 +57,10 @@ class Policy(TimeStampedModel):
 
     policy = models.TextField(verbose_name=_("policy"))
     policy_html = models.TextField(verbose_name=_("HTML policy"))
+
+    keywords = models.TextField(
+        verbose_name=_("Search keywords"), blank=True, default=""
+    )
 
     history = HistoricalRecords()
     objects = PolicyQuerySet.as_manager()

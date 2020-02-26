@@ -151,6 +151,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name_plural": "documents", "ordering": ("name", "pk"),},
+            options={"verbose_name_plural": "documents", "ordering": ("name", "pk")},
         ),
     ]

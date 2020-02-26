@@ -1,10 +1,16 @@
-from datetime import date
-
 import pytest
 
 from nsc.utils.datetime import get_today
 
 from ..forms import PolicyForm
+from ..models import Policy
+
+
+def test_form_configuration():
+    assert Policy == PolicyForm.Meta.model
+    assert "next_review" in PolicyForm.Meta.fields
+    assert "condition" in PolicyForm.Meta.fields
+    assert "keywords" in PolicyForm.Meta.fields
 
 
 @pytest.mark.parametrize(
