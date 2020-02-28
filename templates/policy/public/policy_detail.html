@@ -13,11 +13,23 @@
 
 {% block content %}
 
-  <p class="govuk-body">
-    <a href="{% url 'condition:consultation' policy.slug %}">
-      {% trans 'Take part in the consultation' %}
-    </a>
-  </p>
+  {% if current_review %}
+    <div class="govuk-body">
+      <div class="govuk-!-font-weight-bold">
+        {% trans 'This condition is currently in public consultation.' %}
+      </div>
+      <div class="govuk-!-font-weight-bold">
+        <a href="{% url 'condition:consultation' policy.slug %}">
+          {% trans 'Take part in the consultation' %}
+        </a>
+      </div>
+      <div>
+        {% blocktrans with closing_date=current_review.consultation_end_display %}
+          Closing date: {{ closing_date }}
+        {% endblocktrans %}
+      </div>
+    </div>
+  {% endif %}
 
   {% include "policy/public/summary.html" %}
   {% include "policy/public/condition.html" %}

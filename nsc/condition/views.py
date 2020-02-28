@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView, TemplateView
 
 from nsc.policy.models import Policy
+from nsc.review.models import Review
 
 from .filters import SearchFilter
 from .forms import SearchForm, SubmissionForm
@@ -27,8 +28,14 @@ class ConditionDetail(DetailView):
     context_object_name = "policy"
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data()
         referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
-        return super().get_context_data(back_url=referer)
+        latest = Review.objects.for_policy(self.object).published().first()
+        current = Review.objects.for_policy(self.object).in_consultation().first()
+        context.update(
+            {"back_url": referer, "latest_review": latest, "current_review": current}
+        )
+        return context
 
 
 class ConsultationView(TemplateView):
