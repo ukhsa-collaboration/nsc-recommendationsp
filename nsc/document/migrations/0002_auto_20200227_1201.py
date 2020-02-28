@@ -6,15 +6,13 @@ import nsc.document.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ("document", "0001_initial"),
-    ]
+    dependencies = [("document", "0001_initial")]
 
     operations = [
         migrations.RenameField(
-            model_name="historicaldocument", old_name="document", new_name="upload",
+            model_name="historicaldocument", old_name="document", new_name="upload"
         ),
-        migrations.RemoveField(model_name="document", name="document",),
+        migrations.RemoveField(model_name="document", name="document"),
         migrations.AddField(
             model_name="document",
             name="upload",

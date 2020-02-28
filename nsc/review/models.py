@@ -1,4 +1,3 @@
-from dateutil import relativedelta
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
@@ -6,6 +5,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from dateutil import relativedelta
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords

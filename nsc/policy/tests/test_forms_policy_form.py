@@ -1,5 +1,3 @@
-from datetime import date
-
 import pytest
 
 from nsc.utils.datetime import get_today

@@ -3,9 +3,9 @@ from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
 from nsc.policy.models import Policy
+from nsc.utils.datetime import get_today
 
 from ..models import Review
-from ...utils.datetime import get_today
 
 
 @pytest.fixture
