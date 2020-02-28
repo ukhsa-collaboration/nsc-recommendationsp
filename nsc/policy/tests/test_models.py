@@ -18,12 +18,58 @@ def test_factory_create_policy():
 
 def test_active():
     """
-    Test the active() method on the manager only returns active policies.
+    Test the queryset active() method only returns active policies.
     """
     baker.make(Policy, is_active=True)
     baker.make(Policy, is_active=False)
     expected = [obj.pk for obj in Policy.objects.filter(is_active=True)]
     actual = [obj.pk for obj in Policy.objects.active()]
+    assert expected == actual
+
+
+def test_search_on_name():
+    """
+    Test the queryset search() method searches the name field.
+    """
+    baker.make(Policy, name="title with keyword")
+    baker.make(Policy, name="other")
+    expected = [obj.pk for obj in Policy.objects.filter(name__icontains="with")]
+    actual = [obj.pk for obj in Policy.objects.search("with")]
+    assert expected == actual
+
+
+def test_search_on_keywords():
+    """
+    Test the queryset search() method searches the keywords field.
+    """
+    baker.make(Policy, name="first", keywords="keyword")
+    baker.make(Policy, name="other")
+    expected = [obj.pk for obj in Policy.objects.filter(name="first")]
+    actual = [obj.pk for obj in Policy.objects.search("keyword")]
+    assert expected == actual
+
+
+def test_search_is_case_insensitive():
+    """
+    Test the queryset search() method ignores the case of the name or keywords.
+    """
+    baker.make(Policy, name="first", keywords="KEYWORD")
+    baker.make(Policy, name="other")
+    expected = [obj.pk for obj in Policy.objects.filter(name="first")]
+    actual = [obj.pk for obj in Policy.objects.search("FIRST")]
+    assert expected == actual
+    actual = [obj.pk for obj in Policy.objects.search("keyword")]
+    assert expected == actual
+
+
+def test_search_on_partial_keywords():
+    """
+    Test the queryset search() matches part of a keyword.
+    """
+    baker.make(Policy, name="first", keywords="keyword")
+    baker.make(Policy, name="other")
+    expected = [obj.pk for obj in Policy.objects.filter(name="first")]
+    actual = [obj.pk for obj in Policy.objects.search("key")]
     assert expected == actual
 
 

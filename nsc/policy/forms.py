@@ -57,7 +57,7 @@ class PolicyForm(forms.ModelForm):
 
     class Meta:
         model = Policy
-        fields = ["next_review", "condition"]
+        fields = ["next_review", "condition", "keywords"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -85,6 +85,15 @@ class PolicyForm(forms.ModelForm):
         self.fields["condition"].widget = forms.Textarea()
         self.fields["condition"].widget.attrs.update(
             {"class": "govuk-textarea", "aria-describedby": "condition-hint"}
+        )
+
+        self.fields["keywords"].label = _("Search keywords")
+
+        self.fields["keywords"].help_text = _(
+            "Enter keywords which can help people find a condition"
+        )
+        self.fields["keywords"].widget.attrs.update(
+            {"class": "govuk-input", "aria-describedby": "keywords-hint"}
         )
 
     def clean_next_review(self):
