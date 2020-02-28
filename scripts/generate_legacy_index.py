@@ -15,7 +15,7 @@ TIMESTAMP = timezone.now().isoformat()
 
 
 def run():
-    save_data(scrape_contents(get_page('/screening-recommendations.php')))
+    save_data(scrape_contents(get_page("/screening-recommendations.php")))
 
 
 def get_page(path):
@@ -25,7 +25,7 @@ def get_page(path):
 
 
 def save_data(data):
-    with open('fixtures/legacy_index.json', 'w') as fixture_file:
+    with open("fixtures/legacy_index.json", "w") as fixture_file:
         json.dump(data, fixture_file, indent=4)
 
 
@@ -38,11 +38,11 @@ def scrape_contents(response):
 
 
 def scrape_rows(node):
-    return node.find('div', {'id': 'policyListArea'}).find_all('tr')
+    return node.find("div", {"id": "policyListArea"}).find_all("tr")
 
 
 def scrape_row(node, pk):
-    fields = node.find_all('td')
+    fields = node.find_all("td")
 
     name = get_name(fields[1])
     url = get_url(fields[1])
@@ -51,33 +51,33 @@ def scrape_row(node, pk):
     recommendation = get_recommendation(fields[6])
 
     return {
-        'name': name,
-        'slug': slug,
-        'url': url,
-        'ages': ages,
-        'is_active': True,
-        'is_screened': recommendation,
+        "name": name,
+        "slug": slug,
+        "url": url,
+        "ages": ages,
+        "is_active": True,
+        "recommendation": recommendation,
     }
 
 
 def get_name(node):
-    return node.find('a').text.strip()
+    return node.find("a").text.strip()
 
 
 def get_url(node):
-    return SITE + node.find('a')['href']
+    return SITE + node.find("a")["href"]
 
 
 def get_ages(node):
     text = node.text.strip().lower()
 
-    if ' and ' in text:
-        text = text.replace(' and ', ' ')
-    elif text == 'all age':
-        text = 'all'
+    if " and " in text:
+        text = text.replace(" and ", " ")
+    elif text == "all age":
+        text = "all"
 
     return text.split()
 
 
 def get_recommendation(node):
-    return 'not recommended' not in node.text
+    return "not recommended" not in node.text

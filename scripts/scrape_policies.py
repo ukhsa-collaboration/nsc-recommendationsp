@@ -27,7 +27,7 @@ def run():
 
         obj.name = entry["name"]
         obj.is_active = entry["is_active"]
-        obj.is_screened = entry["is_screened"]
+        obj.recommendation = entry["recommendation"]
         obj.ages = entry["ages"]
         obj.condition = get_condition(page)
         obj.keywords = ""
