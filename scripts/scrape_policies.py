@@ -13,8 +13,11 @@ from nsc.policy.models import Policy
 
 
 def run():
+    print("Scraping...")
     index = load_index()
     for entry in index:
+        print(" ", entry["name"])
+
         page = get_page(entry["url"])
 
         try:
@@ -24,13 +27,16 @@ def run():
 
         obj.name = entry["name"]
         obj.is_active = entry["is_active"]
-        obj.is_screened = entry["is_screened"]
+        obj.recommendation = entry["recommendation"]
         obj.ages = entry["ages"]
         obj.condition = get_condition(page)
+        obj.keywords = ""
 
         obj.clean()
 
         obj.save()
+
+    print("Finished")
 
 
 def load_index():
@@ -56,10 +62,12 @@ def get_condition(node):
         link = node.find("a")
         if link is None:
             text = node.text.strip()
-            content.append(text)
+            if text:
+                content.append(text)
         else:
             link_url = link["href"]
-            content.append("\n[%s](%s)" % ("Read more on NHS UK", link_url))
+            link_text = link.text.strip()
+            content.append("\n[%s](%s)" % (link_text, link_url))
         node = node.find_next_sibling()
 
     return "\n".join(content)

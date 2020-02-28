@@ -24,8 +24,8 @@ class ReviewStatusView(generic.TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
-        reviews = Review.objects.current()
-        policies = Policy.objects.review_due()
+        reviews = Review.objects.draft()
+        policies = Policy.objects.upcoming()
         return super().get_context_data(reviews=reviews, policies=policies)
 
 

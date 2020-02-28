@@ -4,14 +4,16 @@
   {% trans 'Recommendation' %}
 </h2>
 
-{% if policy.is_screened %}
-  <div class="govuk-body">
-    {% trans 'Screening for this condition is recommended.' %}
-  </div>
-{% else %}
-  <div class="govuk-body">
-    {% trans 'Screening is not currently recommended for this condition.' %}
-  </div>
-{% endif %}
+<div class="govuk-body">
+  {% if policy.is_screened %}
+    <div class="nsc-message-success">
+      {% trans 'Screening for this condition is recommended.' %}
+    </div>
+  {% else %}
+    <div class="nsc-message-error">
+      {% trans 'Screening is not currently recommended for this condition.' %}
+    </div>
+  {% endif %}
+</div>
 
-{{ policy.policy_html|safe }}
+{{ policy.summary_html|safe }}

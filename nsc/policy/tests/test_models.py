@@ -103,10 +103,10 @@ def test_condition_markdown_conversion():
     assert instance.condition_html == '<h1 class="govuk-heading-xl">Heading</h1>'
 
 
-def test_policy_markdown_conversion():
+def test_summary_markdown_conversion():
     """
-    Test the markdown in the policy attribute is converted to HTML when the model is cleaned.
+    Test the markdown in the summary attribute is converted to HTML when the model is cleaned.
     """
-    instance = baker.make(Policy, policy="# Heading", policy_html="")
+    instance = baker.make(Policy, summary="# Heading", summary_html="")
     instance.clean()
-    assert instance.policy_html == '<h1 class="govuk-heading-xl">Heading</h1>'
+    assert instance.summary_html == '<h1 class="govuk-heading-xl">Heading</h1>'

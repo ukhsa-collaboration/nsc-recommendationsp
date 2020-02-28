@@ -76,7 +76,7 @@ def test_search_on_recommendation(django_app_form):
     Test the list of policies can be filtered by whether the condition is
     screened for or not.
     """
-    baker.make(Policy, is_screened=False)
+    baker.make(Policy, recommendation=False)
     response = django_app_form(condition_list_url, screen="yes")
     assert not response.context["object_list"]
 

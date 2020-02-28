@@ -18,9 +18,8 @@ class PolicyQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
 
-    def review_due(self):
-        year = get_today().year
-        return self.filter(next_review__year=year)
+    def upcoming(self):
+        return self.filter(next_review__gte=get_today())
 
     def search(self, keywords):
         return self.filter(
@@ -42,7 +41,10 @@ class Policy(TimeStampedModel):
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
-    is_screened = models.BooleanField(verbose_name=_("is_screened"), default=False)
+    recommendation = models.BooleanField(
+        verbose_name=_("recommendation"), default=False
+    )
+
     last_review = models.DateField(verbose_name=_("last review"), null=True, blank=True)
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
 
@@ -55,8 +57,8 @@ class Policy(TimeStampedModel):
     condition = models.TextField(verbose_name=_("condition"))
     condition_html = models.TextField(verbose_name=_("HTML condition"))
 
-    policy = models.TextField(verbose_name=_("policy"))
-    policy_html = models.TextField(verbose_name=_("HTML policy"))
+    summary = models.TextField(verbose_name=_("summary"))
+    summary_html = models.TextField(verbose_name=_("HTML summary"))
 
     keywords = models.TextField(
         verbose_name=_("Search keywords"), blank=True, default=""
@@ -82,7 +84,7 @@ class Policy(TimeStampedModel):
         return reverse("policy:edit", kwargs={"slug": self.slug})
 
     def recommendation_display(self):
-        return _("Recommended") if self.is_screened else _("Not recommended")
+        return _("Recommended") if self.recommendation else _("Not recommended")
 
     def last_review_display(self):
         return (
@@ -107,4 +109,4 @@ class Policy(TimeStampedModel):
         if not self.slug:
             self.slug = slugify(self.name)
         self.condition_html = convert(self.condition)
-        self.policy_html = convert(self.policy)
+        self.summary_html = convert(self.summary)

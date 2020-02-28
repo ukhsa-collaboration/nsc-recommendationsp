@@ -14,8 +14,10 @@ from nsc.policy.models import Policy
 
 
 def run():
+    print("Scraping...")
     index = load_index()
     for entry in index:
+        print(" ", entry["name"])
         page = get_page(entry["url"])
 
         for stakeholder in get_stakeholders(page):
@@ -29,6 +31,8 @@ def run():
                 contact.save()
 
             contact.policies.add(Policy.objects.get(slug=entry["slug"]))
+
+    print("Finished")
 
 
 def load_index():

@@ -21,7 +21,7 @@ class DocumentForm(forms.ModelForm):
 
     class Meta:
         model = Document
-        fields = ["name", "document_type", "is_public", "review", "document"]
+        fields = ["name", "document_type", "is_public", "review", "upload"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -29,7 +29,7 @@ class DocumentForm(forms.ModelForm):
         self.fields["name"].widget.attrs.update({"class": "govuk-input"})
         self.fields["is_public"].widget.attrs.update({"class": "govuk-radios__input"})
         self.fields["document_type"].widget = HiddenInput()
-        self.fields["document"].label = _("Upload a file")
+        self.fields["upload"].label = _("Upload a file")
         self.fields["review"].widget = HiddenInput()
 
 
@@ -54,12 +54,12 @@ class UploadAnotherForm(forms.Form):
 class ReviewDocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ["name", "document_type", "is_public", "review", "document"]
+        fields = ["name", "document_type", "is_public", "review", "upload"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.fields["document"].label = _("Upload a file")
+        self.fields["upload"].label = _("Upload a file")
         self.fields["name"].widget = HiddenInput()
         self.fields["document_type"].widget = HiddenInput()
         self.fields["is_public"].widget = HiddenInput()

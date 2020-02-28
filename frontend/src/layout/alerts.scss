@@ -15,3 +15,15 @@ ul.nsc-alerts {
     padding: govuk-spacing(2);
   }
 }
+
+.nsc-message-error {
+  border: thick solid govuk-colour('red');
+  color: govuk-colour('red');
+  padding: govuk-spacing(2);
+}
+
+.nsc-message-success {
+  border: thick solid govuk-colour('green');
+  color: govuk-colour('green');
+  padding: govuk-spacing(2);
+}
