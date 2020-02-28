@@ -17,4 +17,4 @@ class SearchFilter(FilterSet):
 
     name = CharFilter(field_name="name", lookup_expr="icontains")
     affects = CharFilter(field_name="ages", lookup_expr="icontains")
-    screen = YesNoFilter(field_name="is_screened")
+    screen = YesNoFilter(field_name="recommendation")

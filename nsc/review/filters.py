@@ -13,5 +13,5 @@ class SearchFilter(FilterSet):
         field_name="name", choices=SearchForm.REVIEW_STATUS_CHOICES
     )
     screen = TypedChoiceFilter(
-        field_name="is_screened", choices=SearchForm.YES_NO_CHOICES, coerce=strtobool
+        field_name="recommendation", choices=SearchForm.YES_NO_CHOICES, coerce=strtobool
     )

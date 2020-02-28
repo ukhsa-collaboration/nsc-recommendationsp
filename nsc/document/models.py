@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,34 +9,46 @@ from simple_history.models import HistoricalRecords
 
 
 class DocumentQuerySet(models.QuerySet):
-    def for_review(self, review_id):
-        return self.filter(review_id=review_id)
+    def for_review(self, review):
+        return self.filter(review_id=review.pk)
 
-    def policy(self, review_id):
-        return self.for_review(review_id).filter(document_type=Document.TYPES.policy)
+    def supporting(self):
+        return self.filter(document_type=Document.TYPE.supporting)
 
-    def review(self, review_id):
-        return self.for_review(review_id).filter(document_type=Document.TYPES.review)
+    def external(self):
+        return self.filter(document_type=Document.TYPE.external)
 
-    def recommendation(self, review_id):
-        return self.for_review(review_id).filter(
-            document_type=Document.TYPES.recommendation
-        )
+    def recommendation(self):
+        return self.filter(document_type=Document.TYPE.recommendation)
+
+
+def review_document_path(instance, filename):
+    review = instance.review
+    if review:
+        return "{0}/{1}/{2}".format(review.review_start.year, review.slug, filename)
+    else:
+        today = datetime.date.today()
+        return "uploads/{0}/{1}/{2}".format(today.year, today.month, filename)
 
 
 class Document(TimeStampedModel):
 
-    TYPES = Choices(
-        ("policy", _("Policy")),
-        ("review", _("Review")),
-        ("recommendation", _("Recommendation")),
+    TYPE = Choices(
+        ("supporting", _("Supporting documents")),
+        ("external", _("External Review")),
+        ("recommendation", _("Review recommendation")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     document_type = models.CharField(
-        verbose_name=_("type of document"), choices=TYPES, max_length=256
+        verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
-    document = models.FileField(verbose_name=_("document"), null=True, blank=True)
+    upload = models.FileField(
+        verbose_name=_("document"),
+        upload_to=review_document_path,
+        null=True,
+        blank=True,
+    )
     is_public = models.BooleanField(verbose_name=_("is public"))
     review = models.ForeignKey(
         "review.Review",

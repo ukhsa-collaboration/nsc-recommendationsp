@@ -56,7 +56,7 @@ class ReviewForm(forms.ModelForm):
 
     review_type = forms.TypedChoiceField(
         label=_("What type of review is this?"),
-        choices=Review.TYPE_CHOICES,
+        choices=Review.TYPE,
         widget=forms.RadioSelect,
     )
 
