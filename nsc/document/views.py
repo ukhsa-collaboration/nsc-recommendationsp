@@ -3,9 +3,10 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from .forms import DocumentForm, UploadAnotherForm, ReviewDocumentForm
+from nsc.review.models import Review
+
+from .forms import DocumentForm, ReviewDocumentForm, UploadAnotherForm
 from .models import Document
-from ..review.models import Review
 
 
 class DocumentView(generic.CreateView):

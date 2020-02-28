@@ -15,6 +15,9 @@ class YesNoFilter(Filter):
 
 class SearchFilter(FilterSet):
 
-    name = CharFilter(field_name="name", lookup_expr="icontains")
+    name = CharFilter(field_name="name", method="search_name")
     affects = CharFilter(field_name="ages", lookup_expr="icontains")
     screen = YesNoFilter(field_name="is_screened")
+
+    def search_name(self, queryset, name, value):
+        return queryset.search(value)

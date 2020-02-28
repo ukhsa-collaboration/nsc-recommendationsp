@@ -52,7 +52,7 @@ class AgeGroupFilter(SimpleListFilter):
 
 class SearchFilter(FilterSet):
 
-    name = CharFilter(field_name="name", lookup_expr="icontains")
+    name = CharFilter(field_name="name", method="search_name")
     # ToDo change the field name to the correct one
     status = TypedChoiceFilter(
         field_name="name", choices=SearchForm.REVIEW_STATUS_CHOICES
@@ -60,3 +60,6 @@ class SearchFilter(FilterSet):
     screen = TypedChoiceFilter(
         field_name="is_screened", choices=SearchForm.YES_NO_CHOICES, coerce=strtobool
     )
+
+    def search_name(self, queryset, name, value):
+        return queryset.search(value)
