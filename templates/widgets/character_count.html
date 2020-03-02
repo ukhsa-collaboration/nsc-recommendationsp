@@ -1,0 +1,29 @@
+{% load i18n %}
+
+{% if field and not field.is_hidden %}
+  <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="20000">
+    <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
+      <fieldset class="govuk-fieldset" role="group" aria-describedby="{{ field.name }}-hint {{ field.name }}-error">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--{% if label_size %}{{ label_size }}{% else %}s{% endif %}">
+          <label for="{{ field.id_for_label}}">
+              {{ field.label }}
+          </label>
+        </legend>
+        {% if field.errors %}
+          <span id="{{ field.name }}-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ field.errors.0 }}
+          </span>
+        {% endif %}
+        {% if field.help_text %}
+          <span id="{{ field.name }}-hint" class="govuk-hint">
+            {{ field.help_text }}
+          </span>
+        {% endif %}
+        {{ field }}
+        <span id="with-hint-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+          You can enter up to 20000 characters
+        </span>
+      </fieldset>
+    </div>
+  </div>
+{% endif %}

@@ -14,6 +14,7 @@ urlpatterns = [
     path(r"", ReviewStatusView.as_view(), name="home"),
     path(r"condition/", include("nsc.condition.urls", namespace="condition")),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
+    path(r"document/", include("nsc.document.urls", namespace="document")),
     path(r"organisation/", include("nsc.organisation.urls", namespace="organisation")),
     path(r"policy/", include("nsc.policy.urls", namespace="policy")),
     path(r"review/", include("nsc.review.urls", namespace="review")),

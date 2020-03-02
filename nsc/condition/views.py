@@ -43,7 +43,8 @@ class ConsultationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         condition = Policy.objects.get(slug=self.kwargs["slug"])
-        return super().get_context_data(condition=condition, **kwargs)
+        review = Review.objects.for_policy(condition).in_consultation().first()
+        return super().get_context_data(condition=condition, review=review, **kwargs)
 
 
 class SubmissionView(FormView):
@@ -63,4 +64,5 @@ class SubmittedView(TemplateView):
 
     def get_context_data(self, **kwargs):
         condition = Policy.objects.get(slug=self.kwargs["slug"])
-        return super().get_context_data(condition=condition, **kwargs)
+        review = Review.objects.for_policy(condition).in_consultation().first()
+        return super().get_context_data(condition=condition, review=review, **kwargs)
