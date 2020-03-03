@@ -5,7 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 import envdir
-from configurations import Configuration, values
+from configurations import Configuration
 
 
 # Common settings
@@ -340,17 +340,8 @@ class S3:
     AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
     AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
 
-    AWS_STORAGE_BUCKET_NAME = values.Value(
-        environ_prefix=None,
-        environ_name="OBJECT_STORAGE_BUCKET_NAME",
-        environ_required=True,
-    )
-
-    AWS_S3_CUSTOM_DOMAIN = values.Value(
-        environ_prefix=None,
-        environ_name="OBJECT_STORAGE_DOMAIN_NAME",
-        environ_required=True,
-    )
+    AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
+    AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
 
     # ToDo: it's not clear whether any files uploaded to the server should be
     #       cached since it's likely that an admin would want the ability to
