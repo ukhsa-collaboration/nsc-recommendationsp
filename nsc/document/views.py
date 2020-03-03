@@ -1,8 +1,6 @@
 import mimetypes
-import os
 
-from django.conf import settings
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import FileResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
@@ -94,13 +92,14 @@ class DownloadView(generic.DetailView):
     def get(self, request, *args, **kwargs):
         document = self.get_object()
         storage = document.upload.storage
-        if storage.exists(document.upload.name):
-            mime_type, encoding = mimetypes.guess_type(document.upload.url)
-            file_path = os.path.join(settings.MEDIA_ROOT, document.upload.path)
-            with storage.open(document.upload.path, "rb") as fh:
-                response = HttpResponse(fh.read(), content_type=mime_type)
-                response[
-                    "Content-Disposition"
-                ] = "attachment; filename=" + os.path.basename(file_path)
-                return response
-        raise Http404
+
+        if not storage.exists(document.upload.name):
+            raise Http404
+
+        mime_type, encoding = mimetypes.guess_type(document.upload.url)
+
+        return FileResponse(
+            storage.open(document.upload.path, "rb"),
+            as_attachment=True,
+            content_type=mime_type,
+        )
