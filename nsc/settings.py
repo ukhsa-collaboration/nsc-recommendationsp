@@ -5,7 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 import envdir
-from configurations import Configuration
+from configurations import Configuration, values
 
 
 # Common settings
@@ -137,6 +137,7 @@ class Common(Configuration):
         "django_extensions",
         "clear_cache",
         "simple_history",
+        "storages",
         "django_filters",
         "nsc.condition",
         "nsc.contact",
@@ -331,6 +332,36 @@ class Webpack:
         return TEMPLATES
 
 
+class S3:
+    """
+    Settings needed for an S3 object store.
+    """
+
+    AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
+
+    AWS_STORAGE_BUCKET_NAME = values.Value(
+        environ_prefix=None,
+        environ_name="OBJECT_STORAGE_BUCKET_NAME",
+        environ_required=True,
+    )
+
+    AWS_S3_CUSTOM_DOMAIN = values.Value(
+        environ_prefix=None,
+        environ_name="OBJECT_STORAGE_DOMAIN_NAME",
+        environ_required=True,
+    )
+
+    # ToDo: it's not clear whether any files uploaded to the server should be
+    #       cached since it's likely that an admin would want the ability to
+    #       make changes at any time and have users see them immediately.
+    # AWS_S3_OBJECT_PARAMETERS = {
+    #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
+    # }
+
+    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
+
+
 class Dev(Webpack, Common):
     DEBUG = True
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
@@ -361,7 +392,7 @@ class Test(Dev):
 class Build(Common):
     """
     Settings for use when building containers for deployment
-    """
+        """
 
     # New paths
     PUBLIC_ROOT = BASE_DIR.parent / "public"
@@ -369,7 +400,7 @@ class Build(Common):
     MEDIA_ROOT = PUBLIC_ROOT / "media"
 
 
-class Deployed(Build):
+class Deployed(S3, Build):
     """
     Settings which are for a non-local deployment
     """
