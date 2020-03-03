@@ -25,7 +25,9 @@ class ReviewStatusView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         reviews = Review.objects.draft()
-        policies = Policy.objects.upcoming()
+        policies = (Policy.objects.upcoming() | Policy.objects.overdue()).order_by(
+            "next_review"
+        )
         return super().get_context_data(reviews=reviews, policies=policies)
 
 

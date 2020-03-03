@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
@@ -18,8 +19,20 @@ class PolicyQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
 
+    def overdue(self):
+        """
+        Get the policies where the next review is in the past.
+        """
+        return self.filter(Q(next_review__lt=get_today()) | Q(next_review__isnull=True))
+
     def upcoming(self):
-        return self.filter(next_review__gte=get_today())
+        """
+        Get the policies due for a review in the next 12 month, ordered by the
+        next review date, soonest, first.
+        """
+        today = get_today()
+        next_year = today + relativedelta(months=12)
+        return self.filter(next_review__gte=today, next_review__lt=next_year)
 
     def search(self, keywords):
         return self.filter(
