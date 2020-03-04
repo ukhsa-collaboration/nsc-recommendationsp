@@ -99,7 +99,22 @@ class Review(TimeStampedModel):
         return reverse("review:detail", kwargs={"slug": self.slug})
 
     def get_evidence_review_url(self):
-        document = Document.objects.for_review(self).external().first()
+        document = Document.objects.for_review(self).evidence_reviews().first()
+        if document:
+            return reverse("document:download", kwargs={"pk": document.pk})
+
+    def get_submission_form_url(self):
+        document = Document.objects.for_review(self).submission_forms().first()
+        if document:
+            return reverse("document:download", kwargs={"pk": document.pk})
+
+    def get_coversheet_url(self):
+        document = Document.objects.for_review(self).comments().first()
+        if document:
+            return reverse("document:download", kwargs={"pk": document.pk})
+
+    def get_recommendation_url(self):
+        document = Document.objects.for_review(self).recommendations().first()
         if document:
             return reverse("document:download", kwargs={"pk": document.pk})
 
