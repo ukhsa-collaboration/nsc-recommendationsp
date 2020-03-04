@@ -1,11 +1,27 @@
 import pytest
+from dateutil.relativedelta import relativedelta
 from model_bakery import baker
+
+from nsc.utils.datetime import get_today
 
 from ..models import Policy
 
 
 # All tests require the database
+
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def make_policy():
+    def _make_policy(**kwargs):
+        return baker.make(Policy, **kwargs)
+
+    return _make_policy
+
+
+def relative_date(**kwargs):
+    return get_today() + relativedelta(**kwargs)
 
 
 def test_factory_create_policy():
@@ -16,15 +32,101 @@ def test_factory_create_policy():
     assert isinstance(instance, Policy)
 
 
-def test_active():
+def test_active(make_policy):
     """
     Test the queryset active() method only returns active policies.
     """
-    baker.make(Policy, is_active=True)
-    baker.make(Policy, is_active=False)
+    make_policy(is_active=True)
+    make_policy(is_active=False)
     expected = [obj.pk for obj in Policy.objects.filter(is_active=True)]
     actual = [obj.pk for obj in Policy.objects.active()]
     assert expected == actual
+
+
+def test_overdue(make_policy):
+    """
+    Test the queryset overdue() method includes records where next_review is in the past.
+    """
+    make_policy(next_review=relative_date(months=+1))
+    make_policy(next_review=relative_date(months=-1))
+    expected = [obj.pk for obj in Policy.objects.filter(next_review__lt=get_today())]
+    actual = [obj.pk for obj in Policy.objects.overdue()]
+    assert expected == actual
+
+
+def test_yesterday_is_overdue(make_policy):
+    """
+    Test the queryset overdue() method does not include policies with a next
+    review date of today.
+    """
+    make_policy(next_review=get_today())
+    instance = make_policy(next_review=get_today() - relativedelta(days=1))
+    actual = [obj.pk for obj in Policy.objects.overdue()]
+    assert [instance.pk] == actual
+
+
+def test_no_review_is_overdue(make_policy):
+    """
+    Test the queryset overdue() method includes records where next_review is not set.
+    """
+    make_policy(next_review=get_today())
+    instance = make_policy(next_review=None)
+    actual = [obj.pk for obj in Policy.objects.overdue()]
+    assert [instance.pk] == actual
+
+
+def test_today_is_not_overdue(make_policy):
+    """
+    Test the queryset overdue() method does not include policies with a next
+    review date of today.
+    """
+    make_policy(next_review=get_today())
+    actual = [obj.pk for obj in Policy.objects.overdue()]
+    assert [] == actual
+
+
+def test_upcoming(make_policy):
+    """
+    Test the queryset upcoming method() includes records where the next
+    review is scheduled anytime in the next twelve months.
+    """
+    make_policy(next_review=relative_date(months=+11))
+    make_policy(next_review=relative_date(days=-1))
+    expected = [obj.pk for obj in Policy.objects.filter(next_review__gte=get_today())]
+    actual = [obj.pk for obj in Policy.objects.upcoming()]
+    assert expected == actual
+
+
+def test_today_is_upcoming(make_policy):
+    """
+    Test the queryset upcoming() method includes policies with a next
+    review date of today.
+    """
+    make_policy(next_review=get_today())
+    yesterday = get_today() - relativedelta(days=1)
+    expected = [obj.pk for obj in Policy.objects.filter(next_review__gt=yesterday)]
+    actual = [obj.pk for obj in Policy.objects.upcoming()]
+    assert expected == actual
+
+
+def test_yesterday_is_not_upcoming(make_policy):
+    """
+    Test the queryset upcoming() method excludd policies with a next
+    review date in the past.
+    """
+    make_policy(next_review=get_today() - relativedelta(days=1))
+    actual = [obj.pk for obj in Policy.objects.upcoming()]
+    assert [] == actual
+
+
+def test_upcoming_limit(make_policy):
+    """
+    Test the queryset upcoming method() only includes records where the next
+    review date is within the next twelve months.
+    """
+    make_policy(next_review=relative_date(years=1))
+    actual = [obj.pk for obj in Policy.objects.upcoming()]
+    assert [] == actual
 
 
 def test_search_on_name():
