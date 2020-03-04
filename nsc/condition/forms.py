@@ -43,14 +43,7 @@ class SubmissionForm(forms.Form):
         choices=((True, _("Yes")), (False, _("No"))),
         widget=forms.RadioSelect,
     )
-    comments = forms.CharField(
-        label=_("Consultation comments"),
-        help_text=_(
-            "If your comments relate to specific review sections or page numbers, "
-            "please indicate this in the text, e.g. [page 3, paragraph 2]]"
-        ),
-        required=False,
-    )
+    comments = forms.CharField(required=False)
 
     def __init__(self, **kwargs):
 
@@ -77,5 +70,8 @@ class SubmissionForm(forms.Form):
 
         self.fields["comments"].widget = forms.Textarea()
         self.fields["comments"].widget.attrs.update(
-            {"class": "govuk-textarea", "aria-describedby": "comments-hint"}
+            {
+                "class": "govuk-textarea govuk-js-character-count",
+                "aria-describedby": "comments-hint",
+            }
         )

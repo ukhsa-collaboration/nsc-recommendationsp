@@ -10,6 +10,7 @@ from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
+from nsc.document.models import Document
 from nsc.organisation.models import Organisation
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
@@ -97,6 +98,11 @@ class Review(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("review:detail", kwargs={"slug": self.slug})
 
+    def get_evidence_review_url(self):
+        document = Document.objects.for_review(self).external().first()
+        if document:
+            return reverse("document:download", kwargs={"pk": document.pk})
+
     def clean(self):
         if self.status == self.STATUS.published:
             if self.phase != self.PHASE.completed:
@@ -109,6 +115,9 @@ class Review(TimeStampedModel):
 
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
+
+    def consultation_start_display(self):
+        return get_date_display(self.consultation_start)
 
     def consultation_end_display(self):
         return get_date_display(self.consultation_end)

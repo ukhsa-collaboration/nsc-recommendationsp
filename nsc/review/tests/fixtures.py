@@ -2,6 +2,7 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
+from nsc.document.models import Document
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
@@ -35,7 +36,7 @@ def review_in_consultation(make_review):
     review_start = get_today() - relativedelta(months=2)
     consultation_start = review_start + relativedelta(months=2)
     consultation_end = consultation_start + relativedelta(months=3)
-    return make_review(
+    review = make_review(
         name="review",
         status=Review.STATUS.draft,
         phase=Review.PHASE.consultation,
@@ -43,6 +44,8 @@ def review_in_consultation(make_review):
         consultation_start=consultation_start,
         consultation_end=consultation_end,
     )
+    baker.make(Document, name="document", document_type="external", review=review)
+    return review
 
 
 @pytest.fixture

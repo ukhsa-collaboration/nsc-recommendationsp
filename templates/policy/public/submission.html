@@ -7,9 +7,13 @@
 {% endblock %}
 
 {% block title %}
-  {% block page_title %}
-    {% trans 'Submit your consultation comments' %}
-  {% endblock %}
+  {% trans 'Submit your consultation comments' as action %}
+  {{ condition.name }} -- {{ action }}
+{% endblock %}
+
+{% block page_title %}
+  <span class="govuk-caption-l">{{ condition.name }}</span>
+  {% trans 'Submit your consultation comments' %}
 {% endblock %}
 
 {% block content %}
@@ -40,10 +44,22 @@
     </h2>
 
     <p class="govuk-body">
-      {% trans 'You can input your feedback directly into the box below or upload it as a document.' %}
+      {% url 'condition:evidence-review' condition.slug as url %}
+      {% blocktrans %}
+        You can input your feedback directly into the box below or download and complete the
+        <a href="">response form</a>, and email it to
+        <a href="mailto:screening.evidence@nhs.net">screening.evidence@nhs.net</a>.
+      {% endblocktrans %}
     </p>
 
-    {% include "widgets/text_input.html" with field=form.comments %}
+    <p class="govuk-body">
+      {% blocktrans %}
+        If your comments relate to specific review sections or page numbers,
+        please indicate this in the text. e.g [page 3, paragraph 2] ...
+      {% endblocktrans %}
+    </p>
+
+    {% include "widgets/character_count.html" with field=form.comments %}
 
     <div class="govuk-body">
       <button type="submit" class="govuk-button" name="submit" value="submit">
