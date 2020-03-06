@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
 
 from nsc.policy.models import Policy
@@ -21,10 +22,6 @@ class SearchForm(forms.Form):
         widget=forms.RadioSelect,
         required=False,
     )
-
-    name.widget.attrs.update({"class": "govuk-input"})
-    affects.widget.attrs.update({"class": "govuk-radios__input"})
-    screen.widget.attrs.update({"class": "govuk-radios__input"})
 
 
 class SubmissionForm(forms.Form):

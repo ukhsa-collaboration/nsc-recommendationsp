@@ -42,15 +42,6 @@ class SearchForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input", "style": "width: 80%"}
-        )
-        self.fields["status"].widget.attrs.update({"class": "govuk-radios__input"})
-        self.fields["screen"].widget.attrs.update({"class": "govuk-radios__input"})
-
 
 class ReviewForm(forms.ModelForm):
 
@@ -79,16 +70,7 @@ class ReviewForm(forms.ModelForm):
         self.fields["name"].help_text = _(
             "This will be produced automatically unless filled in specifically"
         )
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
         self.fields["review_type"].label = _("What type of review is this?")
-        self.fields["review_type"].widget.attrs.update({"class": "govuk-radios__input"})
-
-        self.fields["policies"].widget.attrs.update(
-            {"class": "govuk-checkboxes__input", "autofocus": "autofocus"}
-        )
 
     def clean_name(self):
         name = self.cleaned_data["name"]
@@ -105,25 +87,11 @@ class ReviewDatesForm(forms.ModelForm):
         model = Review
         fields = ["name"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
 
 class ReviewAddOrganisationForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ["name"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
 
 
 class ReviewConsultationForm(forms.ModelForm):
@@ -150,8 +118,6 @@ class ReviewConsultationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.fields["open_now"].widget.attrs.update({"class": "govuk-radios__input"})
 
         self.fields["year"].widget.attrs.update(
             {
@@ -207,9 +173,9 @@ class ReviewOrganisationsForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["organisations"].queryset = review.stakeholders()
-        self.fields["organisations"].widget.attrs.update(
-            {"class": "govuk-checkboxes__input", "autofocus": "autofocus"}
-        )
+
+    def clean(self):
+        self.add_error(None, "TEST")
 
 
 class ReviewRecommendationForm(forms.ModelForm):
@@ -229,10 +195,6 @@ class ReviewRecommendationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["recommendation"].widget.attrs.update(
-            {"class": "govuk-radios__input"}
-        )
-
         # Make the condition field optional so we can correctly report
         # validations errors using GDS markup and suppress errors being
         # reported in popovers.
@@ -241,6 +203,3 @@ class ReviewRecommendationForm(forms.ModelForm):
         self.fields["summary"].label = _("Plain English evidence summary (optional)")
         self.fields["summary"].help_text = _("Use markdown to format the text")
         self.fields["summary"].widget = forms.Textarea()
-        self.fields["summary"].widget.attrs.update(
-            {"class": "govuk-textarea", "aria-describedby": "summary-hint"}
-        )

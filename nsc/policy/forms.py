@@ -39,20 +39,30 @@ class SearchForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input", "style": "width: 80%"}
-        )
-        self.fields["status"].widget.attrs.update({"class": "govuk-radios__input"})
-        self.fields["screen"].widget.attrs.update({"class": "govuk-radios__input"})
-
 
 class PolicyForm(forms.ModelForm):
 
     next_review = forms.CharField(
-        label=_(" Expected next review start date "), required=False
+        required=False,
+        label=_("Expected next review start date"),
+        help_text=_("Enter the year in which the policy will be reviewed next"),
+    )
+    condition = forms.CharField(
+        required=True,
+        label=_("Expected next review start date"),
+        help_text=_("Use markdown to format the text"),
+        widget=forms.Textarea,
+    )
+    keywords = forms.CharField(
+        required=False,
+        label=_("Search keywords"),
+        help_text=_("Enter keywords which can help people find a condition"),
+        error_messages={
+            "required": _(
+                "Enter keywords to make it easier for people to find a condition"
+            )
+        },
+        widget=forms.Textarea,
     )
 
     class Meta:
@@ -62,39 +72,10 @@ class PolicyForm(forms.ModelForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.fields["next_review"].help_text = _(
-            "Enter the year in which the policy will be reviewed next"
-        )
-        self.fields["next_review"].widget.attrs.update(
-            {
-                "class": "govuk-input  govuk-input--width-4",
-                "aria-describedby": "next-review-hint",
-            }
-        )
-
         if self.instance.next_review:
             self.initial["next_review"] = self.instance.next_review.year
 
-        # Make the condition field optional so we can correctly report
-        # validations errors using GDS markup and suppress errors being
-        # reported in popovers.
-
-        self.fields["condition"].required = False
         self.fields["condition"].label = _("More about %s" % self.instance.name)
-        self.fields["condition"].help_text = _("Use markdown to format the text")
-        self.fields["condition"].widget = forms.Textarea()
-        self.fields["condition"].widget.attrs.update(
-            {"class": "govuk-textarea", "aria-describedby": "condition-hint"}
-        )
-
-        self.fields["keywords"].label = _("Search keywords")
-
-        self.fields["keywords"].help_text = _(
-            "Enter keywords which can help people find a condition"
-        )
-        self.fields["keywords"].widget.attrs.update(
-            {"class": "govuk-input", "aria-describedby": "keywords-hint"}
-        )
 
     def clean_next_review(self):
         value = self.cleaned_data["next_review"]
@@ -111,13 +92,3 @@ class PolicyForm(forms.ModelForm):
             raise ValidationError(_("The next review cannot be in the past"))
 
         return datetime.date(year=value, month=1, day=1)
-
-    def clean(self):
-        data = self.cleaned_data
-
-        if not data["condition"]:
-            return self.add_error(
-                "condition", _("The description of the condition cannot be empty")
-            )
-
-        return data
