@@ -59,7 +59,7 @@
       {% endblocktrans %}
     </p>
 
-    {% include "widgets/character_count.html" with field=form.comments %}
+    {% include "widgets/text_area.html" with field=form.comment word_limit=5000 %}
 
     <div class="govuk-body">
       <button type="submit" class="govuk-button" name="submit" value="submit">
