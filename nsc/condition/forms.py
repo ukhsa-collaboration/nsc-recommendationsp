@@ -24,10 +24,10 @@ class SearchForm(forms.Form):
     )
 
 
-class SubmissionForm(forms.Form):
+class PublicCommentForm(forms.Form):
 
     name = forms.CharField(
-        label=_("Full name"), error_messages={"required": _("Enter your full name.")},
+        label=_("Full name"), error_messages={"required": _("Enter your full name.")}
     )
     email = forms.EmailField(
         label=_("Email address"),
@@ -57,6 +57,42 @@ class SubmissionForm(forms.Form):
         error_messages={
             "required": _(
                 "Select yes if you would to be notified when the NSC have completed the review."
+            )
+        },
+    )
+    comment = forms.CharField(
+        label="",
+        widget=forms.Textarea,
+        error_messages={"required": _("Enter your comment")},
+    )
+    condition = forms.CharField(required=False, widget=HiddenInput)
+
+
+class StakeholderCommentForm(forms.Form):
+
+    name = forms.CharField(
+        label=_("Full name"), error_messages={"required": _("Enter your full name.")}
+    )
+    email = forms.EmailField(
+        label=_("Email address"),
+        error_messages={
+            "required": _("Enter your email address"),
+            "invalid": _(
+                "Enter an email address in the correct format, like name@example.com."
+            ),
+        },
+    )
+    organisation = forms.CharField(
+        label=_("Organisation (if appropriate)"), required=False
+    )
+    role = forms.CharField(label=_("Role (if appropriate)"), required=False)
+    publish = forms.TypedChoiceField(
+        label=_("Do you consent to your name being published on the NSC web site?"),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would like to shown as a contributor to this consultation."
             )
         },
     )

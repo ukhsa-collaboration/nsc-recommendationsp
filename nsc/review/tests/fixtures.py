@@ -44,7 +44,9 @@ def review_in_consultation(make_review):
         consultation_start=consultation_start,
         consultation_end=consultation_end,
     )
-    baker.make(Document, name="document", document_type="external", review=review)
+    baker.make(
+        Document, name="document", document_type="evidence_review", review=review
+    )
     return review
 
 

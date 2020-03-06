@@ -1,15 +1,16 @@
 from django.conf import settings
 from django.urls import reverse
-from django.views.generic import DetailView, FormView, ListView, TemplateView
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import DetailView, FormView, ListView, TemplateView
+
 from notifications_python_client.errors import HTTPError
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review
+from nsc.utils.notify import submit_public_comment, submit_stakeholder_comment
 
 from .filters import SearchFilter
-from .forms import SearchForm, SubmissionForm
-from ..utils.notify import send_submission_form
+from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
 
 
 class ConditionList(ListView):
@@ -54,9 +55,14 @@ class ConsultationView(TemplateView):
         )
 
 
-class SubmissionView(FormView):
-    template_name = "policy/public/submission.html"
-    form_class = SubmissionForm
+class PublicCommentView(FormView):
+    template_name = "policy/public/public_comment.html"
+    form_class = PublicCommentForm
+
+    def get_success_url(self):
+        return reverse(
+            "condition:public-comment-submitted", kwargs={"slug": self.kwargs["slug"]}
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,12 +71,9 @@ class SubmissionView(FormView):
         context["form"].initial["condition"] = condition.name
         return context
 
-    def get_success_url(self):
-        return reverse("condition:submitted", kwargs={"slug": self.kwargs["slug"]})
-
     def form_valid(self, form):
         try:
-            send_submission_form(form.cleaned_data)
+            submit_public_comment(form.cleaned_data)
         except HTTPError:
             form.add_error(
                 None,
@@ -81,8 +84,50 @@ class SubmissionView(FormView):
         return super().form_valid(form)
 
 
-class SubmittedView(TemplateView):
-    template_name = "policy/public/submitted.html"
+class PublicCommentSubmittedView(TemplateView):
+    template_name = "policy/public/public_comment_submitted.html"
+
+    def get_context_data(self, **kwargs):
+        condition = Policy.objects.get(slug=self.kwargs["slug"])
+        review = Review.objects.for_policy(condition).in_consultation().first()
+        url = settings.PROJECT_FEEDBACK_URL
+        return super().get_context_data(
+            condition=condition, review=review, feedback_url=url, **kwargs
+        )
+
+
+class StakeholderCommentView(FormView):
+    template_name = "policy/public/stakeholder_comment.html"
+    form_class = StakeholderCommentForm
+
+    def get_success_url(self):
+        return reverse(
+            "condition:stakeholder-comment-submitted",
+            kwargs={"slug": self.kwargs["slug"]},
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        condition = Policy.objects.get(slug=self.kwargs["slug"])
+        context["condition"] = condition
+        context["form"].initial["condition"] = condition.name
+        return context
+
+    def form_valid(self, form):
+        try:
+            submit_stakeholder_comment(form.cleaned_data)
+        except HTTPError:
+            form.add_error(
+                None,
+                _("There was a problem submitting your comment. Please try again."),
+            )
+            return super().form_invalid(form)
+
+        return super().form_valid(form)
+
+
+class StakeholderCommentSubmittedView(TemplateView):
+    template_name = "policy/public/stakeholder_comment_submitted.html"
 
     def get_context_data(self, **kwargs):
         condition = Policy.objects.get(slug=self.kwargs["slug"])

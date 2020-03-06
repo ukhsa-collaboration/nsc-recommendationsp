@@ -12,7 +12,7 @@ pytest_plugins = ["nsc.review.tests.fixtures"]
 @pytest.fixture
 def response(review_in_consultation, django_app):
     policy = review_in_consultation.policies.first()
-    url = reverse("condition:submission", kwargs={"slug": policy.slug})
+    url = reverse("condition:stakeholder-comment", kwargs={"slug": policy.slug})
     return django_app.get(url)
 
 

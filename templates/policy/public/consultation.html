@@ -43,7 +43,7 @@
   </p>
 
   <p class="govuk-body">
-  {% url 'condition:submission' condition.slug as url %}
+  {% url 'condition:public-comment' condition.slug as url %}
   {% blocktrans %}
   Complete the <a href="{{ url }}">public comment form</a> to take part.
   {% endblocktrans %}
@@ -73,7 +73,7 @@
         {% endblocktrans %}
       </li>
       <li>
-        {% url 'condition:submission' condition.slug as url %}
+        {% url 'condition:stakeholder-comment' condition.slug as url %}
         {% blocktrans %}
           Send general comments using the <a href="{{ url }}">online form</a>.
         {% endblocktrans %}

@@ -36,7 +36,6 @@ def test_back_link(response, dom):
     expected = reverse("condition:detail", kwargs={"slug": policy.slug})
     link = dom.find(id="back-link-id")
     assert link["href"] == expected
-    assert policy.name in link.text
 
 
 def test_heading_caption(response, dom):

@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block back %}
-  {% url 'condition:submission' condition.slug as back_url %}
+  {% url 'condition:public-comment' condition.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 

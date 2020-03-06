@@ -300,9 +300,9 @@ class Common(Configuration):
         "NOTIFY_TEMPLATE_CONSULTATION_INVITATION"
     )
 
-    NOTIFY_TEMPLATE_CONSULTATION_COMMENT = get_env(
-        "NOTIFY_TEMPLATE_CONSULTATION_COMMENT"
-    )
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
+
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
 
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.

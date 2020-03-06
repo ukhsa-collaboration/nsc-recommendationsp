@@ -13,7 +13,7 @@ pytest_plugins = ["nsc.review.tests.fixtures"]
 @pytest.fixture
 def response(review_in_consultation, django_app):
     policy = review_in_consultation.policies.first()
-    url = reverse("condition:submitted", kwargs={"slug": policy.slug})
+    url = reverse("condition:public-comment-submitted", kwargs={"slug": policy.slug})
     return django_app.get(url)
 
 
@@ -31,10 +31,10 @@ def test_page(response):
 
 def test_back_link(response, dom):
     """
-    Test the back link returns to the submission page.
+    Test the back link returns to the public comment page.
     """
     policy = response.context["condition"]
-    expected = reverse("condition:submission", kwargs={"slug": policy.slug})
+    expected = reverse("condition:public-comment", kwargs={"slug": policy.slug})
     link = dom.find(id="back-link-id")
     assert link["href"] == expected
 

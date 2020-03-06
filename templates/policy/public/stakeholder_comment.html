@@ -1,0 +1,71 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'condition:consultation' condition.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% if form.errors %}
+    {% trans 'Error:' %}
+  {% endif %}
+  {% trans 'Submit your comments'%}
+{% endblock %}
+
+{% block page_title %}
+  <span class="govuk-caption-l">{{ condition.name }}</span>
+  {% trans 'Submit your comments' %}
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
+
+    <h2 class="govuk-heading-m">
+      {% trans 'About you' %}
+    </h2>
+
+    {% include "widgets/text_input.html" with field=form.name %}
+    {% include "widgets/text_input.html" with field=form.email %}
+    {% include "widgets/text_input.html" with field=form.organisation %}
+    {% include "widgets/text_input.html" with field=form.role %}
+    {% include "widgets/radio_buttons.html" with field=form.publish %}
+
+    <h2 class="govuk-heading-m">
+      {% trans 'Consultation comments' %}
+    </h2>
+
+    <p class="govuk-body">
+      {% blocktrans with url=review.get_submission_form_url end=review.consultation_end_display %}
+      Provide your views in the following field. Alternatively, download and complete the
+      <a href="{{ url }}">response form</a>, and email it to
+      <a href="mailto:screening.evidence@nhs.net">screening.evidence@nhs.net</a> before {{ end }}.
+      {% endblocktrans %}
+    </p>
+
+    <p class="govuk-body">
+      {% blocktrans %}
+      If your comments relate to specific review sections or page numbers,
+      please indicate this in the text,for example [page 3, paragraph 2],
+      {% endblocktrans %}
+    </p>
+
+    {% include "widgets/text_area.html" with field=form.comment word_limit=5000 %}
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="submit" value="submit">
+        {% trans 'Send consultation feedback' %}
+      </button>
+    </div>
+
+  </form>
+{% endblock %}
