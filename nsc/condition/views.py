@@ -1,11 +1,15 @@
+from django.conf import settings
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView, TemplateView
+from django.utils.translation import ugettext_lazy as _
+from notifications_python_client.errors import HTTPError
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review
 
 from .filters import SearchFilter
 from .forms import SearchForm, SubmissionForm
+from ..utils.notify import send_submission_form
 
 
 class ConditionList(ListView):
@@ -44,7 +48,10 @@ class ConsultationView(TemplateView):
     def get_context_data(self, **kwargs):
         condition = Policy.objects.get(slug=self.kwargs["slug"])
         review = Review.objects.for_policy(condition).in_consultation().first()
-        return super().get_context_data(condition=condition, review=review, **kwargs)
+        email = settings.CONSULTATION_COMMENT_ADDRESS
+        return super().get_context_data(
+            condition=condition, review=review, email=email, **kwargs
+        )
 
 
 class SubmissionView(FormView):
@@ -52,11 +59,26 @@ class SubmissionView(FormView):
     form_class = SubmissionForm
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         condition = Policy.objects.get(slug=self.kwargs["slug"])
-        return super().get_context_data(condition=condition, **kwargs)
+        context["condition"] = condition
+        context["form"].initial["condition"] = condition.name
+        return context
 
     def get_success_url(self):
         return reverse("condition:submitted", kwargs={"slug": self.kwargs["slug"]})
+
+    def form_valid(self, form):
+        try:
+            send_submission_form(form.cleaned_data)
+        except HTTPError:
+            form.add_error(
+                None,
+                _("There was a problem submitting your comment. Please try again."),
+            )
+            return super().form_invalid(form)
+
+        return super().form_valid(form)
 
 
 class SubmittedView(TemplateView):
