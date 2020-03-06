@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
@@ -51,7 +51,7 @@
   <div class="govuk-inset-text">
     {% trans 'What do you think of this service?' as title %}
     {% trans 'takes 2 minutes' as suffix %}
-    <a href="{{ url }}">{{ title }}</a> ({{ suffix }}).
+    <a href="{{ feedback_url }}">{{ title }}</a> ({{ suffix }}).
   </div>
 
 {% endblock %}

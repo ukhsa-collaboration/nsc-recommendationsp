@@ -87,4 +87,7 @@ class SubmittedView(TemplateView):
     def get_context_data(self, **kwargs):
         condition = Policy.objects.get(slug=self.kwargs["slug"])
         review = Review.objects.for_policy(condition).in_consultation().first()
-        return super().get_context_data(condition=condition, review=review, **kwargs)
+        url = settings.PROJECT_FEEDBACK_URL
+        return super().get_context_data(
+            condition=condition, review=review, feedback_url=url, **kwargs
+        )

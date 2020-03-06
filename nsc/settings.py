@@ -304,6 +304,10 @@ class Common(Configuration):
         "NOTIFY_TEMPLATE_CONSULTATION_COMMENT"
     )
 
+    # This is the URL for the National Screening Committee where members of
+    # the public can leave feedback about the web site.
+    PROJECT_FEEDBACK_URL = ""
+
 
 class Webpack:
     """
