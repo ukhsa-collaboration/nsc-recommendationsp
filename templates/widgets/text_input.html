@@ -1,24 +1,25 @@
 {% load i18n %}
 
-{% if field and not field.is_hidden %}
-  <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
-    <fieldset class="govuk-fieldset" role="group" aria-describedby="{{ field.name }}-hint {{ field.name }}-error">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--{% if label_size %}{{ label_size }}{% else %}s{% endif %}">
-        <label for="{{ field.id_for_label}}">
-            {{ field.label }}
-        </label>
-      </legend>
-      {% if field.errors %}
-        <span id="{{ field.name }}-error" class="govuk-error-message">
-          <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ field.errors.0 }}
-        </span>
+<div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+
+  {% include "widgets/field_label.html" %}
+  {% include "widgets/field_help.html" %}
+  {% include "widgets/field_errors.html" %}
+
+  {% with widget=field.field.widget %}
+    <input
+      type="text"
+      name="{{ field.name }}"
+      class="govuk-input{% if field.errors %} govuk-input--error{% endif %}{% if width %} govuk-input--width-{{ width }}{% endif %}"
+      id="{{ field.id_for_label }}"
+      {% if field.value != None %}
+        value="{{ field.value|stringformat:'s' }}"
       {% endif %}
-      {% if field.help_text %}
-        <span id="{{ field.name }}-hint" class="govuk-hint">
-          {{ field.help_text }}
-        </span>
+      {% if field.help_text or field.errors %}
+        aria-describedby="{% if field.help_text %}{{ field.id_for_label }}-hint {% endif %}{% if field.errors %}{{ field.id_for_label }}-error{% endif %}"
       {% endif %}
-      {{ field }}
-    </fieldset>
-  </div>
-{% endif %}
+      {% include "widgets/field_attrs.html" %}
+    >
+  {% endwith %}
+
+</div>
