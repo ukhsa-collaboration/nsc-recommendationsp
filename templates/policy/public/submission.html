@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
@@ -7,21 +7,18 @@
 {% endblock %}
 
 {% block title %}
-  {% trans 'Submit your consultation comments' as action %}
-  {{ condition.name }} -- {{ action }}
+  {% if form.errors %}
+    {% trans 'Error:' %}
+  {% endif %}
+  {% trans 'Submit your comments'%}
 {% endblock %}
 
 {% block page_title %}
   <span class="govuk-caption-l">{{ condition.name }}</span>
-  {% trans 'Submit your consultation comments' %}
+  {% trans 'Submit your comments' %}
 {% endblock %}
 
 {% block content %}
-
-  <h2 class="govuk-heading-m">
-    {% trans 'About you' %}
-  </h2>
-
   <form method="post">
     {% csrf_token %}
 
@@ -29,35 +26,45 @@
       {{ hidden }}
     {% endfor %}
 
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+      <h2 class="govuk-error-summary__title" id="error-summary-title">
+        {% trans 'There is a problem' %}
+      </h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          {% for key, errors in form.errors.items %}
+            {% for error in errors %}
+              <li><a href="#id_{{ key }}">{{ error }}</a></li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
 
-    {{ form.errors }}
+    <h2 class="govuk-heading-m">
+      {% trans 'About you' %}
+    </h2>
 
     {% include "widgets/text_input.html" with field=form.name %}
     {% include "widgets/text_input.html" with field=form.email %}
-    {% include "widgets/text_input.html" with field=form.organisation %}
-    {% include "widgets/text_input.html" with field=form.role %}
-    {% include "widgets/radio_buttons.html" with field=form.publish size='m' %}
+
+    {% include "widgets/radio_buttons.html" with field=form.publish %}
+    {% include "widgets/radio_buttons.html" with field=form.notify %}
 
     <h2 class="govuk-heading-m">
       {% trans 'Consultation comments' %}
     </h2>
 
     <p class="govuk-body">
-      {% url 'condition:evidence-review' condition.slug as url %}
-      {% blocktrans %}
-        You can input your feedback directly into the box below or download and complete the
-        <a href="">response form</a>, and email it to
-        <a href="mailto:screening.evidence@nhs.net">screening.evidence@nhs.net</a>.
-      {% endblocktrans %}
+      {% trans 'Provide your views in the following field. Here are some sample questions to help you:' %}
     </p>
 
-    <p class="govuk-body">
-      {% blocktrans %}
-        If your comments relate to specific review sections or page numbers,
-        please indicate this in the text. e.g [page 3, paragraph 2] ...
-      {% endblocktrans %}
-    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>{% trans 'How has this condition effected your or your loved ones life?' %}</li>
+        <li>{% trans 'Why do you think screening should or should not be recommended?' %}</li>
+    </ul>
 
     {% include "widgets/text_area.html" with field=form.comment word_limit=5000 %}
 
