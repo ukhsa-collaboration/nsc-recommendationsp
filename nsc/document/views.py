@@ -31,7 +31,7 @@ class PolicyDocumentView(DocumentView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial["document_type"] = Document.TYPES.policy
+        initial["document_type"] = Document.TYPE.recommendation
         return initial
 
     def get_success_url(self):
@@ -68,7 +68,7 @@ class ReviewDocumentView(DocumentView):
             {
                 "name": _("Review document"),
                 "is_public": False,
-                "document_type": Document.TYPES.review,
+                "document_type": Document.TYPE.external,
             }
         )
         return initial
@@ -82,7 +82,7 @@ class RecommendationDocumentView(DocumentView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial["document_type"] = Document.TYPES.recommendation
+        initial["document_type"] = Document.TYPE.recommendation
         return initial
 
 
