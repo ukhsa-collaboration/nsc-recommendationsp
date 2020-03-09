@@ -32,11 +32,16 @@ class ConditionDetail(DetailView):
     lookup_field = "slug"
     context_object_name = "policy"
 
+    def get_object(self, queryset=None):
+        return super().get_object(
+            queryset=self.get_queryset().prefetch_related("reviews")
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
-        latest = Review.objects.for_policy(self.object).published().first()
-        current = Review.objects.for_policy(self.object).in_consultation().first()
+        latest = self.object.reviews.published().first()
+        current = self.object.reviews.in_consultation().first()
         context.update(
             {"back_url": referer, "latest_review": latest, "current_review": current}
         )

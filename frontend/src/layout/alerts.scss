@@ -27,3 +27,17 @@ ul.nsc-alerts {
   color: govuk-colour('green');
   padding: govuk-spacing(2);
 }
+
+.nsc-open-for-comment {
+  border: thick solid govuk-colour('blue');
+
+  .govuk-warning-text__icon {
+    background-color: govuk-colour('blue');
+    border-color: govuk-colour('blue');
+    left: govuk-spacing(2);
+  }
+
+  div {
+    padding-left: govuk-spacing(9);
+  }
+}

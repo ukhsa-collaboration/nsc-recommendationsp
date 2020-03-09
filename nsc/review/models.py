@@ -129,6 +129,9 @@ class Review(TimeStampedModel):
     def consultation_end_display(self):
         return get_date_display(self.consultation_end)
 
+    def discussion_date_display(self):
+        return get_date_display(self.discussion_date)
+
     def stakeholders(self):
         # ToDo this is just a way of generating data. It is nowhere close to
         # being correct.

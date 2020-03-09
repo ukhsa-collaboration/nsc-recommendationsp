@@ -140,7 +140,7 @@ class Policy(TimeStampedModel):
 
     def last_review_display(self):
         return (
-            self.last_review.strftime("%b %Y")
+            self.last_review.strftime("%B %Y")
             if self.last_review
             else _("This policy has not been reviewed")
         )
