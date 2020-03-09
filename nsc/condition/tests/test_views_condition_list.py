@@ -83,6 +83,7 @@ def test_search_form_blank(django_app):
     """
     form = django_app.get(condition_list_url).form
     assert form["name"].value == ""
+    assert form["comments"].value is None
     assert form["affects"].value is None
     assert form["screen"].value is None
 
@@ -93,6 +94,18 @@ def test_search_on_condition_name(django_app_form):
     """
     baker.make(Policy, name="name")
     response = django_app_form(condition_list_url, name="other")
+    assert not response.context["object_list"]
+
+
+def test_search_on_open_for_comment(django_app_form):
+    """
+    Test the list of policies can be filtered by whether the policy is
+    under review and currently open for the public to comment.
+    """
+    policy = baker.make(Policy, name="name")
+    review = baker.make(Review, status="draft", phase="pre_consultation")
+    policy.reviews.add(review)
+    response = django_app_form(condition_list_url, comments="open")
     assert not response.context["object_list"]
 
 

@@ -9,6 +9,13 @@ class SearchForm(forms.Form):
 
     name = forms.CharField(label=_("Search by condition name"), required=False)
 
+    comments = forms.TypedChoiceField(
+        label=_("Public comments"),
+        choices=(("open", _("Open")), ("closed", _("Closed"))),
+        widget=forms.RadioSelect,
+        required=False,
+    )
+
     affects = forms.TypedChoiceField(
         label=_("Who the condition affects"),
         choices=Policy.AGE_GROUPS,
