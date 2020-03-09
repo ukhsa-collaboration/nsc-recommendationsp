@@ -22,6 +22,15 @@ def test_factory_create_document():
     assert isinstance(instance, Document)
 
 
+def test_all_document_types(all_document_types):
+    """
+    Test that the fixture does actually contains all document types.
+    """
+    expected = [item[0] for item in Document.TYPE]
+    actual = [obj.document_type for obj in all_document_types]
+    assert sorted(expected) == sorted(actual)
+
+
 def test_coversheets_query(all_document_types):
     """
     Test the queryset coversheets() method only returns the coversheet
