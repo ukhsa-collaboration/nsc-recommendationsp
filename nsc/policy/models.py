@@ -77,6 +77,10 @@ class Policy(TimeStampedModel):
         verbose_name=_("Search keywords"), blank=True, default=""
     )
 
+    reviews = models.ManyToManyField(
+        "review.Review", verbose_name=_("reviews"), related_name="policies"
+    )
+
     history = HistoricalRecords()
     objects = PolicyQuerySet.as_manager()
 

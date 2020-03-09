@@ -17,9 +17,6 @@ from nsc.utils.markdown import convert
 
 
 class ReviewQuerySet(models.QuerySet):
-    def for_policy(self, policy):
-        return self.filter(policies__in=[policy])
-
     def published(self):
         return self.filter(status=Review.STATUS.published).order_by("-review_start")
 
@@ -80,10 +77,6 @@ class Review(TimeStampedModel):
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
-
-    policies = models.ManyToManyField(
-        "policy.Policy", verbose_name=_("policies"), related_name="reviews"
-    )
 
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
