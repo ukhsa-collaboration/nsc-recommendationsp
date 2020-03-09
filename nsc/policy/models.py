@@ -1,14 +1,15 @@
-from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from dateutil.relativedelta import relativedelta
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
+from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 from nsc.utils.markdown import convert
 
@@ -37,6 +38,40 @@ class PolicyQuerySet(models.QuerySet):
     def search(self, keywords):
         return self.filter(
             Q(name__icontains=keywords) | Q(keywords__icontains=keywords)
+        )
+
+    def in_consultation(self):
+        """
+        Get the policies which are currently in review and where the period for
+        public comments is open.
+        """
+        return self.filter(
+            reviews__status=Review.STATUS.draft,
+            reviews__phase=Review.PHASE.consultation,
+        )
+
+    def not_in_consultation(self):
+        """
+        Get the policies which are currently not open for public comments - either
+        because they are not in review or in review but not in that particular phase.
+        """
+        return self.filter(
+            ~Q(
+                reviews__status=Review.STATUS.draft,
+                reviews__phase=Review.PHASE.consultation,
+            )
+        )
+
+    def prefetch_reviews_in_consultation(self):
+        """
+        Get the list of Policies, pre-fetching any reviews that are currently open for comment.
+        """
+        return self.prefetch_related(
+            Prefetch(
+                "reviews",
+                queryset=Review.objects.in_consultation(),
+                to_attr="reviews_in_consultation",
+            )
         )
 
 
