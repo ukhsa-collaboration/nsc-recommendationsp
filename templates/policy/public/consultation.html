@@ -58,7 +58,7 @@
   </p>
 
   <p class="govuk-body">
-    {% blocktrans with review.get_evidence_review_url as url %}
+    {% blocktrans with review.get_evidence_review_document.get_download_url as url %}
       You can take part in a consultation in two ways, first download the
       <a href="{{ url }}">evidence review document</a> and then either:
     {% endblocktrans %}
@@ -67,7 +67,7 @@
   <div class="govuk-body">
     <ol>
       <li>
-        {% blocktrans with url=review.get_submission_form_url end=review.consultation_end_display %}
+        {% blocktrans with url=review.get_submission_form.get_download_url end=review.consultation_end_display %}
         Download and complete the <a href="{{ url }}">response form</a>, and email it to
         <a href="mailto:screening.evidence@nhs.net">screening.evidence@nhs.net</a> before {{ end }}.
         {% endblocktrans %}

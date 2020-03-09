@@ -52,7 +52,15 @@ def test_evidence_review_link(response):
     Test a link to download the evidence review summary is displayed.
     """
     review = response.context["review"]
-    assert review.get_evidence_review_url() in response.text
+    assert review.get_evidence_review_document().get_download_url() in response.text
+
+
+def test_submission_form_link(response):
+    """
+    Test a link to submission form for comments is displayed.
+    """
+    review = response.context["review"]
+    assert review.get_submission_form().get_download_url() in response.text
 
 
 def test_consultation_start_date_is_shown(response):

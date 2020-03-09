@@ -1,3 +1,5 @@
+from django.urls import reverse
+
 import pytest
 from model_bakery import baker
 
@@ -20,6 +22,16 @@ def test_factory_create_document():
     """
     instance = baker.make(Document)
     assert isinstance(instance, Document)
+
+
+@pytest.fixture
+def test_get_download_url():
+    """
+    Test getting the URL for downloading a document
+    """
+    instance = baker.make(Document)
+    expected = reverse("document:download", kwargs={"pk": instance.pk})
+    assert instance.get_download_url() == expected
 
 
 def test_all_document_types(all_document_types):

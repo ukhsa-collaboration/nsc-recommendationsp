@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
@@ -70,3 +71,6 @@ class Document(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def get_download_url(self):
+        return reverse("document:download", kwargs={"pk": self.pk})
