@@ -6,7 +6,6 @@ from django.views.generic import DetailView, FormView, ListView, TemplateView
 from notifications_python_client.errors import HTTPError
 
 from nsc.policy.models import Policy
-from nsc.review.models import Review
 from nsc.utils.notify import submit_public_comment, submit_stakeholder_comment
 
 from .filters import SearchFilter
@@ -52,8 +51,10 @@ class ConsultationView(TemplateView):
     template_name = "policy/public/consultation.html"
 
     def get_context_data(self, **kwargs):
-        condition = Policy.objects.get(slug=self.kwargs["slug"])
-        review = Review.objects.for_policy(condition).in_consultation().first()
+        condition = Policy.objects.prefetch_related("reviews").get(
+            slug=self.kwargs["slug"]
+        )
+        review = condition.reviews.in_consultation().first()
         email = settings.CONSULTATION_COMMENT_ADDRESS
         return super().get_context_data(
             condition=condition, review=review, email=email, **kwargs
@@ -93,8 +94,10 @@ class PublicCommentSubmittedView(TemplateView):
     template_name = "policy/public/public_comment_submitted.html"
 
     def get_context_data(self, **kwargs):
-        condition = Policy.objects.get(slug=self.kwargs["slug"])
-        review = Review.objects.for_policy(condition).in_consultation().first()
+        condition = Policy.objects.prefetch_related("reviews").get(
+            slug=self.kwargs["slug"]
+        )
+        review = condition.reviews.in_consultation().first()
         url = settings.PROJECT_FEEDBACK_URL
         return super().get_context_data(
             condition=condition, review=review, feedback_url=url, **kwargs
@@ -135,8 +138,10 @@ class StakeholderCommentSubmittedView(TemplateView):
     template_name = "policy/public/stakeholder_comment_submitted.html"
 
     def get_context_data(self, **kwargs):
-        condition = Policy.objects.get(slug=self.kwargs["slug"])
-        review = Review.objects.for_policy(condition).in_consultation().first()
+        condition = Policy.objects.prefetch_related("reviews").get(
+            slug=self.kwargs["slug"]
+        )
+        review = condition.reviews.in_consultation().first()
         url = settings.PROJECT_FEEDBACK_URL
         return super().get_context_data(
             condition=condition, review=review, feedback_url=url, **kwargs
