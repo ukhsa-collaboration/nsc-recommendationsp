@@ -49,8 +49,8 @@
         {% include "policy/admin/last_review.html" %}
         {% include "widgets/text_input.html" with field=form.next_review label_size='m' %}
         {% include "policy/admin/documents.html" %}
-        {% include "widgets/text_input.html" with field=form.condition label_size='m' %}
-        {% include "widgets/text_input.html" with field=form.keywords label_size='m' %}
+        {% include "widgets/text_area.html" with field=form.condition label_size='m' %}
+        {% include "widgets/text_area.html" with field=form.keywords label_size='m' %}
         {% include 'policy/admin/review_history.html' %}
         {% include 'policy/admin/organisations.html' %}
       {% endif %}

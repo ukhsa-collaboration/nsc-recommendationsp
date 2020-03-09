@@ -25,5 +25,6 @@ celery
 django-simple-history
 lxml
 markdown
+notifications-python-client
 python-dateutil
 requests

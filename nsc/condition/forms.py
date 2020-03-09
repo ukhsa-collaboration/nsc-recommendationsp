@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
 
 from nsc.policy.models import Policy
@@ -22,56 +23,82 @@ class SearchForm(forms.Form):
         required=False,
     )
 
-    name.widget.attrs.update({"class": "govuk-input"})
-    affects.widget.attrs.update({"class": "govuk-radios__input"})
-    screen.widget.attrs.update({"class": "govuk-radios__input"})
+
+class PublicCommentForm(forms.Form):
+
+    name = forms.CharField(
+        label=_("Full name"), error_messages={"required": _("Enter your full name.")}
+    )
+    email = forms.EmailField(
+        label=_("Email address"),
+        error_messages={
+            "required": _("Enter your email address"),
+            "invalid": _(
+                "Enter an email address in the correct format, like name@example.com."
+            ),
+        },
+    )
+    publish = forms.TypedChoiceField(
+        label=_("Do you consent to your name being published on the NSC web site?"),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would like to shown as a contributor to this consultation."
+            )
+        },
+    )
+    notify = forms.TypedChoiceField(
+        label=_(
+            "Would you like to be updated when the UK NSC has reviewed the condition?"
+        ),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would to be notified when the NSC have completed the review."
+            )
+        },
+    )
+    comment = forms.CharField(
+        label="",
+        widget=forms.Textarea,
+        error_messages={"required": _("Enter your comment")},
+    )
+    condition = forms.CharField(required=False, widget=HiddenInput)
 
 
-class SubmissionForm(forms.Form):
+class StakeholderCommentForm(forms.Form):
 
-    name = forms.CharField(label=_("Name"))
-    email = forms.EmailField(label=_("Email"))
+    name = forms.CharField(
+        label=_("Full name"), error_messages={"required": _("Enter your full name.")}
+    )
+    email = forms.EmailField(
+        label=_("Email address"),
+        error_messages={
+            "required": _("Enter your email address"),
+            "invalid": _(
+                "Enter an email address in the correct format, like name@example.com."
+            ),
+        },
+    )
     organisation = forms.CharField(
         label=_("Organisation (if appropriate)"), required=False
     )
     role = forms.CharField(label=_("Role (if appropriate)"), required=False)
     publish = forms.TypedChoiceField(
-        label=_("Publish online"),
-        help_text=_(
-            "Do you consent to your name and organisation being published on the NSC web site?"
-        ),
+        label=_("Do you consent to your name being published on the NSC web site?"),
         choices=((True, _("Yes")), (False, _("No"))),
         widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would like to shown as a contributor to this consultation."
+            )
+        },
     )
-    comments = forms.CharField(required=False)
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30", "autofocus": "autofocus"}
-        )
-
-        self.fields["email"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["organisation"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["role"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["publish"].widget.attrs.update({"class": "govuk-radios__input"})
-        self.initial["publish"] = False
-
-        self.fields["comments"].widget = forms.Textarea()
-        self.fields["comments"].widget.attrs.update(
-            {
-                "class": "govuk-textarea govuk-js-character-count",
-                "aria-describedby": "comments-hint",
-            }
-        )
+    comment = forms.CharField(
+        label="",
+        widget=forms.Textarea,
+        error_messages={"required": _("Enter your comment")},
+    )
+    condition = forms.CharField(required=False, widget=HiddenInput)

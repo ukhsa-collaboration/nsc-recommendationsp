@@ -18,7 +18,9 @@ django-model-utils==4.0.0
 django-redis==4.11.0
 django-simple-history==2.8.0
 django==2.2.9
+docopt==0.6.2             # via notifications-python-client
 envdir==1.0.1
+future==0.18.2            # via notifications-python-client
 gunicorn==20.0.4
 hiredis==1.0.1
 idna==2.8                 # via requests
@@ -26,8 +28,11 @@ importlib-metadata==1.4.0  # via kombu
 kombu==4.6.7              # via celery
 lxml==4.4.2
 markdown==3.1.1
+monotonic==1.5            # via notifications-python-client
 more-itertools==8.1.0     # via zipp
+notifications-python-client==5.5.1
 psycopg2-binary==2.8.4
+pyjwt==1.7.1              # via notifications-python-client
 python-dateutil==2.8.1
 pytz==2019.3              # via celery, django
 raven==6.10.0

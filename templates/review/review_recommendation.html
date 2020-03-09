@@ -28,7 +28,7 @@
       {{ form.non_field_errors }}
 
       {% include "widgets/file_upload.html" with field=form.document %}
-      {% include "widgets/text_input.html" with field=form.summary %}
+      {% include "widgets/text_area.html" with field=form.summary %}
       {% include "widgets/radio_buttons.html" with field=form.recommendation size='m' %}
 
       <p>
