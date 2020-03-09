@@ -11,6 +11,25 @@
 {% endblock %}
 
 {% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">
+        {% blocktrans %}
+        This list summarises whether population screening is currently recommended
+        for a condition or not, and if it is open to public comments at this time.
+        {% endblocktrans %}
+      </p>
+
+      <p class="govuk-body">
+        {% blocktrans %}
+        Recommendations are reviewed regularly, usually every 3 years. Use the filters
+        to read the details of the findings and supporting documents from the most recent review.
+        {% endblocktrans %}
+      </p>
+    </div>
+  </div>
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
       <div class="filter-box">

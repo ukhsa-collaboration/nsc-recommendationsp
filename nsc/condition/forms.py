@@ -7,7 +7,7 @@ from nsc.policy.models import Policy
 
 class SearchForm(forms.Form):
 
-    name = forms.CharField(label=_("Search by condition name"), required=False)
+    name = forms.CharField(label=_("Condition name"), required=False)
 
     comments = forms.TypedChoiceField(
         label=_("Public comments"),
@@ -24,7 +24,7 @@ class SearchForm(forms.Form):
     )
 
     screen = forms.TypedChoiceField(
-        label=_("Current recommendation"),
+        label=_("Screening recommended"),
         choices=(("yes", _("Yes")), ("no", _("No"))),
         widget=forms.RadioSelect,
         required=False,
