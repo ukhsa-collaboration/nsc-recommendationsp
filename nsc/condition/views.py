@@ -15,7 +15,7 @@ from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
 
 class ConditionList(ListView):
     template_name = "policy/public/policy_list.html"
-    queryset = Policy.objects.active()
+    queryset = Policy.objects.active().prefetch_reviews_in_consultation()
     paginate_by = 20
 
     def get_queryset(self):
