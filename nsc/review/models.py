@@ -24,7 +24,14 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(status=Review.STATUS.draft).order_by("-review_start")
 
     def in_consultation(self):
-        return self.filter(phase=Review.PHASE.consultation).order_by("-review_start")
+        return self.filter(
+            status=Review.STATUS.draft, phase=Review.PHASE.consultation
+        ).order_by("-review_start")
+
+    def not_in_consultation(self):
+        return self.filter(
+            ~models.Q(status=Review.STATUS.draft, phase=Review.PHASE.consultation)
+        ).order_by("-review_start")
 
 
 class Review(TimeStampedModel):
