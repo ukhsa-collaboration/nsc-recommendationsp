@@ -1,7 +1,4 @@
-from django.db.models import Q
 from django_filters import CharFilter, Filter, FilterSet
-
-from nsc.review.models import Review
 
 
 class YesNoFilter(Filter):
