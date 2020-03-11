@@ -1,10 +1,10 @@
-from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from dateutil.relativedelta import relativedelta
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
