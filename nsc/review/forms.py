@@ -1,7 +1,8 @@
-from datetime import date
+from distutils.util import strtobool
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -82,7 +83,7 @@ class ReviewForm(forms.ModelForm):
         return name
 
 
-class ReviewDatesForm(forms.ModelForm):
+class ReviewConsultationForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ["name"]
@@ -94,65 +95,231 @@ class ReviewAddOrganisationForm(forms.ModelForm):
         fields = ["name"]
 
 
-class ReviewConsultationForm(forms.ModelForm):
+class ReviewDatesForm(forms.ModelForm):
 
-    open_now = forms.TypedChoiceField(
-        label=_("Do you want to open this consultation now?"),
-        help_text=_(
-            "It is possible to automatically open the consultation on a later pre-determined date"
-        ),
+    consultation_open = forms.TypedChoiceField(
+        label=_("Consultation open date"),
+        help_text=_("When do you want to open this consultation?"),
         choices=Choices(
-            (True, _("Yes, open this consultation now and notify the stakeholders")),
-            (False, _("No, open this consultation on a later pre-determined date")),
+            (True, _("Now - open this consultation and email {} stakeholders")),
+            (
+                False,
+                _("Schedule this consultation to automatically open on a later date"),
+            ),
         ),
         widget=forms.RadioSelect,
+        required=False,
     )
 
-    day = forms.IntegerField(label=_("Day"), required=False)
-    month = forms.IntegerField(label=_("Month"), required=False)
-    year = forms.IntegerField(label=_("Year"), required=False)
+    consultation_start = forms.DateField(
+        label=_(""), help_text=_(""), widget=forms.HiddenInput(), required=False
+    )
+
+    consultation_start_day = forms.IntegerField(label=_("Day"), required=False)
+    consultation_start_month = forms.IntegerField(label=_("Month"), required=False)
+    consultation_start_year = forms.IntegerField(label=_("Year"), required=False)
+
+    consultation_end = forms.DateField(
+        label=_("Consultation end date"),
+        help_text=_(
+            "The consultation will automatically close 3 months after it is opened "
+            "unless you specify a different date."
+        ),
+        widget=forms.HiddenInput(),
+        required=False,
+    )
+
+    consultation_end_day = forms.IntegerField(label=_("Day"), required=False)
+    consultation_end_month = forms.IntegerField(label=_("Month"), required=False)
+    consultation_end_year = forms.IntegerField(label=_("Year"), required=False)
+
+    nsc_meeting_date = forms.DateField(
+        label=_("UK NSC meeting date"),
+        help_text=mark_safe(
+            _(
+                "Select the date of the UK NSC meeting when this consultation will be discussed. "
+                'View <a href="https://www.gov.uk/government/groups/uk-national-screening-'
+                'committee-uk-nsc#meetings">spreadsheet of meeting dates</a> for reference.'
+            )
+        ),
+        widget=forms.HiddenInput(),
+        required=False,
+    )
+
+    nsc_meeting_date_day = forms.IntegerField(label=_("Day"), required=False)
+    nsc_meeting_date_month = forms.IntegerField(label=_("Month"), required=False)
+    nsc_meeting_date_year = forms.IntegerField(label=_("Year"), required=False)
 
     class Meta:
         model = Review
-        fields = ["consultation_start", "consultation_end"]
+        fields = ["consultation_start", "consultation_end", "nsc_meeting_date"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["year"].widget.attrs.update(
-            {
-                "class": "govuk-input govuk-date-input__input govuk-input--width-4",
-                "pattern": "[0-9]*",
-                "inputmode": "numeric",
-            }
-        )
-        self.fields["month"].widget.attrs.update(
-            {
-                "class": "govuk-input govuk-date-input__input govuk-input--width-2",
-                "pattern": "[0-9]*",
-                "inputmode": "numeric",
-            }
-        )
-        self.fields["day"].widget.attrs.update(
-            {
-                "class": "govuk-input govuk-date-input__input govuk-input--width-2",
-                "pattern": "[0-9]*",
-                "inputmode": "numeric",
-            }
-        )
+    def clean_consultation_open(self):
+        value = self.cleaned_data["consultation_open"]
+        return strtobool(value) if value else None
 
     def clean(self):
         data = self.cleaned_data
 
-        if data["open_now"]:
-            start = get_today()
-        else:
-            start = date(data["year"], data["month"], data["day"])
+        consultation_open = data.get("consultation_open", None)
 
-        data["consultation_start"] = start
+        if consultation_open:
+            date = get_today()
+            data["consultation_start_day"] = date.day
+            data["consultation_start_month"] = date.month
+            data["consultation_start_year"] = date.year
 
-        if not data["consultation_end"]:
-            data["consultation_end"] = start + relativedelta(months=+3)
+            day = data.get("consultation_end_day", None)
+            month = data.get("consultation_end_month", None)
+            year = data.get("consultation_end_year", None)
+
+            if not (day or month or year):
+                date = get_today() + relativedelta(months=+3)
+                data["consultation_end_day"] = date.day
+                data["consultation_end_month"] = date.month
+                data["consultation_end_year"] = date.year
+
+        day = data["consultation_start_day"]
+        month = data["consultation_start_month"]
+        year = data["consultation_start_year"]
+
+        if day is not None or month is not None or year is not None:
+            if day is None:
+                self.add_error(
+                    "consultation_start_day",
+                    _("Enter the day for the consultation start date"),
+                )
+            if month is None:
+                self.add_error(
+                    "consultation_start_month",
+                    _("Enter the month for the consultation start date"),
+                )
+            if year is None:
+                self.add_error(
+                    "consultation_start_year",
+                    _("Enter the year for the consultation start date"),
+                )
+
+        if day is not None and month is not None and year is not None:
+            try:
+                data["consultation_start"] = get_today().replace(
+                    year=year, month=month, day=day
+                )
+            except ValueError:
+                self.add_error(
+                    "consultation_end",
+                    _(
+                        "Enter a correct date for the opening of the consultation period"
+                    ),
+                )
+
+        if day is None and month is None and year is None:
+            data["consultation_start"] = None
+
+        day = data.get("consultation_end_day", None)
+        month = data.get("consultation_end_month", None)
+        year = data.get("consultation_end_year", None)
+
+        if day is not None or month is not None or year is not None:
+            if day is None:
+                self.add_error(
+                    "consultation_end_day",
+                    _("Enter the day for the consultation end date"),
+                )
+            if month is None:
+                self.add_error(
+                    "consultation_end_month",
+                    _("Enter the month for the consultation end date"),
+                )
+            if year is None:
+                self.add_error(
+                    "consultation_end_year",
+                    _("Enter the year for the consultation end date"),
+                )
+
+        if day is not None and month is not None and year is not None:
+            try:
+                data["consultation_end"] = get_today().replace(
+                    year=year, month=month, day=day
+                )
+            except ValueError:
+                self.add_error(
+                    "consultation_end",
+                    _(
+                        "Enter a correct date for the closing of the consultation period"
+                    ),
+                )
+
+        if day is None and month is None and year is None:
+            data["consultation_end"] = None
+
+        day = data.get("nsc_meeting_date_day", None)
+        month = data.get("nsc_meeting_date_month", None)
+        year = data.get("nsc_meeting_date_year", None)
+
+        if day is not None or month is not None or year is not None:
+            if day is None:
+                self.add_error(
+                    "nsc_meeting_date_day",
+                    _("Enter the day the NSC Meeting takes place"),
+                )
+            if month is None:
+                self.add_error(
+                    "nsc_meeting_date_month",
+                    _("Enter the month the NSC Meeting takes place"),
+                )
+            if year is None:
+                self.add_error(
+                    "nsc_meeting_date_year",
+                    _("Enter the year the NSC Meeting takes place"),
+                )
+
+        if day is not None and month is not None and year is not None:
+            try:
+                data["nsc_meeting_date"] = get_today().replace(
+                    year=year, month=month, day=day
+                )
+            except ValueError:
+                self.add_error(
+                    "nsc_meeting_date", _("Enter a correct date for the NSC Meeting")
+                )
+
+        if day is None and month is None and year is None:
+            data["nsc_meeting_date"] = None
+
+        if "consultation_start" in data and "consultation_end" in data:
+
+            if bool(data["consultation_start"]) != bool(data["consultation_end"]):
+                if data["consultation_start"]:
+                    self.add_error(
+                        "consultation_end",
+                        _("Enter the date the consultation period closes"),
+                    )
+                else:
+                    self.add_error(
+                        "consultation_start",
+                        _("Enter the date the consultation period opens"),
+                    )
+
+        if data.get("consultation_start", False) and data.get(
+            "consultation_end", False
+        ):
+            if data["consultation_end"] < data["consultation_start"]:
+                self.add_error(
+                    "consultation_end",
+                    _(
+                        "Enter a consultation end date which is after the consultation start."
+                    ),
+                )
+
+        if data.get("consultation_end", False) and data.get("nsc_meeting_date", False):
+            if data["nsc_meeting_date"] < data["consultation_end"]:
+                self.add_error(
+                    "nsc_meeting_date",
+                    _(
+                        "Enter a date for the NSC meeting which is after the consultation end."
+                    ),
+                )
 
         return data
 

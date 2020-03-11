@@ -6,6 +6,7 @@ from django.views import generic
 from django_filters.views import FilterView
 
 from nsc.policy.models import Policy
+from nsc.utils.datetime import get_today
 
 from .filters import SearchFilter
 from .forms import (
@@ -68,6 +69,33 @@ class ReviewDates(generic.UpdateView):
     lookup_field = "slug"
     form_class = ReviewDatesForm
     template_name = "review/review_dates.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
+
+        start = self.object.consultation_start
+        end = self.object.consultation_end
+        meeting = self.object.nsc_meeting_date
+
+        if start is None:
+            initial["consultation_open"] = None
+        else:
+            initial["consultation_open"] = start == get_today()
+            initial["consultation_start_day"] = start.day
+            initial["consultation_start_month"] = start.month
+            initial["consultation_start_year"] = start.year
+
+        if end:
+            initial["consultation_end_day"] = end.day
+            initial["consultation_end_month"] = end.month
+            initial["consultation_end_year"] = end.year
+
+        if meeting:
+            initial["nsc_meeting_date_day"] = meeting.day
+            initial["nsc_meeting_date_month"] = meeting.month
+            initial["nsc_meeting_date_year"] = meeting.year
+
+        return initial
 
 
 class ReviewOrganisations(generic.UpdateView):
