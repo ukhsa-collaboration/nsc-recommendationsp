@@ -24,13 +24,9 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(status=Review.STATUS.draft).order_by("-review_start")
 
     def in_consultation(self):
+        today = get_today()
         return self.filter(
-            status=Review.STATUS.draft, phase=Review.PHASE.consultation
-        ).order_by("-review_start")
-
-    def not_in_consultation(self):
-        return self.filter(
-            ~models.Q(status=Review.STATUS.draft, phase=Review.PHASE.consultation)
+            consultation_start__lte=today, consultation_end__gte=today
         ).order_by("-review_start")
 
 
@@ -38,25 +34,12 @@ class Review(TimeStampedModel):
 
     STATUS = Choices(("draft", _("Draft")), ("published", _("Published")))
 
-    PHASE = Choices(
-        ("pre_consultation", _("Pre-consultation")),
-        ("consultation", _("Consultation")),
-        ("post_consultation", _("Post consultation")),
-        ("completed", _("Completed")),
-    )
-
     TYPE = Choices(("rapid", _("Rapid review")), ("other", _("Other")))
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
     status = models.CharField(
         verbose_name=_("status"), choices=STATUS, max_length=50, default=STATUS.draft
-    )
-    phase = models.CharField(
-        verbose_name=_("review phase"),
-        choices=PHASE,
-        max_length=50,
-        default=PHASE.pre_consultation,
     )
     review_type = models.CharField(
         verbose_name=_("type of review"), choices=TYPE, max_length=50
@@ -74,8 +57,8 @@ class Review(TimeStampedModel):
     consultation_end = models.DateField(
         verbose_name=_("consultation end date"), null=True, blank=True
     )
-    discussion_date = models.DateField(
-        verbose_name=_("discussion date"), null=True, blank=True
+    nsc_meeting_date = models.DateField(
+        verbose_name=_("NSC meeting date"), null=True, blank=True
     )
 
     recommendation = models.BooleanField(
@@ -111,10 +94,6 @@ class Review(TimeStampedModel):
         return Document.objects.for_review(self).recommendations().first()
 
     def clean(self):
-        if self.status == self.STATUS.published:
-            if self.phase != self.PHASE.completed:
-                raise ValidationError(_("A published review cannot be reopened"))
-
         if not self.slug:
             self.slug = slugify(self.name)
 
@@ -145,7 +124,6 @@ class Review(TimeStampedModel):
             raise ValidationError(_("You cannot open a review that has been published"))
 
         self.status = self.STATUS.draft
-        self.phase = self.PHASE.pre_consultation
         self.review_start = get_today()
         if commit:
             self.clean()
@@ -153,7 +131,6 @@ class Review(TimeStampedModel):
 
     def close(self, commit=True):
         self.status = self.STATUS.published
-        self.phase = self.PHASE.completed
         self.review_end = get_today()
         if commit:
             self.clean()
@@ -165,7 +142,6 @@ class Review(TimeStampedModel):
                 _("You can only open a draft review for public consultation")
             )
 
-        self.phase = self.PHASE.consultation
         self.consultation_start = start if start else get_today()
         self.consultation_end = (
             end if end else self.consultation_start + relativedelta(months=+3)
@@ -175,7 +151,6 @@ class Review(TimeStampedModel):
             self.save()
 
     def close_consultation(self, commit=True):
-        self.phase = self.PHASE.post_consultation
         self.consultation_end = get_today()
         if commit:
             self.clean()
