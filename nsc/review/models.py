@@ -70,8 +70,8 @@ class Review(TimeStampedModel):
     consultation_end = models.DateField(
         verbose_name=_("consultation end date"), null=True, blank=True
     )
-    discussion_date = models.DateField(
-        verbose_name=_("discussion date"), null=True, blank=True
+    nsc_meeting_date = models.DateField(
+        verbose_name=_("NSC meeting date"), null=True, blank=True
     )
 
     recommendation = models.BooleanField(
