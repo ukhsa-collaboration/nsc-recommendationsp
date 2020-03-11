@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
@@ -7,9 +7,11 @@
 {% endblock %}
 
 {% block title %}
-  {% block page_title %}
-    {{ review.name }}
-  {% endblock %}
+  {{ review.name }}
+{% endblock %}
+
+{% block page_title %}
+  {{ review.name }} <strong class="govuk-tag app-task-list__task-completed">{% trans 'IN REVIEW' %}</strong>
 {% endblock %}
 
 {% block content %}
@@ -17,46 +19,47 @@
   <ul class="app-task-list govuk-body">
     <li>
       <h2 class="app-task-list__section">
-        Preconsultation
-      </h2>
-      <ul class="app-task-list__items">
-        <li class="app-task-list__item">
-          <span class="app-task-list__task-name">
-            <a href="{% url 'review:add-policy-document' review.slug %}" aria-describedby="relevant-documents">
-              Add relevant documents
-            </a>
-          </span>
-          <strong class="govuk-tag app-task-list__task-completed" id="relevent-documents-completed">{{ review.relevent_documents_added }}</strong>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2 class="app-task-list__section">
         Consultation
       </h2>
       <ul class="app-task-list__items">
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:add-review-document' review.slug %}" aria-describedby="external-review-completed">
-              Upload external review document
+            <a href="{% url 'review:add-policy-document' review.slug %}" aria-describedby="relevent_documents_added">
+              Add relevant documents
             </a>
           </span>
-          <strong class="govuk-tag app-task-list__task-completed" id="external-review-completed">{{ review.external_review_added }}</strong>
+          {% if review.relevent_documents_added %}
+            <strong class="govuk-tag app-task-list__task-completed" id="relevent_documents_added">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:dates' object.slug %}" aria-describedby="consultation-dates-completed">
+            <a href="{% url 'review:add-review-document' review.slug %}" aria-describedby="external_review_added">
+              Upload external review document
+            </a>
+          </span>
+          {% if review.external_review_added %}
+            <strong class="govuk-tag app-task-list__task-completed" id="external_review_added">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
+        </li>
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:dates' object.slug %}" aria-describedby="consultation_dates_set">
               Confirm dates of consultation
             </a>
           </span>
-          <strong class="govuk-tag app-task-list__task-completed" id="consultation-dates-completed">{{ review.consultation_dates_set }}</strong>
+          {% if review.consultation_dates_set %}
+            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
             <a href="{% url 'review:organisations' object.slug %}" aria-describedby="stakeholders-notified">
               Confirm stakeholders to be notified
             </a>
-          <strong class="govuk-tag app-task-list__task-completed" id="stakeholders-notified">{{ review.stakeholders_notified }}</strong>
+          {% if review.stakeholders_notified %}
+            <strong class="govuk-tag app-task-list__task-completed" id="stakeholders_notified">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
           </span>
         </li>
         <li class="app-task-list__item">
@@ -65,7 +68,9 @@
               Open consultation
             </a>
           </span>
-          <strong class="govuk-tag app-task-list__task-completed" id="consultation-opened">{{ review.consulation_opened }}</strong>
+          {% if review.consultation_opened %}
+            <strong class="govuk-tag app-task-list__task-completed" id="consultation_opened">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
         </li>
       </ul>
     </li>
@@ -80,7 +85,9 @@
               Documents and recommendation
             </a>
           </span>
-          <strong class="govuk-tag app-task-list__task-completed" id="recommendation-set">{{ review.recomendation_set }}</strong>
+          {% if review.recomendation_set %}
+            <strong class="govuk-tag app-task-list__task-completed" id="recommendation-set">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
         </li>
       </ul>
     </li>
