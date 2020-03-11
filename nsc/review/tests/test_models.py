@@ -1,9 +1,11 @@
 from django.urls import reverse
 
 import pytest
+from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
 from nsc.document.models import Document
+from nsc.utils.datetime import get_today
 
 from ..models import Review
 
@@ -19,6 +21,38 @@ def test_factory_create_policy():
     """
     instance = baker.make(Review)
     assert isinstance(instance, Review)
+
+
+def test_inside_consultation_period():
+    """
+    Test the queryset in_consultation() method includes reviews that are
+    currently open for public comments.
+    """
+    date = get_today()
+    instance = baker.make(
+        Review,
+        consultation_start=date,
+        consultation_end=date + relativedelta(months=+3),
+    )
+    assert Review.objects.in_consultation().first().pk == instance.pk
+
+    instance.consultation_start = date - relativedelta(months=+3)
+    instance.consultation_end = date
+    instance.save()
+    assert Review.objects.in_consultation().first().pk == instance.pk
+
+
+def test_outside_consultation_period():
+    """
+    Test the queryset in_consultation() method excludes reviews that are not
+    currently open for public comments.
+    """
+    date = get_today() + relativedelta(days=1)
+    baker.make(Review, consultation_start=date)
+    assert not Review.objects.in_consultation().exists()
+    date = get_today() - relativedelta(days=1)
+    baker.make(Review, consultation_end=date)
+    assert not Review.objects.in_consultation().exists()
 
 
 def test_slug_is_set():

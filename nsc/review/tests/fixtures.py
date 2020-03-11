@@ -24,10 +24,7 @@ def make_review():
 def review_in_pre_consultation(make_review):
     review_start = get_today() - relativedelta(months=2)
     review = make_review(
-        name="Evidence Review",
-        status=Review.STATUS.draft,
-        phase=Review.PHASE.pre_consultation,
-        review_start=review_start,
+        name="Evidence Review", status=Review.STATUS.draft, review_start=review_start
     )
     baker.make(
         Document, name="document", document_type="evidence_review", review=review
@@ -43,7 +40,6 @@ def review_in_consultation(make_review):
     review = make_review(
         name="review",
         status=Review.STATUS.draft,
-        phase=Review.PHASE.consultation,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
@@ -71,7 +67,6 @@ def review_in_post_consultation(make_review):
     review = make_review(
         name="review",
         status=Review.STATUS.draft,
-        phase=Review.PHASE.post_consultation,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
@@ -99,7 +94,6 @@ def review_completed(make_review):
     review = make_review(
         name="review",
         status=Review.STATUS.draft,
-        phase=Review.PHASE.completed,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
@@ -128,7 +122,6 @@ def review_published(make_review):
     review = make_review(
         name="review",
         status=Review.STATUS.published,
-        phase=Review.PHASE.completed,
         review_start=review_start,
         review_end=review_end,
         consultation_start=consultation_start,
