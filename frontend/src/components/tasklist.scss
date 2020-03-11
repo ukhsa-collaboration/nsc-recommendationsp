@@ -1,0 +1,40 @@
+// Task list
+// Taken from https://govuk-prototype-kit.herokuapp.com/docs/templates/task-list
+
+.app-task-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.app-task-list__section {
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.app-task-list__items {
+  padding-left: 30px;
+  margin-bottom: 60px;
+  list-style: none;
+}
+
+.app-task-list__item:first-child {
+    border-top: 1px solid #b1b4b6;
+}
+
+.app-task-list__item {
+    border-bottom: 1px solid #b1b4b6;
+    margin-bottom: 0 !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.app-task-list__task-name {
+    display: block;
+}
+
+.app-task-list__task-completed {
+    display: inline-block;
+    float: right;
+}
