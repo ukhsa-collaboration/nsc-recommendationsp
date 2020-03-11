@@ -1,5 +1,7 @@
 from django_filters import CharFilter, Filter, FilterSet
 
+from nsc.condition.forms import SearchForm
+
 
 class YesNoFilter(Filter):
     def filter(self, qs, value):
@@ -24,9 +26,9 @@ class SearchFilter(FilterSet):
         return queryset.search(value)
 
     def in_consultation(self, queryset, name, value):
-        if value == "open":
+        if value == SearchForm.CONSULTION.open:
             return queryset.in_consultation()
-        elif value == "closed":
+        elif value == SearchForm.CONSULTION.closed:
             return queryset.not_in_consultation()
         else:
             return queryset
