@@ -17,9 +17,6 @@ from nsc.utils.markdown import convert
 
 
 class ReviewQuerySet(models.QuerySet):
-    def for_policy(self, policy):
-        return self.filter(policies__in=[policy])
-
     def published(self):
         return self.filter(status=Review.STATUS.published).order_by("-review_start")
 
@@ -27,7 +24,14 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(status=Review.STATUS.draft).order_by("-review_start")
 
     def in_consultation(self):
-        return self.filter(phase=Review.PHASE.consultation).order_by("-review_start")
+        return self.filter(
+            status=Review.STATUS.draft, phase=Review.PHASE.consultation
+        ).order_by("-review_start")
+
+    def not_in_consultation(self):
+        return self.filter(
+            ~models.Q(status=Review.STATUS.draft, phase=Review.PHASE.consultation)
+        ).order_by("-review_start")
 
 
 class Review(TimeStampedModel):
@@ -81,10 +85,6 @@ class Review(TimeStampedModel):
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
 
-    policies = models.ManyToManyField(
-        "policy.Policy", verbose_name=_("policies"), related_name="reviews"
-    )
-
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
 
@@ -128,6 +128,9 @@ class Review(TimeStampedModel):
 
     def consultation_end_display(self):
         return get_date_display(self.consultation_end)
+
+    def discussion_date_display(self):
+        return get_date_display(self.discussion_date)
 
     def stakeholders(self):
         # ToDo this is just a way of generating data. It is nowhere close to

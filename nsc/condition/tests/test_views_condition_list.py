@@ -4,6 +4,7 @@ import pytest
 from model_bakery import baker
 
 from nsc.policy.models import Policy
+from nsc.review.models import Review
 
 
 # All tests require the database
@@ -23,13 +24,46 @@ def test_list_view(django_app):
     assert response.context["paginator"].num_pages == 1
 
 
+def test_policy_is_open(django_app):
+    """
+    Test a policy is annotated with the current review when it is open
+    for public comment
+    """
+    policy = baker.make(Policy)
+    review = baker.make(Review, status="draft", phase="consultation")
+    policy.reviews.add(review)
+
+    response = django_app.get(condition_list_url)
+    policies = response.context["object_list"]
+
+    assert policy in policies
+    assert policies.first().reviews_in_consultation[0].pk == review.pk
+    assert "OPEN" in response.text
+
+
+def test_policy_is_closed(django_app):
+    """
+    Test a policy is not annotated with the current review outside of the
+    public consultation period
+    """
+    policy = baker.make(Policy)
+    review = baker.make(Review, status="draft", phase="pre_consultation")
+    policy.reviews.add(review)
+
+    response = django_app.get(condition_list_url)
+    policies = response.context["object_list"]
+
+    assert not policies.first().reviews_in_consultation
+    assert "OPEN" not in response.text
+
+
 @pytest.mark.parametrize("num_policies", [1, 9])
 def test_list_view_query_count(num_policies, django_app, django_assert_num_queries):
     """
     Test that fetching the list takes a fixed number of queries.
     """
     baker.make(Policy, _quantity=num_policies)
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(3):
         django_app.get(condition_list_url)
 
 
@@ -49,6 +83,7 @@ def test_search_form_blank(django_app):
     """
     form = django_app.get(condition_list_url).form
     assert form["name"].value == ""
+    assert form["comments"].value is None
     assert form["affects"].value is None
     assert form["screen"].value is None
 
@@ -59,6 +94,18 @@ def test_search_on_condition_name(django_app_form):
     """
     baker.make(Policy, name="name")
     response = django_app_form(condition_list_url, name="other")
+    assert not response.context["object_list"]
+
+
+def test_search_on_open_for_comment(django_app_form):
+    """
+    Test the list of policies can be filtered by whether the policy is
+    under review and currently open for the public to comment.
+    """
+    policy = baker.make(Policy, name="name")
+    review = baker.make(Review, status="draft", phase="pre_consultation")
+    policy.reviews.add(review)
+    response = django_app_form(condition_list_url, comments="open")
     assert not response.context["object_list"]
 
 
