@@ -59,7 +59,7 @@ def run():
         policy.clean()
         policy.save()
 
-        review.policies.add(policy)
+        policy.reviews.add(review)
 
     print("Finished")
 

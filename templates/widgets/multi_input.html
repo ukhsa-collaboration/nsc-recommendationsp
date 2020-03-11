@@ -10,7 +10,7 @@
     {% include "widgets/field_help.html" %}
     {% include "widgets/field_errors.html" %}
 
-    <div class="govuk-{{ style }}{% if inline %}--inline{% endif %}">
+    <div class="govuk-{{ style }}--small{% if inline %}--inline{% endif %}">
       {% for element in field %}
         <div class="govuk-{{ style }}__item">
 

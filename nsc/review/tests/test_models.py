@@ -124,3 +124,43 @@ def test_coversheet_document(review_published):
     """
     expected = Document.objects.get(document_type=Document.TYPE.coversheet)
     assert review_published.get_coversheet_document().pk == expected.pk
+
+
+@pytest.mark.parametrize(
+    "status,phase,count",
+    [
+        ("draft", "pre_consultation", 0),
+        ("draft", "consultation", 1),
+        ("draft", "post_consultation", 0),
+        ("draft", "completed", 0),
+        ("published", "completed", 0),
+    ],
+)
+def test_in_consultation(status, phase, count):
+    """
+    Test the queryset method in_consultation only returns Review objects which are
+    currently in review and are in the consultation phase.
+    """
+    baker.make(Review, status=status, phase=phase)
+    actual = Review.objects.in_consultation().count()
+    assert count == actual
+
+
+@pytest.mark.parametrize(
+    "status,phase,count",
+    [
+        ("draft", "pre_consultation", 1),
+        ("draft", "consultation", 0),
+        ("draft", "post_consultation", 1),
+        ("draft", "completed", 1),
+        ("published", "completed", 1),
+    ],
+)
+def test_not_in_consultation(status, phase, count):
+    """
+    Test the queryset method not_in_consultation excludes Reviews objects which are
+    currently in review and are in the consultation phase.
+    """
+    baker.make(Review, status=status, phase=phase)
+    actual = Review.objects.not_in_consultation().count()
+    assert count == actual

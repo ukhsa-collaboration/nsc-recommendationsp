@@ -2,13 +2,13 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
+from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 
 from ..models import Policy
 
 
 # All tests require the database
-
 pytestmark = pytest.mark.django_db
 
 
@@ -212,3 +212,69 @@ def test_summary_markdown_conversion():
     instance = baker.make(Policy, summary="# Heading", summary_html="")
     instance.clean()
     assert instance.summary_html == '<h1 class="govuk-heading-xl">Heading</h1>'
+
+
+@pytest.mark.parametrize(
+    "status,phase,count",
+    [
+        ("draft", "pre_consultation", 0),
+        ("draft", "consultation", 1),
+        ("draft", "post_consultation", 0),
+        ("draft", "completed", 0),
+        ("published", "completed", 0),
+    ],
+)
+def test_in_consultation(status, phase, count):
+    """
+    Test the queryset method in_consultation only returns Policy objects which are
+    currently in review and are in the consultation phase.
+    """
+    policy = baker.make(Policy)
+    review = baker.make(Review, status=status, phase=phase)
+    policy.reviews.add(review)
+    actual = Policy.objects.in_consultation().count()
+    assert count == actual
+
+
+@pytest.mark.parametrize(
+    "status,phase,count",
+    [
+        ("draft", "pre_consultation", 1),
+        ("draft", "consultation", 0),
+        ("draft", "post_consultation", 1),
+        ("draft", "completed", 1),
+        ("published", "completed", 1),
+    ],
+)
+def test_not_in_consultation(status, phase, count):
+    """
+    Test the queryset method not_in_consultation excludes Policy objects which are
+    currently in review and are in the consultation phase.
+    """
+    policy = baker.make(Policy)
+    review = baker.make(Review, status=status, phase=phase)
+    policy.reviews.add(review)
+    actual = Policy.objects.not_in_consultation().count()
+    assert count == actual
+
+
+@pytest.mark.parametrize(
+    "status,phase,count",
+    [
+        ("draft", "pre_consultation", 0),
+        ("draft", "consultation", 1),
+        ("draft", "post_consultation", 0),
+        ("draft", "completed", 0),
+        ("published", "completed", 0),
+    ],
+)
+def test_prefetch_reviews_in_consultation(status, phase, count):
+    """
+    Test the queryset method prefetch_reviews_in_consultation annotates Policy
+    objects with a review if there is currently one in the consultation phase.
+    """
+    policy = baker.make(Policy)
+    review = baker.make(Review, status=status, phase=phase)
+    policy.reviews.add(review)
+    actual = Policy.objects.prefetch_reviews_in_consultation().first()
+    assert len(actual.reviews_in_consultation) == count

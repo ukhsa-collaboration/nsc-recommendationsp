@@ -1,6 +1,7 @@
 from django.urls import path
 
-from ..document.views import ContinueView, PolicyDocumentView, ReviewDocumentView
+from nsc.document.views import ContinueView, PolicyDocumentView, ReviewDocumentView
+
 from . import views
 
 

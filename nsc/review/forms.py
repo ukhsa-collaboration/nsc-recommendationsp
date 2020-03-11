@@ -9,10 +9,10 @@ from django.utils.translation import ugettext_lazy as _
 from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
+from nsc.organisation.models import Organisation
+from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
-from ..organisation.models import Organisation
-from ..policy.models import Policy
 from .models import Review
 
 

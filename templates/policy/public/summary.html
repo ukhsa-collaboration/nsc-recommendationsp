@@ -1,7 +1,12 @@
 {% load i18n %}
 
 <h2 class="govuk-heading-m">
-  {% trans 'Recommendation' %}
+  {% trans 'UK NSC screening recommendation' %}
+  <span class="govuk-caption-m">
+    {% blocktrans with date=policy.last_review_display %}
+      Based on the last UK NSC review of this condition that occurred in {{ date}}.
+    {% endblocktrans %}
+  </span>
 </h2>
 
 <div class="govuk-body">
@@ -16,4 +21,10 @@
   {% endif %}
 </div>
 
-{{ policy.summary_html|safe }}
+{% if policy.summary_html %}
+  {{ policy.summary_html|safe }}
+{% else %}
+  <p class="govuk-body">
+     {% trans 'There is no summary of the review available at this time,' %}
+  </p>
+{% endif %}

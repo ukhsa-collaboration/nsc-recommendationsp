@@ -1,13 +1,23 @@
 from django import forms
 from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
+from model_utils import Choices
 
 from nsc.policy.models import Policy
 
 
 class SearchForm(forms.Form):
 
-    name = forms.CharField(label=_("Search by condition name"), required=False)
+    name = forms.CharField(label=_("Condition name"), required=False)
+
+    CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))
+
+    comments = forms.TypedChoiceField(
+        label=_("Public comments"),
+        choices=CONSULTATION,
+        widget=forms.RadioSelect,
+        required=False,
+    )
 
     affects = forms.TypedChoiceField(
         label=_("Who the condition affects"),
@@ -17,7 +27,7 @@ class SearchForm(forms.Form):
     )
 
     screen = forms.TypedChoiceField(
-        label=_("Current recommendation"),
+        label=_("Screening recommended"),
         choices=(("yes", _("Yes")), ("no", _("No"))),
         widget=forms.RadioSelect,
         required=False,
