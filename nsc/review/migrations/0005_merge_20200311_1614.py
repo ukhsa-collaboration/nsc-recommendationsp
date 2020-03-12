@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0003_remove_review_policies'),
-        ('review', '0004_auto_20200311_1249'),
+        ("review", "0003_remove_review_policies"),
+        ("review", "0004_auto_20200311_1249"),
     ]
 
-    operations = [
-    ]
+    operations = []
