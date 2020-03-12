@@ -45,9 +45,9 @@ class PolicyQuerySet(models.QuerySet):
         Get the policies which are currently in review and where the period for
         public comments is open.
         """
+        today = get_today()
         return self.filter(
-            reviews__status=Review.STATUS.draft,
-            reviews__phase=Review.PHASE.consultation,
+            reviews__consultation_start__lte=today, reviews__consultation_end__gte=today
         )
 
     def not_in_consultation(self):
@@ -55,11 +55,11 @@ class PolicyQuerySet(models.QuerySet):
         Get the policies which are currently not open for public comments - either
         because they are not in review or in review but not in that particular phase.
         """
+        today = get_today()
         return self.filter(
-            ~Q(
-                reviews__status=Review.STATUS.draft,
-                reviews__phase=Review.PHASE.consultation,
-            )
+            Q(reviews__consultation_start__gt=today)
+            | Q(reviews__consultation_end__lt=today)
+            | Q(reviews__consultation_start__isnull=True)
         )
 
     def prefetch_reviews_in_consultation(self):

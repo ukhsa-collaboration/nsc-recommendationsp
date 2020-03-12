@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
+
 from model_utils import Choices
 
 from nsc.policy.models import Policy

@@ -5,9 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ("review", "0005_merge_20200311_1614"),
-    ]
+    dependencies = [("review", "0005_merge_20200311_1614")]
 
     operations = [
         migrations.AlterField(

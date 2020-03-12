@@ -29,6 +29,18 @@ class ReviewQuerySet(models.QuerySet):
             consultation_start__lte=today, consultation_end__gte=today
         ).order_by("-review_start")
 
+    def not_in_consultation(self):
+        """
+        Get the policies which are currently not open for public comments - either
+        because they are not in review or in review but not in that particular phase.
+        """
+        today = get_today()
+        return self.filter(
+            models.Q(consultation_start__gt=today)
+            | models.Q(consultation_end__lt=today)
+            | models.Q(consultation_start__isnull=True)
+        ).order_by("-review_start")
+
 
 class Review(TimeStampedModel):
 
