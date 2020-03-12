@@ -51,8 +51,17 @@ class ReviewDetail(generic.DetailView):
 
 class ReviewAdd(generic.CreateView):
     model = Review
-    lookup_field = "slug"
     form_class = ReviewForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        slug = self.request.GET.get("policy", None)
+        if slug:
+            policy = Policy.objects.filter(slug=slug).first()
+            if policy:
+                initial["policies"] = [policy.pk]
+                initial["name"] = _("%s %d review" % (policy.name, get_today().year))
+        return initial
 
 
 class ReviewCancel(generic.DeleteView):

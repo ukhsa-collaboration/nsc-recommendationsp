@@ -34,7 +34,12 @@ class Review(TimeStampedModel):
 
     STATUS = Choices(("draft", _("Draft")), ("published", _("Published")))
 
-    TYPE = Choices(("rapid", _("Rapid review")), ("other", _("Other")))
+    TYPE = Choices(
+        ("evidence", _("Evidence review")),
+        ("map", _("Evidence map")),
+        ("cost", _("Cost-effective model")),
+        ("systematic", _("Systematic review")),
+    )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)

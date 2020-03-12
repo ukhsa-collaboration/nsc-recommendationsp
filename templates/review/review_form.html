@@ -22,11 +22,13 @@
       {{ hidden }}
     {% endfor %}
 
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
 
-    {% include "widgets/text_input.html" with field=form.name label_size='m' %}
-    {% include "widgets/radio_buttons.html" with field=form.review_type size='m' %}
     {% include "widgets/checkboxes.html" with field=form.policies size='m' %}
+    {% include "widgets/text_input.html" with field=form.name show_legend=True %}
+    {% include "widgets/radio_buttons.html" with field=form.review_type size='m' %}
 
     <p class="govuk-body">
       By submitting this, the public will be able to see that this condition is in review.
