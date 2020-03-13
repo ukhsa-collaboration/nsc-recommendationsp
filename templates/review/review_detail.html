@@ -34,12 +34,12 @@
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:add-review-document' review.slug %}" aria-describedby="external_review_added">
+            <a href="{% url 'review:evidence-review-upload' review.slug %}" aria-describedby="evidence_review_added">
               Upload external review document
             </a>
           </span>
-          {% if review.external_review_added %}
-            <strong class="govuk-tag app-task-list__task-completed" id="external_review_added">{% trans 'COMPLETED' %}</strong>
+          {% if review.evidence_review_added %}
+            <strong class="govuk-tag app-task-list__task-completed" id="evidence_review_added">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">

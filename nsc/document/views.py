@@ -7,7 +7,7 @@ from django.views import generic
 
 from nsc.review.models import Review
 
-from .forms import DocumentForm, ReviewDocumentForm, UploadAnotherForm
+from .forms import DocumentForm, EvidenceReviewUploadForm, UploadAnotherForm
 from .models import Document
 
 
@@ -58,20 +58,39 @@ class ContinueView(generic.FormView):
         return HttpResponseRedirect(url)
 
 
-class ReviewDocumentView(DocumentView):
-    template_name = "document/review_document_form.html"
-    form_class = ReviewDocumentForm
+class EvidenceReviewUploadView(DocumentView):
+    template_name = "document/evidence_review_upload.html"
+    form_class = EvidenceReviewUploadForm
 
     def get_initial(self):
         initial = super().get_initial()
         initial.update(
             {
-                "name": _("Review document"),
-                "is_public": False,
-                "document_type": Document.TYPE.external,
+                "name": _("Evidence review"),
+                "is_public": True,
+                "document_type": Document.TYPE.evidence_review,
             }
         )
         return initial
+
+    def get_object(self, queryset=None):
+        # Since there is only ever on external evidence review if the
+        # file was already uploaded, fetch the existing Document and
+        # delete the file so everything can be overwritten.
+        pk = self.request.POST["review"]
+        review = Review.objects.get(pk=pk)
+        document = review.get_evidence_review_document()
+        if document:
+            document.delete_file()
+        return document
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def get_success_url(self):
         return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
