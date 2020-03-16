@@ -59,6 +59,11 @@ Environment variables
     domain name from where the files are served.
 
 
+.. envvar:: CONSULTATION_COMMENT_ADDRESS
+
+    The email address where comments during the consultation period are sent
+
+
 Secrets
 -------
 

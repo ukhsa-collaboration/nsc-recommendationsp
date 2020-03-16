@@ -292,17 +292,13 @@ class Common(Configuration):
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
-    # API key for the GDS Notify service for sending emails.
+    # Settings for the GDS Notify service for sending emails.
     NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
-    # The email address where comments during the consultation period are sent.
-    CONSULTATION_COMMENT_ADDRESS = "screening.evidence@nhs.net"
-
+    CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS")
     NOTIFY_TEMPLATE_CONSULTATION_INVITATION = get_env(
         "NOTIFY_TEMPLATE_CONSULTATION_INVITATION"
     )
-
     NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
-
     NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
 
     # This is the URL for the National Screening Committee where members of
@@ -349,27 +345,6 @@ class Webpack:
         return TEMPLATES
 
 
-class S3:
-    """
-    Settings needed for an S3 object store.
-    """
-
-    AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
-
-    AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
-    AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
-
-    # ToDo: it's not clear whether any files uploaded to the server should be
-    #       cached since it's likely that an admin would want the ability to
-    #       make changes at any time and have users see them immediately.
-    # AWS_S3_OBJECT_PARAMETERS = {
-    #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
-    # }
-
-    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
-
-
 class Dev(Webpack, Common):
     DEBUG = True
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
@@ -408,7 +383,7 @@ class Build(Common):
     MEDIA_ROOT = PUBLIC_ROOT / "media"
 
 
-class Deployed(S3, Build):
+class Deployed(Build):
     """
     Settings which are for a non-local deployment
     """
@@ -416,14 +391,30 @@ class Deployed(S3, Build):
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
-    # Look up secrets from the secret store
+    # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
     DATABASE_USER = get_secret("DATABASE_USER")
     DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
+    NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
 
     # Change default cache
     REDIS_HOST = get_env("DJANGO_REDIS_HOST", required=True)
     REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+
+    # Settings for the S3 object store
+    AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
+    AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
+
+    # ToDo: it's not clear whether any files uploaded to the server should be
+    #       cached since it's likely that an admin would want the ability to
+    #       make changes at any time and have users see them immediately.
+    # AWS_S3_OBJECT_PARAMETERS = {
+    #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
+    # }
+
+    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
 
     @property
     def CACHES(self):
