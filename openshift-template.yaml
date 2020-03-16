@@ -2,8 +2,6 @@
 #
 # Builds webpack resources in a disposable nodejs container, which are then added to the
 # final Django container.
-#
-# TODO: Remove sections for local dev
 kind: Template
 apiVersion: v1
 metadata:
@@ -97,9 +95,6 @@ objects:
         uri: ${SOURCE_REPOSITORY_URL}
         ref: ${SOURCE_REPOSITORY_REF}
       contextDir: ${CONTEXT_DIR}
-      # TODO: Remove - only used for local development against temporary gitolite repo
-      sourceSecret:
-        name: "gitolite-auth"
     strategy:
       type: Source
       sourceStrategy:
@@ -115,10 +110,6 @@ objects:
     triggers:
     - type: ConfigChange
     - type: ImageChange
-    # TODO: Add this if needed
-    #- type: GitHub
-    #    github:
-    #    secret: ${GITHUB_WEBHOOK_SECRET}
 #
 # Build django-webpack using webpack-build as a source
 - kind: BuildConfig
@@ -134,9 +125,6 @@ objects:
       git:
         uri: "${SOURCE_REPOSITORY_URL}"
         ref: "${SOURCE_REPOSITORY_REF}"
-      # TODO: Remove - only used for local development against temporary gitolite repo
-      sourceSecret:
-        name: "gitolite-auth"
       contextDir: "${CONTEXT_DIR}"
       images:
         - from:
@@ -593,6 +581,22 @@ parameters:
 - name: PIP_INDEX_URL
   displayName: Custom PyPi Index URL
   description: The custom PyPi index URL (optional)
+  value: ''
+- name: OBJECT_STORAGE_KEY_ID
+  displayName: Object store key ID
+  description: The key ID to access the S3-compatible store
+  value: ''
+- name: OBJECT_STORAGE_SECRET_KEY
+  displayName: Object store secret key
+  description: The secret key to access the S3-compatible store
+  value: ''
+- name: OBJECT_STORAGE_BUCKET_NAME
+  displayName: Object store bucket name
+  description: The name of the bucket in the S3-compatible store
+  value: ''
+- name: OBJECT_STORAGE_DOMAIN_NAME
+  displayName: Object store domain
+  description: The domain of the S3-compatible store
   value: ''
 - name: NOTIFY_SERVICE_API_KEY
   displayName: API Key for the GOV.UK Notify service
