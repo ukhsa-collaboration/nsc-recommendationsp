@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
 from nsc.document.models import Document, review_document_path
-from nsc.utils.datetime import get_today
+from nsc.utils.datetime import get_today, get_today_with_offset
 
 from ..models import Review
 
@@ -127,41 +127,39 @@ def test_coversheet_document(review_published):
 
 
 @pytest.mark.parametrize(
-    "status,phase,count",
+    "status,start,end,count",
     [
-        ("draft", "pre_consultation", 0),
-        ("draft", "consultation", 1),
-        ("draft", "post_consultation", 0),
-        ("draft", "completed", 0),
-        ("published", "completed", 0),
+        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 0),
+        ("draft", get_today(), get_today_with_offset(+7), 1),
+        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 0),
+        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 0),
     ],
 )
-def test_in_consultation(status, phase, count):
+def test_in_consultation(status, start, end, count):
     """
     Test the queryset method in_consultation only returns Review objects which are
     currently in review and are in the consultation phase.
     """
-    baker.make(Review, status=status, phase=phase)
+    baker.make(Review, status=status, consultation_start=start, consultation_end=end)
     actual = Review.objects.in_consultation().count()
     assert count == actual
 
 
 @pytest.mark.parametrize(
-    "status,phase,count",
+    "status,start,end,count",
     [
-        ("draft", "pre_consultation", 1),
-        ("draft", "consultation", 0),
-        ("draft", "post_consultation", 1),
-        ("draft", "completed", 1),
-        ("published", "completed", 1),
+        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 1),
+        ("draft", get_today(), get_today_with_offset(+7), 0),
+        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 1),
+        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 1),
     ],
 )
-def test_not_in_consultation(status, phase, count):
+def test_not_in_consultation(status, start, end, count):
     """
     Test the queryset method not_in_consultation excludes Reviews objects which are
     currently in review and are in the consultation phase.
     """
-    baker.make(Review, status=status, phase=phase)
+    baker.make(Review, status=status, consultation_start=start, consultation_end=end)
     actual = Review.objects.not_in_consultation().count()
     assert count == actual
 

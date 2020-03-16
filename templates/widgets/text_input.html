@@ -2,7 +2,12 @@
 
 <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
 
-  {% include "widgets/field_label.html" %}
+  {% if show_legend %}
+    {% include "widgets/field_legend.html" %}
+  {% else %}
+    {% include "widgets/field_label.html" %}
+  {% endif %}
+
   {% include "widgets/field_help.html" %}
   {% include "widgets/field_errors.html" %}
 

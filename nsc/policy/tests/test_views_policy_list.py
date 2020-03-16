@@ -1,6 +1,8 @@
 from django.urls import reverse
+from django.utils.translation import ugettext
 
 import pytest
+from bs4 import BeautifulSoup
 from model_bakery import baker
 
 from nsc.policy.models import Policy
@@ -66,3 +68,15 @@ def test_search_field_shows_name_term(django_app_form):
     """
     form = django_app_form(policy_list_url, name="name").form
     assert form["name"].value == "name"
+
+
+def test_create_review_button(django_app):
+    """
+    Test that the page contains a link (button) to create a new review.
+    """
+    baker.make(Policy, name="name")
+    response = django_app.get(policy_list_url)
+    nodes = BeautifulSoup(response.content, "html.parser")
+    link = nodes.find("a", {"id": "create-review-link-id"})
+    assert link.text.strip() == ugettext("Create a new product")
+    assert link["href"] == reverse("review:add")

@@ -46,10 +46,18 @@ class SearchForm(forms.Form):
 
 class ReviewForm(forms.ModelForm):
 
+    name = forms.CharField(
+        label=_("Internal product name"),
+        help_text=_(
+            "This will be produced automatically unless filled in specifically"
+        ),
+    )
+
     review_type = forms.TypedChoiceField(
         label=_("What type of review is this?"),
         choices=Review.TYPE,
         widget=forms.RadioSelect,
+        error_messages={"required": _("Select which type of review this is")},
     )
 
     policies = forms.ModelMultipleChoiceField(
@@ -62,16 +70,7 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ["name", "review_type", "policies"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["name"].label = _("Internal review name")
-        self.fields["name"].help_text = _(
-            "This will be produced automatically unless filled in specifically"
-        )
-        self.fields["review_type"].label = _("What type of review is this?")
+        fields = ["name", "review_type"]
 
     def clean_name(self):
         name = self.cleaned_data["name"]
@@ -81,6 +80,21 @@ class ReviewForm(forms.ModelForm):
             raise ValidationError(_("A review with this name already exists"))
 
         return name
+
+    def clean_policies(self):
+        policies = self.cleaned_data["policies"]
+        if not policies:
+            self.add_error(
+                "policies", _("Select all the conditions that this review will cover")
+            )
+        if Policy.objects.filter(pk__in=policies).count() != len(policies):
+            self.add_error(None, _("There was an error creating the review."))
+        return policies
+
+    def save(self, *args, **kwargs):
+        instance = super(ReviewForm, self).save(*args, **kwargs)
+        instance.policies.set(self.cleaned_data["policies"])
+        return instance
 
 
 class ReviewConsultationForm(forms.ModelForm):

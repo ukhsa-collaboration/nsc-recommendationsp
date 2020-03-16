@@ -1,10 +1,12 @@
 from django.urls import reverse
 
 import pytest
+from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review
+from nsc.utils.datetime import get_today
 
 
 # All tests require the database
@@ -29,8 +31,12 @@ def test_policy_is_open(django_app):
     Test a policy is annotated with the current review when it is open
     for public comment
     """
+    today = get_today()
+    later = get_today() + relativedelta(months=+3)
     policy = baker.make(Policy)
-    review = baker.make(Review, status="draft", phase="consultation")
+    review = baker.make(
+        Review, status="draft", consultation_start=today, consultation_end=later
+    )
     policy.reviews.add(review)
 
     response = django_app.get(condition_list_url)
@@ -46,8 +52,12 @@ def test_policy_is_closed(django_app):
     Test a policy is not annotated with the current review outside of the
     public consultation period
     """
+    tomorrow = get_today() + relativedelta(days=+1)
+    later = get_today() + relativedelta(months=+1)
     policy = baker.make(Policy)
-    review = baker.make(Review, status="draft", phase="pre_consultation")
+    review = baker.make(
+        Review, status="draft", consultation_start=tomorrow, consultation_end=later
+    )
     policy.reviews.add(review)
 
     response = django_app.get(condition_list_url)
@@ -102,8 +112,12 @@ def test_search_on_open_for_comment(django_app_form):
     Test the list of policies can be filtered by whether the policy is
     under review and currently open for the public to comment.
     """
+    tomorrow = get_today() + relativedelta(days=+1)
+    later = get_today() + relativedelta(months=+3)
     policy = baker.make(Policy, name="name")
-    review = baker.make(Review, status="draft", phase="pre_consultation")
+    review = baker.make(
+        Review, status="draft", consultation_start=tomorrow, consultation_end=later
+    )
     policy.reviews.add(review)
     response = django_app_form(condition_list_url, comments="open")
     assert not response.context["object_list"]

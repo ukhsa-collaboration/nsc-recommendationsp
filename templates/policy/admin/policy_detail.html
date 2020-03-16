@@ -20,6 +20,9 @@
       <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button" style="float:right">
         {% trans 'Edit information' %}
       </a>
+      <a id="create-review-link-id" href="{% url 'review:add' %}?policy={{ policy.slug }}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
+        {% trans 'Create a new product' %}
+      </a>
     </div>
   </div>
 {% endblock %}

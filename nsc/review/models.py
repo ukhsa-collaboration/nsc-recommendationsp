@@ -30,12 +30,29 @@ class ReviewQuerySet(models.QuerySet):
             consultation_start__lte=today, consultation_end__gte=today
         ).order_by("-review_start")
 
+    def not_in_consultation(self):
+        """
+        Get the policies which are currently not open for public comments - either
+        because they are not in review or in review but not in that particular phase.
+        """
+        today = get_today()
+        return self.filter(
+            models.Q(consultation_start__gt=today)
+            | models.Q(consultation_end__lt=today)
+            | models.Q(consultation_start__isnull=True)
+        ).order_by("-review_start")
+
 
 class Review(TimeStampedModel):
 
     STATUS = Choices(("draft", _("Draft")), ("published", _("Published")))
 
-    TYPE = Choices(("rapid", _("Rapid review")), ("other", _("Other")))
+    TYPE = Choices(
+        ("evidence", _("Evidence review")),
+        ("map", _("Evidence map")),
+        ("cost", _("Cost-effective model")),
+        ("systematic", _("Systematic review")),
+    )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
