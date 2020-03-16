@@ -11,17 +11,27 @@
 
 {% block content %}
 
+  <p class="govuk-body">
+  {% blocktrans %}
+  This platform is to update stakeholders and members of the public on conditions
+  that are being revised by the UK NSC. All changes made will be reflected on the
+  <a href="https://www.gov.uk/government/groups/uk-national-screening-committee-uk-nsc">
+    UK NSC public website
+  </a>.
+  {% endblocktrans %}
+  </p>
+
   <h2 class="govuk-heading-m">
-    Reviews in progress
+    {% trans 'Your products in progress' %}
   </h2>
 
   <table class="govuk-table">
     <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th class="govuk-table__header">{% trans 'Name' %}</th>
-      <th class="govuk-table__header">{% trans 'Type' %}</th>
-      <th class="govuk-table__header">{% trans 'Status' %}</th>
       <th class="govuk-table__header">{% trans 'Conditions' %}</th>
+      <th class="govuk-table__header">{% trans 'Product type' %}</th>
+      <th class="govuk-table__header">{% trans 'Status' %}</th>
     </tr>
     </thead>
     <tbody class="govuk-table__body">
@@ -32,9 +42,9 @@
             {{ review.name }}
           </a>
         </td>
+        <td class="govuk-table__cell">{{ review.policies_display }}</td>
         <td class="govuk-table__cell">{{ review.get_review_type_display }}</td>
         <td class="govuk-table__cell">{{ review.get_status_display }}</td>
-        <td class="govuk-table__cell">{{ review.policies_display }}</td>
       </tr>
       {% empty %}
       <tr class="govuk-table__row">
@@ -44,32 +54,38 @@
     </tbody>
   </table>
 
-  <h2 class="govuk-heading-m">
-    View all conditions
-  </h2>
-
-  <p class="govuk-body">
-    Use this to start a new review or edit general information about a condition
+  <p class="govuk=body">
+    <a href="">
+      {% trans 'View the whole team\'s products in progress.' %}
+    </a>
   </p>
 
+  <h2 class="govuk-heading-m">
+    {% trans 'Conditions' %}
+  </h2>
+
   <div class="link-menu govuk-body">
-    <a href="{% url 'review:list' %}" class="govuk-link">
-      View all conditions
-    </a>
+    {% url 'review:list' as url %}
+    {% blocktrans %}
+      <a href="{{ url}}" class="govuk-link">
+        View all conditions
+      </a>
+      to start a new product or edit general information about a condition.
+    {% endblocktrans %}
   </div>
 
   <h2 class="govuk-heading-m">
-    Stakeholders
+    {% trans 'Stakeholders' %}
   </h2>
 
-  <p class="govuk-body">
-    You can use this to add and edit stakeholders
-  </p>
-
   <div class="link-menu govuk-body">
-    <a href="{% url 'organisation:list' %}" class="govuk-link">
-      View stakeholder contacts
-    </a>
+    {% url 'organisation:list' as url %}
+    {% blocktrans %}
+      <a href="{{ url }}" class="govuk-link">
+        View stakeholder contacts
+      </a>
+      to add and edit stakeholders.
+    {% endblocktrans %}
   </div>
 
   <h2 class="govuk-heading-m">
