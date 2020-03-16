@@ -46,6 +46,7 @@ objects:
     NOTIFY_TEMPLATE_CONSULTATION_INVITATION: "${NOTIFY_TEMPLATE_CONSULTATION_INVITATION}"
     NOTIFY_TEMPLATE_PUBLIC_COMMENT: "${NOTIFY_TEMPLATE_PUBLIC_COMMENT}"
     NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "${NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT}"
+    CONSULTATION_COMMENT_ADDRESS: "${CONSULTATION_COMMENT_ADDRESS}"
 
 #
 # Secrets
@@ -614,3 +615,7 @@ parameters:
   displayName: Consultation stakeholder comment template identifier
   description: Set this to UUID for the Consultation stakeholder comment template from the GOV.UK Notify service
   value: ''
+- name: CONSULTATION_COMMENT_ADDRESS
+  displayName: Consultation comment email address
+  description: The email address where comments during the consultation period are sent
+  value: 'screening.evidence@nhs.net'
