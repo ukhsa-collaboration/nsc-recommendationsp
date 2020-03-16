@@ -1,12 +1,15 @@
-import datetime
+import os
 
 from django.db import models
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
+
+from nsc.utils.datetime import get_today
 
 
 class DocumentQuerySet(models.QuerySet):
@@ -26,13 +29,21 @@ class DocumentQuerySet(models.QuerySet):
         return self.filter(document_type=Document.TYPE.recommendation)
 
 
-def review_document_path(instance, filename):
-    review = instance.review
-    if review:
-        return "{0}/{1}/{2}".format(review.review_start.year, review.slug, filename)
+def review_document_path(instance, filename=None):
+    from nsc.review.models import Review
+
+    if isinstance(instance, Document):
+        review = instance.review
+    elif isinstance(instance, Review):
+        review = instance
     else:
-        today = datetime.date.today()
-        return "uploads/{0}/{1}/{2}".format(today.year, today.month, filename)
+        raise ValueError("Instance must be either a Review or Document")
+    year = review.review_start.year if review.review_start else get_today().year
+    path = os.path.join(str(year), review.slug)
+    if filename:
+        return os.path.join(path, filename)
+    else:
+        return path
 
 
 class Document(TimeStampedModel):
@@ -48,12 +59,7 @@ class Document(TimeStampedModel):
     document_type = models.CharField(
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
-    upload = models.FileField(
-        verbose_name=_("document"),
-        upload_to=review_document_path,
-        null=True,
-        blank=True,
-    )
+    upload = models.FileField(verbose_name=_("upload"), upload_to=review_document_path)
     is_public = models.BooleanField(verbose_name=_("is public"))
     review = models.ForeignKey(
         "review.Review",
@@ -74,3 +80,17 @@ class Document(TimeStampedModel):
 
     def get_download_url(self):
         return reverse("document:download", kwargs={"pk": self.pk})
+
+    def exists(self):
+        return Document.objects.filter(pk=self.pk).exists() if self.pk else False
+
+    def file_exists(self):
+        return self.upload.storage.exists(self.upload.name)
+
+    def delete_file(self):
+        self.upload.storage.delete(self.upload.name)
+
+
+@receiver(models.signals.post_delete, sender=Document)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    instance.delete_file()

@@ -53,6 +53,12 @@ Environment variables
     Path to dir which contains configuration secrets for deployed configurations.
 
 
+.. envvar:: OBJECT_STORAGE_BUCKET_NAME, OBJECT_STORAGE_DOMAIN_NAME
+
+    The name of the bucket used for uploaded files and the fully qualified
+    domain name from where the files are served.
+
+
 Secrets
 -------
 
@@ -71,6 +77,11 @@ be set there using environment variables.
 .. envvar:: DATABASE_USER, DATABASE_PASSWORD
 
     PostgreSQL login credentials
+
+
+.. envvar:: OBJECT_STORAGE_KEY_ID, OBJECT_STORAGE_SECRET_KEY
+
+    The S3-compatible storage server credentials
 
 
 Adding a setting

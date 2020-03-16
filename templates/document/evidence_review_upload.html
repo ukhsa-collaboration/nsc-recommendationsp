@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
@@ -17,16 +17,18 @@
 
 {% block content %}
 
-  <form method="post">
+  <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
     {% for hidden in form.hidden_fields %}
       {{ hidden }}
     {% endfor %}
 
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
 
-    {% include "widgets/file_upload.html" with field=form.document %}
+    {% include "widgets/file_upload.html" with field=form.upload %}
 
     <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}

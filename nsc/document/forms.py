@@ -44,7 +44,13 @@ class UploadAnotherForm(forms.Form):
         return strtobool(self.cleaned_data["another"])
 
 
-class ReviewDocumentForm(forms.ModelForm):
+class EvidenceReviewUploadForm(forms.ModelForm):
+
+    upload = forms.FileField(
+        label=_("Upload a file"),
+        error_messages={"required": _("Select the evidence review for upload")},
+    )
+
     class Meta:
         model = Document
         fields = ["name", "document_type", "is_public", "review", "upload"]
@@ -52,7 +58,7 @@ class ReviewDocumentForm(forms.ModelForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.fields["upload"].label = _("Upload a file")
+        self.fields["upload"].widget.attrs.update({"class": "govuk-file-upload"})
         self.fields["name"].widget = HiddenInput()
         self.fields["document_type"].widget = HiddenInput()
         self.fields["is_public"].widget = HiddenInput()
