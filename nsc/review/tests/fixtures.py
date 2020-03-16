@@ -46,8 +46,8 @@ def review_in_consultation(make_review):
     )
     baker.make(
         Document,
-        name="Evidence Review",
-        document_type=Document.TYPE.evidence_review,
+        name="External Review",
+        document_type=Document.TYPE.external_review,
         review=review,
     )
     baker.make(
@@ -73,8 +73,8 @@ def review_in_post_consultation(make_review):
     )
     baker.make(
         Document,
-        name="Evidence Review",
-        document_type=Document.TYPE.evidence_review,
+        name="External review",
+        document_type=Document.TYPE.external_review,
         review=review,
     )
     baker.make(
@@ -100,8 +100,8 @@ def review_completed(make_review):
     )
     baker.make(
         Document,
-        name="Evidence Review",
-        document_type=Document.TYPE.evidence_review,
+        name="External review",
+        document_type=Document.TYPE.external_review,
         review=review,
     )
     baker.make(
@@ -129,8 +129,8 @@ def review_published(make_review):
     )
     baker.make(
         Document,
-        name="Evidence Review",
-        document_type=Document.TYPE.evidence_review,
+        name="External Review",
+        document_type=Document.TYPE.external_review,
         review=review,
     )
     baker.make(
@@ -141,14 +141,14 @@ def review_published(make_review):
     )
     baker.make(
         Document,
-        name="Coversheet",
-        document_type=Document.TYPE.coversheet,
+        name="Cover sheet",
+        document_type=Document.TYPE.cover_sheet,
         review=review,
     )
     baker.make(
         Document,
-        name="Recommendation",
-        document_type=Document.TYPE.recommendation,
+        name="Evidence review",
+        document_type=Document.TYPE.evidence_review,
         review=review,
     )
     return review

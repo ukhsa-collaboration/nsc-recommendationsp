@@ -1,6 +1,5 @@
 import random
 
-from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 import pytest
@@ -59,7 +58,24 @@ def review_document(make_document):
     return make_document(
         name="Document",
         document_type=random.choice(types),
-        is_public=True,
+        review=baker.make(Review, name="Review", slug="name"),
+    )
+
+
+@pytest.fixture
+def external_review(make_document):
+    return make_document(
+        name="External review",
+        document_type=Document.TYPE.external_review,
+        review=baker.make(Review, name="Review", slug="name"),
+    )
+
+
+@pytest.fixture
+def submission_form(make_document):
+    return make_document(
+        name="Submission form",
+        document_type=Document.TYPE.submission_form,
         review=baker.make(Review, name="Review", slug="name"),
     )
 
@@ -69,6 +85,14 @@ def evidence_review(make_document):
     return make_document(
         name="Evidence review",
         document_type=Document.TYPE.evidence_review,
-        is_public=True,
+        review=baker.make(Review, name="Review", slug="name"),
+    )
+
+
+@pytest.fixture
+def cover_sheet(make_document):
+    return make_document(
+        name="Cover sheet",
+        document_type=Document.TYPE.cover_sheet,
         review=baker.make(Review, name="Review", slug="name"),
     )

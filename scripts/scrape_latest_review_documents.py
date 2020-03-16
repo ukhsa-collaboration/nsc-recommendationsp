@@ -87,8 +87,7 @@ def add_file(url, document):
 
 def add_external_review(review):
     document = Document()
-    document.document_type = Document.TYPES.external
-    document.is_public = True
+    document.document_type = Document.TYPE.external_review
     document.review = review
     document.save()
     return document

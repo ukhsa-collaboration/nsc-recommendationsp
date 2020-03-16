@@ -99,17 +99,17 @@ class Review(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("review:detail", kwargs={"slug": self.slug})
 
-    def get_evidence_review_document(self):
-        return Document.objects.for_review(self).evidence_reviews().first()
+    def get_external_review(self):
+        return Document.objects.for_review(self).external_reviews().first()
 
     def get_submission_form(self):
         return Document.objects.for_review(self).submission_forms().first()
 
-    def get_coversheet_document(self):
-        return Document.objects.for_review(self).coversheets().first()
+    def get_cover_sheet(self):
+        return Document.objects.for_review(self).cover_sheets().first()
 
-    def get_recommendation_document(self):
-        return Document.objects.for_review(self).recommendations().first()
+    def get_evidence_review(self):
+        return Document.objects.for_review(self).evidence_reviews().first()
 
     def clean(self):
         if not self.slug:
