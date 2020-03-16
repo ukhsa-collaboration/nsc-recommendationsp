@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
 from django.db import models
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-
 from dateutil import relativedelta
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
@@ -155,3 +156,11 @@ class Review(TimeStampedModel):
         if commit:
             self.clean()
             self.save()
+
+
+@receiver(models.signals.post_delete, sender=Review)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    from nsc.document.models import review_document_path
+
+    folder = review_document_path(instance)
+    default_storage.delete(folder)

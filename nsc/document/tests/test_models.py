@@ -3,11 +3,11 @@ from django.urls import reverse
 import pytest
 from model_bakery import baker
 
-from ..models import Document
-
+from ..models import Document, review_document_path
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
+pytest_plugins = ["nsc.document.tests.fixtures"]
 
 
 @pytest.fixture
@@ -95,3 +95,30 @@ def test_recommendations(all_document_types):
     ]
     actual = [obj.pk for obj in Document.objects.recommendations()]
     assert expected == actual
+
+
+def test_deleting_document_deletes_file(review_document):
+    """
+    Test that deleting a Document deletes the associated file in storage.
+    """
+    review_document.delete()
+    assert not review_document.file_exists()
+
+
+def test_queryset_delete_deletes_files(review_document):
+    """
+    Test that calling delete() on the queryset also deletes the files from storage.
+    """
+    Document.objects.all().delete()
+    assert not review_document.exists()
+    assert not review_document.file_exists()
+
+
+def test_deleting_review_deletes_document(review_document):
+    """
+    Test that deleting a Review cascades and associated documents are deleted too.
+    This includes the parent folder if it exists.
+    """
+    review_document.review.delete()
+    assert not review_document.exists()
+    assert not review_document.file_exists()

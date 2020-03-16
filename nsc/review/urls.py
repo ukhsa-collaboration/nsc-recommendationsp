@@ -1,6 +1,10 @@
 from django.urls import path
 
-from nsc.document.views import ContinueView, PolicyDocumentView, ReviewDocumentView
+from nsc.document.views import (
+    ContinueView,
+    PolicyDocumentView,
+    EvidenceReviewUploadView,
+)
 
 from . import views
 
@@ -42,9 +46,9 @@ urlpatterns = [
         name="next-policy-document",
     ),
     path(
-        r"<slug:slug>/add-review-document/",
-        ReviewDocumentView.as_view(),
-        name="add-review-document",
+        r"<slug:slug>/evidence-review-upload/",
+        EvidenceReviewUploadView.as_view(),
+        name="evidence-review-upload",
     ),
 ]
 

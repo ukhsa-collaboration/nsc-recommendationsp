@@ -4,7 +4,7 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
-from nsc.document.models import Document
+from nsc.document.models import Document, review_document_path
 from nsc.utils.datetime import get_today
 
 from ..models import Review
@@ -12,7 +12,7 @@ from ..models import Review
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.review.tests.fixtures"]
+pytest_plugins = ["nsc.review.tests.fixtures", "nsc.document.tests.fixtures"]
 
 
 def test_factory_create_policy():
@@ -164,3 +164,16 @@ def test_not_in_consultation(status, phase, count):
     baker.make(Review, status=status, phase=phase)
     actual = Review.objects.not_in_consultation().count()
     assert count == actual
+
+
+def test_deleting_review_deletes_folder(review_document):
+    """
+    Test that deleting a Review cascades and associated documents are deleted too.
+    This includes the parent folder if it exists.
+    """
+    review = review_document.review
+    review.delete()
+    assert not review_document.exists()
+    assert not review_document.file_exists()
+    folder = review_document_path(review)
+    assert not review_document.upload.storage.exists(folder)
