@@ -21,8 +21,10 @@ django-model-utils
 
 # Project specific
 beautifulsoup4
+boto3
 celery
 django-simple-history
+django-storages
 lxml
 markdown
 notifications-python-client
