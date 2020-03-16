@@ -79,9 +79,7 @@ class Review(TimeStampedModel):
         verbose_name=_("NSC meeting date"), null=True, blank=True
     )
 
-    recommendation = models.BooleanField(
-        verbose_name=_("recommendation"), default=False
-    )
+    recommendation = models.NullBooleanField(verbose_name=_("recommendation"))
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
