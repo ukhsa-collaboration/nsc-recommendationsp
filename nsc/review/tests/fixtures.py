@@ -2,6 +2,7 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
+from nsc.document.models import Document
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
@@ -22,12 +23,13 @@ def make_review():
 @pytest.fixture
 def review_in_pre_consultation(make_review):
     review_start = get_today() - relativedelta(months=2)
-    return make_review(
-        name="review",
-        status=Review.STATUS.draft,
-        phase=Review.PHASE.pre_consultation,
-        review_start=review_start,
+    review = make_review(
+        name="Evidence Review", status=Review.STATUS.draft, review_start=review_start
     )
+    baker.make(
+        Document, name="document", document_type="evidence_review", review=review
+    )
+    return review
 
 
 @pytest.fixture
@@ -35,14 +37,26 @@ def review_in_consultation(make_review):
     review_start = get_today() - relativedelta(months=2)
     consultation_start = review_start + relativedelta(months=2)
     consultation_end = consultation_start + relativedelta(months=3)
-    return make_review(
+    review = make_review(
         name="review",
         status=Review.STATUS.draft,
-        phase=Review.PHASE.consultation,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
     )
+    baker.make(
+        Document,
+        name="Evidence Review",
+        document_type=Document.TYPE.evidence_review,
+        review=review,
+    )
+    baker.make(
+        Document,
+        name="Submission Form",
+        document_type=Document.TYPE.submission_form,
+        review=review,
+    )
+    return review
 
 
 @pytest.fixture
@@ -50,14 +64,26 @@ def review_in_post_consultation(make_review):
     review_start = get_today() - relativedelta(months=6)
     consultation_start = review_start + relativedelta(months=2)
     consultation_end = consultation_start + relativedelta(months=3)
-    return make_review(
+    review = make_review(
         name="review",
         status=Review.STATUS.draft,
-        phase=Review.PHASE.post_consultation,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
     )
+    baker.make(
+        Document,
+        name="Evidence Review",
+        document_type=Document.TYPE.evidence_review,
+        review=review,
+    )
+    baker.make(
+        Document,
+        name="Submission Form",
+        document_type=Document.TYPE.submission_form,
+        review=review,
+    )
+    return review
 
 
 @pytest.fixture
@@ -65,14 +91,26 @@ def review_completed(make_review):
     review_start = get_today() - relativedelta(months=6)
     consultation_start = review_start + relativedelta(months=2)
     consultation_end = consultation_start + relativedelta(months=3)
-    return make_review(
+    review = make_review(
         name="review",
         status=Review.STATUS.draft,
-        phase=Review.PHASE.completed,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
     )
+    baker.make(
+        Document,
+        name="Evidence Review",
+        document_type=Document.TYPE.evidence_review,
+        review=review,
+    )
+    baker.make(
+        Document,
+        name="Submission Form",
+        document_type=Document.TYPE.submission_form,
+        review=review,
+    )
+    return review
 
 
 @pytest.fixture
@@ -81,12 +119,36 @@ def review_published(make_review):
     consultation_start = review_start + relativedelta(months=2)
     consultation_end = consultation_start + relativedelta(months=3)
     review_end = consultation_start + relativedelta(months=1)
-    return make_review(
+    review = make_review(
         name="review",
         status=Review.STATUS.published,
-        phase=Review.PHASE.completed,
         review_start=review_start,
         review_end=review_end,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
     )
+    baker.make(
+        Document,
+        name="Evidence Review",
+        document_type=Document.TYPE.evidence_review,
+        review=review,
+    )
+    baker.make(
+        Document,
+        name="Submission Form",
+        document_type=Document.TYPE.submission_form,
+        review=review,
+    )
+    baker.make(
+        Document,
+        name="Coversheet",
+        document_type=Document.TYPE.coversheet,
+        review=review,
+    )
+    baker.make(
+        Document,
+        name="Recommendation",
+        document_type=Document.TYPE.recommendation,
+        review=review,
+    )
+    return review

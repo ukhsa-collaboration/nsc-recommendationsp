@@ -13,9 +13,6 @@ class SearchForm(forms.Form):
     name = forms.CharField(label=_("Search by name"), required=False)
     condition = forms.CharField(label=_("Search by condition"), required=False)
 
-    name.widget.attrs.update({"class": "govuk-input", "style": "width: 80%"})
-    condition.widget.attrs.update({"class": "govuk-input", "style": "width: 80%"})
-
 
 class OrganisationForm(forms.ModelForm):
     """Form for adding and editing and Organisation.
@@ -60,20 +57,7 @@ class OrganisationForm(forms.ModelForm):
 
         super().__init__(**kwargs)
 
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30", "autofocus": "autofocus"}
-        )
-
         self.fields["url"].label = _("Web site")
-        self.fields["url"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["is_public"].widget.attrs.update({"class": "govuk-radios__input"})
-
-        self.fields["policies"].widget.attrs.update(
-            {"class": "govuk-checkboxes__input", "autofocus": "autofocus"}
-        )
 
         self.initial["is_public"] = False
 
@@ -83,9 +67,7 @@ class OrganisationForm(forms.ModelForm):
                 del self.fields["policies"]
 
             for name, field in self.fields.items():
-                if name == show_field:
-                    field.widget.attrs.update({"autofocus": "autofocus"})
-                else:
+                if name != show_field:
                     field.widget = HiddenInput()
 
     def is_valid(self):

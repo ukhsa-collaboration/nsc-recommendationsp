@@ -21,10 +21,18 @@
 
     {{ form.non_field_errors }}
 
-    {% include "widgets/text_input.html" with field=form.name %}
-    {% include "widgets/text_input.html" with field=form.url %}
-    {% include "widgets/radio_buttons.html" with field=form.is_public size='m' %}
-    {% include "widgets/checkboxes.html" with field=form.policies size='m' %}
+    {% if form.name and not form.name.is_hidden %}
+      {% include "widgets/text_input.html" with field=form.name %}
+    {% endif %}
+    {% if form.url and not form.url.is_hidden %}
+      {% include "widgets/text_input.html" with field=form.url %}
+    {% endif %}
+    {% if form.is_public and not form.is_public.is_hidden %}
+      {% include "widgets/radio_buttons.html" with field=form.is_public size='m' %}
+    {% endif %}
+    {% if form.policies %}
+      {% include "widgets/checkboxes.html" with field=form.policies size='m' %}
+    {% endif %}
 
     <div class="govuk-body">
       <button type="submit" class="govuk-button" name="save" value="save">

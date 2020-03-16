@@ -26,8 +26,6 @@ class DocumentForm(forms.ModelForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.fields["name"].widget.attrs.update({"class": "govuk-input"})
-        self.fields["is_public"].widget.attrs.update({"class": "govuk-radios__input"})
         self.fields["document_type"].widget = HiddenInput()
         self.fields["upload"].label = _("Upload a file")
         self.fields["review"].widget = HiddenInput()
@@ -41,11 +39,6 @@ class UploadAnotherForm(forms.Form):
         choices=YES_NO_CHOICES,
         widget=forms.RadioSelect,
     )
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.fields["another"].widget.attrs.update({"class": "govuk-radios__input"})
 
     def clean_another(self):
         return strtobool(self.cleaned_data["another"])

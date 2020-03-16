@@ -27,5 +27,6 @@ django-simple-history
 django-storages
 lxml
 markdown
+notifications-python-client
 python-dateutil
 requests

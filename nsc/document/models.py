@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
@@ -12,13 +13,16 @@ class DocumentQuerySet(models.QuerySet):
     def for_review(self, review):
         return self.filter(review_id=review.pk)
 
-    def supporting(self):
-        return self.filter(document_type=Document.TYPE.supporting)
+    def coversheets(self):
+        return self.filter(document_type=Document.TYPE.coversheet)
 
-    def external(self):
-        return self.filter(document_type=Document.TYPE.external)
+    def evidence_reviews(self):
+        return self.filter(document_type=Document.TYPE.evidence_review)
 
-    def recommendation(self):
+    def submission_forms(self):
+        return self.filter(document_type=Document.TYPE.submission_form)
+
+    def recommendations(self):
         return self.filter(document_type=Document.TYPE.recommendation)
 
 
@@ -34,8 +38,9 @@ def review_document_path(instance, filename):
 class Document(TimeStampedModel):
 
     TYPE = Choices(
-        ("supporting", _("Supporting documents")),
-        ("external", _("External Review")),
+        ("coversheet", _("Coversheet")),
+        ("submission_form", _("Submission form")),
+        ("evidence_review", _("Evidence Review")),
         ("recommendation", _("Review recommendation")),
     )
 
@@ -66,3 +71,6 @@ class Document(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def get_download_url(self):
+        return reverse("document:download", kwargs={"pk": self.pk})

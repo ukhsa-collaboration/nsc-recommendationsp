@@ -292,6 +292,23 @@ class Common(Configuration):
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
+    # API key for the GDS Notify service for sending emails.
+    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
+    # The email address where comments during the consultation period are sent.
+    CONSULTATION_COMMENT_ADDRESS = "screening.evidence@nhs.net"
+
+    NOTIFY_TEMPLATE_CONSULTATION_INVITATION = get_env(
+        "NOTIFY_TEMPLATE_CONSULTATION_INVITATION"
+    )
+
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
+
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
+
+    # This is the URL for the National Screening Committee where members of
+    # the public can leave feedback about the web site.
+    PROJECT_FEEDBACK_URL = ""
+
 
 class Webpack:
     """

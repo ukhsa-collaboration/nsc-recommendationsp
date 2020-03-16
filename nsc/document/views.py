@@ -1,4 +1,6 @@
-from django.http import HttpResponseRedirect
+import mimetypes
+
+from django.http import FileResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
@@ -29,7 +31,7 @@ class PolicyDocumentView(DocumentView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial["document_type"] = Document.TYPES.policy
+        initial["document_type"] = Document.TYPE.recommendation
         return initial
 
     def get_success_url(self):
@@ -66,7 +68,7 @@ class ReviewDocumentView(DocumentView):
             {
                 "name": _("Review document"),
                 "is_public": False,
-                "document_type": Document.TYPES.review,
+                "document_type": Document.TYPE.external,
             }
         )
         return initial
@@ -80,5 +82,24 @@ class RecommendationDocumentView(DocumentView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial["document_type"] = Document.TYPES.recommendation
+        initial["document_type"] = Document.TYPE.recommendation
         return initial
+
+
+class DownloadView(generic.DetailView):
+    model = Document
+
+    def get(self, request, *args, **kwargs):
+        document = self.get_object()
+        storage = document.upload.storage
+
+        if not storage.exists(document.upload.name):
+            raise Http404
+
+        mime_type, encoding = mimetypes.guess_type(document.upload.url)
+
+        return FileResponse(
+            storage.open(document.upload.path, "rb"),
+            as_attachment=True,
+            content_type=mime_type,
+        )

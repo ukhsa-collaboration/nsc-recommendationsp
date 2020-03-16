@@ -1,29 +1,44 @@
 {% load i18n %}
 
-<div class="govuk-form-group{% if date.errors %} govuk-form-group--error{% endif %}">
-  <fieldset class="govuk-dateset" role="group" aria-describedby="{{ date.name }}-hint {{ date.name }}-error">
-    <legend class="govuk-dateset__legend govuk-dateset__legend--{% if label_size %}{{ label_size }}{% else %}s{% endif %}">
-      <label for="{{ date.id_for_label}}">
-          {{ date.label }}
-      </label>
-    </legend>
-    {% if date.errors %}
-      <span id="{{ date.name }}-error" class="govuk-error-message">
-        <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ date.errors.0 }}
-      </span>
-    {% endif %}
-    {% if date.help_text %}
-      <span id="{{ date.name }}-hint" class="govuk-hint">
-        {{ date.help_text }}
-      </span>
-    {% endif %}
-    <div class="govuk-date-input" id="{{ date.id_for_label}}">
+<div class="govuk-form-group{% if field.errors or day.errors or month.errors or year.errors %} govuk-form-group--error{% endif %}">
+
+  <fieldset class="govuk-fieldset"
+            role="group"
+            aria-describedby="{% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %} ">
+
+    {% include "widgets/field_legend.html" %}
+    {% include "widgets/field_help.html" %}
+
+    {% include "widgets/field_errors.html" %}
+    {% include "widgets/field_errors.html" with field=day %}
+    {% include "widgets/field_errors.html" with field=month %}
+    {% include "widgets/field_errors.html" with field=year %}
+
+    <div class="govuk-date-input" id="{{ field.id_for_label}}">
       <div class="govuk-date-input__item">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-date-input__label" for="{{ day.id_for_label }}">
             {{ day.label }}
           </label>
-          {{ day }}
+
+          {% with field=day widget=day.field.widget %}
+            <input
+              type="text"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              name="{{ field.name }}"
+              class="govuk-input govuk-input--width-2 {% if field.errors %} govuk-input--error{% endif %}{% if width %} govuk-input--width-{{ width }}{% endif %}"
+              id="{{ field.id_for_label }}"
+              {% if field.value != None %}
+                value="{{ field.value|stringformat:'s' }}"
+              {% endif %}
+              {% if field.help_text or field.errors %}
+                aria-describedby="{% if field.help_text %}{{ field.id_for_label }}-hint {% endif %}{% if field.errors %}{{ field.id_for_label }}-error{% endif %}"
+              {% endif %}
+              {% include "widgets/field_attrs.html" %}
+            >
+          {% endwith %}
+
         </div>
       </div>
       <div class="govuk-date-input__item">
@@ -31,7 +46,25 @@
           <label class="govuk-label govuk-date-input__label" for="{{ month.id_for_label }}">
             {{ month.label }}
           </label>
-          {{ month }}
+
+          {% with field=month widget=month.field.widget %}
+            <input
+              type="text"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              name="{{ field.name }}"
+              class="govuk-input govuk-input--width-2 {% if field.errors %} govuk-input--error{% endif %}{% if width %} govuk-input--width-{{ width }}{% endif %}"
+              id="{{ field.id_for_label }}"
+              {% if field.value != None %}
+                value="{{ field.value|stringformat:'s' }}"
+              {% endif %}
+              {% if field.help_text or field.errors %}
+                aria-describedby="{% if field.help_text %}{{ field.id_for_label }}-hint {% endif %}{% if field.errors %}{{ field.id_for_label }}-error{% endif %}"
+              {% endif %}
+              {% include "widgets/field_attrs.html" %}
+            >
+          {% endwith %}
+
         </div>
       </div>
       <div class="govuk-date-input__item">
@@ -39,7 +72,25 @@
           <label class="govuk-label govuk-date-input__label" for="{{ year.id_for_label }}">
             {{ year.label }}
           </label>
-          {{ year }}
+
+          {% with field=year widget=year.field.widget %}
+            <input
+              type="text"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              name="{{ field.name }}"
+              class="govuk-input govuk-input--width-4 {% if field.errors %} govuk-input--error{% endif %}{% if width %} govuk-input--width-{{ width }}{% endif %}"
+              id="{{ field.id_for_label }}"
+              {% if field.value != None %}
+                value="{{ field.value|stringformat:'s' }}"
+              {% endif %}
+              {% if field.help_text or field.errors %}
+                aria-describedby="{% if field.help_text %}{{ field.id_for_label }}-hint {% endif %}{% if field.errors %}{{ field.id_for_label }}-error{% endif %}"
+              {% endif %}
+              {% include "widgets/field_attrs.html" %}
+            >
+          {% endwith %}
+
         </div>
       </div>
     </div>

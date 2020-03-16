@@ -45,6 +45,10 @@ objects:
     DJANGO_REDIS_PORT: "6379"
     OBJECT_STORAGE_BUCKET_NAME: "${OBJECT_STORAGE_BUCKET_NAME}"
     OBJECT_STORAGE_DOMAIN_NAME: "${OBJECT_STORAGE_DOMAIN_NAME}"
+    NOTIFY_TEMPLATE_CONSULTATION_INVITATION: "${NOTIFY_TEMPLATE_CONSULTATION_INVITATION}"
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT: "${NOTIFY_TEMPLATE_PUBLIC_COMMENT}"
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "${NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT}"
+
 #
 # Secrets
 #
@@ -58,6 +62,7 @@ objects:
     DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY}"
     OBJECT_STORAGE_KEY_ID: "${OBJECT_STORAGE_KEY_ID}"
     OBJECT_STORAGE_SECRET_KEY: "${OBJECT_STORAGE_SECRET_KEY}"
+    NOTIFY_SERVICE_API_KEY: "${NOTIFY_SERVICE_API_KEY}"
 #
 # ImageStreams
 #
@@ -588,4 +593,20 @@ parameters:
 - name: PIP_INDEX_URL
   displayName: Custom PyPi Index URL
   description: The custom PyPi index URL (optional)
+  value: ''
+- name: NOTIFY_SERVICE_API_KEY
+  displayName: API Key for the GOV.UK Notify service
+  description: Set this API key for the PHE NSC project.
+  value: ''
+- name: NOTIFY_TEMPLATE_CONSULTATION_INVITATION
+  displayName: Consultation invitation template identifier
+  description: Set this to UUID for the Consultation Invitation template from the GOV.UK Notify service
+  value: ''
+- name: NOTIFY_TEMPLATE_PUBLIC_COMMENT
+  displayName: Consultation public comment template identifier
+  description: Set this to UUID for the Consultation public comment template from the GOV.UK Notify service
+  value: ''
+- name: NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
+  displayName: Consultation stakeholder comment template identifier
+  description: Set this to UUID for the Consultation stakeholder comment template from the GOV.UK Notify service
   value: ''

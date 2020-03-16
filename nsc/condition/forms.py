@@ -1,12 +1,23 @@
 from django import forms
+from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
+from model_utils import Choices
 
 from nsc.policy.models import Policy
 
 
 class SearchForm(forms.Form):
 
-    name = forms.CharField(label=_("Search by condition name"), required=False)
+    name = forms.CharField(label=_("Condition name"), required=False)
+
+    CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))
+
+    comments = forms.TypedChoiceField(
+        label=_("Public comments"),
+        choices=CONSULTATION,
+        widget=forms.RadioSelect,
+        required=False,
+    )
 
     affects = forms.TypedChoiceField(
         label=_("Who the condition affects"),
@@ -16,66 +27,88 @@ class SearchForm(forms.Form):
     )
 
     screen = forms.TypedChoiceField(
-        label=_("Current recommendation"),
+        label=_("Screening recommended"),
         choices=(("yes", _("Yes")), ("no", _("No"))),
         widget=forms.RadioSelect,
         required=False,
     )
 
-    name.widget.attrs.update({"class": "govuk-input"})
-    affects.widget.attrs.update({"class": "govuk-radios__input"})
-    screen.widget.attrs.update({"class": "govuk-radios__input"})
+
+class PublicCommentForm(forms.Form):
+
+    name = forms.CharField(
+        label=_("Full name"), error_messages={"required": _("Enter your full name.")}
+    )
+    email = forms.EmailField(
+        label=_("Email address"),
+        error_messages={
+            "required": _("Enter your email address"),
+            "invalid": _(
+                "Enter an email address in the correct format, like name@example.com."
+            ),
+        },
+    )
+    publish = forms.TypedChoiceField(
+        label=_("Do you consent to your name being published on the NSC web site?"),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would like to shown as a contributor to this consultation."
+            )
+        },
+    )
+    notify = forms.TypedChoiceField(
+        label=_(
+            "Would you like to be updated when the UK NSC has reviewed the condition?"
+        ),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would to be notified when the NSC have completed the review."
+            )
+        },
+    )
+    comment = forms.CharField(
+        label="",
+        widget=forms.Textarea,
+        error_messages={"required": _("Enter your comment")},
+    )
+    condition = forms.CharField(required=False, widget=HiddenInput)
 
 
-class SubmissionForm(forms.Form):
+class StakeholderCommentForm(forms.Form):
 
-    name = forms.CharField(label=_("Name"))
-    email = forms.EmailField(label=_("Email"))
+    name = forms.CharField(
+        label=_("Full name"), error_messages={"required": _("Enter your full name.")}
+    )
+    email = forms.EmailField(
+        label=_("Email address"),
+        error_messages={
+            "required": _("Enter your email address"),
+            "invalid": _(
+                "Enter an email address in the correct format, like name@example.com."
+            ),
+        },
+    )
     organisation = forms.CharField(
         label=_("Organisation (if appropriate)"), required=False
     )
     role = forms.CharField(label=_("Role (if appropriate)"), required=False)
     publish = forms.TypedChoiceField(
-        label=_("Publish online"),
-        help_text=_(
-            "Do you consent to your name and organisation being published on the NSC web site?"
-        ),
+        label=_("Do you consent to your name being published on the NSC web site?"),
         choices=((True, _("Yes")), (False, _("No"))),
         widget=forms.RadioSelect,
+        error_messages={
+            "required": _(
+                "Select yes if you would like to shown as a contributor to this consultation."
+            )
+        },
     )
-    comments = forms.CharField(
-        label=_("Consultation comments"),
-        help_text=_(
-            "If your comments relate to specific review sections or page numbers, "
-            "please indicate this in the text, e.g. [page 3, paragraph 2]]"
-        ),
-        required=False,
+    comment = forms.CharField(
+        label="",
+        widget=forms.Textarea,
+        error_messages={"required": _("Enter your comment")},
     )
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30", "autofocus": "autofocus"}
-        )
-
-        self.fields["email"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["organisation"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["role"].widget.attrs.update(
-            {"class": "govuk-input govuk-input--width-30"}
-        )
-
-        self.fields["publish"].widget.attrs.update({"class": "govuk-radios__input"})
-        self.initial["publish"] = False
-
-        self.fields["comments"].widget = forms.Textarea()
-        self.fields["comments"].widget.attrs.update(
-            {"class": "govuk-textarea", "aria-describedby": "comments-hint"}
-        )
+    condition = forms.CharField(required=False, widget=HiddenInput)

@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Review cycle' %}
+</h2>
+
+{% if current_review %}
+  <p class="govuk-body">
+    {% trans 'This condition is currently in review.' %}
+  </p>
+{% endif %}
+
+<p class="govuk-body">
+  {% blocktrans with year=policy.last_review.year %}
+  Last review completed: {{ year }}
+  {% endblocktrans %}
+</p>
+
+<p class="govuk-body">
+  {% blocktrans with year=policy.next_review.year next=policy.next_review.year|add:"1" %}
+  Next review estimated to be completed: {{ year }} to {{ next }}.
+  {% endblocktrans %}
+</p>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  Previous evidence reviews, are available on the UK NSC archive.
+  {% endblocktrans %}
+</p>
+
+
+
+
+
+
