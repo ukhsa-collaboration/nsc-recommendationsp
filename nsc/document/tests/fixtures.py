@@ -39,7 +39,10 @@ def model_pdf(minimal_pdf):
     """
     Return a minimum viable PDF that can be used in a model.
     """
-    return ContentFile(minimal_pdf, name="document.pdf")
+    return SimpleUploadedFile(
+        "document.pdf", minimal_pdf.encode(), content_type="application/pdf"
+    )
+    # return ContentFile(minimal_pdf, name="document.pdf")
 
 
 @pytest.fixture

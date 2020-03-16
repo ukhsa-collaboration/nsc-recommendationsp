@@ -3,8 +3,7 @@ from django.urls import reverse
 import pytest
 from model_bakery import baker
 
-from ..models import Document
-
+from ..models import Document, review_document_path
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
@@ -118,6 +117,7 @@ def test_queryset_delete_deletes_files(review_document):
 def test_deleting_review_deletes_document(review_document):
     """
     Test that deleting a Review cascades and associated documents are deleted too.
+    This includes the parent folder if it exists.
     """
     review_document.review.delete()
     assert not review_document.exists()

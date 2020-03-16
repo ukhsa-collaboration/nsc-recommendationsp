@@ -74,20 +74,21 @@ class EvidenceReviewUploadView(DocumentView):
         return initial
 
     def get_object(self, queryset=None):
-        # Since there is only ever on external evidence review if the
-        # file was already uploaded, fetch the existing Document and
-        # delete the file so everything can be overwritten.
+        # Get any existing evidence review document.
         pk = self.request.POST["review"]
         review = Review.objects.get(pk=pk)
-        document = review.get_evidence_review_document()
-        if document:
-            document.delete_file()
-        return document
+        return review.get_evidence_review_document()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if self.object:
+            existing = self.object.upload
+        else:
+            existing = None
         form = self.get_form()
         if form.is_valid():
+            if existing:
+                self.object.upload.storage.delete(existing.name)
             return self.form_valid(form)
         else:
             return self.form_invalid(form)

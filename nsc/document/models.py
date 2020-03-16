@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
@@ -27,10 +29,21 @@ class DocumentQuerySet(models.QuerySet):
         return self.filter(document_type=Document.TYPE.recommendation)
 
 
-def review_document_path(instance, filename):
-    review = instance.review
+def review_document_path(instance, filename=None):
+    from nsc.review.models import Review
+
+    if isinstance(instance, Document):
+        review = instance.review
+    elif isinstance(instance, Review):
+        review = instance
+    else:
+        raise ValueError("Instance must be either a Review or Document")
     year = review.review_start.year if review.review_start else get_today().year
-    return "{0}/{1}/{2}".format(year, review.slug, filename)
+    path = os.path.join(str(year), review.slug)
+    if filename:
+        return os.path.join(path, filename)
+    else:
+        return path
 
 
 class Document(TimeStampedModel):

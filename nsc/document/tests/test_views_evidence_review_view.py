@@ -1,3 +1,5 @@
+import os
+
 from django.urls import reverse
 from django.utils.translation import ugettext
 
@@ -57,4 +59,25 @@ def test_document_created(minimal_pdf, django_app):
     )
     assert document is not None
     assert document.file_exists()
+    review.delete()
+
+
+def test_existing_document_is_replaced(evidence_review, minimal_pdf, django_app):
+    """
+    Test any existing evidence review document is replaced by the new upload.
+    """
+    review = evidence_review.review
+    existing = evidence_review.upload.name
+
+    form = django_app.get(
+        reverse("review:evidence-review-upload", kwargs={"slug": review.slug})
+    ).form
+    form["upload"] = ("new.pdf", minimal_pdf.encode(), "application/pdf")
+    form.submit().follow()
+
+    document = review.get_evidence_review_document()
+    assert os.path.basename(document.upload.name) == "new.pdf"
+    assert document.file_exists()
+    assert not document.upload.storage.exists(existing)
+
     review.delete()
