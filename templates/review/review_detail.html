@@ -24,32 +24,22 @@
       <ul class="app-task-list__items">
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:add-policy-document' review.slug %}" aria-describedby="relevent_documents_added">
-              Add relevant documents
-            </a>
-          </span>
-          {% if review.relevent_documents_added %}
-            <strong class="govuk-tag app-task-list__task-completed" id="relevent_documents_added">{% trans 'COMPLETED' %}</strong>
-          {% endif %}
-        </li>
-        <li class="app-task-list__item">
-          <span class="app-task-list__task-name">
-            <a href="{% url 'review:evidence-review-upload' review.slug %}" aria-describedby="evidence_review_added">
+            <a href="{% url 'review:add-external-review' review.slug %}" aria-describedby="external_review_added">
               Upload external review document
             </a>
           </span>
-          {% if review.evidence_review_added %}
-            <strong class="govuk-tag app-task-list__task-completed" id="evidence_review_added">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_evidence_review %}
+            <strong class="govuk-tag app-task-list__task-completed" id="external_review_added">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:dates' object.slug %}" aria-describedby="consultation_dates_set">
-              Confirm dates of consultation
+            <a href="" aria-describedby="notify-communications-department">
+              Notify communications department
             </a>
           </span>
-          {% if review.consultation_dates_set %}
-            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_notified_communications_department %}
+            <strong class="govuk-tag app-task-list__task-completed" id="notify-communications-department">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -57,19 +47,19 @@
             <a href="{% url 'review:organisations' object.slug %}" aria-describedby="stakeholders-notified">
               Confirm stakeholders to be notified
             </a>
-          {% if review.stakeholders_notified %}
+          {% if review.has_notified_stakeholders %}
             <strong class="govuk-tag app-task-list__task-completed" id="stakeholders_notified">{% trans 'COMPLETED' %}</strong>
           {% endif %}
           </span>
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:consultation' object.slug %}" aria-describedby="consultation-opened">
-              Open consultation
+            <a href="{% url 'review:dates' object.slug %}" aria-describedby="consultation_dates_set">
+              Confirm dates of consultation
             </a>
           </span>
-          {% if review.consultation_opened %}
-            <strong class="govuk-tag app-task-list__task-completed" id="consultation_opened">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_consultation_dates_set and review.has_nsc_meeting_date_set %}
+            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>
       </ul>
@@ -81,12 +71,32 @@
       <ul class="app-task-list__items">
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:recommendation' object.slug %}" aria-describedby="recommendation-set">
-              Documents and recommendation
+            <a href="{% url 'review:add-review-documents' review.slug %}" aria-describedby="review_documents_added">
+              Add relevant documents
             </a>
           </span>
-          {% if review.recomendation_set %}
-            <strong class="govuk-tag app-task-list__task-completed" id="recommendation-set">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_evidence_review and review.has_cover_sheet %}
+            <strong class="govuk-tag app-task-list__task-completed" id="review_documents_added">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
+        </li>
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:add-summary' review.slug %}" aria-describedby="summary_added">
+              Upload plain English summary
+            </a>
+          </span>
+          {% if review.has_summary %}
+            <strong class="govuk-tag app-task-list__task-completed" id="summary_added">{% trans 'COMPLETED' %}</strong>
+          {% endif %}
+        </li>
+        <li class="app-task-list__item">
+          <span class="app-task-list__task-name">
+            <a href="{% url 'review:recommendation' object.slug %}" aria-describedby="recommendation_submitted">
+              Submit recommendation
+            </a>
+          </span>
+          {% if review.has_recommendation %}
+            <strong class="govuk-tag app-task-list__task-completed" id="recommendation_submitted">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>
       </ul>
