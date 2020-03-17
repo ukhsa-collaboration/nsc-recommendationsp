@@ -9,7 +9,7 @@ urlpatterns = [
     path(r"", views.ReviewList.as_view(), name="list"),
     path(r"add/", views.ReviewAdd.as_view(), name="add"),
     path(r"<slug:slug>/", views.ReviewDetail.as_view(), name="detail"),
-    path(r"<slug:slug>/cancel/", views.ReviewCancel.as_view(), name="cancel"),
+    path(r"<slug:slug>/delete/", views.ReviewDelete.as_view(), name="delete"),
     path(r"<slug:slug>/dates/", views.ReviewDates.as_view(), name="dates"),
     path(
         r"<slug:slug>/organisations/",
@@ -21,7 +21,7 @@ urlpatterns = [
         views.ReviewRecommendation.as_view(),
         name="recommendation",
     ),
-    path(r"<slug:slug>/summary/", views.ReviewSummary.as_view(), name="add-summary"),
+    path(r"<slug:slug>/summary/", views.ReviewSummary.as_view(), name="summary"),
     path(
         r"<slug:slug>/add-external-review/",
         AddExternalReviewView.as_view(),

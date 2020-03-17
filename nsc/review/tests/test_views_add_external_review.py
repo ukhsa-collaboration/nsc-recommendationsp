@@ -58,6 +58,7 @@ def test_document_created(minimal_pdf, django_app):
     )
     assert document is not None
     assert document.file_exists()
+    document.delete()
     review.delete()
 
 
@@ -78,5 +79,5 @@ def test_existing_document_is_replaced(external_review, minimal_pdf, django_app)
     assert os.path.basename(document.upload.name) == "new.pdf"
     assert document.file_exists()
     assert not document.upload.storage.exists(existing)
-
+    document.delete()
     review.delete()

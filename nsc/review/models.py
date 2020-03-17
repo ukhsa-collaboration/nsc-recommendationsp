@@ -11,6 +11,7 @@ from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.document.models import Document
+from nsc.organisation.models import Organisation
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
 
@@ -155,10 +156,11 @@ class Review(TimeStampedModel):
         return self.recommendation is not None
 
     def stakeholders(self):
-        result = set()
-        for policy in self.policies.all():
-            result.update(policy.organisations.all())
-        return sorted(result, key=lambda obj: obj.name)
+        return (
+            Organisation.objects.filter(policies__reviews__pk=2)
+            .distinct()
+            .order_by("name")
+        )
 
 
 @receiver(models.signals.post_delete, sender=Review)

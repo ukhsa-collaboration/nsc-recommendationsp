@@ -11,5 +11,5 @@ def test_view(django_app):
     """
     Test that the page can be displayed
     """
-    response = django_app.get(reverse("home"))
+    response = django_app.get(reverse("dashboard"))
     assert response.status == "200 OK"

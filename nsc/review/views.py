@@ -20,8 +20,8 @@ from .forms import (
 from .models import Review
 
 
-class ReviewStatusView(generic.TemplateView):
-    template_name = "home.html"
+class ReviewDashboardView(generic.TemplateView):
+    template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
         reviews = Review.objects.draft()
@@ -63,13 +63,13 @@ class ReviewAdd(generic.CreateView):
         return initial
 
 
-class ReviewCancel(generic.DeleteView):
+class ReviewDelete(generic.DeleteView):
     model = Review
 
     def get_success_url(self):
-        msg = _("%s was cancelled successfully" % self.object.name)
+        msg = _("%s was deleted successfully" % self.object.name)
         messages.info(self.request, msg)
-        return reverse("home")
+        return reverse("dashboard")
 
 
 class ReviewDates(generic.UpdateView):
