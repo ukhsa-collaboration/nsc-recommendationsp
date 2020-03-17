@@ -65,6 +65,11 @@ Environment variables
     using the UK GOV Notify Service.
 
 
+.. envvar:: CONSULTATION_COMMENT_ADDRESS
+
+    The email address where comments during the consultation period are sent
+
+
 Secrets
 -------
 
