@@ -57,10 +57,9 @@ def test_outside_consultation_period():
 
 def test_slug_is_set():
     """
-    Test the slug field, if not set, is generated from the name field.
+    Test the slug field, if not set, is set when a Review is created.
     """
     instance = baker.make(Review, name="The Review", slug="")
-    instance.clean()
     assert instance.slug == "the-review"
 
 
@@ -72,16 +71,42 @@ def test_slug_is_not_overwritten():
     """
     instance = baker.make(Review, name="The Review", slug="the-review")
     instance.name = "New name"
-    instance.clean()
+    instance.save()
     assert instance.slug == "the-review"
+
+
+def test_default_review_start():
+    """
+    Test the review_start field defaults to today when a Review is created.
+    """
+    instance = baker.make(Review)
+    assert instance.review_start == get_today()
+
+
+def test_review_start_is_updated():
+    """
+    Test the review_start field can be set when a Review is created.
+    """
+    tomorrow = get_today() + relativedelta(days=+1)
+    instance = baker.make(Review, review_start=tomorrow)
+    assert instance.review_start == tomorrow
+
+
+def test_review_start_is_not_updated_later():
+    """
+    Test the review_start field is not changed if set already.
+    """
+    tomorrow = get_today() + relativedelta(days=+1)
+    instance = baker.make(Review, review_start=tomorrow)
+    instance.save()
+    assert instance.review_start == tomorrow
 
 
 def test_summary_markdown_conversion():
     """
-    Test the markdown in the summary attribute is converted to HTML when the model is cleaned.
+    Test the markdown in the summary attribute is converted to HTML when the model is saved.
     """
     instance = baker.make(Review, summary="# Heading", summary_html="")
-    instance.clean()
     assert instance.summary_html == '<h1 class="govuk-heading-xl">Heading</h1>'
 
 

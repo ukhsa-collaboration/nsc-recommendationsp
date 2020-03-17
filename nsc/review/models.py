@@ -108,12 +108,6 @@ class Review(TimeStampedModel):
     def get_evidence_review(self):
         return Document.objects.for_review(self).evidence_reviews().first()
 
-    def clean(self):
-        if not self.slug:
-            self.slug = slugify(self.name)
-
-        self.summary_html = convert(self.summary)
-
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
 
@@ -161,6 +155,17 @@ class Review(TimeStampedModel):
             .distinct()
             .order_by("name")
         )
+
+    def save(self, **kwargs):
+        if not self.pk and not self.review_start:
+            self.review_start = get_today()
+
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        self.summary_html = convert(self.summary)
+
+        return super(Review, self).save(**kwargs)
 
 
 @receiver(models.signals.post_delete, sender=Review)
