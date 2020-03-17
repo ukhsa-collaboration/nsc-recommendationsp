@@ -3,7 +3,8 @@ from django.urls import reverse
 import pytest
 from model_bakery import baker
 
-from ..models import Document, review_document_path
+from ..models import Document
+
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
@@ -43,30 +44,30 @@ def test_all_document_types(all_document_types):
     assert sorted(expected) == sorted(actual)
 
 
-def test_coversheets_query(all_document_types):
+def test_cover_sheets_query(all_document_types):
     """
-    Test the queryset coversheets() method only returns the coversheet
+    Test the queryset cover_sheets() method only returns the cover_sheet
     documents which contain all the comments made by stakeholders and members
     of the public during the consultation stage of a review.
     """
     expected = [
         obj.pk
-        for obj in Document.objects.filter(document_type=Document.TYPE.coversheet)
+        for obj in Document.objects.filter(document_type=Document.TYPE.cover_sheet)
     ]
-    actual = [obj.pk for obj in Document.objects.coversheets()]
+    actual = [obj.pk for obj in Document.objects.cover_sheets()]
     assert expected == actual
 
 
-def test_evidence_review_query(all_document_types):
+def test_external_review_query(all_document_types):
     """
     Test the queryset comments() method only returns documents which contain
-    the evidence reviews made by an external reviewer.
+    the reviews made by an external reviewer.
     """
     expected = [
         obj.pk
-        for obj in Document.objects.filter(document_type=Document.TYPE.evidence_review)
+        for obj in Document.objects.filter(document_type=Document.TYPE.external_review)
     ]
-    actual = [obj.pk for obj in Document.objects.evidence_reviews()]
+    actual = [obj.pk for obj in Document.objects.external_reviews()]
     assert expected == actual
 
 
@@ -83,17 +84,17 @@ def test_submission_form_query(all_document_types):
     assert expected == actual
 
 
-def test_recommendations(all_document_types):
+def test_evidence_reviews(all_document_types):
     """
-    Test the queryset recommendation() method only returns the documents that
+    Test the queryset evidence_reviews() method only returns the documents that
     contain the final recommendation by the National Screening Committee on
     whether a condition should be screened for or not.
     """
     expected = [
         obj.pk
-        for obj in Document.objects.filter(document_type=Document.TYPE.recommendation)
+        for obj in Document.objects.filter(document_type=Document.TYPE.evidence_review)
     ]
-    actual = [obj.pk for obj in Document.objects.recommendations()]
+    actual = [obj.pk for obj in Document.objects.evidence_reviews()]
     assert expected == actual
 
 

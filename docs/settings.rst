@@ -59,6 +59,12 @@ Environment variables
     domain name from where the files are served.
 
 
+.. envvar:: NOTIFY_TEMPLATE_CONSULTATION_INVITATION, NOTIFY_TEMPLATE_PUBLIC_COMMENT, NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
+
+    The unique identifiers for each of the templates used to send notifications
+    using the UK GOV Notify Service.
+
+
 .. envvar:: CONSULTATION_COMMENT_ADDRESS
 
     The email address where comments during the consultation period are sent
@@ -87,6 +93,12 @@ be set there using environment variables.
 .. envvar:: OBJECT_STORAGE_KEY_ID, OBJECT_STORAGE_SECRET_KEY
 
     The S3-compatible storage server credentials
+
+
+.. envvar:: NOTIFY_SERVICE_API_KEY
+
+    The key for the UK GOV Notify service. There are also a set of unique identifiers
+    for each of the email message templates.
 
 
 Adding a setting

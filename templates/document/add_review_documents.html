@@ -11,24 +11,29 @@
 
 {% block title %}
   {% block page_title %}
-    Add relevant documents
+    Update recommendation for {{ review.name }}
   {% endblock %}
 {% endblock %}
 
 {% block content %}
 
-  <form method="post">
+  <h2 class="govuk-heading-m">
+    {% trans 'Upload supporting documents' %}
+  </h2>
+
+  <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
     {% for hidden in form.hidden_fields %}
       {{ hidden }}
     {% endfor %}
 
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
 
-    {% include "widgets/text_input.html" with field=form.name %}
-    {% include "widgets/file_upload.html" with field=form.document %}
-    {% include "widgets/radio_buttons.html" with field=form.is_public %}
+    {% include "widgets/file_upload.html" with field=form.evidence_review %}
+    {% include "widgets/file_upload.html" with field=form.cover_sheet %}
 
     <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}

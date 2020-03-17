@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.dispatch import receiver
@@ -6,13 +5,12 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-from dateutil import relativedelta
+
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.document.models import Document
-from nsc.organisation.models import Organisation
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
 
@@ -79,9 +77,7 @@ class Review(TimeStampedModel):
         verbose_name=_("NSC meeting date"), null=True, blank=True
     )
 
-    recommendation = models.BooleanField(
-        verbose_name=_("recommendation"), default=False
-    )
+    recommendation = models.NullBooleanField(verbose_name=_("recommendation"))
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
@@ -99,17 +95,17 @@ class Review(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("review:detail", kwargs={"slug": self.slug})
 
-    def get_evidence_review_document(self):
-        return Document.objects.for_review(self).evidence_reviews().first()
+    def get_external_review(self):
+        return Document.objects.for_review(self).external_reviews().first()
 
     def get_submission_form(self):
         return Document.objects.for_review(self).submission_forms().first()
 
-    def get_coversheet_document(self):
-        return Document.objects.for_review(self).coversheets().first()
+    def get_cover_sheet(self):
+        return Document.objects.for_review(self).cover_sheets().first()
 
-    def get_recommendation_document(self):
-        return Document.objects.for_review(self).recommendations().first()
+    def get_evidence_review(self):
+        return Document.objects.for_review(self).evidence_reviews().first()
 
     def clean(self):
         if not self.slug:
@@ -129,50 +125,40 @@ class Review(TimeStampedModel):
     def discussion_date_display(self):
         return get_date_display(self.discussion_date)
 
+    def has_notified_communications_department(self):
+        # ToDo implement
+        return False
+
+    def has_notified_stakeholders_notified(self):
+        # ToDo implement
+        return False
+
+    def has_consultation_dates_set(self):
+        return self.consultation_start is not None and self.consultation_end is not None
+
+    def has_nsc_meeting_date_set(self):
+        return self.nsc_meeting_date is not None
+
+    def has_external_review(self):
+        return Document.objects.for_review(self).external_reviews().exists()
+
+    def has_cover_sheet(self):
+        return Document.objects.for_review(self).cover_sheets().exists()
+
+    def has_evidence_review(self):
+        return Document.objects.for_review(self).evidence_reviews().exists()
+
+    def has_summary(self):
+        return self.summary and len(self.summary) > 0
+
+    def has_recommendation(self):
+        return self.recommendation is not None
+
     def stakeholders(self):
-        # ToDo this is just a way of generating data. It is nowhere close to
-        # being correct.
-        if self.policies:
-            return self.policies.first().organisations.all()
-        else:
-            return Organisation.objects.none()
-
-    def open(self, commit=True):
-        if self.status == self.STATUS.published:
-            raise ValidationError(_("You cannot open a review that has been published"))
-
-        self.status = self.STATUS.draft
-        self.review_start = get_today()
-        if commit:
-            self.clean()
-            self.save()
-
-    def close(self, commit=True):
-        self.status = self.STATUS.published
-        self.review_end = get_today()
-        if commit:
-            self.clean()
-            self.save()
-
-    def open_consultation(self, start=None, end=None, commit=True):
-        if self.status != self.STATUS.draft:
-            raise ValidationError(
-                _("You can only open a draft review for public consultation")
-            )
-
-        self.consultation_start = start if start else get_today()
-        self.consultation_end = (
-            end if end else self.consultation_start + relativedelta(months=+3)
-        )
-        if commit:
-            self.clean()
-            self.save()
-
-    def close_consultation(self, commit=True):
-        self.consultation_end = get_today()
-        if commit:
-            self.clean()
-            self.save()
+        result = set()
+        for policy in self.policies.all():
+            result.update(policy.organisations.all())
+        return sorted(result, key=lambda obj: obj.name)
 
 
 @receiver(models.signals.post_delete, sender=Review)

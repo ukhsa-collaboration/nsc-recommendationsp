@@ -94,12 +94,12 @@ def test_get_absolute_url():
     assert instance.get_absolute_url() == expected
 
 
-def test_evidence_review_document(review_published):
+def test_external_review_document(review_published):
     """
-    Test that the evidence review document can be obtained from a review.
+    Test that the external review document can be obtained from a review.
     """
-    expected = Document.objects.get(document_type=Document.TYPE.evidence_review)
-    assert review_published.get_evidence_review_document().pk == expected.pk
+    expected = Document.objects.get(document_type=Document.TYPE.external_review)
+    assert review_published.get_external_review().pk == expected.pk
 
 
 def test_submission_form(review_published):
@@ -110,20 +110,20 @@ def test_submission_form(review_published):
     assert review_published.get_submission_form().pk == expected.pk
 
 
-def test_recommendation_document(review_published):
+def test_evidence_review_document(review_published):
     """
-    Test that the final recommendation document can be obtained from a review.
+    Test that the evidence review can be obtained from a review.
     """
-    expected = Document.objects.get(document_type=Document.TYPE.recommendation)
-    assert review_published.get_recommendation_document().pk == expected.pk
+    expected = Document.objects.get(document_type=Document.TYPE.evidence_review)
+    assert review_published.get_evidence_review().pk == expected.pk
 
 
-def test_coversheet_document(review_published):
+def test_cover_sheet_document(review_published):
     """
     Test that the final coversheet document (submitted comments) can be obtained from a review.
     """
-    expected = Document.objects.get(document_type=Document.TYPE.coversheet)
-    assert review_published.get_coversheet_document().pk == expected.pk
+    expected = Document.objects.get(document_type=Document.TYPE.cover_sheet)
+    assert review_published.get_cover_sheet().pk == expected.pk
 
 
 @pytest.mark.parametrize(

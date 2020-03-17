@@ -97,18 +97,6 @@ class ReviewForm(forms.ModelForm):
         return instance
 
 
-class ReviewConsultationForm(forms.ModelForm):
-    class Meta:
-        model = Review
-        fields = ["name"]
-
-
-class ReviewAddOrganisationForm(forms.ModelForm):
-    class Meta:
-        model = Review
-        fields = ["name"]
-
-
 class ReviewDatesForm(forms.ModelForm):
 
     consultation_open = forms.TypedChoiceField(
@@ -359,9 +347,21 @@ class ReviewOrganisationsForm(forms.Form):
         self.add_error(None, "TEST")
 
 
-class ReviewRecommendationForm(forms.ModelForm):
+class ReviewSummaryForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ["summary"]
 
-    document = forms.FileField(label=_("Upload evidence document"), required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["summary"].required = False
+        self.fields["summary"].label = _("Plain English evidence summary (optional)")
+        self.fields["summary"].help_text = _("Use markdown to format the text")
+        self.fields["summary"].widget = forms.Textarea()
+
+
+class ReviewRecommendationForm(forms.ModelForm):
 
     recommendation = forms.TypedChoiceField(
         label=_("What is the recommended decision for screening?"),
@@ -371,16 +371,4 @@ class ReviewRecommendationForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ["summary", "recommendation"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Make the condition field optional so we can correctly report
-        # validations errors using GDS markup and suppress errors being
-        # reported in popovers.
-
-        self.fields["summary"].required = False
-        self.fields["summary"].label = _("Plain English evidence summary (optional)")
-        self.fields["summary"].help_text = _("Use markdown to format the text")
-        self.fields["summary"].widget = forms.Textarea()
+        fields = ["recommendation"]

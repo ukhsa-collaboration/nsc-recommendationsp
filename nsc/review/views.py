@@ -10,12 +10,11 @@ from nsc.utils.datetime import get_today
 
 from .filters import SearchFilter
 from .forms import (
-    ReviewAddOrganisationForm,
-    ReviewConsultationForm,
     ReviewDatesForm,
     ReviewForm,
     ReviewOrganisationsForm,
     ReviewRecommendationForm,
+    ReviewSummaryForm,
     SearchForm,
 )
 from .models import Review
@@ -114,18 +113,11 @@ class ReviewOrganisations(generic.UpdateView):
     template_name = "review/review_organisations.html"
 
 
-class ReviewAddOrganisation(generic.UpdateView):
-    model = Review  # TODO change to organisation
-    lookup_field = "slug"
-    form_class = ReviewAddOrganisationForm
-    template_name = "review/review_add_organisation.html"
-
-
-class ReviewConsultation(generic.UpdateView):
+class ReviewSummary(generic.UpdateView):
     model = Review
     lookup_field = "slug"
-    form_class = ReviewConsultationForm
-    template_name = "review/review_consultation.html"
+    form_class = ReviewSummaryForm
+    template_name = "review/review_summary.html"
 
 
 class ReviewRecommendation(generic.UpdateView):

@@ -16,17 +16,17 @@ class DocumentQuerySet(models.QuerySet):
     def for_review(self, review):
         return self.filter(review_id=review.pk)
 
-    def coversheets(self):
-        return self.filter(document_type=Document.TYPE.coversheet)
+    def cover_sheets(self):
+        return self.filter(document_type=Document.TYPE.cover_sheet)
 
     def evidence_reviews(self):
         return self.filter(document_type=Document.TYPE.evidence_review)
 
+    def external_reviews(self):
+        return self.filter(document_type=Document.TYPE.external_review)
+
     def submission_forms(self):
         return self.filter(document_type=Document.TYPE.submission_form)
-
-    def recommendations(self):
-        return self.filter(document_type=Document.TYPE.recommendation)
 
 
 def review_document_path(instance, filename=None):
@@ -49,10 +49,10 @@ def review_document_path(instance, filename=None):
 class Document(TimeStampedModel):
 
     TYPE = Choices(
-        ("coversheet", _("Coversheet")),
+        ("cover_sheet", _("Coversheet")),
         ("submission_form", _("Submission form")),
-        ("evidence_review", _("Evidence Review")),
-        ("recommendation", _("Review recommendation")),
+        ("evidence_review", _("Evidence review")),
+        ("external_review", _("External review")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
@@ -60,7 +60,6 @@ class Document(TimeStampedModel):
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
     upload = models.FileField(verbose_name=_("upload"), upload_to=review_document_path)
-    is_public = models.BooleanField(verbose_name=_("is public"))
     review = models.ForeignKey(
         "review.Review",
         on_delete=models.CASCADE,

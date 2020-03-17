@@ -1,83 +1,41 @@
 import mimetypes
 
-from django.http import FileResponse, Http404, HttpResponseRedirect
+from django.http import FileResponse, Http404
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from nsc.review.models import Review
 
-from .forms import DocumentForm, EvidenceReviewUploadForm, UploadAnotherForm
+from .forms import ExternalReviewForm, ReviewDocumentsForm
 from .models import Document
 
 
-class DocumentView(generic.CreateView):
-    model = Document
-    form_class = DocumentForm
+class AddExternalReviewView(generic.CreateView):
+    template_name = "document/add_external_review.html"
+    form_class = ExternalReviewForm
 
     def get_initial(self):
         initial = super().get_initial()
         review = Review.objects.get(slug=self.kwargs["slug"])
-        initial["review"] = review.pk
+        initial.update(
+            {
+                "name": _("External review"),
+                "document_type": Document.TYPE.external_review,
+                "review": review.pk,
+            }
+        )
         return initial
 
     def get_context_data(self, **kwargs):
         review = Review.objects.get(slug=self.kwargs["slug"])
         return super().get_context_data(review=review, **kwargs)
 
-
-class PolicyDocumentView(DocumentView):
-    template_name = "document/policy_document_form.html"
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial["document_type"] = Document.TYPE.recommendation
-        return initial
-
-    def get_success_url(self):
-        return reverse(
-            "review:next-policy-document", kwargs={"slug": self.kwargs["slug"]}
-        )
-
-
-class ContinueView(generic.FormView):
-    template_name = "document/policy_document_continue.html"
-    form_class = UploadAnotherForm
-
-    def get_success_url(self):
-        return reverse(
-            "review:next-policy-document", kwargs={"slug": self.kwargs["slug"]}
-        )
-
-    def form_valid(self, form):
-        slug = self.kwargs["slug"]
-        if form.cleaned_data["another"]:
-            url = reverse("review:add-policy-document", kwargs={"slug": slug})
-        else:
-            url = reverse("review:detail", kwargs={"slug": slug})
-        return HttpResponseRedirect(url)
-
-
-class EvidenceReviewUploadView(DocumentView):
-    template_name = "document/evidence_review_upload.html"
-    form_class = EvidenceReviewUploadForm
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial.update(
-            {
-                "name": _("Evidence review"),
-                "is_public": True,
-                "document_type": Document.TYPE.evidence_review,
-            }
-        )
-        return initial
-
     def get_object(self, queryset=None):
-        # Get any existing evidence review document.
+        # Get any existing external review document.
         pk = self.request.POST["review"]
         review = Review.objects.get(pk=pk)
-        return review.get_evidence_review_document()
+        return review.get_external_review()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -97,13 +55,16 @@ class EvidenceReviewUploadView(DocumentView):
         return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
 
 
-class RecommendationDocumentView(DocumentView):
-    template_name = "document/recommendation_document_form.html"
+class AddReviewDocumentsView(generic.CreateView):
+    template_name = "document/add_review_documents.html"
+    form_class = ReviewDocumentsForm
 
-    def get_initial(self):
-        initial = super().get_initial()
-        initial["document_type"] = Document.TYPE.recommendation
-        return initial
+    def get_context_data(self, **kwargs):
+        review = Review.objects.get(slug=self.kwargs["slug"])
+        return super().get_context_data(review=review, **kwargs)
+
+    def get_success_url(self):
+        return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
 
 
 class DownloadView(generic.DetailView):

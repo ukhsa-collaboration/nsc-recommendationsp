@@ -3,7 +3,7 @@ from model_bakery import baker
 
 from nsc.review.models import Review
 
-from ..forms import EvidenceReviewUploadForm
+from ..forms import ExternalReviewForm
 from ..models import Document
 
 
@@ -18,8 +18,7 @@ def form_data(form_pdf):
     return {
         "data": {
             "name": "Document",
-            "document_type": Document.TYPE.evidence_review,
-            "is_public": True,
+            "document_type": Document.TYPE.external_review,
             "review": review.pk,
         },
         "files": {"upload": form_pdf},
@@ -27,34 +26,33 @@ def form_data(form_pdf):
 
 
 def test_form_configuration():
-    assert Document == EvidenceReviewUploadForm.Meta.model
-    assert "name" in EvidenceReviewUploadForm.Meta.fields
-    assert "document_type" in EvidenceReviewUploadForm.Meta.fields
-    assert "is_public" in EvidenceReviewUploadForm.Meta.fields
-    assert "upload" in EvidenceReviewUploadForm.Meta.fields
+    assert Document == ExternalReviewForm.Meta.model
+    assert "name" in ExternalReviewForm.Meta.fields
+    assert "document_type" in ExternalReviewForm.Meta.fields
+    assert "upload" in ExternalReviewForm.Meta.fields
 
 
 def test_form_is_valid(form_data):
-    form = EvidenceReviewUploadForm(**form_data)
+    form = ExternalReviewForm(**form_data)
     assert form.is_valid()
 
 
 def test_name_is_required(form_data):
     form_data["data"]["name"] = None
-    form = EvidenceReviewUploadForm(**form_data)
+    form = ExternalReviewForm(**form_data)
     assert not form.is_valid()
     assert "name" in form.errors
 
 
 def test_document_type_is_required(form_data):
     form_data["data"]["document_type"] = None
-    form = EvidenceReviewUploadForm(**form_data)
+    form = ExternalReviewForm(**form_data)
     assert not form.is_valid()
     assert "document_type" in form.errors
 
 
 def test_file_is_required(form_data):
     form_data["files"]["upload"] = None
-    form = EvidenceReviewUploadForm(**form_data)
+    form = ExternalReviewForm(**form_data)
     assert not form.is_valid()
     assert "upload" in form.errors

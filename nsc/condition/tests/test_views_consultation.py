@@ -47,12 +47,12 @@ def test_heading_caption(response, dom):
     assert condition.name in title.text
 
 
-def test_evidence_review_link(response):
+def test_external_review_link(response):
     """
-    Test a link to download the evidence review summary is displayed.
+    Test a link to download the external review summary is displayed.
     """
     review = response.context["review"]
-    assert review.get_evidence_review_document().get_download_url() in response.text
+    assert review.get_external_review().get_download_url() in response.text
 
 
 def test_submission_form_link(response):
