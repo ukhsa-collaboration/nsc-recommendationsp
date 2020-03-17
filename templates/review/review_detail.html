@@ -81,7 +81,7 @@
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:add-summary' review.slug %}" aria-describedby="summary_added">
+            <a href="{% url 'review:summary' review.slug %}" aria-describedby="summary_added">
               Upload plain English summary
             </a>
           </span>
@@ -104,8 +104,8 @@
   </ul>
 
   <div class="link-menu">
-    <a href="{% url 'review:cancel' review.slug %}" class="govuk-link">
-      Cancel review
+    <a href="{% url 'review:delete' review.slug %}" class="govuk-link">
+      Delete this review
     </a>
   </div>
 

@@ -55,7 +55,7 @@ class AddExternalReviewView(generic.CreateView):
         return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
 
 
-class AddReviewDocumentsView(generic.CreateView):
+class AddReviewDocumentsView(generic.FormView):
     template_name = "document/add_review_documents.html"
     form_class = ReviewDocumentsForm
 

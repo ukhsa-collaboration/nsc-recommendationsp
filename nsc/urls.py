@@ -4,13 +4,13 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
 
-from nsc.review.views import ReviewStatusView
+from nsc.review.views import ReviewDashboardView
 
 
 admin.autodiscover()
 
 urlpatterns = [
-    path(r"", ReviewStatusView.as_view(), name="home"),
+    path(r"", ReviewDashboardView.as_view(), name="dashboard"),
     path(r"admin/", admin.site.urls),
     path(r"condition/", include("nsc.condition.urls", namespace="condition")),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
