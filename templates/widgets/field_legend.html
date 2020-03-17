@@ -1,0 +1,13 @@
+{% if field.label %}
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--{% if label_size %}{{ label_size }}{% else %}m{% endif %}">
+    {% if is_heading %}
+      <h1 class="govuk-fieldset__heading">
+    {% endif %}
+    <label for="{{ field.id_for_label}}">
+      {{ field.label }}
+    </label>
+    {% if is_heading %}
+    </h1>
+    {% endif %}
+  </legend>
+{% endif %}

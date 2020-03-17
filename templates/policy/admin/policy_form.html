@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% if not preview %}
+    {% trans "Back to policy" as back_title %}
+    {% include 'widgets/back_link.html' with back_url=object.get_admin_url %}
+  {% endif %}
+{% endblock %}
+
+{% block title %}
+  {{ form.instance.name }}
+{% endblock %}
+
+{% block heading %}
+  {% if preview %}
+    <span class="govuk-caption-l">{% trans 'Policy preview' %}</span>
+  {%  endif %}
+  <h1 class="govuk-heading-l">
+    {% block page_title %}{{ form.instance.name }}{% endblock %}
+  </h1>
+{% endblock %}
+
+{% block content %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {{ form.non_field_errors }}
+
+    {% with policy=form.instance %}
+      {% if preview %}
+        {% include "policy/admin/recommendation.html" %}
+        {% include "policy/admin/last_review.html" %}
+        {% include "policy/admin/next_review.html" %}
+        {% include "policy/admin/documents.html" %}
+        {% include "policy/admin/condition.html" %}
+        {% include "policy/admin/review_history.html" %}
+        {% include "policy/admin/organisations.html" %}
+        {{ form.next_review.as_hidden }}
+        {{ form.condition.as_hidden }}
+        {{ form.keywords.as_hidden }}
+      {% else %}
+        {% include "policy/admin/recommendation.html" %}
+        {% include "policy/admin/last_review.html" %}
+        {% include "widgets/text_input.html" with field=form.next_review label_size='m' %}
+        {% include "policy/admin/documents.html" %}
+        {% include "widgets/text_area.html" with field=form.condition label_size='m' %}
+        {% include "widgets/text_area.html" with field=form.keywords label_size='m' %}
+        {% include 'policy/admin/review_history.html' %}
+        {% include 'policy/admin/organisations.html' %}
+      {% endif %}
+    {% endwith %}
+
+    {% if preview %}
+      <button type="submit" class="govuk-button" name="publish" value="publish">
+        {% trans 'Publish' %}
+      </button>
+      <button type="submit" class="govuk-button govuk-button--secondary" name="edit" value="edit">
+        {% trans 'Back to edit policy' %}
+      </button>
+    {% else %}
+      <button type="submit" class="govuk-button" name="preview" value="preview">
+        {% trans 'Preview' %}
+      </button>
+    {% endif %}
+
+  </form>
+
+{% endblock %}
+

@@ -1,0 +1,43 @@
+// Alerts are not included in the current GDS but there are several proposals
+// in the community backlog, https://github.com/alphagov/govuk-design-system-backlog/issues/2
+
+ul.nsc-alerts {
+
+  font-family: 'Inter UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  list-style: none;
+  margin: 0 0 govuk-spacing(1) 0;
+  padding: govuk-spacing(0);
+
+  li {
+    background-color: #2cc36b;
+    padding: govuk-spacing(2);
+  }
+}
+
+.nsc-message-error {
+  border: thick solid govuk-colour('red');
+  color: govuk-colour('red');
+  padding: govuk-spacing(2);
+}
+
+.nsc-message-success {
+  border: thick solid govuk-colour('green');
+  color: govuk-colour('green');
+  padding: govuk-spacing(2);
+}
+
+.nsc-open-for-comment {
+  border: thick solid govuk-colour('blue');
+
+  .govuk-warning-text__icon {
+    background-color: govuk-colour('blue');
+    border-color: govuk-colour('blue');
+    left: govuk-spacing(2);
+  }
+
+  div {
+    padding-left: govuk-spacing(9);
+  }
+}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Stakeholder details" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {{ form.non_field_errors }}
+
+    {% if form.name and not form.name.is_hidden %}
+      {% include "widgets/text_input.html" with field=form.name %}
+    {% endif %}
+    {% if form.url and not form.url.is_hidden %}
+      {% include "widgets/text_input.html" with field=form.url %}
+    {% endif %}
+    {% if form.is_public and not form.is_public.is_hidden %}
+      {% include "widgets/radio_buttons.html" with field=form.is_public size='m' %}
+    {% endif %}
+    {% if form.policies %}
+      {% include "widgets/checkboxes.html" with field=form.policies size='m' %}
+    {% endif %}
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="save" value="save">
+        {% trans 'Save' %}
+      </button>
+    </div>
+
+  </form>
+{% endblock %}
+

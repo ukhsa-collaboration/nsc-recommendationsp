@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with organisation.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% include 'widgets/back_link.html' with back_url=organisation.get_detail_url %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Contact details" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {{ form.non_field_errors }}
+
+    {{ form.errors }}
+
+    {% include "widgets/text_input.html" with field=form.name %}
+    {% include "widgets/text_input.html" with field=form.email %}
+    {% include "widgets/text_input.html" with field=form.phone %}
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="submit" value="submit">
+        {% trans 'Save' %}
+      </button>
+    </div>
+
+  </form>
+{% endblock %}
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with object.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% url 'review:detail' object.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Update recommendation for review" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
+
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+
+      {{ form.non_field_errors }}
+
+      {% include "widgets/text_area.html" with field=form.summary %}
+
+      <p>
+        {% trans 'The next review for this condition will be due to start in '%}
+      </p>
+
+      <button type="submit" class="govuk-button" name="submit" value="submit">
+        {% trans 'Save and continue' %}
+      </button>
+    </form>
+  </div>
+
+{% endblock %}

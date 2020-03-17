@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'More about' %} {{ policy.name }}
+</h2>
+
+{{ policy.condition_html|safe }}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Search keywords' %}
+</h2>
+
+<p class="govuk-body">
+  {% if policy.keywords %}
+    {{ policy.keywords }}
+  {% else %}
+    {% trans 'There are no keywords defined for this condition.' %}
+  {% endif %}
+</p>

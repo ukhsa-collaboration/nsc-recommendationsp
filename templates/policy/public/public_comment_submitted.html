@@ -1,0 +1,57 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'condition:public-comment' condition.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% trans 'Consultation comments submitted' as action %}
+  {{ condition.name }} -- {{ action }}
+{% endblock %}
+
+{% block page_title %}
+  <span class="govuk-caption-l">{{ condition.name }}</span>
+  {% trans 'Consultation comments submitted' %}
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    {% blocktrans with condition.name as name %}
+    Thank you for your comments on this consultation for {{ name }}.
+    {% endblocktrans %}
+  </p>
+
+  <h2 class="govuk-heading-m">
+    {% trans 'What happens next' %}
+  </h2>
+
+  <p class="govuk-body">
+    {% blocktrans with review.consultation_end_display as end %}
+    This consultation closes on {{ end }}. Your comments will be
+    reviewed alongside others received in this consultation.
+    {% endblocktrans %}
+  </p>
+
+  <p class="govuk-body">
+    <a href="{% url 'condition:detail' condition.slug %}">
+      {% blocktrans with condition.name as name %}
+        {{ name }} policy page
+      {% endblocktrans %}
+    </a>
+  </p>
+
+  <p class="govuk-body">
+    <a href="{% url 'condition:list' %}">
+      {% trans 'List of all current UK NSC recommendations' %}
+    </a>
+  </p>
+
+  <div class="govuk-inset-text">
+    {% trans 'What do you think of this service?' as title %}
+    {% trans 'takes 2 minutes' as suffix %}
+    <a href="{{ feedback_url }}">{{ title }}</a> ({{ suffix }}).
+  </div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% blocktrans asvar back_title with object.name as name %}
+    Back to {{ name }}
+  {% endblocktrans %}
+  {% include 'widgets/back_link.html' with back_url=object.get_detail_url %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Delete stakeholder" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <dl class="govuk-summary-list">
+
+    {% include "widgets/summary_text.html" with key='Name' value=object.name %}
+    {% include "widgets/summary_text.html" with key='Web site' value=object.url %}
+
+  </dl>
+
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
+      <p>
+        {% trans 'Are you sure you want to delete this stakeholder?'%}
+      </p>
+      <button type="submit" class="govuk-button govuk-button--warning" name="submit" value="submit">
+        {% trans 'Yes, delete' %}
+      </button>
+    </form>
+  </div>
+
+{% endblock %}
+

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% trans 'Back to stakeholders' as back_title %}
+  {% url 'organisation:list' as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Stakeholder details" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+<dl class="govuk-summary-list">
+
+  {% include "widgets/summary_text.html" with key='Name' value=object.name action='edit/name/' %}
+  {% include "widgets/summary_text.html" with key='Web site' value=object.url action='edit/url/' %}
+  {% include "widgets/summary_text.html" with key='Publish online' value=object.is_public_display action='edit/is_public/' %}
+
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      {% trans "Contacts" %}
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {% if not object.contacts.all %}{% trans 'There are no contacts for this organisation' %}{% endif %}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{% url "contact:add" org_pk=object.pk %}">
+        {% trans 'Add new' %}<span class="govuk-visually-hidden">{% trans "Contact" %}</span>
+      </a>
+    </dd>
+  </div>
+
+  {% for contact in object.contacts.all %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ contact.name }}
+      </dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="{% url "contact:delete" contact.pk %}">
+          {% trans 'Remove' %}<span class="govuk-visually-hidden"> {{ contact.name }}</span>
+        </a>
+        <a class="govuk-link govuk-!-margin-left-6"" href="{% url "contact:edit" contact.pk %}">
+          {% trans 'Change' %}<span class="govuk-visually-hidden"> {{ contact.name }}</span>
+        </a>
+      </dd>
+    </div>
+  {% endfor %}
+
+  {% include "widgets/summary_text.html" with key='Conditions' value=object.policies_display action='edit/policies/' %}
+</dl>
+
+<a href="{% url 'organisation:delete' object.pk %}" role="button" draggable="false" class="govuk-button govuk-button--warning" data-module="govuk-button">
+  Delete
+</a>
+
+{% endblock %}
+

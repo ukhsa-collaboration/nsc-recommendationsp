@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title_spacer %}{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    UK NSC internal system
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <p class="govuk-body">
+  {% blocktrans %}
+  This platform is to update stakeholders and members of the public on conditions
+  that are being revised by the UK NSC. All changes made will be reflected on the
+  <a href="https://www.gov.uk/government/groups/uk-national-screening-committee-uk-nsc">
+    UK NSC public website
+  </a>.
+  {% endblocktrans %}
+  </p>
+
+  <h2 class="govuk-heading-m">
+    {% trans 'Your products in progress' %}
+  </h2>
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header">{% trans 'Name' %}</th>
+      <th class="govuk-table__header">{% trans 'Conditions' %}</th>
+      <th class="govuk-table__header">{% trans 'Product type' %}</th>
+      <th class="govuk-table__header">{% trans 'Status' %}</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    {% for review in reviews %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+          <a href="{{ review.get_absolute_url }}">
+            {{ review.name }}
+          </a>
+        </td>
+        <td class="govuk-table__cell">{{ review.policies_display }}</td>
+        <td class="govuk-table__cell">{{ review.get_review_type_display }}</td>
+        <td class="govuk-table__cell">{{ review.get_status_display }}</td>
+      </tr>
+      {% empty %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell" colspan="4"><p>{% trans 'There are no current reviews.' %}</p></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="govuk=body">
+    <a href="">
+      {% trans 'View the whole team\'s products in progress.' %}
+    </a>
+  </p>
+
+  <h2 class="govuk-heading-m">
+    {% trans 'Conditions' %}
+  </h2>
+
+  <div class="link-menu govuk-body">
+    {% url 'review:list' as url %}
+    {% blocktrans %}
+      <a href="{{ url}}" class="govuk-link">
+        View all conditions
+      </a>
+      to start a new product or edit general information about a condition.
+    {% endblocktrans %}
+  </div>
+
+  <h2 class="govuk-heading-m">
+    {% trans 'Stakeholders' %}
+  </h2>
+
+  <div class="link-menu govuk-body">
+    {% url 'organisation:list' as url %}
+    {% blocktrans %}
+      <a href="{{ url }}" class="govuk-link">
+        View stakeholder contacts
+      </a>
+      to add and edit stakeholders.
+    {% endblocktrans %}
+  </div>
+
+  <h2 class="govuk-heading-m">
+    Reviews scheduled to start this year
+  </h2>
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header">{% trans 'Condition' %}</th>
+      <th class="govuk-table__header">{% trans 'Due' %}</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    {% for policy in policies %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+          {{ policy.name }}
+        </td>
+        <td class="govuk-table__cell">{{ policy.next_review_display }}</td>
+      </tr>
+      {% empty %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell" colspan="3"><p>{%  trans 'There are no upcoming reviews.' %}</p></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}

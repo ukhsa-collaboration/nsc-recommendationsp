@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Public Consultees for this Condition' %}
+</h2>
+
+<ul class="govuk-list">
+  {% for organisation in policy.organisations.all %}
+    <li>
+      <a class="govuk-link" href="{{ organisation.url }}">{{ organisation.name }}</a>
+    </li>
+  {% empty %}
+    <li>
+      {% trans 'There are no organisations at this time' %}
+    </li>
+  {% endfor %}
+</ul>

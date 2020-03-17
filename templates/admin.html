@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}
+  {% trans 'NSC Admin Home' %}
+{% endblock %}
+
+{% block content %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Reviews' %}
+</h2>
+
+<p class="govuk-body">
+  {% trans 'Use this section to:' %}
+  <ul class="govuk-list govuk-list--bullet">
+    <li>{% trans 'See current and upcoming reviews' %}</li>
+    <li>{% trans 'Start and manage reviews' %}</li>
+    <li>{% trans 'Start and manage consultations' %}</li>
+  </ul>
+</p>
+
+<div class="link-menu">
+  <a href="#" class="govuk-link">
+    {% trans 'View all reviews' %}
+  </a>
+</div>
+
+<p class="govuk-body">
+  <h2 class="govuk-heading-m">
+    {% trans 'Stakeholders' %}
+  </h2>
+</p>
+
+<p class="govuk-body">
+  {% trans 'Use this section to:' %}
+  <ul class="govuk-list govuk-list--bullet">
+    <li>{% trans 'Add and edit stakeholders' %}</li>
+    <li>{% trans 'Add and edit stakeholder contacts' %}</li>
+  </ul>
+</p>
+
+<div class="link-menu">
+  <a href="{% url 'organisation:list' %}" class="govuk-link">
+    {% trans 'View stakeholder contacts' %}
+  </a>
+</div>
+
+<p class="govuk-body">
+  <h2 class="govuk-heading-m">
+    {% trans 'Policy pages' %}
+  </h2>
+</p>
+
+<p class="govuk-body">
+  {% trans 'Use this section to:' %}
+  <ul class="govuk-list govuk-list--bullet">
+    <li>{% trans 'Edit policy pages' %}</li>
+    <li>{% trans 'Add a new policy page' %}</li>
+    <li>{% trans 'Deactivate a policy page' %}</li>
+  </ul>
+</p>
+
+<div class="link-menu">
+  <a href="{% url 'policy:list' %}" class="govuk-link">
+    {% trans 'View policy pages' %}
+  </a>
+</div>
+
+{% endblock content %}

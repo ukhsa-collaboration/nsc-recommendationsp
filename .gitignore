@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[co]
+*.egg*
+
+# Editor temp files
+*~
+
+# Ignore dot files except those required for the project
+.*
+!.gitignore
+!.gitkeep
+!.nvmrc
+!.yvmrc
+
+# Development artefacts
+dev-docker-compose.yml
+ssh-config
+htmlcov/
+*.log
+*.sqlite3
+
+# Frontend build
+node_modules
+frontend/dist/*
+
+# Sphinx docs
+docs/_build/
+
+# Uploaded files
+media/
+
+# Non-deployment path for collectstatic
+static_root/

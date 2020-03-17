@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-s">
+  {% blocktrans with year=policy.last_review.year%}
+  Supporting documents from the {{ year }} review
+  {% endblocktrans %}
+</h2>
+
+<ul class="govuk-list">
+  {% for document in policy.documents.all %}
+    <li>
+      <a class="govuk-link" href="{{ document.url }}">{{ document.name }}</a>
+    </li>
+  {% empty %}
+    <li>
+      {% trans 'There are no supporting documents at this time' %}
+    </li>
+  {% endfor %}
+</ul>

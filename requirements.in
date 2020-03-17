@@ -1,0 +1,32 @@
+#
+# Project requirements
+#
+
+# Core Django and deployment
+django>=2.2,<3.0
+django-configurations
+django-clear-cache
+django-redis
+envdir
+gunicorn
+hiredis
+psycopg2-binary
+raven
+whitenoise
+
+# General Django apps
+django-extensions
+django-filter
+django-model-utils
+
+# Project specific
+beautifulsoup4
+boto3
+celery
+django-simple-history
+django-storages
+lxml
+markdown
+notifications-python-client
+python-dateutil
+requests
