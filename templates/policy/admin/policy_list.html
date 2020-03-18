@@ -26,26 +26,29 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
-      <section>
+      <div class="filter-box">
         <form>
 
           <h2 class="govuk-heading-m">
             {% trans 'Filter conditions by:' %}
           </h2>
 
-          {% include 'widgets/text_input.html' with field=form.name %}
-          {% include 'widgets/radio_buttons.html' with field=form.status %}
+          {% include 'widgets/text_input.html' with field=form.name show_legend=True %}
+          {% include 'widgets/radio_buttons.html' with field=form.comments %}
+          {% include 'widgets/radio_buttons.html' with field=form.affects %}
           {% include 'widgets/radio_buttons.html' with field=form.screen %}
 
-          <button type="submit" class="govuk-button search-b-button">
+          <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
             {% trans 'Search' %}
           </button>
 
           <a href="{% url 'policy:list' %}"
-             class="govuk-link govuk-link--no-visited-state">{% trans 'Clear search' %}</a>
+             class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">
+              {% trans 'Clear search' %}
+          </a>
 
         </form>
-      </section>
+      </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
       <table class="govuk-table">
@@ -54,6 +57,7 @@
           <th class="govuk-table__header">{% trans 'Condition' %}</th>
           <th class="govuk-table__header">{% trans 'Who it affects' %}</th>
           <th class="govuk-table__header">{% trans 'Recommended' %}</th>
+          <th class="govuk-table__header">{% trans 'Public comments' %}</th>
         </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -63,10 +67,17 @@
                 href="{{ object.get_admin_url }}">{{ object.name }}</a></td>
             <td class="govuk-table__cell">{{ object.ages_display }}</td>
             <td class="govuk-table__cell">{{ object.recommendation_display }}</td>
+            <td class="govuk-table__cell">
+              {% if object.reviews_in_consultation %}
+                <strong class="govuk-tag govuk-tag--blue">
+                  {% trans 'OPEN' %}
+                </strong>
+              {% endif %}
+            </td>
           </tr>
           {% empty %}
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell" colspan="3"><p>{%  trans 'No matching conditions found.' %}</p></td>
+            <td class="govuk-table__cell" colspan="4"><p>{%  trans 'No matching conditions found.' %}</p></td>
           </tr>
         {% endfor %}
         </tbody>

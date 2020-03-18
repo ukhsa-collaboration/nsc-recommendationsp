@@ -12,22 +12,27 @@ from nsc.utils.datetime import get_today
 from .models import Policy
 
 
+# TODO The SearchForm is currently identical to the one in condition/forms.py
+#      check later once the development is finished to see if it can be shared.
+
+
 class SearchForm(forms.Form):
 
-    REVIEW_STATUS_CHOICES = Choices(
-        ("due_for_review", _("Due to be reviewed")),
-        ("in_review", _("In review")),
-        ("in_consultation", _("In consultation")),
-        ("post_consultation", _("Post consultation")),
-    )
-
+    CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))
     YES_NO_CHOICES = Choices(("yes", _("Yes")), ("no", _("No")))
 
-    name = forms.CharField(label=_("Search by condition name"), required=False)
+    name = forms.CharField(label=_("Condition name"), required=False)
 
-    status = forms.TypedChoiceField(
-        label=_("Status of the recommendation"),
-        choices=REVIEW_STATUS_CHOICES,
+    comments = forms.TypedChoiceField(
+        label=_("Public comments"),
+        choices=CONSULTATION,
+        widget=forms.RadioSelect,
+        required=False,
+    )
+
+    affects = forms.TypedChoiceField(
+        label=_("Who the condition affects"),
+        choices=Policy.AGE_GROUPS,
         widget=forms.RadioSelect,
         required=False,
     )

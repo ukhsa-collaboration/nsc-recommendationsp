@@ -11,7 +11,7 @@ from .models import Policy
 
 
 class PolicyList(FilterView):
-    queryset = Policy.objects.active()
+    queryset = Policy.objects.active().prefetch_reviews_in_consultation()
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
     filterset_class = SearchFilter
