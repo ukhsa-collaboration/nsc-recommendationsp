@@ -265,23 +265,21 @@ def test_closed_for_comments(start, end, count):
 
 
 @pytest.mark.parametrize(
-    "status,start,end,count",
+    "start,end,count",
     [
-        ("draft", from_today(+1), from_today(+30), 0),
-        ("draft", get_today(), from_today(+7), 1),
-        ("draft", from_today(-30), from_today(-1), 0),
-        ("published", from_today(-30), from_today(-1), 0),
+        (from_today(+1), from_today(+30), 0),
+        (get_today(), from_today(+7), 1),
+        (from_today(-30), from_today(-1), 0),
+        (from_today(-30), from_today(-1), 0),
     ],
 )
-def test_prefetch_reviews_in_consultation(status, start, end, count):
+def test_prefetch_reviews_in_consultation(start, end, count):
     """
     Test the queryset method prefetch_reviews_in_consultation annotates Policy
     objects with a review if there is currently one in the consultation phase.
     """
     policy = baker.make(Policy)
-    review = baker.make(
-        Review, status=status, consultation_start=start, consultation_end=end
-    )
+    review = baker.make(Review, consultation_start=start, consultation_end=end)
     policy.reviews.add(review)
     actual = Policy.objects.prefetch_reviews_in_consultation().first()
     assert len(actual.reviews_in_consultation) == count

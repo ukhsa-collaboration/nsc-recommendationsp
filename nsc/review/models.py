@@ -18,10 +18,7 @@ from nsc.utils.markdown import convert
 
 class ReviewQuerySet(models.QuerySet):
     def published(self):
-        return self.filter(status=Review.STATUS.published).order_by("-review_start")
-
-    def draft(self):
-        return self.filter(status=Review.STATUS.draft).order_by("-review_start")
+        return self.filter(review_end__lte=get_today()).order_by("-review_start")
 
     def in_progress(self):
         today = get_today()
@@ -46,7 +43,12 @@ class ReviewQuerySet(models.QuerySet):
 
 class Review(TimeStampedModel):
 
-    STATUS = Choices(("draft", _("Draft")), ("published", _("Published")))
+    STATUS = Choices(
+        ("pre_consultation", _("Pre-consultation")),
+        ("in_consultation", _("In consultation")),
+        ("post_consultation", _("Post-consultation")),
+        ("completed", _("Completed")),
+    )
 
     TYPE = Choices(
         ("evidence", _("Evidence review")),
@@ -57,9 +59,7 @@ class Review(TimeStampedModel):
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
-    status = models.CharField(
-        verbose_name=_("status"), choices=STATUS, max_length=50, default=STATUS.draft
-    )
+
     review_type = models.CharField(
         verbose_name=_("type of review"), choices=TYPE, max_length=50
     )

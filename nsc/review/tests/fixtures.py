@@ -23,9 +23,7 @@ def make_review():
 @pytest.fixture
 def review_in_pre_consultation(make_review):
     review_start = get_today() - relativedelta(months=2)
-    review = make_review(
-        name="Evidence Review", status=Review.STATUS.draft, review_start=review_start
-    )
+    review = make_review(name="Evidence Review", review_start=review_start)
     baker.make(
         Document, name="document", document_type="evidence_review", review=review
     )
@@ -39,7 +37,6 @@ def review_in_consultation(make_review):
     consultation_end = consultation_start + relativedelta(months=3)
     review = make_review(
         name="review",
-        status=Review.STATUS.draft,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
@@ -66,7 +63,6 @@ def review_in_post_consultation(make_review):
     consultation_end = consultation_start + relativedelta(months=3)
     review = make_review(
         name="review",
-        status=Review.STATUS.draft,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
@@ -93,7 +89,6 @@ def review_completed(make_review):
     consultation_end = consultation_start + relativedelta(months=3)
     review = make_review(
         name="review",
-        status=Review.STATUS.draft,
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
@@ -121,7 +116,6 @@ def review_published(make_review):
     review_end = consultation_start + relativedelta(months=1)
     review = make_review(
         name="review",
-        status=Review.STATUS.published,
         review_start=review_start,
         review_end=review_end,
         consultation_start=consultation_start,
