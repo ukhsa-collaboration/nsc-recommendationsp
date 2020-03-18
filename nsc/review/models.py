@@ -44,6 +44,7 @@ class ReviewQuerySet(models.QuerySet):
 class Review(TimeStampedModel):
 
     STATUS = Choices(
+        ("development", _("Evidence product development")),
         ("pre_consultation", _("Pre-consultation")),
         ("in_consultation", _("In consultation")),
         ("post_consultation", _("Post-consultation")),
@@ -154,6 +155,22 @@ class Review(TimeStampedModel):
 
     def has_recommendation(self):
         return self.recommendation is not None
+
+    def status(self):
+        today = get_today()
+        if self.review_end and self.review_end <= today:
+            return self.STATUS.completed
+        elif self.consultation_end and self.consultation_end < today:
+            return self.STATUS.post_consultation
+        elif self.consultation_start and self.consultation_start <= today:
+            return self.STATUS.in_consultation
+        elif self.has_external_review():
+            return self.STATUS.pre_consultation
+        else:
+            return self.STATUS.development
+
+    def status_display(self):
+        return self.STATUS[self.status()]
 
     def stakeholders(self):
         return (

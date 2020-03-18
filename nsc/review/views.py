@@ -24,11 +24,8 @@ class ReviewDashboardView(generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
-        reviews = Review.objects.draft()
-        policies = (Policy.objects.upcoming() | Policy.objects.overdue()).order_by(
-            "next_review"
-        )
-        return super().get_context_data(reviews=reviews, policies=policies)
+        reviews = Review.objects.in_progress()
+        return super().get_context_data(reviews=reviews)
 
 
 class ReviewList(FilterView):
