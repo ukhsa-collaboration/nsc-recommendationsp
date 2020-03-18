@@ -1,12 +1,21 @@
+import sys
+
 from django.conf import settings
 
 from notifications_python_client.notifications import NotificationsAPIClient
 
 
-client = NotificationsAPIClient(settings.NOTIFY_SERVICE_API_KEY)
+if settings.NOTIFY_SERVICE_ENABLED:
+    client = NotificationsAPIClient(settings.NOTIFY_SERVICE_API_KEY)
+else:
+    client = None
 
 
 def send_email(address, template, context=None):
+    if client is None:
+        sys.stdout.write(f"[Notify] {address} {template} {context}")
+        return
+
     return client.send_email_notification(
         email_address=address, template_id=template, personalisation=context
     )
