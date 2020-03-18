@@ -119,8 +119,8 @@ class Review(TimeStampedModel):
     def consultation_end_display(self):
         return get_date_display(self.consultation_end)
 
-    def discussion_date_display(self):
-        return get_date_display(self.discussion_date)
+    def nsc_meeting_date_display(self):
+        return get_date_display(self.nsc_meeting_date)
 
     def manager_display(self):
         # Todo return the name of the person who is managing the review
@@ -157,7 +157,7 @@ class Review(TimeStampedModel):
 
     def stakeholders(self):
         return (
-            Organisation.objects.filter(policies__reviews__pk=2)
+            Organisation.objects.filter(policies__reviews__pk=self.pk)
             .distinct()
             .order_by("name")
         )
