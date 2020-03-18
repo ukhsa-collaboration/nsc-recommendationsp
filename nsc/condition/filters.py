@@ -27,8 +27,8 @@ class SearchFilter(FilterSet):
 
     def in_consultation(self, queryset, name, value):
         if value == SearchForm.CONSULTATION.open:
-            return queryset.in_consultation()
+            return queryset.open_for_comments()
         elif value == SearchForm.CONSULTATION.closed:
-            return queryset.not_in_consultation()
+            return queryset.closed_for_comments()
         else:
             return queryset

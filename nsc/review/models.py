@@ -23,23 +23,25 @@ class ReviewQuerySet(models.QuerySet):
     def draft(self):
         return self.filter(status=Review.STATUS.draft).order_by("-review_start")
 
-    def in_consultation(self):
+    def in_progress(self):
         today = get_today()
         return self.filter(
-            consultation_start__lte=today, consultation_end__gte=today
-        ).order_by("-review_start")
+            models.Q(review_start__lte=today)
+            & (models.Q(review_end__isnull=True) | models.Q(review_end__gte=today))
+        )
 
-    def not_in_consultation(self):
-        """
-        Get the policies which are currently not open for public comments - either
-        because they are not in review or in review but not in that particular phase.
-        """
+    def open_for_comments(self):
+        today = get_today()
+        return self.filter(consultation_start__lte=today, consultation_end__gte=today)
+
+    def closed_for_comments(self):
         today = get_today()
         return self.filter(
-            models.Q(consultation_start__gt=today)
-            | models.Q(consultation_end__lt=today)
-            | models.Q(consultation_start__isnull=True)
-        ).order_by("-review_start")
+            ~(
+                models.Q(consultation_start__lte=today)
+                & models.Q(consultation_end__gte=today)
+            )
+        )
 
 
 class Review(TimeStampedModel):
@@ -119,6 +121,10 @@ class Review(TimeStampedModel):
 
     def discussion_date_display(self):
         return get_date_display(self.discussion_date)
+
+    def manager_display(self):
+        # Todo return the name of the person who is managing the review
+        return ""
 
     def has_notified_communications_department(self):
         # ToDo implement

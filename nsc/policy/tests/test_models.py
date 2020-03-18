@@ -3,7 +3,7 @@ from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
 from nsc.review.models import Review
-from nsc.utils.datetime import get_today, get_today_with_offset
+from nsc.utils.datetime import from_today, get_today
 
 from ..models import Policy
 
@@ -215,58 +215,62 @@ def test_summary_markdown_conversion():
 
 
 @pytest.mark.parametrize(
-    "status,start,end,count",
+    "start,end,count",
     [
-        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 0),
-        ("draft", get_today(), get_today_with_offset(+7), 1),
-        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 0),
-        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 0),
+        (None, None, 0),  # valid: review in pre-consultation
+        (from_today(+1), from_today(+30), 0),  # valid: consultation dates set
+        (get_today(), from_today(+7), 1),  # valid: consultation period opens today
+        (from_today(-30), get_today(), 1),  # valid: consultation period closes today
+        (from_today(-30), from_today(-1), 0),  # valid: review in post-consultation
+        (from_today(+1), None, 0),  # error: pre-consultation but only start date set
+        (get_today(), None, 0),  # error: consultation opens but only start date set
+        (None, from_today(-1), 0),  # error: post-consultation but only end date set
     ],
 )
-def test_in_consultation(status, start, end, count):
+def test_open_for_comments(start, end, count):
     """
-    Test the queryset method in_consultation only returns Policy objects which are
+    Test the queryset method open_for_comments only returns Policy objects which are
     currently in review and are in the consultation phase.
     """
     policy = baker.make(Policy)
-    review = baker.make(
-        Review, status=status, consultation_start=start, consultation_end=end
-    )
+    review = baker.make(Review, consultation_start=start, consultation_end=end)
     policy.reviews.add(review)
-    actual = Policy.objects.in_consultation().count()
+    actual = Policy.objects.open_for_comments().count()
+    assert count == actual
+
+
+@pytest.mark.parametrize(
+    "start,end,count",
+    [
+        (None, None, 1),  # valid: review in pre-consultation
+        (from_today(+1), from_today(+30), 1),  # valid: consultation dates set
+        (get_today(), from_today(+7), 0),  # valid: consultation period opens today
+        (from_today(-30), get_today(), 0),  # valid: consultation period closes today
+        (from_today(-30), from_today(-1), 1),  # valid: review in post-consultation
+        (from_today(+1), None, 1),  # error: pre-consultation but only start date set
+        (get_today(), None, 1),  # error: consultation opens but only start date set
+        (None, from_today(-1), 1),  # error: post-consultation but only end date set
+    ],
+)
+def test_closed_for_comments(start, end, count):
+    """
+    Test the queryset method closed_for_comments excludes Policy objects which are
+    currently in review and are in the consultation phase.
+    """
+    policy = baker.make(Policy)
+    review = baker.make(Review, consultation_start=start, consultation_end=end)
+    policy.reviews.add(review)
+    actual = Policy.objects.closed_for_comments().count()
     assert count == actual
 
 
 @pytest.mark.parametrize(
     "status,start,end,count",
     [
-        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 1),
-        ("draft", get_today(), get_today_with_offset(+7), 0),
-        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 1),
-        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 1),
-    ],
-)
-def test_not_in_consultation(status, start, end, count):
-    """
-    Test the queryset method not_in_consultation excludes Policy objects which are
-    currently in review and are in the consultation phase.
-    """
-    policy = baker.make(Policy)
-    review = baker.make(
-        Review, status=status, consultation_start=start, consultation_end=end
-    )
-    policy.reviews.add(review)
-    actual = Policy.objects.not_in_consultation().count()
-    assert count == actual
-
-
-@pytest.mark.parametrize(
-    "status,start,end,count",
-    [
-        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 0),
-        ("draft", get_today(), get_today_with_offset(+7), 1),
-        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 0),
-        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 0),
+        ("draft", from_today(+1), from_today(+30), 0),
+        ("draft", get_today(), from_today(+7), 1),
+        ("draft", from_today(-30), from_today(-1), 0),
+        ("published", from_today(-30), from_today(-1), 0),
     ],
 )
 def test_prefetch_reviews_in_consultation(status, start, end, count):

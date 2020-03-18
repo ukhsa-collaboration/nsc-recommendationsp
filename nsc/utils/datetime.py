@@ -10,7 +10,7 @@ def get_today():
     return timezone.localtime(timezone.now()).date()
 
 
-def get_today_with_offset(offset):
+def from_today(offset):
     return get_today() + relativedelta(days=offset)
 
 
