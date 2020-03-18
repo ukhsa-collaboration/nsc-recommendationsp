@@ -3,19 +3,15 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from django_filters.views import FilterView
-
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
-from .filters import SearchFilter
 from .forms import (
     ReviewDatesForm,
     ReviewForm,
     ReviewOrganisationsForm,
     ReviewRecommendationForm,
     ReviewSummaryForm,
-    SearchForm,
 )
 from .models import Review
 
@@ -28,15 +24,12 @@ class ReviewDashboardView(generic.TemplateView):
         return super().get_context_data(reviews=reviews)
 
 
-class ReviewList(FilterView):
-    queryset = Policy.objects.active()
-    paginate_by = 20
+class ReviewList(generic.TemplateView):
     template_name = "review/review_list.html"
-    filterset_class = SearchFilter
 
     def get_context_data(self, **kwargs):
-        form = SearchForm(initial=self.request.GET)
-        return super().get_context_data(form=form)
+        reviews = Review.objects.in_progress()
+        return super().get_context_data(reviews=reviews)
 
 
 class ReviewDetail(generic.DetailView):
