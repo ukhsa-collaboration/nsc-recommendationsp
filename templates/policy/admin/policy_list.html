@@ -83,7 +83,7 @@
         </tbody>
       </table>
       {% if is_paginated %}
-        {% include 'widgets/pagination.html' %}
+        {% include 'widgets/pagination.html' with namespace='condition:list' %}
       {% endif %}
     </div>
 

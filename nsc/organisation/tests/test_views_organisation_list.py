@@ -34,7 +34,7 @@ def test_list_view_query_count(
     Test that fetching the list takes a fixed number of queries.
     """
     baker.make(Organisation, _quantity=num_organisations)
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(3):
         django_app.get(organisation_list_url)
 
 

@@ -10,8 +10,8 @@ from .models import Organisation
 
 class SearchForm(forms.Form):
 
-    name = forms.CharField(label=_("Search by name"), required=False)
-    condition = forms.CharField(label=_("Search by condition"), required=False)
+    name = forms.CharField(label=_("Stakeholder name"), required=False)
+    condition = forms.CharField(label=_("Condition of interest"), required=False)
 
 
 class OrganisationForm(forms.ModelForm):

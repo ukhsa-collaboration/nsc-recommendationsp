@@ -10,7 +10,7 @@
     {% if page_obj.has_previous %}
       <li class="pagination__item">
         <a class="pagination__link"
-           href="{% url 'condition:list' %}?page={{ page_obj.previous_page_number }}"
+           href="{% url namespace %}?page={{ page_obj.previous_page_number }}"
            aria-label="Previous page">
           <span aria-hidden="true" role="presentation">&laquo; </span>{% trans 'Previous' %}</a>
       </li>
@@ -19,12 +19,12 @@
     {% for i in paginator.page_range %}
       {% if page_obj.number == i %}
         <li class="pagination__item">
-          <a class="pagination__link current" href="{% url 'condition:list' %}?page={{ i }}"
+          <a class="pagination__link current" href="{% url namespace %}?page={{ i }}"
              aria-current="true" aria-label="Page {{ i }}, current page">{{ i }}</a>
         </li>
       {% else %}
         <li class="pagination__item">
-          <a class="pagination__link" href="{% url 'condition:list' %}?page={{ i }}"
+          <a class="pagination__link" href="{% url namespace %}?page={{ i }}"
              aria-label="Page {{ i }}">{{ i }}</a>
         </li>
       {% endif %}
@@ -33,7 +33,7 @@
     {% if page_obj.has_next %}
       <li class="pagination__item">
         <a class="pagination__link"
-           href="{% url 'condition:list' %}?page={{ page_obj.next_page_number }}"
+           href="{% url namespace %}?page={{ page_obj.next_page_number }}"
            aria-label="Next page">{% trans 'Next' %}
           <span aria-hidden="true" role="presentation">
             &raquo;

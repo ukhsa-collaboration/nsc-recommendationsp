@@ -10,7 +10,7 @@ from .models import Organisation
 
 
 class OrganisationList(generic.ListView):
-    queryset = Organisation.objects.all().order_by("name")
+    queryset = Organisation.objects.all().prefetch_related("policies").order_by("name")
     paginate_by = 20
 
     def get_queryset(self):
