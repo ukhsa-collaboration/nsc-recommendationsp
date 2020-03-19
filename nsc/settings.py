@@ -373,10 +373,20 @@ class Test(Dev):
     pass
 
 
+class TravisCI(Dev):
+    """
+    Default CI settings for Travis
+    """
+
+    DATABASE_NAME = "test_db"
+    DATABASE_USER = "postgres"
+    DATABASE_PASSWORD = ""
+
+
 class Build(Common):
     """
     Settings for use when building containers for deployment
-        """
+    """
 
     # New paths
     PUBLIC_ROOT = BASE_DIR.parent / "public"
