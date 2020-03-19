@@ -61,18 +61,38 @@ class PolicyForm(forms.ModelForm):
     keywords = forms.CharField(
         required=False,
         label=_("Search keywords"),
-        help_text=_("Enter keywords which can help people find a condition"),
+        help_text=_("Enter keywords which can help people find a condition."),
         error_messages={
             "required": _(
-                "Enter keywords to make it easier for people to find a condition"
+                "Enter keywords to make it easier for people to find a condition."
             )
         },
         widget=forms.Textarea,
     )
+    summary = forms.CharField(
+        required=True,
+        label=_("Plain English summary"),
+        help_text=_("Use markdown to format the text."),
+        widget=forms.Textarea,
+        error_messages={
+            "required": _(
+                "Enter a simple description of the condition that people would find easy to understand."
+            )
+        },
+    )
+    background = forms.CharField(
+        required=True,
+        label=_("Review history"),
+        help_text=_("Use markdown to format the text"),
+        widget=forms.Textarea,
+        error_messages={
+            "required": _("Enter a simple description of the review process.")
+        },
+    )
 
     class Meta:
         model = Policy
-        fields = ["next_review", "condition", "keywords"]
+        fields = ["next_review", "condition", "keywords", "summary", "background"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -81,6 +101,7 @@ class PolicyForm(forms.ModelForm):
             self.initial["next_review"] = self.instance.next_review.year
 
         self.fields["condition"].label = _("More about %s" % self.instance.name)
+        self.fields["keywords"].widget.attrs.update({"rows": 3})
 
     def clean_next_review(self):
         value = self.cleaned_data["next_review"]

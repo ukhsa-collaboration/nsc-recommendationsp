@@ -1,6 +1,4 @@
-from django.contrib import messages
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from nsc.organisation.models import Organisation
@@ -14,8 +12,6 @@ class ContactAdd(generic.CreateView):
     form_class = ContactForm
 
     def get_success_url(self):
-        msg = _("%s was added successfully" % self.object.name)
-        messages.info(self.request, msg)
         return reverse(
             "organisation:detail", kwargs={"pk": self.object.organisation.pk}
         )
@@ -42,8 +38,6 @@ class ContactEdit(generic.UpdateView):
         return super().get_context_data(organisation=organisation, **kwargs)
 
     def get_success_url(self):
-        msg = _("%s was updated successfully" % self.object.name)
-        messages.info(self.request, msg)
         return reverse(
             "organisation:detail", kwargs={"pk": self.object.organisation.pk}
         )
@@ -53,8 +47,6 @@ class ContactDelete(generic.DeleteView):
     model = Contact
 
     def get_success_url(self):
-        msg = _("%s was deleted successfully" % self.object.name)
-        messages.info(self.request, msg)
         return reverse(
             "organisation:detail", kwargs={"pk": self.object.organisation.pk}
         )

@@ -1,5 +1,4 @@
-from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
@@ -55,11 +54,7 @@ class ReviewAdd(generic.CreateView):
 
 class ReviewDelete(generic.DeleteView):
     model = Review
-
-    def get_success_url(self):
-        msg = _("%s was deleted successfully" % self.object.name)
-        messages.info(self.request, msg)
-        return reverse("dashboard")
+    success_url = reverse_lazy("dashboard")
 
 
 class ReviewDates(generic.UpdateView):

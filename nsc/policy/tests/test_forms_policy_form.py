@@ -11,6 +11,8 @@ def test_form_configuration():
     assert "next_review" in PolicyForm.Meta.fields
     assert "condition" in PolicyForm.Meta.fields
     assert "keywords" in PolicyForm.Meta.fields
+    assert "summary" in PolicyForm.Meta.fields
+    assert "background" in PolicyForm.Meta.fields
 
 
 @pytest.mark.parametrize(
@@ -24,7 +26,12 @@ def test_form_configuration():
     ],
 )
 def test_condition_validation(condition, expected):
-    data = {"condition": condition, "next_review": ""}
+    data = {
+        "condition": condition,
+        "next_review": "",
+        "summary": "A summary",
+        "background": "Some background",
+    }
     assert PolicyForm(data=data).is_valid() == expected
 
 
@@ -42,7 +49,12 @@ def test_condition_validation(condition, expected):
     ],
 )
 def test_next_review_validation(next_review, expected):
-    data = {"condition": "# Heading", "next_review": next_review}
+    data = {
+        "condition": "# Heading",
+        "next_review": next_review,
+        "summary": "A summary",
+        "background": "Some background",
+    }
     assert PolicyForm(data=data).is_valid() == expected
 
 
@@ -52,7 +64,12 @@ def test_next_review_is_cleaned(next_review):
     Test empty strings and only spaces for the next_review field need
     to be cleaned to None.
     """
-    data = {"condition": "# Heading", "next_review": next_review}
+    data = {
+        "condition": "# Heading",
+        "next_review": next_review,
+        "summary": "A summary",
+        "background": "Some background",
+    }
     form = PolicyForm(data=data)
     assert form.is_valid() is True
     assert form.cleaned_data["next_review"] is None

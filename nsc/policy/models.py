@@ -109,6 +109,9 @@ class Policy(TimeStampedModel):
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
 
+    background = models.TextField(verbose_name=_("summary"))
+    background_html = models.TextField(verbose_name=_("HTML summary"))
+
     keywords = models.TextField(
         verbose_name=_("Search keywords"), blank=True, default=""
     )
@@ -163,6 +166,7 @@ class Policy(TimeStampedModel):
             self.slug = slugify(self.name)
         self.condition_html = convert(self.condition)
         self.summary_html = convert(self.summary)
+        self.background_html = convert(self.background)
 
     def latest_review(self):
         return self.reviews.all().published().first()
