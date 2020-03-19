@@ -1,9 +1,7 @@
-from distutils.util import strtobool
-
 from django.contrib.admin.filters import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 
-from django_filters import CharFilter, FilterSet, TypedChoiceFilter, Filter
+from django_filters import CharFilter, Filter, FilterSet
 
 from .forms import SearchForm
 from .models import Policy

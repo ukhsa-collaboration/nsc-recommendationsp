@@ -153,7 +153,7 @@ class Policy(TimeStampedModel):
         if self.next_review < today:
             return _("Overdue")
         else:
-            return self.next_review.strftime("%b %Y")
+            return self.next_review.strftime("%B %Y")
 
     def ages_display(self):
         return ", ".join(str(Policy.AGE_GROUPS[age]) for age in self.ages)
@@ -163,3 +163,6 @@ class Policy(TimeStampedModel):
             self.slug = slugify(self.name)
         self.condition_html = convert(self.condition)
         self.summary_html = convert(self.summary)
+
+    def latest_review(self):
+        return self.reviews.all().published().first()

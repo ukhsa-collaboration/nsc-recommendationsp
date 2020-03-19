@@ -1,17 +1,32 @@
 {% load i18n %}
 
 <h2 class="govuk-heading-m">
-  {% trans 'Important downloads' %}
+  {% trans 'Supporting documents for download' %}
 </h2>
 
-<ul class="govuk-list">
-  {% for document in policy.documents.all %}
-    <li>
-      <a class="govuk-link" href="{{ document.url }}">{{ document.name }}</a>
-    </li>
-  {% empty %}
-    <li>
-      {% trans 'There are no downloads at this time' %}
-    </li>
-  {% endfor %}
-</ul>
+{% with review=policy.latest_review %}
+  {% if review %}
+    <div class="govuk-body">
+      <span class="govuk-caption-m">
+        {% blocktrans with name=review.name %}
+          Documents from {{ name }}
+        {% endblocktrans %}
+      </span>
+    </div>
+
+    <ul class="govuk-list govuk-list--bullet">
+      {% if review.has_evidence_review %}
+        <li>
+          <a class="govuk-link" target="_blank" href="{{ review.get_evidence_review.upload.url }}">{{ review.get_evidence_review.name }}</a>
+        </li>
+      {% endif %}
+      {% if review.has_cover_sheet %}
+        <li>
+          <a class="govuk-link" target="_blank" href="{{ review.get_cover_sheet.upload.url }}">{{ review.get_cover_sheet.name }}</a>
+        </li>
+      {% endif %}
+    </ul>
+  {% else %}
+    {% trans 'There are no downloads at this time' %}
+  {% endif %}
+{% endwith %}

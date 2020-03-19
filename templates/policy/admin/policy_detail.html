@@ -1,38 +1,52 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block back %}
-  {% url "policy:list" as back_url %}
-  {% trans "Back to all conditions" as back_title %}
-  {% include 'widgets/back_link.html' %}
-{% endblock %}
+{% block main  %}
+<div class="govuk-width-container ">
+  <main class="govuk-main-wrapper " id="main-content" role="main">
 
-{% block heading %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        {% block title %}
-          {{ policy.name }}
-        {% endblock %}
-      </h1>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button" style="float:right">
-        {% trans 'Edit information' %}
-      </a>
-      <a id="create-review-link-id" href="{% url 'review:add' %}?policy={{ policy.slug }}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
-        {% trans 'Create a new product' %}
-      </a>
-    </div>
-  </div>
-{% endblock %}
+    {% block messages %}
+      <ul class="nsc-alerts">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endblock %}
 
-{% block content %}
-  {% include "policy/admin/recommendation.html" %}
-  {% include "policy/admin/last_review.html" %}
-  {% include "policy/admin/next_review.html" %}
-  {% include "policy/admin/documents.html" %}
-  {% include "policy/admin/condition.html" %}
-  {% include "policy/admin/review_history.html" %}
-  {% include "policy/admin/organisations.html" %}
+    {% block back %}
+      {% url "policy:list" as back_url %}
+      {% trans "Back to all conditions" as back_title %}
+      {% include 'widgets/back_link.html' %}
+    {% endblock %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">
+          {% block title %}{{ policy.name }}{% endblock %}
+        </h1>
+
+        {% include "policy/admin/recommendation.html" %}
+        {% include "policy/admin/last_review.html" %}
+        {% include "policy/admin/next_review.html" %}
+        {% include "policy/admin/documents.html" %}
+        {% include "policy/admin/summary.html" %}
+        {% include "policy/admin/condition.html" %}
+        {% include "policy/admin/keywords.html" %}
+        {% include "policy/admin/review_history.html" %}
+        {% include "policy/admin/organisations.html" %}
+
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <a id="create-review-link-id" href="{% url 'review:add' %}?policy={{ policy.slug }}" role="button" class="govuk-button" style="float:right">
+          {% trans 'Create a new product' %}
+        </a>
+        <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
+          {% trans 'Edit information' %}
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
 {% endblock %}
