@@ -18,6 +18,7 @@ matrix:
       install:
         - yarn install
       script:
+        # For now just check it builds
         - yarn build
 
 notifications:
