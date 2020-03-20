@@ -293,6 +293,7 @@ class Common(Configuration):
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
     # Settings for the GDS Notify service for sending emails.
+    NOTIFY_SERVICE_ENABLED = False
     NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
     CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS")
     NOTIFY_TEMPLATE_CONSULTATION_INVITATION = get_env(
@@ -372,10 +373,20 @@ class Test(Dev):
     pass
 
 
+class TravisCI(Dev):
+    """
+    Default CI settings for Travis
+    """
+
+    DATABASE_NAME = "test_db"
+    DATABASE_USER = "postgres"
+    DATABASE_PASSWORD = ""
+
+
 class Build(Common):
     """
     Settings for use when building containers for deployment
-        """
+    """
 
     # New paths
     PUBLIC_ROOT = BASE_DIR.parent / "public"
@@ -395,6 +406,7 @@ class Deployed(Build):
     SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
     DATABASE_USER = get_secret("DATABASE_USER")
     DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
+    NOTIFY_SERVICE_ENABLED = True
     NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
 
     # Change default cache
