@@ -4,10 +4,16 @@
   {% trans 'Search keywords' %}
 </h2>
 
-<p class="govuk-body">
-  {% if policy.keywords %}
+{% if policy.keywords %}
+  <p class="govuk-body">
     {{ policy.keywords }}
-  {% else %}
-    {% trans 'There are no keywords defined for this condition.' %}
-  {% endif %}
-</p>
+  </p>
+{% else %}
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-warning-text__assistive">Warning</span>
+      {% trans 'There are no keywords defined for this condition.' %}
+    </strong>
+  </div>
+{% endif %}

@@ -4,4 +4,16 @@
   {% trans 'Review history' %}
 </h2>
 
-{{ policy.background_html|safe }}
+{% if policy.background_html %}
+  <p class="govuk-body">
+    {{ policy.background_html|safe }}
+  </p>
+{% else %}
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-warning-text__assistive">Warning</span>
+      {% trans 'There is no review history for this condition.' %}
+    </strong>
+  </div>
+{% endif %}

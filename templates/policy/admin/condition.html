@@ -4,4 +4,16 @@
   {% trans 'More about' %} {{ policy.name }}
 </h2>
 
-{{ policy.condition_html|safe }}
+{% if policy.condition_html %}
+  <p class="govuk-body">
+    {{ policy.condition_html|safe }}
+  </p>
+{% else %}
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-warning-text__assistive">Warning</span>
+      {% trans 'There is no description of this condition.' %}
+    </strong>
+  </div>
+{% endif %}

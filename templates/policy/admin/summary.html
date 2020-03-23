@@ -4,4 +4,16 @@
   {% trans 'Plain English summary' %}
 </h2>
 
-{{ policy.summary_html|safe }}
+{% if policy.summary_html %}
+  <p class="govuk-body">
+    {{ policy.summary_html|safe }}
+  </p>
+{% else %}
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-warning-text__assistive">Warning</span>
+        {% trans 'There is no plain English summary for the latest review of this condition.' %}
+    </strong>
+  </div>
+{% endif %}
