@@ -57,7 +57,7 @@
 </dl>
 
 <a href="{% url 'organisation:delete' object.pk %}" role="button" draggable="false" class="govuk-button govuk-button--warning" data-module="govuk-button">
-  Delete
+  {% trans 'Delete stakeholder' %}
 </a>
 
 {% endblock %}

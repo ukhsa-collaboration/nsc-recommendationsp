@@ -26,9 +26,9 @@
 
     {{ form.errors }}
 
-    {% include "widgets/text_input.html" with field=form.name %}
-    {% include "widgets/text_input.html" with field=form.email %}
-    {% include "widgets/text_input.html" with field=form.phone %}
+    {% include "widgets/text_input.html" with field=form.name width=20 %}
+    {% include "widgets/text_input.html" with field=form.email width=20 %}
+    {% include "widgets/text_input.html" with field=form.phone width=10 %}
 
     <div class="govuk-body">
       <button type="submit" class="govuk-button" name="submit" value="submit">
