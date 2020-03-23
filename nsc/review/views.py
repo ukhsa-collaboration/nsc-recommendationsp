@@ -8,6 +8,7 @@ from nsc.utils.datetime import get_today
 from .forms import (
     ReviewDatesForm,
     ReviewForm,
+    ReviewHistoryForm,
     ReviewOrganisationsForm,
     ReviewRecommendationForm,
     ReviewSummaryForm,
@@ -103,6 +104,13 @@ class ReviewSummary(generic.UpdateView):
     lookup_field = "slug"
     form_class = ReviewSummaryForm
     template_name = "review/review_summary.html"
+
+
+class ReviewHistory(generic.UpdateView):
+    model = Review
+    lookup_field = "slug"
+    form_class = ReviewHistoryForm
+    template_name = "review/review_history.html"
 
 
 class ReviewRecommendation(generic.UpdateView):

@@ -1,6 +1,10 @@
 from django.urls import path
 
-from nsc.document.views import AddExternalReviewView, AddReviewDocumentsView
+from nsc.document.views import (
+    AddExternalReviewView,
+    AddReviewDocumentsView,
+    AddSubmissionFormView,
+)
 
 from . import views
 
@@ -22,10 +26,16 @@ urlpatterns = [
         name="recommendation",
     ),
     path(r"<slug:slug>/summary/", views.ReviewSummary.as_view(), name="summary"),
+    path(r"<slug:slug>/history/", views.ReviewHistory.as_view(), name="history"),
     path(
         r"<slug:slug>/add-external-review/",
         AddExternalReviewView.as_view(),
         name="add-external-review",
+    ),
+    path(
+        r"<slug:slug>/add-submission-form/",
+        AddSubmissionFormView.as_view(),
+        name="add-submission-form",
     ),
     path(
         r"<slug:slug>/add-review-documents/",

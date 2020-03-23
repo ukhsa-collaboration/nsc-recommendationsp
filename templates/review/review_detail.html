@@ -54,12 +54,12 @@
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="" aria-describedby="upload-response-form">
+            <a href="{% url 'review:add-submission-form' review.slug %}" aria-describedby="upload-submission-form">
               {% trans "Upload response form for consultation" %}
             </a>
           </span>
-          {% if review.has_response_form %}
-            <strong class="govuk-tag app-task-list__task-completed" id="upload-response-form">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_submission_form %}
+            <strong class="govuk-tag app-task-list__task-completed" id="upload-submission-form">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -101,11 +101,11 @@
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="" aria-describedby="product_history_added">
+            <a href="{% url 'review:history' review.slug %}" aria-describedby="product_history_added">
               {% trans "Upload product history" %}
             </a>
           </span>
-          {% if review.has_product_history %}
+          {% if review.has_history %}
             <strong class="govuk-tag app-task-list__task-completed" id="product_history_added">{% trans 'COMPLETED' %}</strong>
           {% endif %}
         </li>

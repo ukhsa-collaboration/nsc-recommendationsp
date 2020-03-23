@@ -55,7 +55,10 @@ class Review(TimeStampedModel):
         ("evidence", _("Evidence review")),
         ("map", _("Evidence map")),
         ("cost", _("Cost-effective model")),
+        ("disease", _("Disease model")),
         ("systematic", _("Systematic review")),
+        ("meta", _("Systematic review and meta analysis")),
+        ("other", _("Other")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
@@ -85,6 +88,9 @@ class Review(TimeStampedModel):
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
+
+    background = models.TextField(verbose_name=_("history"))
+    background_html = models.TextField(verbose_name=_("HTML history"))
 
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
@@ -150,8 +156,14 @@ class Review(TimeStampedModel):
     def has_evidence_review(self):
         return Document.objects.for_review(self).evidence_reviews().exists()
 
+    def has_submission_form(self):
+        return Document.objects.for_review(self).submission_forms().exists()
+
     def has_summary(self):
         return self.summary and len(self.summary) > 0
+
+    def has_history(self):
+        return self.background and len(self.background) > 0
 
     def has_recommendation(self):
         return self.recommendation is not None
@@ -187,6 +199,7 @@ class Review(TimeStampedModel):
             self.slug = slugify(self.name)
 
         self.summary_html = convert(self.summary)
+        self.background_html = convert(self.background)
 
         return super(Review, self).save(**kwargs)
 

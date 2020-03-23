@@ -25,6 +25,26 @@ class ExternalReviewForm(forms.ModelForm):
         self.fields["review"].widget = HiddenInput()
 
 
+class SubmissionForm(forms.ModelForm):
+
+    upload = forms.FileField(
+        label=_("Upload a file"),
+        error_messages={"required": _("Select the response form for upload")},
+    )
+
+    class Meta:
+        model = Document
+        fields = ["name", "document_type", "review", "upload"]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.fields["upload"].widget.attrs.update({"class": "govuk-file-upload"})
+        self.fields["name"].widget = HiddenInput()
+        self.fields["document_type"].widget = HiddenInput()
+        self.fields["review"].widget = HiddenInput()
+
+
 class ReviewDocumentsForm(forms.Form):
 
     evidence_review = forms.FileField(
