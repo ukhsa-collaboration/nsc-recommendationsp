@@ -1,19 +1,19 @@
 {% load i18n %}
 
 <h2 class="govuk-heading-m">
-  {% trans 'Review history' %}
+  {% trans 'Plain English summary' %}
 </h2>
 
-{% if policy.background_html %}
+{% if policy.summary_html %}
   <p class="govuk-body">
-    {{ policy.background_html|safe }}
+    {{ policy.summary_html|safe }}
   </p>
 {% else %}
   <div class="govuk-warning-text">
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
       <span class="govuk-warning-text__assistive">Warning</span>
-      {% trans 'There is no review history for this condition.' %}
+        {% trans 'There is no plain English summary for the latest review of this condition.' %}
     </strong>
   </div>
 {% endif %}

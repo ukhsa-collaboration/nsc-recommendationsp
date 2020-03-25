@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Formatting' %}
+</h2>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  To put a title in your template, use a hash:
+  {% endblocktrans %}
+
+  <div class="govuk-inset-text">
+    {% blocktrans %}
+    # This is a title
+    {% endblocktrans %}
+  </div>
+</p>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  To make bullet points, use asterisks:
+  {% endblocktrans %}
+
+  <div class="govuk-inset-text">
+    {% blocktrans %}
+    * point 1<br>
+    * point 2<br>
+    * point 3<br>
+    {% endblocktrans %}
+  </div>
+</p>
+
+<h2 class="govuk-heading-m">
+  {% trans 'Links and URLs' %}
+</h2>
+
+<p class="govuk-body">
+  {% blocktrans %}
+  Always use full URLs, starting with https://
+  {% endblocktrans %}
+
+  <div class="govuk-inset-text">
+    {% blocktrans %}
+    Apply now at https://www.gov.uk/example
+    {% endblocktrans %}
+  </div>
+</p>

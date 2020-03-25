@@ -1,9 +1,7 @@
-from distutils.util import strtobool
-
 from django.contrib.admin.filters import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 
-from django_filters import CharFilter, FilterSet, TypedChoiceFilter
+from django_filters import CharFilter, Filter, FilterSet
 
 from .forms import SearchForm
 from .models import Policy
@@ -50,16 +48,36 @@ class AgeGroupFilter(SimpleListFilter):
         return queryset
 
 
+# TODO All the following code is shared with condition/filters.py check
+#     later once the development is finished to see if it can be shared.
+
+
+class YesNoFilter(Filter):
+    def filter(self, qs, value):
+        if value is None:
+            return qs
+        lc_value = value.lower()
+        if lc_value == "yes":
+            value = True
+        elif lc_value == "no":
+            value = False
+        return qs.filter(**{self.field_name: value})
+
+
 class SearchFilter(FilterSet):
 
     name = CharFilter(field_name="name", method="search_name")
-    # ToDo change the field name to the correct one
-    status = TypedChoiceFilter(
-        field_name="name", choices=SearchForm.REVIEW_STATUS_CHOICES
-    )
-    screen = TypedChoiceFilter(
-        field_name="recommendation", choices=SearchForm.YES_NO_CHOICES, coerce=strtobool
-    )
+    comments = CharFilter(method="in_consultation")
+    affects = CharFilter(field_name="ages", lookup_expr="icontains")
+    screen = YesNoFilter(field_name="recommendation")
 
     def search_name(self, queryset, name, value):
         return queryset.search(value)
+
+    def in_consultation(self, queryset, name, value):
+        if value == SearchForm.CONSULTATION.open:
+            return queryset.open_for_comments()
+        elif value == SearchForm.CONSULTATION.closed:
+            return queryset.closed_for_comments()
+        else:
+            return queryset

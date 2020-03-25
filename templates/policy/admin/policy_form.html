@@ -1,75 +1,101 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block back %}
-  {% if not preview %}
-    {% trans "Back to policy" as back_title %}
-    {% include 'widgets/back_link.html' with back_url=object.get_admin_url %}
-  {% endif %}
-{% endblock %}
-
 {% block title %}
   {{ form.instance.name }}
 {% endblock %}
 
-{% block heading %}
-  {% if preview %}
-    <span class="govuk-caption-l">{% trans 'Policy preview' %}</span>
-  {%  endif %}
-  <h1 class="govuk-heading-l">
-    {% block page_title %}{{ form.instance.name }}{% endblock %}
-  </h1>
+{% block main  %}
+<div class="govuk-width-container ">
+  <main class="govuk-main-wrapper " id="main-content" role="main">
+    <form method="post" id="form-id">
+
+      {% block messages %}
+        <ul class="nsc-alerts">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endblock %}
+
+      {% block back %}
+        {% if preview %}
+          <a href="" class="govuk-back-link" onclick="document.forms['form-id'].submit(); return false">
+            {% trans 'Back to edit policy' %}
+          </a>
+        {% else %}
+          {% trans "Back to policy" as back_title %}
+          {% include 'widgets/back_link.html' with back_url=object.get_admin_url %}
+        {% endif %}
+      {% endblock %}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+          {% if preview %}
+            <span class="govuk-caption-l">{% trans 'Preview policy' %}</span>
+            <h1 class="govuk-heading-l">
+              {{ policy.name }}
+            </h1>
+          {% else %}
+            <span class="govuk-caption-l">{% trans 'Edit policy' %}</span>
+            <h1 class="govuk-heading-l">
+              {{ form.instance.name }}
+            </h1>
+          {% endif %}
+
+          {% csrf_token %}
+
+          {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+
+          {% if form.errors %}
+            {% include "widgets/error_summary.html" %}
+          {% endif %}
+
+          {% with policy=form.instance %}
+            {% if preview %}
+              {% include "policy/admin/recommendation.html" %}
+              {% include "policy/admin/last_review.html" %}
+              {% include "policy/admin/next_review.html" %}
+              {% include "policy/admin/documents.html" %}
+              {% include "policy/admin/summary.html" %}
+              {% include "policy/admin/condition.html" %}
+              {% include "policy/admin/review_history.html" %}
+              {% include "policy/admin/organisations.html" %}
+              {{ form.next_review.as_hidden }}
+              {{ form.summary.as_hidden }}
+              {{ form.condition.as_hidden }}
+              {{ form.keywords.as_hidden }}
+              {{ form.background.as_hidden }}
+            {% else %}
+              {% include "policy/admin/recommendation.html" %}
+              {% include "policy/admin/last_review.html" %}
+              {% include "widgets/text_input.html" with field=form.next_review show_legend=True width=4 %}
+              {% include "policy/admin/documents.html" %}
+              {% include "widgets/text_area.html" with field=form.summary show_legend=True word_limit=500 %}
+              {% include "widgets/text_area.html" with field=form.condition show_legend=True word_limit=1000 %}
+              {% include "widgets/text_area.html" with field=form.keywords show_legend=True word_limit=100 %}
+              {% include "widgets/text_area.html" with field=form.background show_legend=True word_limit=1000 %}
+              {% include 'policy/admin/organisations.html' %}
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <div class="govuk-grid-column-one-third govuk-!-padding-top-3">
+          {% if preview %}
+              <button type="submit" class="govuk-button" name="publish" value="publish" style="float: right">
+                {% trans 'Publish' %}
+              </button>
+          {% else %}
+            <button type="submit" class="govuk-button" name="preview" value="preview" style="float: right">
+              {% trans 'Preview' %}
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
 {% endblock %}
-
-{% block content %}
-
-  <form method="post">
-    {% csrf_token %}
-
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
-
-    {{ form.non_field_errors }}
-
-    {% with policy=form.instance %}
-      {% if preview %}
-        {% include "policy/admin/recommendation.html" %}
-        {% include "policy/admin/last_review.html" %}
-        {% include "policy/admin/next_review.html" %}
-        {% include "policy/admin/documents.html" %}
-        {% include "policy/admin/condition.html" %}
-        {% include "policy/admin/review_history.html" %}
-        {% include "policy/admin/organisations.html" %}
-        {{ form.next_review.as_hidden }}
-        {{ form.condition.as_hidden }}
-        {{ form.keywords.as_hidden }}
-      {% else %}
-        {% include "policy/admin/recommendation.html" %}
-        {% include "policy/admin/last_review.html" %}
-        {% include "widgets/text_input.html" with field=form.next_review label_size='m' %}
-        {% include "policy/admin/documents.html" %}
-        {% include "widgets/text_area.html" with field=form.condition label_size='m' %}
-        {% include "widgets/text_area.html" with field=form.keywords label_size='m' %}
-        {% include 'policy/admin/review_history.html' %}
-        {% include 'policy/admin/organisations.html' %}
-      {% endif %}
-    {% endwith %}
-
-    {% if preview %}
-      <button type="submit" class="govuk-button" name="publish" value="publish">
-        {% trans 'Publish' %}
-      </button>
-      <button type="submit" class="govuk-button govuk-button--secondary" name="edit" value="edit">
-        {% trans 'Back to edit policy' %}
-      </button>
-    {% else %}
-      <button type="submit" class="govuk-button" name="preview" value="preview">
-        {% trans 'Preview' %}
-      </button>
-    {% endif %}
-
-  </form>
-
-{% endblock %}
-

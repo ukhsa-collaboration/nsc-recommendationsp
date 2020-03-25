@@ -40,8 +40,6 @@ def run():
         except Review.DoesNotExist:
             review = Review(name=name)
 
-        review.status = Review.STATUS.published
-        review.phase = Review.PHASE.completed
         review.review_type = Review.TYPE.other
         review.recommendation = entry["recommendation"]
         review.review_start = review_start

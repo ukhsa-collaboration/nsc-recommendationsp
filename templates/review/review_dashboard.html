@@ -1,16 +1,21 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block title_spacer %}{% endblock %}
 
-{% block title %}
-  {% block page_title %}
-    UK NSC internal system
-  {% endblock %}
+{% block heading %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">
+        {% block title %}
+          {% trans 'UK NSC evidence admin and reporting system' %}
+        {% endblock %}
+      </h1>
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
-
   <p class="govuk-body">
   {% blocktrans %}
   This platform is to update stakeholders and members of the public on conditions
@@ -42,9 +47,15 @@
             {{ review.name }}
           </a>
         </td>
-        <td class="govuk-table__cell">{{ review.policies_display }}</td>
+        <td class="govuk-table__cell">
+          <ul class="conditions-list">
+            {% for policy in review.policies.all %}
+              <li>{{ policy.name }}</li>
+            {% endfor %}
+          </ul>
+        </td>
         <td class="govuk-table__cell">{{ review.get_review_type_display }}</td>
-        <td class="govuk-table__cell">{{ review.get_status_display }}</td>
+        <td class="govuk-table__cell">{{ review.status_display }}</td>
       </tr>
       {% empty %}
       <tr class="govuk-table__row">
@@ -54,8 +65,8 @@
     </tbody>
   </table>
 
-  <p class="govuk=body">
-    <a href="">
+  <p class="govuk-body">
+    <a href="{% url 'review:list' %}">
       {% trans 'View the whole team\'s products in progress.' %}
     </a>
   </p>
@@ -65,7 +76,7 @@
   </h2>
 
   <div class="link-menu govuk-body">
-    {% url 'review:list' as url %}
+    {% url 'policy:list' as url %}
     {% blocktrans %}
       <a href="{{ url}}" class="govuk-link">
         View all conditions
@@ -87,32 +98,5 @@
       to add and edit stakeholders.
     {% endblocktrans %}
   </div>
-
-  <h2 class="govuk-heading-m">
-    Reviews scheduled to start this year
-  </h2>
-
-  <table class="govuk-table">
-    <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-      <th class="govuk-table__header">{% trans 'Condition' %}</th>
-      <th class="govuk-table__header">{% trans 'Due' %}</th>
-    </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-    {% for policy in policies %}
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell">
-          {{ policy.name }}
-        </td>
-        <td class="govuk-table__cell">{{ policy.next_review_display }}</td>
-      </tr>
-      {% empty %}
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell" colspan="3"><p>{%  trans 'There are no upcoming reviews.' %}</p></td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
 
 {% endblock content %}

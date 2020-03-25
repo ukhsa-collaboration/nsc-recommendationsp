@@ -1,6 +1,4 @@
-from django.contrib import messages
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
 from django_filters.views import FilterView
@@ -11,7 +9,7 @@ from .models import Policy
 
 
 class PolicyList(FilterView):
-    queryset = Policy.objects.active()
+    queryset = Policy.objects.active().prefetch_reviews_in_consultation()
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
     filterset_class = SearchFilter
@@ -45,8 +43,6 @@ class PolicyEdit(UpdateView):
 
     def form_valid(self, form):
         if self.is_publish():
-            msg = _("Published changes to conditions page for %s." % self.object.name)
-            messages.info(self.request, msg)
             return super().form_valid(form=form)
         else:
             return self.render_to_response(

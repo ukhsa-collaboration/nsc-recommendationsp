@@ -12,22 +12,27 @@ from nsc.utils.datetime import get_today
 from .models import Policy
 
 
+# TODO The SearchForm is currently identical to the one in condition/forms.py
+#      check later once the development is finished to see if it can be shared.
+
+
 class SearchForm(forms.Form):
 
-    REVIEW_STATUS_CHOICES = Choices(
-        ("due_for_review", _("Due to be reviewed")),
-        ("in_review", _("In review")),
-        ("in_consultation", _("In consultation")),
-        ("post_consultation", _("Post consultation")),
-    )
-
+    CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))
     YES_NO_CHOICES = Choices(("yes", _("Yes")), ("no", _("No")))
 
-    name = forms.CharField(label=_("Search by condition name"), required=False)
+    name = forms.CharField(label=_("Condition name"), required=False)
 
-    status = forms.TypedChoiceField(
-        label=_("Status of the recommendation"),
-        choices=REVIEW_STATUS_CHOICES,
+    comments = forms.TypedChoiceField(
+        label=_("Public comments"),
+        choices=CONSULTATION,
+        widget=forms.RadioSelect,
+        required=False,
+    )
+
+    affects = forms.TypedChoiceField(
+        label=_("Who the condition affects"),
+        choices=Policy.AGE_GROUPS,
         widget=forms.RadioSelect,
         required=False,
     )
@@ -56,18 +61,38 @@ class PolicyForm(forms.ModelForm):
     keywords = forms.CharField(
         required=False,
         label=_("Search keywords"),
-        help_text=_("Enter keywords which can help people find a condition"),
+        help_text=_("Enter keywords which can help people find a condition."),
         error_messages={
             "required": _(
-                "Enter keywords to make it easier for people to find a condition"
+                "Enter keywords to make it easier for people to find a condition."
             )
         },
         widget=forms.Textarea,
     )
+    summary = forms.CharField(
+        required=True,
+        label=_("Plain English summary"),
+        help_text=_("Use markdown to format the text."),
+        widget=forms.Textarea,
+        error_messages={
+            "required": _(
+                "Enter a simple description of the condition that people would find easy to understand."
+            )
+        },
+    )
+    background = forms.CharField(
+        required=True,
+        label=_("Review history"),
+        help_text=_("Use markdown to format the text"),
+        widget=forms.Textarea,
+        error_messages={
+            "required": _("Enter a simple description of the review process.")
+        },
+    )
 
     class Meta:
         model = Policy
-        fields = ["next_review", "condition", "keywords"]
+        fields = ["next_review", "condition", "keywords", "summary", "background"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -76,6 +101,7 @@ class PolicyForm(forms.ModelForm):
             self.initial["next_review"] = self.instance.next_review.year
 
         self.fields["condition"].label = _("More about %s" % self.instance.name)
+        self.fields["keywords"].widget.attrs.update({"rows": 3})
 
     def clean_next_review(self):
         value = self.cleaned_data["next_review"]

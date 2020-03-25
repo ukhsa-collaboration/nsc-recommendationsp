@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block title %}
-  {% trans "Upload plain English summary" %}
+  {% trans "Upload product history" %}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/text_area.html" with field=form.summary show_legend=True %}
+    {% include "widgets/text_area.html" with field=form.background show_legend=True %}
 
     <button type="submit" class="govuk-button" name="submit" value="submit">
       {% trans 'Save and continue' %}

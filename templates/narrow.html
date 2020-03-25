@@ -13,21 +13,26 @@
         </ul>
       {% endblock %}
 
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+      {% block back %}{% endblock %}
 
-          {% block back %}{% endblock %}
-
-          {% block heading %}
+      {% block heading %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">
               {% block page_title %}{% endblock %}
             </h1>
-          {% endblock %}
+          </div>
+        </div>
+      {% endblock %}
 
+      {% block body %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
           {% block content %}{% endblock %}
-
         </div>
       </div>
+      {% endblock %}
+
     </main>
   </div>
 {% endblock %}

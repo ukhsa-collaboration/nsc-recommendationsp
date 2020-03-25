@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
 from nsc.document.models import Document, review_document_path
-from nsc.utils.datetime import get_today, get_today_with_offset
+from nsc.utils.datetime import from_today, get_today
 
 from ..models import Review
 
@@ -23,44 +23,11 @@ def test_factory_create_policy():
     assert isinstance(instance, Review)
 
 
-def test_inside_consultation_period():
-    """
-    Test the queryset in_consultation() method includes reviews that are
-    currently open for public comments.
-    """
-    date = get_today()
-    instance = baker.make(
-        Review,
-        consultation_start=date,
-        consultation_end=date + relativedelta(months=+3),
-    )
-    assert Review.objects.in_consultation().first().pk == instance.pk
-
-    instance.consultation_start = date - relativedelta(months=+3)
-    instance.consultation_end = date
-    instance.save()
-    assert Review.objects.in_consultation().first().pk == instance.pk
-
-
-def test_outside_consultation_period():
-    """
-    Test the queryset in_consultation() method excludes reviews that are not
-    currently open for public comments.
-    """
-    date = get_today() + relativedelta(days=1)
-    baker.make(Review, consultation_start=date)
-    assert not Review.objects.in_consultation().exists()
-    date = get_today() - relativedelta(days=1)
-    baker.make(Review, consultation_end=date)
-    assert not Review.objects.in_consultation().exists()
-
-
 def test_slug_is_set():
     """
-    Test the slug field, if not set, is generated from the name field.
+    Test the slug field, if not set, is set when a Review is created.
     """
     instance = baker.make(Review, name="The Review", slug="")
-    instance.clean()
     assert instance.slug == "the-review"
 
 
@@ -72,16 +39,42 @@ def test_slug_is_not_overwritten():
     """
     instance = baker.make(Review, name="The Review", slug="the-review")
     instance.name = "New name"
-    instance.clean()
+    instance.save()
     assert instance.slug == "the-review"
+
+
+def test_default_review_start():
+    """
+    Test the review_start field defaults to today when a Review is created.
+    """
+    instance = baker.make(Review)
+    assert instance.review_start == get_today()
+
+
+def test_review_start_is_updated():
+    """
+    Test the review_start field can be set when a Review is created.
+    """
+    tomorrow = get_today() + relativedelta(days=+1)
+    instance = baker.make(Review, review_start=tomorrow)
+    assert instance.review_start == tomorrow
+
+
+def test_review_start_is_not_updated_later():
+    """
+    Test the review_start field is not changed if set already.
+    """
+    tomorrow = get_today() + relativedelta(days=+1)
+    instance = baker.make(Review, review_start=tomorrow)
+    instance.save()
+    assert instance.review_start == tomorrow
 
 
 def test_summary_markdown_conversion():
     """
-    Test the markdown in the summary attribute is converted to HTML when the model is cleaned.
+    Test the markdown in the summary attribute is converted to HTML when the model is saved.
     """
     instance = baker.make(Review, summary="# Heading", summary_html="")
-    instance.clean()
     assert instance.summary_html == '<h1 class="govuk-heading-xl">Heading</h1>'
 
 
@@ -127,40 +120,76 @@ def test_cover_sheet_document(review_published):
 
 
 @pytest.mark.parametrize(
-    "status,start,end,count",
+    "start,end,count",
     [
-        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 0),
-        ("draft", get_today(), get_today_with_offset(+7), 1),
-        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 0),
-        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 0),
+        (get_today(), None, 1),  # valid: review started
+        (from_today(-30), from_today(-1), 0),  # valid: review completed
+        (None, None, 0),  # error: review created with start date not set
+        (from_today(+1), None, 0),  # error: review created with start date in future
+        (get_today(), from_today(+7), 1),  # error: review started but end already set
+        (None, from_today(-1), 0),  # error: review completed but start date not set
+        (from_today(+1), from_today(+30), 0),  # error: review completed in future
     ],
 )
-def test_in_consultation(status, start, end, count):
+def test_in_progress(start, end, count):
     """
-    Test the queryset method in_consultation only returns Review objects which are
-    currently in review and are in the consultation phase.
+    Test the queryset method in_progress only returns Review objects which are
+    currently in review.
+
+    The review_start field gets set when a review is created so we have to force
+    it to be None.
     """
-    baker.make(Review, status=status, consultation_start=start, consultation_end=end)
-    actual = Review.objects.in_consultation().count()
+    instance = baker.make(Review, review_start=start, review_end=end)
+    if start is None:
+        instance.review_start = None
+        instance.save()
+    actual = Review.objects.in_progress().count()
     assert count == actual
 
 
 @pytest.mark.parametrize(
-    "status,start,end,count",
+    "start,end,count",
     [
-        ("draft", get_today_with_offset(+1), get_today_with_offset(+30), 1),
-        ("draft", get_today(), get_today_with_offset(+7), 0),
-        ("draft", get_today_with_offset(-30), get_today_with_offset(-1), 1),
-        ("published", get_today_with_offset(-30), get_today_with_offset(-1), 1),
+        (None, None, 0),  # valid: review in pre-consultation
+        (from_today(+1), from_today(+30), 0),  # valid: consultation dates set
+        (get_today(), from_today(+7), 1),  # valid: consultation period opens today
+        (from_today(-30), get_today(), 1),  # valid: consultation period closes today
+        (from_today(-30), from_today(-1), 0),  # valid: review in post-consultation
+        (from_today(+1), None, 0),  # error: pre-consultation but only start date set
+        (get_today(), None, 0),  # error: consultation opens but only start date set
+        (None, from_today(-1), 0),  # error: post-consultation but only end date set
     ],
 )
-def test_not_in_consultation(status, start, end, count):
+def test_open_for_comments(start, end, count):
     """
-    Test the queryset method not_in_consultation excludes Reviews objects which are
-    currently in review and are in the consultation phase.
+    Test the queryset method open_for_comments only returns Review objects which are
+    currently accepting comments from the public.
     """
-    baker.make(Review, status=status, consultation_start=start, consultation_end=end)
-    actual = Review.objects.not_in_consultation().count()
+    baker.make(Review, consultation_start=start, consultation_end=end)
+    actual = Review.objects.open_for_comments().count()
+    assert count == actual
+
+
+@pytest.mark.parametrize(
+    "start,end,count",
+    [
+        (None, None, 1),  # valid: review in pre-consultation
+        (from_today(+1), from_today(+30), 1),  # valid: consultation dates set
+        (get_today(), from_today(+7), 0),  # valid: consultation period opens today
+        (from_today(-30), get_today(), 0),  # valid: consultation period closes today
+        (from_today(-30), from_today(-1), 1),  # valid: review in post-consultation
+        (from_today(+1), None, 1),  # error: pre-consultation but only start date set
+        (get_today(), None, 1),  # error: consultation opens but only start date set
+        (None, from_today(-1), 1),  # error: post-consultation but only end date set
+    ],
+)
+def test_closed_for_comments(start, end, count):
+    """
+    Test the queryset method closed_for_comments only returns Review objects which are
+    not accepting comments from the public.
+    """
+    baker.make(Review, consultation_start=start, consultation_end=end)
+    actual = Review.objects.closed_for_comments().count()
     assert count == actual
 
 

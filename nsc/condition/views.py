@@ -40,7 +40,7 @@ class ConditionDetail(DetailView):
         context = super().get_context_data()
         referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
         latest = self.object.reviews.published().first()
-        current = self.object.reviews.in_consultation().first()
+        current = self.object.reviews.open_for_comments().first()
         context.update(
             {"back_url": referer, "latest_review": latest, "current_review": current}
         )
@@ -54,7 +54,7 @@ class ConsultationView(TemplateView):
         condition = Policy.objects.prefetch_related("reviews").get(
             slug=self.kwargs["slug"]
         )
-        review = condition.reviews.in_consultation().first()
+        review = condition.reviews.open_for_comments().first()
         email = settings.CONSULTATION_COMMENT_ADDRESS
         return super().get_context_data(
             condition=condition, review=review, email=email, **kwargs
@@ -97,7 +97,7 @@ class PublicCommentSubmittedView(TemplateView):
         condition = Policy.objects.prefetch_related("reviews").get(
             slug=self.kwargs["slug"]
         )
-        review = condition.reviews.in_consultation().first()
+        review = condition.reviews.open_for_comments().first()
         url = settings.PROJECT_FEEDBACK_URL
         return super().get_context_data(
             condition=condition, review=review, feedback_url=url, **kwargs
@@ -141,7 +141,7 @@ class StakeholderCommentSubmittedView(TemplateView):
         condition = Policy.objects.prefetch_related("reviews").get(
             slug=self.kwargs["slug"]
         )
-        review = condition.reviews.in_consultation().first()
+        review = condition.reviews.open_for_comments().first()
         url = settings.PROJECT_FEEDBACK_URL
         return super().get_context_data(
             condition=condition, review=review, feedback_url=url, **kwargs

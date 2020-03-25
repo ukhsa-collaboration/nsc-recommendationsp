@@ -12,5 +12,15 @@ class ContactForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields["name"].widget.attrs.update(
+            {"class": "govuk-input govuk-input--width-20"}
+        )
+        self.fields["email"].widget.attrs.update(
+            {"class": "govuk-input govuk-input--width-20"}
+        )
+        self.fields["phone"].widget.attrs.update(
+            {"class": "govuk-input govuk-input--width-10"}
+        )
+
         if "organisation" in self.fields:
             self.fields["organisation"].widget = HiddenInput()

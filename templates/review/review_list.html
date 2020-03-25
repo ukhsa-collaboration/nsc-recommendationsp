@@ -6,76 +6,49 @@
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
-{% block heading %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        {% block title %}
-          {% trans 'All conditions' %}
-        {% endblock %}
-      </h1>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <a id="edit-link-id" href="{% url 'review:add' %}" role="button" class="govuk-button" style="float: right">
-        {% trans 'Create a new review' %}
-      </a>
-    </div>
-  </div>
+{% block page_title %}
+  {% block title %}
+    {% trans 'All products in progress' %}
+  {% endblock %}
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-      <section>
-        <form>
 
-          <h2 class="govuk-heading-m">
-            {% trans 'Filter conditions by:' %}
-          </h2>
-
-          {% include 'widgets/text_input.html' with field=form.name %}
-          {% include 'widgets/radio_buttons.html' with field=form.status %}
-          {% include 'widgets/radio_buttons.html' with field=form.screen %}
-
-          <button type="submit" class="govuk-button search-b-button">
-            {% trans 'Search' %}
-          </button>
-
-          <a href="{% url 'policy:list' %}"
-             class="govuk-link govuk-link--no-visited-state">{% trans 'Clear search' %}</a>
-
-        </form>
-      </section>
-    </div>
-    <div class="govuk-grid-column-two-thirds">
-      <table class="govuk-table">
-        <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th class="govuk-table__header">{% trans 'Condition' %}</th>
-          <th class="govuk-table__header">{% trans 'Who it affects' %}</th>
-          <th class="govuk-table__header">{% trans 'Recommended' %}</th>
-        </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-        {% for object in object_list %}
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><a
-                href="{{ object.get_admin_url }}">{{ object.name }}</a></td>
-            <td class="govuk-table__cell">{{ object.ages_display }}</td>
-            <td class="govuk-table__cell">{{ object.recommendation_display }}</td>
-          </tr>
-          {% empty %}
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell" colspan="3"><p>{%  trans 'No matching conditions found.' %}</p></td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-      {% if is_paginated %}
-        {% include 'widgets/pagination.html' %}
-      {% endif %}
-    </div>
-
-  </div>
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header">{% trans 'Name' %}</th>
+      <th class="govuk-table__header">{% trans 'Conditions' %}</th>
+      <th class="govuk-table__header">{% trans 'Product type' %}</th>
+      <th class="govuk-table__header">{% trans 'Status' %}</th>
+      <th class="govuk-table__header">{% trans 'Evidence review manager' %}</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    {% for review in reviews %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+          <a href="{{ review.get_absolute_url }}">
+            {{ review.name }}
+          </a>
+        </td>
+        <td class="govuk-table__cell">
+          <ul class="conditions-list">
+            {% for policy in review.policies.all %}
+              <li>{{ policy.name }}</li>
+            {% endfor %}
+          </ul>
+        </td>
+        <td class="govuk-table__cell">{{ review.get_review_type_display }}</td>
+        <td class="govuk-table__cell">{{ review.status_display }}</td>
+        <td class="govuk-table__cell">{{ review.manager_display }}</td>
+      </tr>
+      {% empty %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell" colspan="4"><p>{% trans 'There are no products currently in progress.' %}</p></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 
 {% endblock %}

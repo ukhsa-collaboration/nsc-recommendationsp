@@ -1,21 +1,23 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with object.name as name %}
+  {% blocktrans asvar back_title with review.name as name %}
     Back to {{ name }}
   {% endblocktrans %}
-  {% url 'review:detail' object.slug as back_url %}
+  {% url 'review:detail' review.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
 {% block title %}
-  {% trans "Upload plain English summary" %}
+  {% block page_title %}
+    Upload the response form
+  {% endblock %}
 {% endblock %}
 
 {% block content %}
 
-  <form method="post">
+  <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
     {% for hidden in form.hidden_fields %}
@@ -26,13 +28,13 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/text_area.html" with field=form.summary show_legend=True %}
+    {% include "widgets/file_upload.html" with field=form.upload %}
 
-    <button type="submit" class="govuk-button" name="submit" value="submit">
+    <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}
     </button>
+
   </form>
 
-  {% include "widgets/markdown_guide.html" %}
-
 {% endblock %}
+

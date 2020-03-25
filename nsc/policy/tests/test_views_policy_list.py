@@ -31,7 +31,7 @@ def test_list_view_query_count(num_policies, django_app, django_assert_num_queri
     Test that fetching the list takes a fixed number of queries.
     """
     baker.make(Policy, _quantity=num_policies)
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(3):
         django_app.get(policy_list_url)
 
 

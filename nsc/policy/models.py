@@ -40,7 +40,7 @@ class PolicyQuerySet(models.QuerySet):
             Q(name__icontains=keywords) | Q(keywords__icontains=keywords)
         )
 
-    def in_consultation(self):
+    def open_for_comments(self):
         """
         Get the policies which are currently in review and where the period for
         public comments is open.
@@ -50,16 +50,17 @@ class PolicyQuerySet(models.QuerySet):
             reviews__consultation_start__lte=today, reviews__consultation_end__gte=today
         )
 
-    def not_in_consultation(self):
+    def closed_for_comments(self):
         """
         Get the policies which are currently not open for public comments - either
         because they are not in review or in review but not in that particular phase.
         """
         today = get_today()
         return self.filter(
-            Q(reviews__consultation_start__gt=today)
-            | Q(reviews__consultation_end__lt=today)
-            | Q(reviews__consultation_start__isnull=True)
+            ~(
+                models.Q(reviews__consultation_start__lte=today)
+                & models.Q(reviews__consultation_end__gte=today)
+            )
         )
 
     def prefetch_reviews_in_consultation(self):
@@ -69,7 +70,7 @@ class PolicyQuerySet(models.QuerySet):
         return self.prefetch_related(
             Prefetch(
                 "reviews",
-                queryset=Review.objects.in_consultation(),
+                queryset=Review.objects.open_for_comments(),
                 to_attr="reviews_in_consultation",
             )
         )
@@ -107,6 +108,9 @@ class Policy(TimeStampedModel):
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
+
+    background = models.TextField(verbose_name=_("summary"))
+    background_html = models.TextField(verbose_name=_("HTML summary"))
 
     keywords = models.TextField(
         verbose_name=_("Search keywords"), blank=True, default=""
@@ -152,7 +156,7 @@ class Policy(TimeStampedModel):
         if self.next_review < today:
             return _("Overdue")
         else:
-            return self.next_review.strftime("%b %Y")
+            return self.next_review.strftime("%B %Y")
 
     def ages_display(self):
         return ", ".join(str(Policy.AGE_GROUPS[age]) for age in self.ages)
@@ -162,3 +166,7 @@ class Policy(TimeStampedModel):
             self.slug = slugify(self.name)
         self.condition_html = convert(self.condition)
         self.summary_html = convert(self.summary)
+        self.background_html = convert(self.background)
+
+    def latest_review(self):
+        return self.reviews.all().published().first()

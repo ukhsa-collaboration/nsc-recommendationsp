@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
@@ -11,7 +10,7 @@ from .models import Organisation
 
 
 class OrganisationList(generic.ListView):
-    queryset = Organisation.objects.all().order_by("name")
+    queryset = Organisation.objects.all().prefetch_related("policies").order_by("name")
     paginate_by = 20
 
     def get_queryset(self):
@@ -63,8 +62,4 @@ class OrganisationEdit(generic.UpdateView):
 
 class OrganisationDelete(generic.DeleteView):
     model = Organisation
-
-    def get_success_url(self):
-        msg = _("%s was deleted successfully" % self.object.name)
-        messages.info(self.request, msg)
-        return reverse("organisation:list")
+    success_url = reverse_lazy("organisation:list")

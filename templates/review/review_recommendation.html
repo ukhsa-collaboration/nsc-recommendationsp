@@ -10,35 +10,33 @@
 {% endblock %}
 
 {% block title %}
-  {% block page_title %}
-    {% trans "Update recommendation for review" %}
-  {% endblock %}
+  {% trans "What is the recommended decision?" %}
 {% endblock %}
 
 {% block content %}
 
-  <div class="govuk-body">
-    <form method="post">
-      {% csrf_token %}
+  <form method="post">
+    {% csrf_token %}
 
-      {% for hidden in form.hidden_fields %}
-        {{ hidden }}
-      {% endfor %}
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
 
-      {{ form.non_field_errors }}
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
 
-      {% include "widgets/file_upload.html" with field=form.document %}
-      {% include "widgets/text_area.html" with field=form.summary %}
-      {% include "widgets/radio_buttons.html" with field=form.recommendation size='m' %}
+    {% include "widgets/radio_buttons.html" with field=form.recommendation show_legend=True size='m' %}
 
-      <p>
-        {% trans 'The next review for this condition will be due to start in '%}
-      </p>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The next review for this condition will be due to start in the financial year...
+      {% endblocktrans %}
+    </p>
 
-      <button type="submit" class="govuk-button" name="submit" value="submit">
-        {% trans 'Save and continue' %}
-      </button>
-    </form>
-  </div>
+    <button type="submit" class="govuk-button" name="submit" value="submit">
+      {% trans 'Save and continue' %}
+    </button>
+  </form>
 
 {% endblock %}

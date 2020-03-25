@@ -54,7 +54,9 @@ class ReviewForm(forms.ModelForm):
     )
 
     review_type = forms.TypedChoiceField(
-        label=_("What type of review is this?"),
+        label=_("What type of product is this?"),
+        # Todo upgrade this widget to allow multiple selections
+        # help_text=_("Check all that apply"),
         choices=Review.TYPE,
         widget=forms.RadioSelect,
         error_messages={"required": _("Select which type of review this is")},
@@ -348,17 +350,33 @@ class ReviewOrganisationsForm(forms.Form):
 
 
 class ReviewSummaryForm(forms.ModelForm):
+
+    summary = forms.CharField(
+        label=_("Upload plain English summary"),
+        help_text=_("Use markdown to format the text"),
+        widget=forms.Textarea,
+        error_messages={
+            "required": "Enter the summary of the recommendation made for this review."
+        },
+    )
+
     class Meta:
         model = Review
         fields = ["summary"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-        self.fields["summary"].required = False
-        self.fields["summary"].label = _("Plain English evidence summary (optional)")
-        self.fields["summary"].help_text = _("Use markdown to format the text")
-        self.fields["summary"].widget = forms.Textarea()
+class ReviewHistoryForm(forms.ModelForm):
+
+    background = forms.CharField(
+        label=_("Upload product history"),
+        help_text=_("Use markdown to format the text"),
+        widget=forms.Textarea,
+        error_messages={"required": "Enter the history of this review."},
+    )
+
+    class Meta:
+        model = Review
+        fields = ["background"]
 
 
 class ReviewRecommendationForm(forms.ModelForm):

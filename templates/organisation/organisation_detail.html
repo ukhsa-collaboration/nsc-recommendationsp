@@ -46,7 +46,7 @@
         <a class="govuk-link" href="{% url "contact:delete" contact.pk %}">
           {% trans 'Remove' %}<span class="govuk-visually-hidden"> {{ contact.name }}</span>
         </a>
-        <a class="govuk-link govuk-!-margin-left-6"" href="{% url "contact:edit" contact.pk %}">
+        <a class="govuk-link govuk-!-margin-left-6" href="{% url "contact:edit" contact.pk %}">
           {% trans 'Change' %}<span class="govuk-visually-hidden"> {{ contact.name }}</span>
         </a>
       </dd>
@@ -57,7 +57,7 @@
 </dl>
 
 <a href="{% url 'organisation:delete' object.pk %}" role="button" draggable="false" class="govuk-button govuk-button--warning" data-module="govuk-button">
-  Delete
+  {% trans 'Delete stakeholder' %}
 </a>
 
 {% endblock %}

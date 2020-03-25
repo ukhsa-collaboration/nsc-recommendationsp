@@ -1,21 +1,17 @@
-from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
-
-from django_filters.views import FilterView
 
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
-from .filters import SearchFilter
 from .forms import (
     ReviewDatesForm,
     ReviewForm,
+    ReviewHistoryForm,
     ReviewOrganisationsForm,
     ReviewRecommendationForm,
     ReviewSummaryForm,
-    SearchForm,
 )
 from .models import Review
 
@@ -24,22 +20,16 @@ class ReviewDashboardView(generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
-        reviews = Review.objects.draft()
-        policies = (Policy.objects.upcoming() | Policy.objects.overdue()).order_by(
-            "next_review"
-        )
-        return super().get_context_data(reviews=reviews, policies=policies)
+        reviews = Review.objects.in_progress()
+        return super().get_context_data(reviews=reviews)
 
 
-class ReviewList(FilterView):
-    queryset = Policy.objects.active()
-    paginate_by = 20
+class ReviewList(generic.TemplateView):
     template_name = "review/review_list.html"
-    filterset_class = SearchFilter
 
     def get_context_data(self, **kwargs):
-        form = SearchForm(initial=self.request.GET)
-        return super().get_context_data(form=form)
+        reviews = Review.objects.in_progress()
+        return super().get_context_data(reviews=reviews)
 
 
 class ReviewDetail(generic.DetailView):
@@ -65,11 +55,7 @@ class ReviewAdd(generic.CreateView):
 
 class ReviewDelete(generic.DeleteView):
     model = Review
-
-    def get_success_url(self):
-        msg = _("%s was deleted successfully" % self.object.name)
-        messages.info(self.request, msg)
-        return reverse("dashboard")
+    success_url = reverse_lazy("dashboard")
 
 
 class ReviewDates(generic.UpdateView):
@@ -118,6 +104,13 @@ class ReviewSummary(generic.UpdateView):
     lookup_field = "slug"
     form_class = ReviewSummaryForm
     template_name = "review/review_summary.html"
+
+
+class ReviewHistory(generic.UpdateView):
+    model = Review
+    lookup_field = "slug"
+    form_class = ReviewHistoryForm
+    template_name = "review/review_history.html"
 
 
 class ReviewRecommendation(generic.UpdateView):

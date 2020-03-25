@@ -34,9 +34,7 @@ def test_policy_is_open(django_app):
     today = get_today()
     later = get_today() + relativedelta(months=+3)
     policy = baker.make(Policy)
-    review = baker.make(
-        Review, status="draft", consultation_start=today, consultation_end=later
-    )
+    review = baker.make(Review, consultation_start=today, consultation_end=later)
     policy.reviews.add(review)
 
     response = django_app.get(condition_list_url)
@@ -55,9 +53,7 @@ def test_policy_is_closed(django_app):
     tomorrow = get_today() + relativedelta(days=+1)
     later = get_today() + relativedelta(months=+1)
     policy = baker.make(Policy)
-    review = baker.make(
-        Review, status="draft", consultation_start=tomorrow, consultation_end=later
-    )
+    review = baker.make(Review, consultation_start=tomorrow, consultation_end=later)
     policy.reviews.add(review)
 
     response = django_app.get(condition_list_url)
@@ -115,9 +111,7 @@ def test_search_on_open_for_comment(django_app_form):
     tomorrow = get_today() + relativedelta(days=+1)
     later = get_today() + relativedelta(months=+3)
     policy = baker.make(Policy, name="name")
-    review = baker.make(
-        Review, status="draft", consultation_start=tomorrow, consultation_end=later
-    )
+    review = baker.make(Review, consultation_start=tomorrow, consultation_end=later)
     policy.reviews.add(review)
     response = django_app_form(condition_list_url, comments="open")
     assert not response.context["object_list"]

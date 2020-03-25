@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from model_bakery import baker
 
 from nsc.policy.models import Policy
+from nsc.review.models import Review
 
 
 # All tests require the database
@@ -59,3 +60,36 @@ def test_create_review_button(django_app):
     link = nodes.find("a", {"id": "create-review-link-id"})
     assert link.text.strip() == ugettext("Create a new product")
     assert link["href"] == "%s?policy=%s" % (reverse("review:add"), instance.slug)
+
+
+def test_manage_review_button(django_app):
+    """
+    Test that the page contains a link (button) to manage a review for the condition
+    if there is a review in progress.
+    """
+    policy = baker.make(Policy, name="name")
+    review = baker.make(Review)
+    policy.reviews.add(review)
+    response = django_app.get(policy.get_admin_url())
+    nodes = BeautifulSoup(response.content, "html.parser")
+    link = nodes.find("a", {"id": "manage-review-link-id"})
+    assert link.text.strip() == ugettext("Manage product")
+    assert link["href"] == (reverse("review:detail", kwargs={"slug": review.slug}))
+
+
+def test_manage_versus_create_button(django_app):
+    """
+    If a review is in progress then the manage button is displayed and the
+    create button is not and vice versa.
+    """
+    policy = baker.make(Policy, name="name")
+    response = django_app.get(policy.get_admin_url())
+    nodes = BeautifulSoup(response.content, "html.parser")
+    assert nodes.find("a", {"id": "create-review-link-id"}) is not None
+    assert nodes.find("a", {"id": "manage-review-link-id"}) is None
+    review = baker.make(Review)
+    policy.reviews.add(review)
+    response = django_app.get(policy.get_admin_url())
+    nodes = BeautifulSoup(response.content, "html.parser")
+    assert nodes.find("a", {"id": "create-review-link-id"}) is None
+    assert nodes.find("a", {"id": "manage-review-link-id"}) is not None

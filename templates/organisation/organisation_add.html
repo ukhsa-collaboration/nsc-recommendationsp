@@ -23,8 +23,8 @@
       {{ hidden }}
     {% endfor %}
 
-    {% include "widgets/text_input.html" with field=form.name %}
-    {% include "widgets/text_input.html" with field=form.url %}
+    {% include "widgets/text_input.html" with field=form.name width=20 %}
+    {% include "widgets/text_input.html" with field=form.url width=20 %}
     {% include "widgets/radio_buttons.html" with field=form.is_public size='m' %}
 
     {% for formset in form.formsets %}

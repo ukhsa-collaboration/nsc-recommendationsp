@@ -4,16 +4,16 @@
   {% trans 'More about' %} {{ policy.name }}
 </h2>
 
-{{ policy.condition_html|safe }}
-
-<h2 class="govuk-heading-m">
-  {% trans 'Search keywords' %}
-</h2>
-
-<p class="govuk-body">
-  {% if policy.keywords %}
-    {{ policy.keywords }}
-  {% else %}
-    {% trans 'There are no keywords defined for this condition.' %}
-  {% endif %}
-</p>
+{% if policy.condition_html %}
+  <p class="govuk-body">
+    {{ policy.condition_html|safe }}
+  </p>
+{% else %}
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-warning-text__assistive">Warning</span>
+      {% trans 'There is no description of this condition.' %}
+    </strong>
+  </div>
+{% endif %}

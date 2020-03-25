@@ -18,46 +18,52 @@ from nsc.utils.markdown import convert
 
 class ReviewQuerySet(models.QuerySet):
     def published(self):
-        return self.filter(status=Review.STATUS.published).order_by("-review_start")
+        return self.filter(review_end__lte=get_today()).order_by("-review_start")
 
-    def draft(self):
-        return self.filter(status=Review.STATUS.draft).order_by("-review_start")
-
-    def in_consultation(self):
+    def in_progress(self):
         today = get_today()
         return self.filter(
-            consultation_start__lte=today, consultation_end__gte=today
-        ).order_by("-review_start")
+            models.Q(review_start__lte=today)
+            & (models.Q(review_end__isnull=True) | models.Q(review_end__gte=today))
+        )
 
-    def not_in_consultation(self):
-        """
-        Get the policies which are currently not open for public comments - either
-        because they are not in review or in review but not in that particular phase.
-        """
+    def open_for_comments(self):
+        today = get_today()
+        return self.filter(consultation_start__lte=today, consultation_end__gte=today)
+
+    def closed_for_comments(self):
         today = get_today()
         return self.filter(
-            models.Q(consultation_start__gt=today)
-            | models.Q(consultation_end__lt=today)
-            | models.Q(consultation_start__isnull=True)
-        ).order_by("-review_start")
+            ~(
+                models.Q(consultation_start__lte=today)
+                & models.Q(consultation_end__gte=today)
+            )
+        )
 
 
 class Review(TimeStampedModel):
 
-    STATUS = Choices(("draft", _("Draft")), ("published", _("Published")))
+    STATUS = Choices(
+        ("development", _("Evidence product development")),
+        ("pre_consultation", _("Pre-consultation")),
+        ("in_consultation", _("In consultation")),
+        ("post_consultation", _("Post-consultation")),
+        ("completed", _("Completed")),
+    )
 
     TYPE = Choices(
         ("evidence", _("Evidence review")),
         ("map", _("Evidence map")),
         ("cost", _("Cost-effective model")),
+        ("disease", _("Disease model")),
         ("systematic", _("Systematic review")),
+        ("meta", _("Systematic review and meta analysis")),
+        ("other", _("Other")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
-    status = models.CharField(
-        verbose_name=_("status"), choices=STATUS, max_length=50, default=STATUS.draft
-    )
+
     review_type = models.CharField(
         verbose_name=_("type of review"), choices=TYPE, max_length=50
     )
@@ -82,6 +88,9 @@ class Review(TimeStampedModel):
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
+
+    background = models.TextField(verbose_name=_("history"))
+    background_html = models.TextField(verbose_name=_("HTML history"))
 
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
@@ -108,12 +117,6 @@ class Review(TimeStampedModel):
     def get_evidence_review(self):
         return Document.objects.for_review(self).evidence_reviews().first()
 
-    def clean(self):
-        if not self.slug:
-            self.slug = slugify(self.name)
-
-        self.summary_html = convert(self.summary)
-
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
 
@@ -123,8 +126,12 @@ class Review(TimeStampedModel):
     def consultation_end_display(self):
         return get_date_display(self.consultation_end)
 
-    def discussion_date_display(self):
-        return get_date_display(self.discussion_date)
+    def nsc_meeting_date_display(self):
+        return get_date_display(self.nsc_meeting_date)
+
+    def manager_display(self):
+        # Todo return the name of the person who is managing the review
+        return ""
 
     def has_notified_communications_department(self):
         # ToDo implement
@@ -149,18 +156,52 @@ class Review(TimeStampedModel):
     def has_evidence_review(self):
         return Document.objects.for_review(self).evidence_reviews().exists()
 
+    def has_submission_form(self):
+        return Document.objects.for_review(self).submission_forms().exists()
+
     def has_summary(self):
         return self.summary and len(self.summary) > 0
+
+    def has_history(self):
+        return self.background and len(self.background) > 0
 
     def has_recommendation(self):
         return self.recommendation is not None
 
+    def status(self):
+        today = get_today()
+        if self.review_end and self.review_end <= today:
+            return self.STATUS.completed
+        elif self.consultation_end and self.consultation_end < today:
+            return self.STATUS.post_consultation
+        elif self.consultation_start and self.consultation_start <= today:
+            return self.STATUS.in_consultation
+        elif self.has_external_review():
+            return self.STATUS.pre_consultation
+        else:
+            return self.STATUS.development
+
+    def status_display(self):
+        return self.STATUS[self.status()]
+
     def stakeholders(self):
         return (
-            Organisation.objects.filter(policies__reviews__pk=2)
+            Organisation.objects.filter(policies__reviews__pk=self.pk)
             .distinct()
             .order_by("name")
         )
+
+    def save(self, **kwargs):
+        if not self.pk and not self.review_start:
+            self.review_start = get_today()
+
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        self.summary_html = convert(self.summary)
+        self.background_html = convert(self.background)
+
+        return super(Review, self).save(**kwargs)
 
 
 @receiver(models.signals.post_delete, sender=Review)
