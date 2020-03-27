@@ -389,11 +389,6 @@ parameters:
   required: true
   description: Maximum amount of memory the Redis container can use.
   value: 512Mi
-- name: VOLUME_CAPACITY
-  displayName: Volume Capacity
-  description: Volume space available for data, e.g. 512Mi, 2Gi
-  value: 1Gi
-  required: true
 #
 # Git and repository
 - name: SOURCE_REPOSITORY_URL
