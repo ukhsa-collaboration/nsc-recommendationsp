@@ -8,11 +8,11 @@ metadata:
   name: django-webpack
   annotations:
     openshift.io/display-name: NSC Recommendations
-    description: Django site using PostgreSQL with frontend resources built by webpack
-    openshift.io/long-description: This template builds webpack resources in a
-      disposable nodejs container before they are moved into a python container for
-      deployment alongside a container with a PostgreSQL database using persistent
-      storage, and an ephemeral Redis container.
+    description: Django site using frontend resources built by Webpack
+    openshift.io/long-description: This template builds Webpack resources in a
+      disposable Node.js container before they are moved into a Python container for
+      deployment, alongside an ephemeral Redis container for caching. A PostgreSQL
+      server should be set up separately before building this.
     tags: django, webpack
     iconClass: icon-django
 labels:
@@ -20,7 +20,7 @@ labels:
   app: "django-webpack"
 message: |-
   The following service(s) have been created in your project:
-  ${NAME}, ${DATABASE_SERVICE_NAME}, ${REDIS_SERVICE_NAME}.
+  ${NAME}, ${REDIS_SERVICE_NAME}.
 objects:
 #
 # ConfigMap
@@ -31,12 +31,11 @@ objects:
     name: "${NAME}"
   data:
     DJANGO_CONFIGURATION: "${DJANGO_CONFIGURATION}"
-    DATABASE_HOST: "${DATABASE_SERVICE_NAME}"
-    DATABASE_PORT: "5432"
+    DATABASE_HOST: "${DATABASE_HOST}"
+    DATABASE_PORT: "${DATABASE_PORT}"
     DATABASE_NAME: "${DATABASE_NAME}"
     APP_MODULE: "${APP_MODULE}"
     APP_CONFIG: "${APP_CONFIG}"
-    DJANGO_SECRET_DIR: "/run/secrets/common"
     DJANGO_ADMINS: ""
     DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
     DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
@@ -160,19 +159,6 @@ objects:
           kind: ImageStreamTag
           name: "${NAME}-webpack-build:latest"
 #
-# PersistentVolumeClaim
-#
-- kind: PersistentVolumeClaim
-  apiVersion: v1
-  metadata:
-    name: "${DATABASE_SERVICE_NAME}"
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: "${VOLUME_CAPACITY}"
-#
 # DeploymentConfig
 #
 # Django application
@@ -242,6 +228,8 @@ objects:
                 key: APP_CONFIG
           - name: DJANGO_CONFIG_DIR
             value: "/run/configs/common"
+          - name: DJANGO_SECRET_DIR
+            value: "/run/secrets/common"
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
@@ -259,82 +247,6 @@ objects:
         - name: secret-common
           secret:
             secretName: "${NAME}"
-#
-# PostgreSQL
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    name: "${DATABASE_SERVICE_NAME}"
-    annotations:
-      description: Defines how to deploy the database
-      template.alpha.openshift.io/wait-for-ready: "true"
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - postgresql
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: postgresql:${POSTGRESQL_VERSION}
-    - type: ConfigChange
-    replicas: 1
-    selector:
-      name: "${DATABASE_SERVICE_NAME}"
-    template:
-      metadata:
-        name: "${DATABASE_SERVICE_NAME}"
-        labels:
-          name: "${DATABASE_SERVICE_NAME}"
-      spec:
-        volumes:
-        - name: "${DATABASE_SERVICE_NAME}-data"
-          persistentVolumeClaim:
-            claimName: "${DATABASE_SERVICE_NAME}"
-        containers:
-        - name: postgresql
-          image: " "
-          ports:
-          - containerPort: 5432
-          env:
-          - name: POSTGRESQL_USER
-            valueFrom:
-              secretKeyRef:
-                name: "${NAME}"
-                key: DATABASE_USER
-          - name: POSTGRESQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: "${NAME}"
-                key: DATABASE_PASSWORD
-          - name: POSTGRESQL_DATABASE
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: DATABASE_NAME
-          volumeMounts:
-          - name: "${DATABASE_SERVICE_NAME}-data"
-            mountPath: "/var/lib/pgsql/data"
-          readinessProbe:
-            timeoutSeconds: 1
-            initialDelaySeconds: 5
-            exec:
-              command:
-              - "/usr/libexec/check-container"
-          livenessProbe:
-            timeoutSeconds: 10
-            initialDelaySeconds: 120
-            exec:
-              command:
-              - "/usr/libexec/check-container"
-              - "--live"
-          resources:
-            limits:
-              memory: "${MEMORY_POSTGRESQL_LIMIT}"
 #
 # Redis
 - kind: DeploymentConfig
@@ -399,8 +311,6 @@ objects:
     name: "${NAME}"
     annotations:
       description: Exposes and load balances the application pods
-      service.alpha.openshift.io/dependencies: '[{"name": "${DATABASE_SERVICE_NAME}",
-        "kind": "Service"}]'
   spec:
     ports:
     - name: http
@@ -409,22 +319,6 @@ objects:
       targetPort: 8080
     selector:
       name: "${NAME}"
-#
-# PostgreSQL
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: "${DATABASE_SERVICE_NAME}"
-    annotations:
-      description: Exposes the database server
-  spec:
-    ports:
-    - name: postgresql
-      protocol: TCP
-      port: 5432
-      targetPort: 5432
-    selector:
-      name: "${DATABASE_SERVICE_NAME}"
 #
 # Redis
 - kind: Service
@@ -473,11 +367,6 @@ parameters:
   description: Version of Python image to be used (3.6 or latest).
   value: "3.6"
   required: true
-- name: POSTGRESQL_VERSION
-  displayName: Version of PostgreSQL Image
-  description: Version of PostgreSQL image to be used (10 or latest).
-  value: "10"
-  required: true
 - name: REDIS_VERSION
   displayName: Version of Redis Image
   description: Version of Redis image to be used
@@ -494,11 +383,6 @@ parameters:
   displayName: Memory Limit
   required: true
   description: Maximum amount of memory the Django container can use.
-  value: 512Mi
-- name: MEMORY_POSTGRESQL_LIMIT
-  displayName: Memory Limit (PostgreSQL)
-  required: true
-  description: Maximum amount of memory the PostgreSQL container can use.
   value: 512Mi
 - name: MEMORY_REDIS_LIMIT
   displayName: Memory Limit (Redis)
@@ -538,10 +422,14 @@ parameters:
   from: "[a-zA-Z0-9]{40}"
 #
 # Postgresql
-- name: DATABASE_SERVICE_NAME
-  displayName: Database Service Name
+- name: DATABASE_HOST
+  displayName: Database Host
   required: true
   value: postgresql
+- name: DATABASE_PORT
+  displayName: Database Port
+  required: true
+  value: "5432"
 - name: DATABASE_NAME
   displayName: Database Name
   required: true
@@ -552,8 +440,7 @@ parameters:
   value: django
 - name: DATABASE_PASSWORD
   displayName: Database User Password
-  generate: expression
-  from: "[a-zA-Z0-9]{16}"
+  required: true
 #
 # Redis
 - name: REDIS_SERVICE_NAME

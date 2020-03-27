@@ -36,7 +36,7 @@ def get_env(name, default=None, required=False, cast=str):
             return default
 
         if value is None and required:
-            raise ImproperlyConfigured(f"{name} not found in env")
+            raise ValueError(f"{name} not found in env")
 
         return cast(value)
 
@@ -56,16 +56,17 @@ def get_secret(name, cast=str):
         name (str): Name of environment variable
         cast (Callable): function to call on extracted string value
     """
+
     # We don't want this to be called unless we're in a configuration which uses it
     def _lookup(self):
-        if SECRET_DIR:
-            raise ImproperlyConfigured(
+        if not SECRET_DIR:
+            raise ValueError(
                 f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
             )
 
         file = Path(SECRET_DIR) / name
         if not file.exists():
-            raise ImproperlyConfigured(f"Secret {file} not found")
+            raise ValueError(f"Secret {file} not found")
 
         value = file.read_text().strip()
         return cast(value)
@@ -470,3 +471,51 @@ class Prod(Deployed):
     DEBUG = False
 
     RAVEN_CONFIG = {"dsn": ""}
+
+
+class Demo(Build):
+    """
+    Demo configuration for simplified OpenShift deployment
+
+    Mirrors the Deployed configuration but without services external to OpenShift
+
+    This should be removed once external services are available
+    """
+
+    # Redefine values which are not optional in a deployed environment
+    ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
+
+    # Some deployed settings are no longer env vars - collect from the secret store
+    SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
+    DATABASE_USER = get_secret("DATABASE_USER")
+    DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
+    NOTIFY_SERVICE_ENABLED = True
+    NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
+
+    # Change default cache
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", required=True)
+    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PARSER_CLASS": "redis.connection.HiredisParser",
+                    # See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+                    # 'IGNORE_EXCEPTIONS': True,
+                },
+            }
+        }
+
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_CACHE_ALIAS = "default"
+
+    # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
+    # ever turned on when run with a WSGI server
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
+    COMPRESS_OUTPUT_DIR = ""
