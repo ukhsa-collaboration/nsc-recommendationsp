@@ -14,7 +14,6 @@ from django.core.files import File
 
 from nsc.document.models import Document
 from nsc.policy.models import Policy
-from nsc.review.models import Review
 
 from .generate_legacy_index import SITE
 
@@ -24,7 +23,7 @@ def run():
     index = load_index()
     for entry in index:
         policy = Policy.objects.get(slug=entry["slug"])
-        review = Review.objects.for_policy(policy).published().first()
+        review = policy.reviews.published().first()
 
         if not review:
             print("  [skipping]", entry["name"])
@@ -39,7 +38,7 @@ def run():
 
         print(" ", entry["name"])
 
-        document = Document.objects.for_review(review).external().first()
+        document = Document.objects.for_review(review).external_reviews().first()
 
         if not document:
             document = add_external_review(review)
