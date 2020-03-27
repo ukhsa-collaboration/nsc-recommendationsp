@@ -1,7 +1,6 @@
 from os import environ
 from pathlib import Path
 
-from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 import envdir
