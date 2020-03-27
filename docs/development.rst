@@ -106,22 +106,23 @@ Initialising the database
 There is a set of django-extensions scripts that can be used to scrape data from the
 existing National Screening Committee `legacy website`_.
 
-.. _legacy website: https://legacyscreening.phe.org.uk/screening-recommendations.php
-
-* First generate an index containing the list of pages for each condition screened::
+Run them in the following order::
 
     python manage.py runscript generate_legacy_index
-
-* Then run the script to scrape and load the data::
-
     python manage.py runscript scrape_policies
+    python manage.py runscript scrape_stakeholders
+    python manage.py runscript scrape_latest_reviews
+    python manage.py runscript scrape_latest_review_documents
 
+.. note::
 
-(If running Django using docker, replace ``python`` in the above commands with
-``docker-compose -f dev-docker-compose.yml exec django``).
+    If running Django using docker, replace ``python`` in the above commands with
+    ``docker-compose -f dev-docker-compose.yml exec django``.
 
 Scraping data from the legacy site is just a temporary measure during the initial
 phases of development.
+
+.. _legacy website: https://legacyscreening.phe.org.uk/screening-recommendations.php
 
 
 Running tests
