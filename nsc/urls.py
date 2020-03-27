@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 from nsc.review.views import ReviewDashboardView
 
@@ -10,8 +11,9 @@ from nsc.review.views import ReviewDashboardView
 admin.autodiscover()
 
 urlpatterns = [
-    path(r"", ReviewDashboardView.as_view(), name="dashboard"),
-    path(r"admin/", admin.site.urls),
+    path(r"", TemplateView.as_view(template_name="demo.html")),
+    path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
+    path(r"django-admin/", admin.site.urls),
     path(r"condition/", include("nsc.condition.urls", namespace="condition")),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
     path(r"document/", include("nsc.document.urls", namespace="document")),

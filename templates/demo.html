@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}
+  {% block title %}
+    PHE NSC Recommendations
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <ul class="govuk-list">
+    <li><a href="{% url "condition:list" %}" class="govuk-link">Public site</a></li>
+    <li><a href="{% url "dashboard" %}" class="govuk-link">Admin dashboard</a></li>
+    <li><a href="{% url "admin:index" %}" class="govuk-link">Django admin</a></li>
+  </ul>
+
+{% endblock %}
