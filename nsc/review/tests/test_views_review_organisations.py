@@ -14,6 +14,6 @@ def test_view(make_review, django_app):
     """
     review = make_review()
     response = django_app.get(
-        reverse("review:organisations", kwargs={"slug": review.slug})
+        reverse("review:stakeholders", kwargs={"slug": review.slug})
     )
     assert response.status == "200 OK"

@@ -8,13 +8,25 @@ from simple_history.models import HistoricalRecords
 
 class Contact(TimeStampedModel):
 
-    name = models.CharField(verbose_name=_("name"), max_length=256)
-    email = models.EmailField(verbose_name=_("email"))
-    phone = models.CharField(verbose_name=_("phone number"), max_length=50, blank=True)
-    organisation = models.ForeignKey(
-        "organisation.Organisation",
+    name = models.CharField(
+        verbose_name=_("Name of contact (optional)"), max_length=256, blank=True,
+    )
+    role = models.CharField(
+        verbose_name=_("Contact's role (optional)"),
+        max_length=50,
+        blank=True,
+        default="",
+    )
+    email = models.EmailField(verbose_name=_("Contact's email (optional)"), blank=True,)
+    phone = models.CharField(
+        verbose_name=_("Contact's mobile phone number (optional)"),
+        max_length=50,
+        blank=True,
+    )
+    stakeholder = models.ForeignKey(
+        "stakeholder.Stakeholder",
         on_delete=models.CASCADE,
-        verbose_name=_("organisation"),
+        verbose_name=_("stakeholder"),
         related_name="contacts",
     )
 

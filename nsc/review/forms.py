@@ -9,8 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
-from nsc.organisation.models import Organisation
 from nsc.policy.models import Policy
+from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
 from .models import Review
@@ -328,11 +328,11 @@ class ReviewDatesForm(forms.ModelForm):
         return data
 
 
-class ReviewOrganisationsForm(forms.Form):
+class ReviewStakeholdersForm(forms.Form):
 
-    organisations = forms.ModelMultipleChoiceField(
+    stakeholders = forms.ModelMultipleChoiceField(
         label=_("Stakeholders"),
-        queryset=Organisation.objects.none(),
+        queryset=Stakeholder.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         help_text=_(
             "Select the stakeholders who will be notified when the consultation opens"
@@ -343,7 +343,7 @@ class ReviewOrganisationsForm(forms.Form):
         review = kwargs.pop("instance")
         super().__init__(*args, **kwargs)
 
-        self.fields["organisations"].queryset = review.stakeholders()
+        self.fields["stakeholders"].queryset = review.stakeholders()
 
     def clean(self):
         self.add_error(None, "TEST")

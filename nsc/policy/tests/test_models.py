@@ -12,14 +12,6 @@ from ..models import Policy
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture
-def make_policy():
-    def _make_policy(**kwargs):
-        return baker.make(Policy, **kwargs)
-
-    return _make_policy
-
-
 def relative_date(**kwargs):
     return get_today() + relativedelta(**kwargs)
 

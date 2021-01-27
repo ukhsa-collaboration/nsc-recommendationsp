@@ -11,7 +11,7 @@ from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.document.models import Document
-from nsc.organisation.models import Organisation
+from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
 
@@ -186,7 +186,7 @@ class Review(TimeStampedModel):
 
     def stakeholders(self):
         return (
-            Organisation.objects.filter(policies__reviews__pk=self.pk)
+            Stakeholder.objects.filter(policies__reviews__pk=self.pk)
             .distinct()
             .order_by("name")
         )

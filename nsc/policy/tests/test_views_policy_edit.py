@@ -1,4 +1,5 @@
 import pytest
+from dateutil.utils import today
 from model_bakery import baker
 
 from nsc.policy.models import Policy
@@ -37,16 +38,17 @@ def test_preview_page(django_app):
     fields are hidden.
     """
     instance = baker.make(Policy, condition="# heading", next_review=None)
+    year = str(today().year + 1)
 
     edit_page = django_app.get(instance.get_edit_url())
     edit_form = edit_page.form
-    edit_form["next_review"] = "2020"
+    edit_form["next_review"] = year
     edit_form["condition"] = "# updated"
 
     preview_page = edit_form.submit(name="preview")
     preview_form = preview_page.form
     assert preview_form["next_review"].attrs["type"] == "hidden"
-    assert preview_form["next_review"].value == "2020"
+    assert preview_form["next_review"].value == year
     assert preview_form["condition"].attrs["type"] == "hidden"
     assert preview_form["condition"].value == "# updated"
     assert preview_page.context.get("preview") == "preview"
@@ -61,7 +63,7 @@ def test_changes_are_published(django_app):
 
     edit_page = django_app.get(instance.get_edit_url())
     edit_form = edit_page.form
-    edit_form["next_review"] = "2020"
+    edit_form["next_review"] = today().year
     edit_form["condition"] = "# updated"
 
     preview_page = edit_form.submit(name="preview")

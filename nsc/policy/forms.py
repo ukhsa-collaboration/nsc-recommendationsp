@@ -118,3 +118,13 @@ class PolicyForm(forms.ModelForm):
             raise ValidationError(_("The next review cannot be in the past"))
 
         return datetime.date(year=value, month=1, day=1)
+
+
+class PolicySelectionForm(forms.Form):
+    policy = forms.ModelChoiceField(Policy.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["policy"].widget.attrs.update({"class": "govuk-select"})
+        self.fields["policy"].queryset = Policy.objects.all()

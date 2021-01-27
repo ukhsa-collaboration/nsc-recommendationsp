@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Public Consultees for this Condition' %}
+</h2>
+
+<ul class="govuk-list">
+  {% for stakeholder in policy.stakeholder.all %}
+    <li>
+      <a class="govuk-link" href="{{ stakeholder.url }}">{{ stakeholder.name }}</a>
+    </li>
+  {% empty %}
+    <li>
+      {% trans 'There are no stakeholders at this time' %}
+    </li>
+  {% endfor %}
+</ul>

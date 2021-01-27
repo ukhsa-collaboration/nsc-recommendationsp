@@ -1,18 +1,18 @@
 import pytest
 from model_bakery import baker
 
-from nsc.organisation.models import Organisation
+from nsc.stakeholder.models import Stakeholder
 
 from ..models import Contact
 
 
 @pytest.fixture
-def make_contact(make_organisation):
-    organisation = make_organisation()
+def make_contact(make_stakeholder):
+    stakeholder = make_stakeholder()
     phone = 123456000
 
     def _make_contact():
-        return baker.make(Contact, phone=phone + 1, organisation=organisation)
+        return baker.make(Contact, phone=phone + 1, stakeholder=stakeholder)
 
     return _make_contact
 
@@ -23,13 +23,13 @@ def contact(make_contact):
 
 
 @pytest.fixture
-def make_organisation():
-    def _make_organisation():
-        return baker.make(Organisation)
+def make_stakeholder():
+    def _make_stakeholder():
+        return baker.make(Stakeholder)
 
-    return _make_organisation
+    return _make_stakeholder
 
 
 @pytest.fixture
-def organisation(make_organisation):
-    return make_organisation()
+def stakeholder(make_stakeholder):
+    return make_stakeholder()

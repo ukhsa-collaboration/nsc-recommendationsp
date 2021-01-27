@@ -44,7 +44,7 @@
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:organisations' object.slug %}" aria-describedby="stakeholders-notified">
+            <a href="{% url 'review:stakeholders' object.slug %}" aria-describedby="stakeholders-notified">
               {% trans 'Confirm stakeholders to be notified' %}
             </a>
           {% if review.has_notified_stakeholders %}

@@ -8,9 +8,10 @@ import os
 import re
 import tempfile
 
+from django.core.files import File
+
 import requests
 from bs4 import BeautifulSoup
-from django.core.files import File
 
 from nsc.document.models import Document
 from nsc.policy.models import Policy

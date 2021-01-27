@@ -103,7 +103,7 @@ class Policy(TimeStampedModel):
         )
     )
 
-    condition = models.TextField(verbose_name=_("condition"))
+    condition = models.TextField(verbose_name=_("condition name"))
     condition_html = models.TextField(verbose_name=_("HTML condition"))
 
     summary = models.TextField(verbose_name=_("summary"))

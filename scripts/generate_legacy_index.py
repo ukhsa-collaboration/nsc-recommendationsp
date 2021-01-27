@@ -4,11 +4,13 @@ Generate an initial table of policies by scraping the legacy site.
 """
 
 import json
-import requests
 
-from bs4 import BeautifulSoup
 from django.utils import timezone
 from django.utils.text import slugify
+
+import requests
+from bs4 import BeautifulSoup
+
 
 SITE = "https://legacyscreening.phe.org.uk"
 TIMESTAMP = timezone.now().isoformat()

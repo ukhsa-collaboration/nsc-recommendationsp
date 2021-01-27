@@ -9,8 +9,8 @@ from .forms import (
     ReviewDatesForm,
     ReviewForm,
     ReviewHistoryForm,
-    ReviewOrganisationsForm,
     ReviewRecommendationForm,
+    ReviewStakeholdersForm,
     ReviewSummaryForm,
 )
 from .models import Review
@@ -92,11 +92,11 @@ class ReviewDates(generic.UpdateView):
         return initial
 
 
-class ReviewOrganisations(generic.UpdateView):
+class ReviewStakeholders(generic.UpdateView):
     model = Review
     lookup_field = "slug"
-    form_class = ReviewOrganisationsForm
-    template_name = "review/review_organisations.html"
+    form_class = ReviewStakeholdersForm
+    template_name = "review/review_stakeholders.html"
 
 
 class ReviewSummary(generic.UpdateView):

@@ -142,7 +142,7 @@ class Common(Configuration):
         "nsc.condition",
         "nsc.contact",
         "nsc.document",
-        "nsc.organisation",
+        "nsc.stakeholder",
         "nsc.policy",
         "nsc.review",
     ]

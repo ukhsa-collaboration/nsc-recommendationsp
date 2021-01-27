@@ -63,7 +63,7 @@
               {% include "policy/admin/summary.html" %}
               {% include "policy/admin/condition.html" %}
               {% include "policy/admin/review_history.html" %}
-              {% include "policy/admin/organisations.html" %}
+              {% include "policy/admin/stakeholders.html" %}
               {{ form.next_review.as_hidden }}
               {{ form.summary.as_hidden }}
               {{ form.condition.as_hidden }}
@@ -78,7 +78,7 @@
               {% include "widgets/text_area.html" with field=form.condition show_legend=True word_limit=1000 %}
               {% include "widgets/text_area.html" with field=form.keywords show_legend=True word_limit=100 %}
               {% include "widgets/text_area.html" with field=form.background show_legend=True word_limit=1000 %}
-              {% include 'policy/admin/organisations.html' %}
+              {% include 'policy/admin/stakeholders.html' %}
             {% endif %}
           {% endwith %}
         </div>
