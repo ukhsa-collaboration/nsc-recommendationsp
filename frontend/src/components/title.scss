@@ -1,0 +1,16 @@
+@import "~govuk-frontend/govuk/helpers/media-queries";
+
+.title-with-button {
+  .govuk-grid-column-three-quarters,
+  .govuk-grid-column-one-quarters {
+    padding: 0;
+  }
+
+  .button-container {
+    text-align: left;
+
+    @include govuk-media-query($from: tablet) {
+      text-align: right;
+    }
+  }
+}

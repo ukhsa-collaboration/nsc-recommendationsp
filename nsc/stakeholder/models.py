@@ -57,13 +57,21 @@ class Stakeholder(TimeStampedModel):
     )
     url = models.URLField(verbose_name=_("url"), max_length=256, blank=True)
     twitter = models.URLField(verbose_name=_("twitter"), max_length=256, blank=True,)
-    is_public = models.BooleanField(verbose_name=_("is_public"), default=False)
+    is_public = models.BooleanField(
+        verbose_name=_("Should this organisation be published on the condition pages"),
+        default=False,
+    )
 
     policies = models.ManyToManyField(
         "policy.Policy", verbose_name=_("policies"), related_name="stakeholders"
     )
 
-    comments = models.CharField(max_length=255, blank=True, default="",)
+    comments = models.CharField(
+        verbose_name=_("Additional comments (for internal use only)"),
+        max_length=255,
+        blank=True,
+        default="",
+    )
 
     history = HistoricalRecords()
     objects = StakeholderQuerySet().as_manager()
@@ -79,7 +87,7 @@ class Stakeholder(TimeStampedModel):
         return reverse("stakeholder:detail", kwargs={"pk": self.pk})
 
     def get_edit_url(self):
-        return reverse("stakeholder:add", kwargs={"pk": self.pk})
+        return reverse("stakeholder:edit", kwargs={"pk": self.pk})
 
     def is_public_display(self):
         return _("Yes") if self.is_public else _("No")

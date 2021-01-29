@@ -45,8 +45,6 @@
       </div>
     </div>
 
-    {% include "widgets/text_input.html" with field=form.comments %}
-
     {% with formset=form.policy_formset %}
     <div id="policy_formset_wrapper" class="formset__root" data-nsc-formset="{{ formset.prefix }}">
         <label class="govuk-label">Condition Interested In:</label>
@@ -91,7 +89,7 @@
     <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl govuk-!-margin-top-5 govuk-!-margin-bottom-5">
 
     {% with formset=form.contact_formset %}
-      <div id="contact_formset_wrapper" class="formset__root" data-nsc-formset="{{ formset.prefix }}">
+      <div id="contact_formset_wrapper" class="formset__root govuk-form-group" data-nsc-formset="{{ formset.prefix }}">
 
         {{ formset.management_form }}
 
@@ -154,6 +152,8 @@
         </a>
 
       </div>
+
+      {% include "widgets/text_input.html" with field=form.comments %}
     {% endwith %}
 
     <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl govuk-!-margin-top-5 govuk-!-margin-bottom-5">

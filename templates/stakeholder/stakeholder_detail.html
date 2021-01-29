@@ -7,58 +7,85 @@
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
-{% block title %}
-  {% block page_title %}
+{% block page_title %}
+  {% block title %}
     {% trans "Stakeholder details" %}
   {% endblock %}
 {% endblock %}
 
+{% block heading %}
+  <div class="title-with-button">
+    <div class="govuk-grid-column-row">
+      <div class="govuk-grid-column-three-quarters">{{ block.super }}</div>
+      <div class="govuk-grid-column-one-quarters button-container">
+        <a class="govuk-button" href="{{ stakeholder.get_edit_url }}">{% trans "Edit stakeholder" %}</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
 {% block content %}
 
-<dl class="govuk-summary-list">
+<h3 class="govuk-heading-m">{% trans "Stakeholder name" %}</h3>
+<p class="govuk-body">{{ stakeholder.name }}</p>
 
-  {% include "widgets/summary_text.html" with key='Name' value=object.name action='edit/name/' %}
-  {% include "widgets/summary_text.html" with key='Web site' value=object.url action='edit/url/' %}
-  {% include "widgets/summary_text.html" with key='Publish online' value=object.is_public_display action='edit/is_public/' %}
+<h3 class="govuk-heading-m">{% trans "Type of stakeholder" %}</h3>
+<p class="govuk-body">{{ stakeholder.get_type_display }}</p>
 
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      {% trans "Contacts" %}
-    </dt>
-    <dd class="govuk-summary-list__value">
-      {% if not object.contacts.all %}{% trans 'There are no contacts for this stakeholder' %}{% endif %}
-    </dd>
-    <dd class="govuk-summary-list__actions">
-      <a class="govuk-link" href="{% url "contact:add" org_pk=object.pk %}">
-        {% trans 'Add new' %}<span class="govuk-visually-hidden">{% trans "Contact" %}</span>
-      </a>
-    </dd>
-  </div>
+<h3 class="govuk-heading-m">{% trans "Country" %}</h3>
+<p class="govuk-body">{{ stakeholder.get_country_display }}</p>
 
-  {% for contact in object.contacts.all %}
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">
-      </dt>
-      <dd class="govuk-summary-list__value">
-        {{ contact.name }}
-      </dd>
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="{% url "contact:delete" contact.pk %}">
-          {% trans 'Remove' %}<span class="govuk-visually-hidden"> {{ contact.name }}</span>
-        </a>
-        <a class="govuk-link govuk-!-margin-left-6" href="{% url "contact:edit" contact.pk %}">
-          {% trans 'Change' %}<span class="govuk-visually-hidden"> {{ contact.name }}</span>
-        </a>
-      </dd>
-    </div>
-  {% endfor %}
+{% if stakeholder.twitter %}
+<h3 class="govuk-heading-m">{% trans "Website" %}</h3>
+<p class="govuk-body"><a href="{{ stakeholder.website }}">{{ stockholder.website }}</p>
+{% endif %}
 
-  {% include "widgets/summary_text.html" with key='Conditions' value=object.policies_display action='edit/policies/' %}
-</dl>
+{% if stakeholder.twitter %}
+<h3 class="govuk-heading-m">{% trans "Twitter" %}</h3>
+<p class="govuk-body"><a href="{{ stakeholder.twitter }}">{{ stockholder.twitter }}</p>
+{% endif %}
 
-<a href="{% url 'stakeholder:delete' object.pk %}" role="button" draggable="false" class="govuk-button govuk-button--warning" data-module="govuk-button">
-  {% trans 'Delete stakeholder' %}
-</a>
+<h3 class="govuk-heading-m">{% trans "Conditions interested in" %}</h3>
+{% for policy in stakeholder.policies.all %}
+  <p class="govuk-body">{{ policy.name }}</p>
+{% endfor %}
+
+{% if stakeholder.comments %}
+<h3 class="govuk-heading-m">{% trans "Comments" %}</h3>
+<p class="govuk-body"><a href="{{ stakeholder.comments }}">{{ stockholder.comments }}</a></p>
+{% endif %}
+
+<h3 class="govuk-heading-m">
+  {% if stakeholder.is_public %}
+  {% trans "Publish this organisation online." %}
+  {% else %}
+    {% trans "Do not show this organisation as a stakeholder publicly." %}
+  {% endif %}
+</h3>
+
+{% for contact in object.contacts.all %}
+  <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+
+  {% if contact.name %}
+  <h3 class="govuk-heading-m">{% trans "Name of contact (optional)" %}</h3>
+  <p class="govuk-body">{{ contact.name }}</p>
+  {% endif %}
+
+  {% if contact.role %}
+  <h3 class="govuk-heading-m">{% trans "Contact's role (optional)" %}</h3>
+  <p class="govuk-body">{{ contact.role }}</p>
+  {% endif %}
+
+  {% if contact.email %}
+  <h3 class="govuk-heading-m">{% trans "Contact's email (optional)" %}</h3>
+  <p class="govuk-body"><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+  {% endif %}
+
+  {% if contact.phone %}
+  <h3 class="govuk-heading-m">{% trans "Contact's mobile phone number (optional)" %}</h3>
+  <p class="govuk-body"><a href="tel:{{ contact.phone }}">{{ contact.phone }}</a></p>
+  {% endif %}
+{% endfor %}
 
 {% endblock %}
 

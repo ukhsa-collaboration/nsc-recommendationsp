@@ -49,8 +49,6 @@ class StakeholderForm(forms.ModelForm):
 
         self.fields["url"].label = _("Website")
 
-        self.initial["is_public"] = None
-
     def is_valid(self):
         formsets_valid = all([formset.is_valid() for formset in self.formsets])
         return super().is_valid() and formsets_valid
