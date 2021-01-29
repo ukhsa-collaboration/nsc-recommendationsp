@@ -3,7 +3,7 @@
 
 {% block back %}
   {% url "dashboard" as back_url %}
-  {% trans 'Back to your products in progress' as back_title %}
+  {% trans 'Back to all reviews' as back_title %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
@@ -14,12 +14,14 @@
 {% block heading %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        {{ review.name }}
-      </h1>
-    </div>
-    <div class="govuk-grid-column-one-third">
-        <strong class="govuk-tag">{{ review.status_display }}</strong>
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">
+          {{ review.name }}
+        </h1>
+      </div>
+      <div class="govuk-grid-column-one-third review-tag">
+          <strong class="govuk-tag">{{ review.status_display }}</strong>
+      </div>
     </div>
   </div>
 {% endblock %}
@@ -35,7 +37,7 @@
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
             <a href="{% url 'review:add-external-review' review.slug %}" aria-describedby="external_review_added">
-              {% trans 'Upload consultation documents' %}
+              {% trans 'Upload external review document' %}
             </a>
           </span>
           {% if review.has_evidence_review %}
@@ -101,16 +103,6 @@
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:history' review.slug %}" aria-describedby="product_history_added">
-              {% trans "Upload product history" %}
-            </a>
-          </span>
-          {% if review.has_history %}
-            <strong class="govuk-tag app-task-list__task-completed" id="product_history_added">{% trans 'COMPLETED' %}</strong>
-          {% endif %}
-        </li>
-        <li class="app-task-list__item">
-          <span class="app-task-list__task-name">
             <a href="{% url 'review:recommendation' object.slug %}" aria-describedby="recommendation_submitted">
               {% trans "Submit recommendation" %}
             </a>
@@ -124,7 +116,7 @@
   </ul>
 
   <div class="link-menu">
-    <a href="{% url 'review:delete' review.slug %}" class="govuk-button govuk-button--warning">
+    <a href="{% url 'review:delete' review.slug %}" class="govuk-link link-warning">
       {% trans "Delete review" %}
     </a>
   </div>

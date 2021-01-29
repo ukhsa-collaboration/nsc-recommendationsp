@@ -63,7 +63,7 @@ class MultipleTypeField(JSONField):
 class Review(TimeStampedModel):
 
     STATUS = Choices(
-        ("development", _("Evidence product development")),
+        ("development", _("In review")),
         ("pre_consultation", _("Pre-consultation")),
         ("in_consultation", _("In consultation")),
         ("post_consultation", _("Post-consultation")),
