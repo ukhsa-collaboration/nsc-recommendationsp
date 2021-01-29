@@ -2,6 +2,7 @@ from distutils.util import strtobool
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -14,6 +15,7 @@ from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
 from .models import Review
+from ..policy.formsets import PolicySelectionFormset
 
 
 class SearchForm(forms.Form):
@@ -53,21 +55,12 @@ class ReviewForm(forms.ModelForm):
         ),
     )
 
-    review_type = forms.TypedChoiceField(
+    review_type = forms.MultipleChoiceField(
         label=_("What type of product is this?"),
-        # Todo upgrade this widget to allow multiple selections
-        # help_text=_("Check all that apply"),
+        help_text=_("Select all that apply"),
         choices=Review.TYPE,
-        widget=forms.RadioSelect,
-        error_messages={"required": _("Select which type of review this is")},
-    )
-
-    policies = forms.ModelMultipleChoiceField(
-        label=_("Conditions"),
-        queryset=Policy.objects.active(),
         widget=forms.CheckboxSelectMultiple,
-        help_text=_("Select all the conditions that will be included in this review"),
-        required=False,
+        error_messages={"required": _("Select which type of review this is")},
     )
 
     class Meta:
@@ -83,19 +76,30 @@ class ReviewForm(forms.ModelForm):
 
         return name
 
-    def clean_policies(self):
-        policies = self.cleaned_data["policies"]
-        if not policies:
-            self.add_error(
-                "policies", _("Select all the conditions that this review will cover")
-            )
-        if Policy.objects.filter(pk__in=policies).count() != len(policies):
-            self.add_error(None, _("There was an error creating the review."))
-        return policies
+    @cached_property
+    def policy_formset(self):
+        return PolicySelectionFormset(
+            self.data or None,
+            prefix="policies",
+            initial=(
+                [
+                    {"policy": p}
+                    for p in self.instance.policies.values_list("id", flat=True)
+                ]
+                if self.instance.id
+                else None
+            ),
+        )
+
+    def clean(self):
+        policies_clean = self.policy_formset.clean()
+        return super(ReviewForm, self).clean() and policies_clean
 
     def save(self, *args, **kwargs):
         instance = super(ReviewForm, self).save(*args, **kwargs)
-        instance.policies.set(self.cleaned_data["policies"])
+        instance.policies.set(
+            [entry["policy"] for entry in self.policy_formset.cleaned_data]
+        )
         return instance
 
 

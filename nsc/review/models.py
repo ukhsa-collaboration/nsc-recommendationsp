@@ -1,3 +1,5 @@
+from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.dispatch import receiver
@@ -41,6 +43,23 @@ class ReviewQuerySet(models.QuerySet):
         )
 
 
+class MultipleTypeField(JSONField):
+    def __init__(self, *args, choices=None, **kwargs):
+        self.multiple_choices = choices or []
+        super().__init__(*args, **kwargs)
+
+    def validate(self, value, model_instance):
+        if not isinstance(value, list):
+            raise ValidationError("Value should be a list.")
+
+        valid_values = [db for db, _ in self.multiple_choices]
+        invalid_values = [v for v in value if v not in valid_values]
+        if invalid_values:
+            raise ValidationError([f"{v} is not a valid choice." for v in invalid_values])
+
+        return super().validate(value, model_instance)
+
+
 class Review(TimeStampedModel):
 
     STATUS = Choices(
@@ -55,16 +74,14 @@ class Review(TimeStampedModel):
         ("evidence", _("Evidence review")),
         ("map", _("Evidence map")),
         ("cost", _("Cost-effective model")),
-        ("disease", _("Disease model")),
         ("systematic", _("Systematic review")),
-        ("meta", _("Systematic review and meta analysis")),
         ("other", _("Other")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
 
-    review_type = models.CharField(
+    review_type = MultipleTypeField(
         verbose_name=_("type of review"), choices=TYPE, max_length=50
     )
 
