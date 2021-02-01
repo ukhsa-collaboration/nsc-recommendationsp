@@ -11,48 +11,12 @@ from .forms import ExternalReviewForm, ReviewDocumentsForm, SubmissionForm
 from .models import Document
 
 
-class AddExternalReviewView(generic.CreateView):
+class AddExternalReviewView(generic.UpdateView):
     template_name = "document/add_external_review.html"
     form_class = ExternalReviewForm
-
-    def get_initial(self):
-        initial = super().get_initial()
-        review = Review.objects.get(slug=self.kwargs["slug"])
-        initial.update(
-            {
-                "name": _("External review"),
-                "document_type": Document.TYPE.external_review,
-                "review": review.pk,
-            }
-        )
-        return initial
-
-    def get_context_data(self, **kwargs):
-        review = Review.objects.get(slug=self.kwargs["slug"])
-        return super().get_context_data(review=review, **kwargs)
-
-    def get_object(self, queryset=None):
-        # Get any existing external review document.
-        pk = self.request.POST["review"]
-        review = Review.objects.get(pk=pk)
-        return review.get_external_review()
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object:
-            existing = self.object.upload
-        else:
-            existing = None
-        form = self.get_form()
-        if form.is_valid():
-            if existing:
-                self.object.upload.storage.delete(existing.name)
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def get_success_url(self):
-        return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
+    model = Review
+    lookup_field = "slug"
+    context_object_name = "review"
 
 
 class AddSubmissionFormView(generic.CreateView):

@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
@@ -43,7 +43,7 @@ class ReviewQuerySet(models.QuerySet):
         )
 
 
-class MultipleTypeField(JSONField):
+class MultipleTypeField(ArrayField):
     def __init__(self, *args, choices=None, **kwargs):
         self.multiple_choices = choices or []
         super().__init__(*args, **kwargs)
@@ -81,8 +81,9 @@ class Review(TimeStampedModel):
     name = models.CharField(verbose_name=_("name"), max_length=256)
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
 
-    review_type = MultipleTypeField(
-        verbose_name=_("type of review"), choices=TYPE, max_length=50
+    review_type = ArrayField(
+        models.CharField(max_length=10, choices=TYPE),
+        verbose_name=_("type of review"),
     )
 
     review_start = models.DateField(
@@ -123,7 +124,7 @@ class Review(TimeStampedModel):
         return reverse("review:detail", kwargs={"slug": self.slug})
 
     def get_external_review(self):
-        return Document.objects.for_review(self).external_reviews().first()
+        return Document.objects.for_review(self).external_reviews()
 
     def get_submission_form(self):
         return Document.objects.for_review(self).submission_forms().first()

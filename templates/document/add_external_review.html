@@ -3,7 +3,7 @@
 
 {% block back %}
   {% blocktrans asvar back_title with review.name as name %}
-    Back to {{ name }}
+    Back
   {% endblocktrans %}
   {% url 'review:detail' review.slug as back_url %}
   {% include 'widgets/back_link.html' %}
@@ -20,15 +20,43 @@
   <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
+    <div id="contact_formset_wrapper" class="formset__root govuk-form-group" data-nsc-formset="{{ form.formset.prefix }}">
+      {{ form.formset.management_form }}
 
-    {% if form.errors %}
-      {% include "widgets/error_summary.html" %}
-    {% endif %}
+      {% with f=form.formset.empty_form %}
+      <fieldset class="govuk-fieldset" id="contact_emptyform_wrapper" style="display: none" data-nsc-formset-template="{{ f.prefix }}">
+        {% for hidden in f.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
 
-    {% include "widgets/file_upload.html" with field=form.upload %}
+        {% if f.errors %}
+          {% include "widgets/error_summary.html" %}
+        {% endif %}
+
+        {% include "widgets/file_upload.html" with field=f.upload %}
+      </fieldset>
+      {% endwith %}
+
+      {% for f in form.formset %}
+        <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ f.prefix }}">
+          {% for hidden in f.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+
+          {% if f.errors %}
+            {% include "widgets/error_summary.html" %}
+          {% endif %}
+
+          {% include "widgets/file_upload.html" with field=f.upload %}
+        </fieldset>
+      {% endfor %}
+
+      <div>
+        <a id="add-file" type="button" href="#" data-nsc-formset-add="">
+          {% trans 'add another file' %}
+        </a>
+      </div>
+    </div>
 
     <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}

@@ -40,7 +40,7 @@ def run():
         except Review.DoesNotExist:
             review = Review(name=name)
 
-        review.review_type = Review.TYPE.other
+        review.review_type = [Review.TYPE.other]
         review.recommendation = entry["recommendation"]
         review.review_start = review_start
         review.review_end = review_end
