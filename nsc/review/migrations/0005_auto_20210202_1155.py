@@ -7,23 +7,35 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0004_reviewnotification'),
+        ("review", "0004_reviewnotification"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='reviewnotification',
-            name='review',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notifications', to='review.Review'),
+            model_name="reviewnotification",
+            name="review",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="notifications",
+                to="review.Review",
+            ),
         ),
         migrations.AlterField(
-            model_name='reviewnotification',
-            name='stakeholder',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notifications', to='stakeholder.Stakeholder'),
+            model_name="reviewnotification",
+            name="stakeholder",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="notifications",
+                to="stakeholder.Stakeholder",
+            ),
         ),
         migrations.AlterField(
-            model_name='reviewnotification',
-            name='status',
-            field=models.CharField(choices=[('PENDING', 'Pending'), ('SENT', 'Sent')], default='PENDING', max_length=7),
+            model_name="reviewnotification",
+            name="status",
+            field=models.CharField(
+                choices=[("PENDING", "Pending"), ("SENT", "Sent")],
+                default="PENDING",
+                max_length=7,
+            ),
         ),
     ]

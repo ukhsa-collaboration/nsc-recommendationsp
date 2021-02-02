@@ -52,7 +52,7 @@ def test_external_review_link(response):
     Test a link to download the external review summary is displayed.
     """
     review = response.context["review"]
-    assert review.get_external_review().get_download_url() in response.text
+    assert review.get_external_review().first().get_download_url() in response.text
 
 
 def test_submission_form_link(response):

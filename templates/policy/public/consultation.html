@@ -58,7 +58,7 @@
   </p>
 
   <p class="govuk-body">
-    {% blocktrans with review.get_external_review.get_download_url as url %}
+    {% blocktrans with review.get_external_review.first.get_download_url as url %}
       You can take part in a consultation in two ways, first download the
       <a href="{{ url }}">evidence review document</a> and then either:
     {% endblocktrans %}

@@ -6,13 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stakeholder', '0001_initial'),
-        ('review', '0005_auto_20210202_1155'),
+        ("stakeholder", "0001_initial"),
+        ("review", "0005_auto_20210202_1155"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='ReviewNotification',
-            new_name='ReviewStakeholderNotification',
+            old_name="ReviewNotification", new_name="ReviewStakeholderNotification",
         ),
     ]

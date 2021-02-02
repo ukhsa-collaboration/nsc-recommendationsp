@@ -8,14 +8,16 @@ def set_stakeholders_from_policies(apps, schema_editor):
 
     for review in Review.objects.all():
         policy_ids = review.policies.values_list("id", flat=True)
-        review.stakeholders.set(Stakeholder.objects.filter(policies__pk__in=policy_ids).distinct())
+        review.stakeholders.set(
+            Stakeholder.objects.filter(policies__pk__in=policy_ids).distinct()
+        )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0002_review_stakeholders'),
-        ('stakeholder', '0001_initial')
+        ("review", "0002_review_stakeholders"),
+        ("stakeholder", "0001_initial"),
     ]
 
     operations = [

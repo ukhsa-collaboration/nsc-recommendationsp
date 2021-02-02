@@ -92,7 +92,7 @@ def test_external_review_document(review_published):
     Test that the external review document can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.external_review)
-    assert review_published.get_external_review().pk == expected.pk
+    assert review_published.get_external_review().first().pk == expected.pk
 
 
 def test_submission_form(review_published):

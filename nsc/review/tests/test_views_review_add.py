@@ -40,8 +40,9 @@ def test_review_is_created(django_app):
 
     form = django_app.get(reverse("review:add")).form
     form["name"] = "Review"
-    form["review_type"] = Review.TYPE.evidence
-    form["policies"] = [policy.pk]
+    form["review_type"] = [Review.TYPE.evidence]
+    form["policies-TOTAL_FORMS"] = 1
+    form["policies-0-policy"] = policy.pk
     response = form.submit().follow()
     review = response.context["object"]
 

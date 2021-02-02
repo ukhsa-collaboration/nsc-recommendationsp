@@ -18,59 +18,194 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Review',
+            name="Review",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('name', models.CharField(max_length=256, verbose_name='name')),
-                ('slug', models.SlugField(max_length=256, unique=True, verbose_name='slug')),
-                ('review_type', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('evidence', 'Evidence review'), ('map', 'Evidence map'), ('cost', 'Cost-effective model'), ('systematic', 'Systematic review'), ('other', 'Other')], max_length=10), size=None, verbose_name='type of review')),
-                ('review_start', models.DateField(blank=True, null=True, verbose_name='review start date')),
-                ('review_end', models.DateField(blank=True, null=True, verbose_name='review end date')),
-                ('consultation_start', models.DateField(blank=True, null=True, verbose_name='consultation start date')),
-                ('consultation_end', models.DateField(blank=True, null=True, verbose_name='consultation end date')),
-                ('nsc_meeting_date', models.DateField(blank=True, null=True, verbose_name='NSC meeting date')),
-                ('recommendation', models.NullBooleanField(verbose_name='recommendation')),
-                ('summary', models.TextField(verbose_name='summary')),
-                ('summary_html', models.TextField(verbose_name='HTML summary')),
-                ('background', models.TextField(verbose_name='history')),
-                ('background_html', models.TextField(verbose_name='HTML history')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("name", models.CharField(max_length=256, verbose_name="name")),
+                (
+                    "slug",
+                    models.SlugField(max_length=256, unique=True, verbose_name="slug"),
+                ),
+                (
+                    "review_type",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(
+                            choices=[
+                                ("evidence", "Evidence review"),
+                                ("map", "Evidence map"),
+                                ("cost", "Cost-effective model"),
+                                ("systematic", "Systematic review"),
+                                ("other", "Other"),
+                            ],
+                            max_length=10,
+                        ),
+                        size=None,
+                        verbose_name="type of review",
+                    ),
+                ),
+                (
+                    "review_start",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="review start date"
+                    ),
+                ),
+                (
+                    "review_end",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="review end date"
+                    ),
+                ),
+                (
+                    "consultation_start",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="consultation start date"
+                    ),
+                ),
+                (
+                    "consultation_end",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="consultation end date"
+                    ),
+                ),
+                (
+                    "nsc_meeting_date",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="NSC meeting date"
+                    ),
+                ),
+                (
+                    "recommendation",
+                    models.NullBooleanField(verbose_name="recommendation"),
+                ),
+                ("summary", models.TextField(verbose_name="summary")),
+                ("summary_html", models.TextField(verbose_name="HTML summary")),
+                ("background", models.TextField(verbose_name="history")),
+                ("background_html", models.TextField(verbose_name="HTML history")),
             ],
-            options={
-                'verbose_name_plural': 'reviews',
-                'ordering': ('name', 'pk'),
-            },
+            options={"verbose_name_plural": "reviews", "ordering": ("name", "pk"),},
         ),
         migrations.CreateModel(
-            name='HistoricalReview',
+            name="HistoricalReview",
             fields=[
-                ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('name', models.CharField(max_length=256, verbose_name='name')),
-                ('slug', models.SlugField(max_length=256, verbose_name='slug')),
-                ('review_type', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('evidence', 'Evidence review'), ('map', 'Evidence map'), ('cost', 'Cost-effective model'), ('systematic', 'Systematic review'), ('other', 'Other')], max_length=10), size=None, verbose_name='type of review')),
-                ('review_start', models.DateField(blank=True, null=True, verbose_name='review start date')),
-                ('review_end', models.DateField(blank=True, null=True, verbose_name='review end date')),
-                ('consultation_start', models.DateField(blank=True, null=True, verbose_name='consultation start date')),
-                ('consultation_end', models.DateField(blank=True, null=True, verbose_name='consultation end date')),
-                ('nsc_meeting_date', models.DateField(blank=True, null=True, verbose_name='NSC meeting date')),
-                ('recommendation', models.NullBooleanField(verbose_name='recommendation')),
-                ('summary', models.TextField(verbose_name='summary')),
-                ('summary_html', models.TextField(verbose_name='HTML summary')),
-                ('background', models.TextField(verbose_name='history')),
-                ('background_html', models.TextField(verbose_name='HTML history')),
-                ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField()),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.IntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("name", models.CharField(max_length=256, verbose_name="name")),
+                ("slug", models.SlugField(max_length=256, verbose_name="slug")),
+                (
+                    "review_type",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(
+                            choices=[
+                                ("evidence", "Evidence review"),
+                                ("map", "Evidence map"),
+                                ("cost", "Cost-effective model"),
+                                ("systematic", "Systematic review"),
+                                ("other", "Other"),
+                            ],
+                            max_length=10,
+                        ),
+                        size=None,
+                        verbose_name="type of review",
+                    ),
+                ),
+                (
+                    "review_start",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="review start date"
+                    ),
+                ),
+                (
+                    "review_end",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="review end date"
+                    ),
+                ),
+                (
+                    "consultation_start",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="consultation start date"
+                    ),
+                ),
+                (
+                    "consultation_end",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="consultation end date"
+                    ),
+                ),
+                (
+                    "nsc_meeting_date",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="NSC meeting date"
+                    ),
+                ),
+                (
+                    "recommendation",
+                    models.NullBooleanField(verbose_name="recommendation"),
+                ),
+                ("summary", models.TextField(verbose_name="summary")),
+                ("summary_html", models.TextField(verbose_name="HTML summary")),
+                ("background", models.TextField(verbose_name="history")),
+                ("background_html", models.TextField(verbose_name="HTML history")),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField()),
+                ("history_change_reason", models.CharField(max_length=100, null=True)),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'historical review',
-                'ordering': ('-history_date', '-history_id'),
-                'get_latest_by': 'history_date',
+                "verbose_name": "historical review",
+                "ordering": ("-history_date", "-history_id"),
+                "get_latest_by": "history_date",
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),

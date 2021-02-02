@@ -13,9 +13,9 @@ from model_utils import Choices
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
-from .models import Review, ReviewStakeholderNotification, ReviewPheCommsNotification
 from ..policy.formsets import PolicySelectionFormset
 from ..stakeholder.formsets import StakeholderSelectionFormset
+from .models import Review, ReviewPheCommsNotification, ReviewStakeholderNotification
 
 
 class SearchForm(forms.Form):
@@ -91,16 +91,18 @@ class ReviewForm(forms.ModelForm):
             ),
         )
 
-    def clean(self):
-        policies_clean = self.policy_formset.clean()
-        return super(ReviewForm, self).clean() and policies_clean
+    def is_valid(self):
+        policies_is_valid = self.policy_formset.is_valid()
+        return super(ReviewForm, self).is_valid() and policies_is_valid
 
     def save(self, *args, **kwargs):
         instance = super(ReviewForm, self).save(*args, **kwargs)
 
-        policy_ids = [entry["policy"] for entry in self.policy_formset.cleaned_data]
+        policy_ids = [entry["policy"].id for entry in self.policy_formset.cleaned_data]
         instance.policies.set(policy_ids)
-        instance.stakeholders.set(Stakeholder.objects.filter(policies__pk__in=policy_ids).distinct())
+        instance.stakeholders.set(
+            Stakeholder.objects.filter(policies__pk__in=policy_ids).distinct()
+        )
         return instance
 
 
@@ -339,9 +341,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
         label=_("Stakeholders"),
         queryset=Stakeholder.objects.none(),
         widget=forms.CheckboxSelectMultiple,
-        help_text=_(
-            "Deselect any stakeholders that are not to be notified"
-        ),
+        help_text=_("Deselect any stakeholders that are not to be notified"),
     )
 
     class Meta:
@@ -352,8 +352,10 @@ class ReviewStakeholdersForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["stakeholders"].queryset = (
-            self.instance.stakeholders.distinct() | self.instance.policy_stakeholders
-        ).distinct().order_by("name")
+            (self.instance.stakeholders.distinct() | self.instance.policy_stakeholders)
+            .distinct()
+            .order_by("name")
+        )
 
     def is_valid(self):
         formset_valid = self.extra_stakeholders_formset.is_valid()
@@ -365,10 +367,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
             self.data or None,
             prefix="stakeholders",
             initial=(
-                [
-                    {"stakeholder": s}
-                    for s in self.instance.stakeholders.none()
-                ]
+                [{"stakeholder": s} for s in self.instance.stakeholders.none()]
                 if self.instance.id
                 else None
             ),
@@ -378,8 +377,10 @@ class ReviewStakeholdersForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.stakeholders.set(
-            set(self.cleaned_data["stakeholders"]) |
-            set(f.cleaned_data["stakeholder"] for f in self.extra_stakeholders_formset)
+            set(self.cleaned_data["stakeholders"])
+            | set(
+                f.cleaned_data["stakeholder"] for f in self.extra_stakeholders_formset
+            )
         )
 
         # create notifications so that they can be picked up and sent later on

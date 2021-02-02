@@ -4,6 +4,8 @@ import pytest
 from model_bakery import baker
 
 
+pytest_plugins = ["nsc.utils.tests.fixtures.media"]
+
 # A custom ArrayField was used to model the ages field on the Policy model
 # so a better default widget would be available. While model bakery supports
 # ArrayField it can't customized versions so we have to add a generator
@@ -20,7 +22,7 @@ def generate_ages():
     return random.choice(all_ages)
 
 
-baker.generators.add("nsc.policy.fields.ChoiceArrayField", "nsc.conftest.generate_ages")
+baker.generators.add("nsc.policy.fields.ChoiceArrayField", "conftest.generate_ages")
 
 
 @pytest.fixture

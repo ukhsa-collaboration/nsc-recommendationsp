@@ -1,12 +1,10 @@
 import os
 
 from django.urls import reverse
-from django.utils.translation import ugettext
 
 import pytest
 from model_bakery import baker
 
-from nsc.document.models import Document
 from nsc.review.models import Review
 
 
@@ -34,10 +32,7 @@ def test_initial_values(django_app):
     form = django_app.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug})
     ).form
-    assert form["name"].value == ugettext("External review")
-    assert form["document_type"].value == Document.TYPE.external_review
-    assert form["review"].value == str(review.pk)
-    assert form["upload"].value == ""
+    assert form["document-0-upload"].value == ""
     review.delete()
 
 
@@ -49,9 +44,14 @@ def test_document_created(minimal_pdf, django_app):
     form = django_app.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug})
     ).form
-    form["upload"] = ("document.pdf", minimal_pdf.encode(), "application/pdf")
+    form["document-TOTAL_FORMS"] = 1
+    form["document-0-upload"] = (
+        "document.pdf",
+        minimal_pdf.encode(),
+        "application/pdf",
+    )
     response = form.submit().follow()
-    document = review.get_external_review()
+    document = review.get_external_review().first()
     assert response.status == "200 OK"
     assert response.request.path == reverse(
         "review:detail", kwargs={"slug": review.slug}
@@ -72,10 +72,11 @@ def test_existing_document_is_replaced(external_review, minimal_pdf, django_app)
     form = django_app.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug})
     ).form
-    form["upload"] = ("new.pdf", minimal_pdf.encode(), "application/pdf")
+    form["document-TOTAL_FORMS"] = 1
+    form["document-0-id"] = external_review.id
+    form["document-0-upload"] = ("new.pdf", minimal_pdf.encode(), "application/pdf")
     form.submit().follow()
-
-    document = review.get_external_review()
+    document = review.get_external_review().first()
     assert os.path.basename(document.upload.name) == "new.pdf"
     assert document.file_exists()
     assert not document.upload.storage.exists(existing)

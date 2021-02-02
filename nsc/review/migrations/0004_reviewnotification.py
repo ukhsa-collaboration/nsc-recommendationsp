@@ -8,25 +8,59 @@ import django_extensions.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stakeholder', '0001_initial'),
-        ('review', '0003_auto_20210201_1426'),
+        ("stakeholder", "0001_initial"),
+        ("review", "0003_auto_20210201_1426"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ReviewNotification',
+            name="ReviewNotification",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('status', models.CharField(choices=[('PENDING', 'Pending'), ('SENT', 'Sent')], max_length=7)),
-                ('review', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='review.Review')),
-                ('stakeholder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stakeholder.Stakeholder')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("PENDING", "Pending"), ("SENT", "Sent")], max_length=7
+                    ),
+                ),
+                (
+                    "review",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="review.Review"
+                    ),
+                ),
+                (
+                    "stakeholder",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="stakeholder.Stakeholder",
+                    ),
+                ),
             ],
             options={
-                'ordering': ('-modified', '-created'),
-                'get_latest_by': 'modified',
-                'abstract': False,
+                "ordering": ("-modified", "-created"),
+                "get_latest_by": "modified",
+                "abstract": False,
             },
         ),
     ]

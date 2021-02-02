@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
@@ -55,7 +55,9 @@ class MultipleTypeField(ArrayField):
         valid_values = [db for db, _ in self.multiple_choices]
         invalid_values = [v for v in value if v not in valid_values]
         if invalid_values:
-            raise ValidationError([f"{v} is not a valid choice." for v in invalid_values])
+            raise ValidationError(
+                [f"{v} is not a valid choice." for v in invalid_values]
+            )
 
         return super().validate(value, model_instance)
 
@@ -82,8 +84,7 @@ class Review(TimeStampedModel):
     slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
 
     review_type = ArrayField(
-        models.CharField(max_length=10, choices=TYPE),
-        verbose_name=_("type of review"),
+        models.CharField(max_length=10, choices=TYPE), verbose_name=_("type of review"),
     )
 
     review_start = models.DateField(
@@ -224,13 +225,14 @@ class Review(TimeStampedModel):
 
 
 class ReviewStakeholderNotification(TimeStampedModel):
-    STATUS = Choices(
-        ("PENDING", _("Pending")),
-        ("SENT", _("Sent")),
-    )
+    STATUS = Choices(("PENDING", _("Pending")), ("SENT", _("Sent")),)
 
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="notifications")
-    stakeholder = models.ForeignKey(Stakeholder, on_delete=models.CASCADE, related_name="notifications")
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name="notifications"
+    )
+    stakeholder = models.ForeignKey(
+        Stakeholder, on_delete=models.CASCADE, related_name="notifications"
+    )
     status = models.CharField(choices=STATUS, max_length=7, default=STATUS.PENDING)
 
     def __str__(self):
@@ -238,12 +240,11 @@ class ReviewStakeholderNotification(TimeStampedModel):
 
 
 class ReviewPheCommsNotification(TimeStampedModel):
-    STATUS = Choices(
-        ("PENDING", _("Pending")),
-        ("SENT", _("Sent")),
-    )
+    STATUS = Choices(("PENDING", _("Pending")), ("SENT", _("Sent")),)
 
-    review = models.OneToOneField(Review, on_delete=models.CASCADE, related_name="phe_comms_notification")
+    review = models.OneToOneField(
+        Review, on_delete=models.CASCADE, related_name="phe_comms_notification"
+    )
     status = models.CharField(choices=STATUS, max_length=7, default=STATUS.PENDING)
 
     def __str__(self):
