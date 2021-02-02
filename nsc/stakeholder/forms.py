@@ -93,3 +93,13 @@ class StakeholderForm(forms.ModelForm):
             contact.save()
 
         return stakeholder
+
+
+class StakeholderSelectionForm(forms.Form):
+    stakeholder = forms.ModelChoiceField(Stakeholder.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["stakeholder"].widget.attrs.update({"class": "govuk-select"})
+        self.fields["stakeholder"].queryset = Stakeholder.objects.all()

@@ -10,12 +10,12 @@ from django.utils.translation import ugettext_lazy as _
 from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
-from nsc.policy.models import Policy
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
-from .models import Review
+from .models import Review, ReviewStakeholderNotification, ReviewPheCommsNotification
 from ..policy.formsets import PolicySelectionFormset
+from ..stakeholder.formsets import StakeholderSelectionFormset
 
 
 class SearchForm(forms.Form):
@@ -97,9 +97,10 @@ class ReviewForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         instance = super(ReviewForm, self).save(*args, **kwargs)
-        instance.policies.set(
-            [entry["policy"] for entry in self.policy_formset.cleaned_data]
-        )
+
+        policy_ids = [entry["policy"] for entry in self.policy_formset.cleaned_data]
+        instance.policies.set(policy_ids)
+        instance.stakeholders.set(Stakeholder.objects.filter(policies__pk__in=policy_ids).distinct())
         return instance
 
 
@@ -332,25 +333,64 @@ class ReviewDatesForm(forms.ModelForm):
         return data
 
 
-class ReviewStakeholdersForm(forms.Form):
+class ReviewStakeholdersForm(forms.ModelForm):
 
     stakeholders = forms.ModelMultipleChoiceField(
         label=_("Stakeholders"),
         queryset=Stakeholder.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         help_text=_(
-            "Select the stakeholders who will be notified when the consultation opens"
+            "Deselect any stakeholders that are not to be notified"
         ),
     )
 
+    class Meta:
+        model = Review
+        fields = ()
+
     def __init__(self, *args, **kwargs):
-        review = kwargs.pop("instance")
         super().__init__(*args, **kwargs)
 
-        self.fields["stakeholders"].queryset = review.stakeholders()
+        self.fields["stakeholders"].queryset = (
+            self.instance.stakeholders.distinct() | self.instance.policy_stakeholders
+        ).distinct().order_by("name")
 
-    def clean(self):
-        self.add_error(None, "TEST")
+    def is_valid(self):
+        formset_valid = self.extra_stakeholders_formset.is_valid()
+        return super().is_valid() and formset_valid
+
+    @cached_property
+    def extra_stakeholders_formset(self):
+        formset = StakeholderSelectionFormset(
+            self.data or None,
+            prefix="stakeholders",
+            initial=(
+                [
+                    {"stakeholder": s}
+                    for s in self.instance.stakeholders.none()
+                ]
+                if self.instance.id
+                else None
+            ),
+        )
+        formset.min_num = 0
+        return formset
+
+    def save(self, commit=True):
+        self.instance.stakeholders.set(
+            set(self.cleaned_data["stakeholders"]) |
+            set(f.cleaned_data["stakeholder"] for f in self.extra_stakeholders_formset)
+        )
+
+        # create notifications so that they can be picked up and sent later on
+        ReviewStakeholderNotification.objects.bulk_create(
+            ReviewStakeholderNotification(stakeholder=s, review=self.instance)
+            for s in self.instance.stakeholders.all()
+        )
+
+        ReviewPheCommsNotification.objects.create(review=self.instance)
+
+        return self.instance
 
 
 class ReviewSummaryForm(forms.ModelForm):

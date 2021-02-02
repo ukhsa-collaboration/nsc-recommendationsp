@@ -47,7 +47,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        {% include "policy/forms/selection-formset.html" with formset=form.policy_formset %}
+        {% include "forms/selection-formset.html" with formset=form.policy_formset label=_("Condition Interested In:") link_text=_("add another condition") %}
       </div>
     </div>
 

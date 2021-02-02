@@ -1,7 +1,9 @@
 {% load i18n %}
 <div id="policy_formset_wrapper" class="formset__root" data-nsc-formset="{{ formset.prefix }}">
 
-  <label class="govuk-label">{{ label|default:_("Condition Interested In:") }}</label>
+  {% if label %}
+    <label class="govuk-label">{{ label }}</label>
+  {% endif %}
 
   {{ formset.management_form }}
 
@@ -28,8 +30,6 @@
   {% endfor %}
 
   <div class="govuk-form-group">
-    <a id="add-contact" type="button" href="#" data-nsc-formset-add="">
-      {% trans 'add another condition' %}
-    </a>
+    <a id="add" class="govuk-link" type="button" href="#" data-nsc-formset-add="">{{ link_text }}</a>
   </div>
 </div>

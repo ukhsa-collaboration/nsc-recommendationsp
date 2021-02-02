@@ -28,12 +28,12 @@
           {% include "widgets/error_summary.html" %}
         {% endif %}
 
-        {% include "policy/forms/selection-formset.html" with formset=form.policy_formset label=_("Entry condition under review") %}
+        {% include "forms/selection-formset.html" with formset=form.policy_formset label=_("Entry condition under review") link_text=_("add another condition") %}
         {% include "widgets/text_input.html" with field=form.name show_legend=True %}
         {% include "widgets/checkboxes.html" with field=form.review_type size='m' show_legend=True %}
 
         <p class="govuk-body">
-          By submitting this, the public will be able to see that this condition is in review.
+          {% trans "By submitting this, the public will be able to see that this condition is in review." %}
         </p>
 
         <button type="submit" class="govuk-button" name="save" value="save">

@@ -49,10 +49,10 @@
             <a href="{% url 'review:stakeholders' object.slug %}" aria-describedby="stakeholders-notified">
               {% trans 'Confirm stakeholders to be notified' %}
             </a>
-          {% if review.has_notified_stakeholders %}
-            <strong class="govuk-tag app-task-list__task-completed" id="stakeholders_notified">{% trans 'COMPLETED' %}</strong>
-          {% endif %}
           </span>
+          {% if review.has_notified_stakeholders %}
+            <strong class="govuk-tag app-task-list__task-completed" id="stakeholders_notified">✓</strong>
+          {% endif %}
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
@@ -61,7 +61,7 @@
             </a>
           </span>
           {% if review.has_submission_form %}
-            <strong class="govuk-tag app-task-list__task-completed" id="upload-submission-form">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="upload-submission-form">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -71,7 +71,7 @@
             </a>
           </span>
           {% if review.has_consultation_dates_set and review.has_nsc_meeting_date_set %}
-            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">✓</strong>
           {% endif %}
         </li>
       </ul>
@@ -88,7 +88,7 @@
             </a>
           </span>
           {% if review.has_evidence_review and review.has_cover_sheet %}
-            <strong class="govuk-tag app-task-list__task-completed" id="review_documents_added">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="review_documents_added">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -98,7 +98,7 @@
             </a>
           </span>
           {% if review.has_summary %}
-            <strong class="govuk-tag app-task-list__task-completed" id="summary_added">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="summary_added">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -108,7 +108,7 @@
             </a>
           </span>
           {% if review.has_recommendation %}
-            <strong class="govuk-tag app-task-list__task-completed" id="recommendation_submitted">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="recommendation_submitted">✓</strong>
           {% endif %}
         </li>
       </ul>

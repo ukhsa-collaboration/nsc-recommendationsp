@@ -110,6 +110,8 @@ class Review(TimeStampedModel):
     background = models.TextField(verbose_name=_("history"))
     background_html = models.TextField(verbose_name=_("HTML history"))
 
+    stakeholders = models.ManyToManyField(Stakeholder, related_name="reviews")
+
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
 
@@ -152,12 +154,10 @@ class Review(TimeStampedModel):
         return ""
 
     def has_notified_communications_department(self):
-        # ToDo implement
-        return False
+        return self.phe_comms_notification
 
-    def has_notified_stakeholders_notified(self):
-        # ToDo implement
-        return False
+    def has_notified_stakeholders(self):
+        return self.notifications.exists()
 
     def has_consultation_dates_set(self):
         return self.consultation_start is not None and self.consultation_end is not None
@@ -202,7 +202,8 @@ class Review(TimeStampedModel):
     def status_display(self):
         return self.STATUS[self.status()]
 
-    def stakeholders(self):
+    @property
+    def policy_stakeholders(self):
         return (
             Stakeholder.objects.filter(policies__reviews__pk=self.pk)
             .distinct()
@@ -220,6 +221,33 @@ class Review(TimeStampedModel):
         self.background_html = convert(self.background)
 
         return super(Review, self).save(**kwargs)
+
+
+class ReviewStakeholderNotification(TimeStampedModel):
+    STATUS = Choices(
+        ("PENDING", _("Pending")),
+        ("SENT", _("Sent")),
+    )
+
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="notifications")
+    stakeholder = models.ForeignKey(Stakeholder, on_delete=models.CASCADE, related_name="notifications")
+    status = models.CharField(choices=STATUS, max_length=7, default=STATUS.PENDING)
+
+    def __str__(self):
+        return f"{self.stakeholder} notification for {self.review}: {self.STATUS[self.status]}"
+
+
+class ReviewPheCommsNotification(TimeStampedModel):
+    STATUS = Choices(
+        ("PENDING", _("Pending")),
+        ("SENT", _("Sent")),
+    )
+
+    review = models.OneToOneField(Review, on_delete=models.CASCADE, related_name="phe_comms_notification")
+    status = models.CharField(choices=STATUS, max_length=7, default=STATUS.PENDING)
+
+    def __str__(self):
+        return f"PHE Communications notification for {self.review}: {self.STATUS[self.status]}"
 
 
 @receiver(models.signals.post_delete, sender=Review)

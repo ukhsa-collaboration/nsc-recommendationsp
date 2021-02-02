@@ -11,34 +11,46 @@
 
 {% block title %}
   {% block page_title %}
-    Confirm stakeholders to be notified of consultation opening
+    Confirm stakeholders to be notify about consultation opening
   {% endblock %}
 {% endblock %}
 
+{% block heading %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">{{ block.super }}</div>
+  </div>
+{% endblock %}
+
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        {% csrf_token %}
 
-  <form method="post">
-    {% csrf_token %}
+        {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
 
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
+        {{ form.non_field_errors }}
 
-    {{ form.non_field_errors }}
+        {% include "widgets/checkboxes.html" with field=form.stakeholders %}
 
-    {% include "widgets/checkboxes.html" with field=form.stakeholders %}
+        {% include "forms/selection-formset.html" with formset=form.extra_stakeholders_formset link_text=_("add a stakeholder to be notified") %}
 
-    <div class="link-menu govuk-body">
-      <a href="" class="govuk-link">
-        add a stakeholder to be notified
-      </a>
+        <p class="govuk-body">
+          <b>
+            {% blocktrans with name=review.name %}
+            By confirming you will also inform PHE Communications that the consultation for {{ name }} is opening.
+            {% endblocktrans %}
+          </b>
+        </p>
+
+        <button type="submit" class="govuk-button" name="save" value="save">
+          {% trans 'Save and continue' %}
+        </button>
+
+      </form>
     </div>
-
-    <button type="submit" class="govuk-button" name="save" value="save">
-      {% trans 'Save and continue' %}
-    </button>
-
-  </form>
-
+  </div>
 {% endblock %}
 
