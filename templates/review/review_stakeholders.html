@@ -1,10 +1,8 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with object.name as name %}
-    Back to {{ name }}
-  {% endblocktrans %}
+  {% trans "Back" as back_title %}
   {% url 'review:detail' object.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}

@@ -2,9 +2,7 @@
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with review.name as name %}
-    Back
-  {% endblocktrans %}
+  {% trans "Back" as back_title %}
   {% url 'review:detail' review.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
