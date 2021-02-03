@@ -157,7 +157,6 @@ class ReviewDatesForm(forms.ModelForm):
         required=False,
     )
 
-    nsc_meeting_date_day = forms.IntegerField(label=_("Day"), required=False)
     nsc_meeting_date_month = forms.IntegerField(label=_("Month"), required=False)
     nsc_meeting_date_year = forms.IntegerField(label=_("Year"), required=False)
 
@@ -165,30 +164,31 @@ class ReviewDatesForm(forms.ModelForm):
         model = Review
         fields = ["consultation_start", "consultation_end", "nsc_meeting_date"]
 
+    def __init__(self, *args, initial=None, **kwargs):
+        three_months_time = self.today + relativedelta(months=+3)
+
+        initial = {
+            "consultation_start_day": self.today.day,
+            "consultation_start_month": self.today.month,
+            "consultation_start_year": self.today.year,
+            "consultation_end_day": three_months_time.day,
+            "consultation_end_month": three_months_time.month,
+            "consultation_end_year": three_months_time.year,
+            **(initial or {}),
+        }
+
+        super().__init__(*args, initial=initial, **kwargs)
+
+    @cached_property
+    def today(self):
+        return get_today()
+
     def clean_consultation_open(self):
         value = self.cleaned_data["consultation_open"]
         return strtobool(value) if value else None
 
     def clean(self):
         data = self.cleaned_data
-
-        consultation_open = data.get("consultation_open", None)
-
-        if consultation_open:
-            date = get_today()
-            data["consultation_start_day"] = date.day
-            data["consultation_start_month"] = date.month
-            data["consultation_start_year"] = date.year
-
-            day = data.get("consultation_end_day", None)
-            month = data.get("consultation_end_month", None)
-            year = data.get("consultation_end_year", None)
-
-            if not (day or month or year):
-                date = get_today() + relativedelta(months=+3)
-                data["consultation_end_day"] = date.day
-                data["consultation_end_month"] = date.month
-                data["consultation_end_year"] = date.year
 
         day = data["consultation_start_day"]
         month = data["consultation_start_month"]
@@ -213,7 +213,7 @@ class ReviewDatesForm(forms.ModelForm):
 
         if day is not None and month is not None and year is not None:
             try:
-                data["consultation_start"] = get_today().replace(
+                data["consultation_start"] = self.today.replace(
                     year=year, month=month, day=day
                 )
             except ValueError:
@@ -250,7 +250,7 @@ class ReviewDatesForm(forms.ModelForm):
 
         if day is not None and month is not None and year is not None:
             try:
-                data["consultation_end"] = get_today().replace(
+                data["consultation_end"] = self.today.replace(
                     year=year, month=month, day=day
                 )
             except ValueError:
@@ -264,16 +264,10 @@ class ReviewDatesForm(forms.ModelForm):
         if day is None and month is None and year is None:
             data["consultation_end"] = None
 
-        day = data.get("nsc_meeting_date_day", None)
         month = data.get("nsc_meeting_date_month", None)
         year = data.get("nsc_meeting_date_year", None)
 
-        if day is not None or month is not None or year is not None:
-            if day is None:
-                self.add_error(
-                    "nsc_meeting_date_day",
-                    _("Enter the day the NSC Meeting takes place"),
-                )
+        if month is not None or year is not None:
             if month is None:
                 self.add_error(
                     "nsc_meeting_date_month",
@@ -285,17 +279,17 @@ class ReviewDatesForm(forms.ModelForm):
                     _("Enter the year the NSC Meeting takes place"),
                 )
 
-        if day is not None and month is not None and year is not None:
+        if month is not None and year is not None:
             try:
-                data["nsc_meeting_date"] = get_today().replace(
-                    year=year, month=month, day=day
+                data["nsc_meeting_date"] = self.today.replace(
+                    year=year, month=month, day=1
                 )
             except ValueError:
                 self.add_error(
                     "nsc_meeting_date", _("Enter a correct date for the NSC Meeting")
                 )
 
-        if day is None and month is None and year is None:
+        if month is None and year is None:
             data["nsc_meeting_date"] = None
 
         if "consultation_start" in data and "consultation_end" in data:
@@ -324,7 +318,9 @@ class ReviewDatesForm(forms.ModelForm):
                 )
 
         if data.get("consultation_end", False) and data.get("nsc_meeting_date", False):
-            if data["nsc_meeting_date"] < data["consultation_end"]:
+            if data["nsc_meeting_date"].replace(day=1) < data[
+                "consultation_end"
+            ].replace(day=1):
                 self.add_error(
                     "nsc_meeting_date",
                     _(

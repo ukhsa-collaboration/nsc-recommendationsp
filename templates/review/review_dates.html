@@ -2,9 +2,7 @@
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with object.name as name %}
-    Back to {{ name }}
-  {% endblocktrans %}
+  {% trans "Back" as back_title %}
   {% url 'review:detail' object.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
@@ -84,7 +82,7 @@
     {% endwith %}
 
     {% include "widgets/date_input.html" with field=form.consultation_end day=form.consultation_end_day month=form.consultation_end_month year=form.consultation_end_year %}
-    {% include "widgets/date_input.html" with field=form.nsc_meeting_date day=form.nsc_meeting_date_day month=form.nsc_meeting_date_month year=form.nsc_meeting_date_year %}
+    {% include "widgets/date_input.html" with field=form.nsc_meeting_date month=form.nsc_meeting_date_month year=form.nsc_meeting_date_year %}
 
     <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}

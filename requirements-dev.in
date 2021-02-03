@@ -20,6 +20,7 @@ pytest-cov
 pytest-django
 pytest-isort
 pytest-flake8
+freezegun
 
 # Documentation
 sphinx
