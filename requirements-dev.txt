@@ -53,7 +53,7 @@ click==7.1.1
     #   pip-tools
 coverage==5.0.4
     # via pytest-cov
-cryptography==2.8
+cryptography==3.2
     # via paramiko
 decorator==4.4.2
     # via
