@@ -112,11 +112,8 @@ class ReviewDatesForm(forms.ModelForm):
         label=_("Consultation open date"),
         help_text=_("When do you want to open this consultation?"),
         choices=Choices(
-            (True, _("Now - open this consultation and email {} stakeholders")),
-            (
-                False,
-                _("Schedule this consultation to automatically open on a later date"),
-            ),
+            (True, "now"),
+            (False, "later"),
         ),
         widget=forms.RadioSelect,
         required=False,
@@ -178,6 +175,19 @@ class ReviewDatesForm(forms.ModelForm):
         }
 
         super().__init__(*args, initial=initial, **kwargs)
+
+        self.fields["consultation_open"].choices = (
+            (
+                True,
+                _("Now - open this consultation and email {} stakeholders").format(
+                    self.instance.stakeholders.count()
+                ),
+            ),
+            (
+                False,
+                _("Schedule this consultation to automatically open on a later date"),
+            )
+        )
 
     @cached_property
     def today(self):
