@@ -5,6 +5,7 @@
   {% trans "Back" as back_title %}
   {% url 'review:detail' object.slug as back_url %}
   {% include 'widgets/back_link.html' %}
+  {% include "review/dates_already_confirmed_notification.html" %}
 {% endblock %}
 
 {% block title %}
@@ -14,81 +15,86 @@
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
 
-  <form method="post">
-    {% csrf_token %}
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
 
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
+      {% if form.errors %}
+        {% include "widgets/error_summary.html" %}
+      {% endif %}
 
-    {% if form.errors %}
-      {% include "widgets/error_summary.html" %}
-    {% endif %}
+      {% with field=form.consultation_open %}
+        <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
 
-    {% with field=form.consultation_open  %}
-      <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
+          <fieldset class="govuk-fieldset"
+                    role="group"
+                    aria-describedby="
+                        {% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %} ">
 
-        <fieldset class="govuk-fieldset"
-                  role="group"
-                  aria-describedby="{% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %} ">
+            {% include "widgets/field_legend.html" %}
+            {% include "widgets/field_help.html" %}
 
-          {% include "widgets/field_legend.html" %}
-          {% include "widgets/field_help.html" %}
+            {% include "widgets/field_errors.html" %}
 
-          {% include "widgets/field_errors.html" %}
+            <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
 
-          <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
-
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input"
-                     id="consultation_start-conditional"
-                     name="consultation_open"
-                     type="radio"
-                     value="{{ field.0.data.value|stringformat:'s' }}"
-                     {% if field.0.data.selected == True %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input"
+                       id="consultation_start-conditional"
+                       name="consultation_open"
+                       type="radio"
+                       value="{{ field.0.data.value|stringformat:'s' }}"
+                    {% if field.0.data.selected == True %}
                        checked="checked"
-                     {% endif %}
-                     aria-controls="conditional-consultation_start-conditional"
-                     aria-expanded="false">
-              <label class="govuk-label govuk-radios__label" for="consultation_start-conditional">
-                {{ field.0.choice_label }}
-              </label>
-            </div>
-            <div class="govuk-radios__conditional--hidden" id="conditional-consultation_start-conditional">
-            </div>
+                    {% endif %}
+                       {% if field.0.data.attrs.disabled %}disabled{% endif %}
+                       aria-controls="conditional-consultation_start-conditional"
+                       aria-expanded="false">
+                <label class="govuk-label govuk-radios__label" for="consultation_start-conditional">
+                  {{ field.0.choice_label }}
+                </label>
+              </div>
+              <div class="govuk-radios__conditional--hidden" id="conditional-consultation_start-conditional">
+              </div>
 
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input"
-                     id="consultation_start-conditional-2"
-                     name="consultation_open"
-                     type="radio"
-                     value="{{ field.1.data.value|stringformat:'s' }}"
-                     {% if field.1.data.selected == True %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input"
+                       id="consultation_start-conditional-2"
+                       name="consultation_open"
+                       type="radio"
+                       value="{{ field.1.data.value|stringformat:'s' }}"
+                    {% if field.1.data.selected == True %}
                        checked="checked"
-                     {% endif %}
-                     aria-controls="conditional-consultation_start-conditional-2"
-                     aria-expanded="{% if field.1.data.selected == True %}true{% else %}false{% endif %}">
-              <label class="govuk-label govuk-radios__label" for="consultation_start-conditional-2">
-                {{ field.1.choice_label }}
-              </label>
-            </div>
-            <div class="govuk-radios__conditional govuk-radios__conditional{% if field.1.data.selected == False %}--hidden{% endif %}" id="conditional-consultation_start-conditional-2">
-             {% include "widgets/date_input.html" with field=form.consultation_start day=form.consultation_start_day month=form.consultation_start_month year=form.consultation_start_year %}
-            </div>
+                    {% endif %}
+                       {% if field.1.data.attrs.disabled %}disabled{% endif %}
+                       aria-controls="conditional-consultation_start-conditional-2"
+                       aria-expanded="{% if field.1.data.selected == True %}true{% else %}false{% endif %}">
+                <label class="govuk-label govuk-radios__label" for="consultation_start-conditional-2">
+                  {{ field.1.choice_label }}
+                </label>
+              </div>
+              <div
+                  class="govuk-radios__conditional govuk-radios__conditional{% if field.1.data.selected == False %}--hidden{% endif %}"
+                  id="conditional-consultation_start-conditional-2">
+                {% include "widgets/date_input.html" with field=form.consultation_start day=form.consultation_start_day month=form.consultation_start_month year=form.consultation_start_year %}
+              </div>
 
-        </fieldset>
-      </div>
-    {% endwith %}
+          </fieldset>
+        </div>
+      {% endwith %}
 
-    {% include "widgets/date_input.html" with field=form.consultation_end day=form.consultation_end_day month=form.consultation_end_month year=form.consultation_end_year %}
-    {% include "widgets/date_input.html" with field=form.nsc_meeting_date month=form.nsc_meeting_date_month year=form.nsc_meeting_date_year %}
+      {% include "widgets/date_input.html" with field=form.consultation_end day=form.consultation_end_day month=form.consultation_end_month year=form.consultation_end_year %}
+      {% include "widgets/date_input.html" with field=form.nsc_meeting_date month=form.nsc_meeting_date_month year=form.nsc_meeting_date_year %}
 
-    <button type="submit" class="govuk-button" name="save" value="save">
-      {% trans 'Save and continue' %}
-    </button>
+      <button type="submit" class="govuk-button" name="save" value="save"{% if review.dates_confirmed %}disabled{% endif %}>
+        {% trans 'Save and continue' %}
+      </button>
 
-  </form>
-
+    </form>
+  </div>
 {% endblock %}
 

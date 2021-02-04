@@ -12,7 +12,7 @@
     {% include "widgets/field_help.html" %}
     {% include "widgets/field_errors.html" %}
 
-    <div class="govuk-{{ style }}--small{% if inline %}--inline{% endif %}">
+    <div class="govuk-{{ style }}--small{% if inline %} govuk-{{ style }}--inline{% endif %}">
       {% for element in field %}
         <div class="govuk-{{ style }}__item">
 
@@ -25,6 +25,7 @@
             {% if element.data.selected == True %}
               checked="checked"
             {% endif %}
+            {% include "widgets/field_attrs.html" with widget=element.data %}
           >
 
           <label class="govuk-label govuk-{{ style }}__label" for="{{ element.id_for_label }}">

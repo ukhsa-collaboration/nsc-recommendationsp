@@ -16,6 +16,11 @@ urlpatterns = [
     path(r"<slug:slug>/delete/", views.ReviewDelete.as_view(), name="delete"),
     path(r"<slug:slug>/dates/", views.ReviewDates.as_view(), name="dates"),
     path(
+        r"<slug:slug>/dates/confirmation/",
+        views.ReviewDateConfirmation.as_view(),
+        name="open",
+    ),
+    path(
         r"<slug:slug>/stakeholders/",
         views.ReviewStakeholders.as_view(),
         name="stakeholders",

@@ -87,6 +87,7 @@ class Review(TimeStampedModel):
         models.CharField(max_length=10, choices=TYPE), verbose_name=_("type of review"),
     )
 
+    dates_confirmed = models.BooleanField(default=False)
     review_start = models.DateField(
         verbose_name=_("review start date"), null=True, blank=True
     )
@@ -161,10 +162,14 @@ class Review(TimeStampedModel):
         return self.notifications.exists()
 
     def has_consultation_dates_set(self):
-        return self.consultation_start is not None and self.consultation_end is not None
+        return (
+            self.dates_confirmed
+            and self.consultation_start is not None
+            and self.consultation_end is not None
+        )
 
     def has_nsc_meeting_date_set(self):
-        return self.nsc_meeting_date is not None
+        return self.dates_confirmed and self.nsc_meeting_date is not None
 
     def has_external_review(self):
         return Document.objects.for_review(self).external_reviews().exists()
@@ -189,11 +194,19 @@ class Review(TimeStampedModel):
 
     def status(self):
         today = get_today()
-        if self.review_end and self.review_end <= today:
+        if self.dates_confirmed and self.review_end and self.review_end <= today:
             return self.STATUS.completed
-        elif self.consultation_end and self.consultation_end < today:
+        elif (
+            self.dates_confirmed
+            and self.consultation_end
+            and self.consultation_end < today
+        ):
             return self.STATUS.post_consultation
-        elif self.consultation_start and self.consultation_start <= today:
+        elif (
+            self.dates_confirmed
+            and self.consultation_start
+            and self.consultation_start <= today
+        ):
             return self.STATUS.in_consultation
         elif self.has_external_review():
             return self.STATUS.pre_consultation

@@ -6,6 +6,7 @@ from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
 from .forms import (
+    ReviewDateConfirmationForm,
     ReviewDatesForm,
     ReviewForm,
     ReviewHistoryForm,
@@ -91,6 +92,9 @@ class ReviewDates(generic.UpdateView):
 
         return initial
 
+    def get_success_url(self):
+        return reverse_lazy("review:open", kwargs={"slug": self.object.slug})
+
 
 class ReviewStakeholders(generic.UpdateView):
     model = Review
@@ -118,3 +122,15 @@ class ReviewRecommendation(generic.UpdateView):
     lookup_field = "slug"
     form_class = ReviewRecommendationForm
     template_name = "review/review_recommendation.html"
+
+
+class ReviewDateConfirmation(generic.UpdateView):
+    model = Review
+    lookup_field = "slug"
+    form_class = ReviewDateConfirmationForm
+    template_name = "review/review_date_confirmation.html"
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            scheduled=self.object.consultation_start > get_today(), **kwargs
+        )

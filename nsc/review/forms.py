@@ -111,10 +111,7 @@ class ReviewDatesForm(forms.ModelForm):
     consultation_open = forms.TypedChoiceField(
         label=_("Consultation open date"),
         help_text=_("When do you want to open this consultation?"),
-        choices=Choices(
-            (True, "now"),
-            (False, "later"),
-        ),
+        choices=Choices((True, "now"), (False, "later"),),
         widget=forms.RadioSelect,
         required=False,
     )
@@ -186,8 +183,12 @@ class ReviewDatesForm(forms.ModelForm):
             (
                 False,
                 _("Schedule this consultation to automatically open on a later date"),
-            )
+            ),
         )
+
+        # if the dates have already been confirmed disable the fields
+        for field in self.fields.values():
+            field.widget.attrs["disabled"] = self.instance.dates_confirmed
 
     @cached_property
     def today(self):
@@ -198,6 +199,9 @@ class ReviewDatesForm(forms.ModelForm):
         return strtobool(value) if value else None
 
     def clean(self):
+        if self.instance.dates_confirmed:
+            self.add_error(None, _("The dates have already been confirmed."))
+
         data = self.cleaned_data
 
         day = data["consultation_start_day"]
@@ -339,6 +343,60 @@ class ReviewDatesForm(forms.ModelForm):
                 )
 
         return data
+
+
+class ReviewDateConfirmationForm(forms.ModelForm):
+    dates_confirmed = forms.TypedChoiceField(
+        choices=((True, _("Yes")), (False, _("No")),),
+        widget=forms.RadioSelect,
+        initial=None,
+    )
+
+    class Meta:
+        model = Review
+        fields = ("dates_confirmed",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["dates_confirmed"].label = _(
+            "Confirm you want to open the {review} consultation now?"
+        ).format(review=self.instance)
+
+        if self.instance.review_start >= get_today():
+            self.fields["dates_confirmed"].help_text = _(
+                "This will update the public condition page to show the consultation is open and notify "
+                "{stakeholders} by email"
+            ).format(stakeholders=self.instance.stakeholders.count())
+        else:
+            self.fields["dates_confirmed"].help_text = _(
+                "This will schedule the public condition page to show the consultation is open and notify "
+                "{stakeholders} by email on {date}"
+            ).format(
+                stakeholders=self.instance.stakeholders.count(),
+                date=self.instance.consultation_start.strftime("%d %m %Y"),
+            )
+
+        # if the dates have already been confirmed disable the fields
+        for field in self.fields.values():
+            field.widget.attrs["disabled"] = self.instance.dates_confirmed
+
+    def clean(self):
+        if self.instance.dates_confirmed:
+            self.add_error(None, _("The dates have already been confirmed."))
+
+        if not self.instance.consultation_start:
+            self.add_error(
+                None, _("The review consultation start date has not been set.")
+            )
+        if not self.instance.consultation_end:
+            self.add_error(
+                None, _("The review consultation end date has not been set.")
+            )
+        if not self.instance.nsc_meeting_date:
+            self.add_error(None, _("The review UK NSC meeting date has not been set."))
+
+        return super().clean()
 
 
 class ReviewStakeholdersForm(forms.ModelForm):
