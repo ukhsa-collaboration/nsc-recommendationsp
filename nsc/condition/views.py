@@ -5,8 +5,8 @@ from django.views.generic import DetailView, FormView, ListView, TemplateView
 
 from notifications_python_client.errors import HTTPError
 
+from nsc.notify.client import submit_public_comment, submit_stakeholder_comment
 from nsc.policy.models import Policy
-from nsc.utils.notify import submit_public_comment, submit_stakeholder_comment
 
 from .filters import SearchFilter
 from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm

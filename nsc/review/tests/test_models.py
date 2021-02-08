@@ -12,7 +12,6 @@ from ..models import Review
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.review.tests.fixtures", "nsc.document.tests.fixtures"]
 
 
 def test_factory_create_policy():

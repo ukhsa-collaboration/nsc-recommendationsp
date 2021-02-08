@@ -10,11 +10,15 @@ from ..models import Review
 
 
 @pytest.fixture
-def make_review():
-    def _make_review(**kwargs):
+def make_review(make_stakeholder):
+    def _make_review(add_stakeholders=False, **kwargs):
         policy = baker.make(Policy, name="condition", ages="{child}")
         review = baker.make(Review, **kwargs)
         review.policies.add(policy)
+
+        if add_stakeholders:
+            review.stakeholders.add(make_stakeholder(_make_contact=True))
+
         return review
 
     return _make_review

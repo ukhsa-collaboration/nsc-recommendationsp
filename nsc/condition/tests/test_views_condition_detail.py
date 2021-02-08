@@ -10,7 +10,6 @@ from nsc.utils.datetime import get_date_display
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.review.tests.fixtures"]
 
 
 def test_detail_view(django_app):

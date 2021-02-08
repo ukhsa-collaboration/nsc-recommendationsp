@@ -8,7 +8,6 @@ from ..models import Document
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.document.tests.fixtures"]
 
 
 @pytest.fixture

@@ -5,7 +5,6 @@ import pytest
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.document.tests.fixtures"]
 
 
 def test_view(review_document, django_app):

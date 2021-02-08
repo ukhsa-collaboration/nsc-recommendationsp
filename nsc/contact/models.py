@@ -6,6 +6,11 @@ from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
 
+class ContactQuerySet(models.QuerySet):
+    def with_email(self):
+        return self.exclude(email="")
+
+
 class Contact(TimeStampedModel):
 
     name = models.CharField(
@@ -31,6 +36,8 @@ class Contact(TimeStampedModel):
     )
 
     history = HistoricalRecords()
+
+    objects = ContactQuerySet.as_manager()
 
     class Meta:
         ordering = ("name", "pk")

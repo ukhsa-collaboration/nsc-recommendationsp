@@ -59,11 +59,14 @@ Environment variables
     domain name from where the files are served.
 
 
-.. envvar:: NOTIFY_TEMPLATE_CONSULTATION_INVITATION, NOTIFY_TEMPLATE_PUBLIC_COMMENT, NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
+.. envvar:: NOTIFY_TEMPLATE_CONSULTATION_INVITATION, NOTIFY_TEMPLATE_PUBLIC_COMMENT, NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT, NOTIFY_TEMPLATE_CONSULTATION_OPEN
 
     The unique identifiers for each of the templates used to send notifications
     using the UK GOV Notify Service.
 
+.. envvar:: PHE_COMMUNICATIONS_EMAIL
+
+    The email address to send notifications for the PHE communications team to.
 
 .. envvar:: CONSULTATION_COMMENT_ADDRESS
 

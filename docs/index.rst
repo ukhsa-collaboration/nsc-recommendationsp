@@ -19,3 +19,4 @@ UK NSC Project Documentation
    development
    deployment
    settings
+   notifications

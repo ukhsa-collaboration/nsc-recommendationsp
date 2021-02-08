@@ -10,7 +10,6 @@ from nsc.stakeholder.models import Stakeholder
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.policy.tests.fixtures"]
 
 
 @pytest.fixture

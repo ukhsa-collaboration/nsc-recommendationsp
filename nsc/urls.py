@@ -21,6 +21,7 @@ urlpatterns = [
     path(r"policy/", include("nsc.policy.urls", namespace="policy")),
     path(r"review/", include("nsc.review.urls", namespace="review")),
     path(r"_health/", lambda request: HttpResponse()),
+    path("_notify/", include("nsc.notify.urls", namespace="notify")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

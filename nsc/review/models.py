@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
@@ -12,13 +13,21 @@ from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
+from nsc.contact.models import Contact
 from nsc.document.models import Document
+from nsc.notify.models import Email
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
 
 
 class ReviewQuerySet(models.QuerySet):
+    def dates_confirmed(self):
+        return self.filter(dates_confirmed=True)
+
+    def consultation_open(self):
+        return self.dates_confirmed().filter(consultation_start__lte=get_today())
+
     def published(self):
         return self.filter(review_end__lte=get_today()).order_by("-review_start")
 
@@ -114,6 +123,10 @@ class Review(TimeStampedModel):
 
     stakeholders = models.ManyToManyField(Stakeholder, related_name="reviews")
 
+    open_consultation_notifications = models.ManyToManyField(
+        Email, related_name="reviews"
+    )
+
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
 
@@ -155,11 +168,8 @@ class Review(TimeStampedModel):
         # Todo return the name of the person who is managing the review
         return ""
 
-    def has_notified_communications_department(self):
-        return self.phe_comms_notification
-
     def has_notified_stakeholders(self):
-        return self.notifications.exists()
+        return self.stakeholders.exists()
 
     def has_consultation_dates_set(self):
         return (
@@ -236,32 +246,34 @@ class Review(TimeStampedModel):
 
         return super(Review, self).save(**kwargs)
 
+    def send_open_consultation_notifications(self):
+        email_context = {"review": self.name}
 
-class ReviewStakeholderNotification(TimeStampedModel):
-    STATUS = Choices(("PENDING", _("Pending")), ("SENT", _("Sent")),)
+        # find each stakeholder without a notification object and create one
+        existing_notification_emails = self.open_consultation_notifications.values_list(
+            "address", flat=True
+        )
+        self.open_consultation_notifications.add(
+            *Email.objects.bulk_create(
+                Email(
+                    address=contact.email,
+                    template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+                    context=email_context,
+                )
+                for contact in Contact.objects.with_email()
+                .filter(stakeholder__in=self.stakeholders.all())
+                .exclude(email__in=existing_notification_emails)
+            )
+        )
 
-    review = models.ForeignKey(
-        Review, on_delete=models.CASCADE, related_name="notifications"
-    )
-    stakeholder = models.ForeignKey(
-        Stakeholder, on_delete=models.CASCADE, related_name="notifications"
-    )
-    status = models.CharField(choices=STATUS, max_length=7, default=STATUS.PENDING)
-
-    def __str__(self):
-        return f"{self.stakeholder} notification for {self.review}: {self.STATUS[self.status]}"
-
-
-class ReviewPheCommsNotification(TimeStampedModel):
-    STATUS = Choices(("PENDING", _("Pending")), ("SENT", _("Sent")),)
-
-    review = models.OneToOneField(
-        Review, on_delete=models.CASCADE, related_name="phe_comms_notification"
-    )
-    status = models.CharField(choices=STATUS, max_length=7, default=STATUS.PENDING)
-
-    def __str__(self):
-        return f"PHE Communications notification for {self.review}: {self.STATUS[self.status]}"
+        if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
+            self.open_consultation_notifications.add(
+                Email.objects.create(
+                    address=settings.PHE_COMMUNICATIONS_EMAIL,
+                    template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+                    context=email_context,
+                )
+            )
 
 
 @receiver(models.signals.post_delete, sender=Review)

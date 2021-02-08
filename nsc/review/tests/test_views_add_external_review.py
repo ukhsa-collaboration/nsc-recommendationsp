@@ -10,7 +10,6 @@ from nsc.review.models import Review
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.document.tests.fixtures"]
 
 
 def test_view(django_app):

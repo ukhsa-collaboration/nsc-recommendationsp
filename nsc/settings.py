@@ -145,6 +145,7 @@ class Common(Configuration):
         "nsc.stakeholder",
         "nsc.policy",
         "nsc.review",
+        "nsc.notify",
     ]
 
     MIDDLEWARE = [
@@ -293,12 +294,14 @@ class Common(Configuration):
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
     # Settings for the GDS Notify service for sending emails.
+    PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL")
     NOTIFY_SERVICE_ENABLED = False
     NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
     CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS")
     NOTIFY_TEMPLATE_CONSULTATION_INVITATION = get_env(
         "NOTIFY_TEMPLATE_CONSULTATION_INVITATION"
     )
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env("NOTIFY_TEMPLATE_CONSULTATION_OPEN")
     NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
     NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
 

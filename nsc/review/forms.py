@@ -15,7 +15,7 @@ from nsc.utils.datetime import get_today
 
 from ..policy.formsets import PolicySelectionFormset
 from ..stakeholder.formsets import StakeholderSelectionFormset
-from .models import Review, ReviewPheCommsNotification, ReviewStakeholderNotification
+from .models import Review
 
 
 class SearchForm(forms.Form):
@@ -446,14 +446,6 @@ class ReviewStakeholdersForm(forms.ModelForm):
                 f.cleaned_data["stakeholder"] for f in self.extra_stakeholders_formset
             )
         )
-
-        # create notifications so that they can be picked up and sent later on
-        ReviewStakeholderNotification.objects.bulk_create(
-            ReviewStakeholderNotification(stakeholder=s, review=self.instance)
-            for s in self.instance.stakeholders.all()
-        )
-
-        ReviewPheCommsNotification.objects.create(review=self.instance)
 
         return self.instance
 
