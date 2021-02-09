@@ -447,6 +447,8 @@ class ReviewStakeholdersForm(forms.ModelForm):
             )
         )
 
+        self.instance.stakeholders_confirmed = True
+        self.instance.save()
         return self.instance
 
 

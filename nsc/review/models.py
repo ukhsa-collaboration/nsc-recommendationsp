@@ -122,6 +122,7 @@ class Review(TimeStampedModel):
     background_html = models.TextField(verbose_name=_("HTML history"))
 
     stakeholders = models.ManyToManyField(Stakeholder, related_name="reviews")
+    stakeholders_confirmed = models.BooleanField(default=False)
 
     open_consultation_notifications = models.ManyToManyField(
         Email, related_name="reviews"
@@ -169,7 +170,7 @@ class Review(TimeStampedModel):
         return ""
 
     def has_notified_stakeholders(self):
-        return self.stakeholders.exists()
+        return self.stakeholders_confirmed
 
     def has_consultation_dates_set(self):
         return (
