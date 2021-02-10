@@ -22,11 +22,23 @@ class DocumentQuerySet(models.QuerySet):
     def evidence_reviews(self):
         return self.filter(document_type=Document.TYPE.evidence_review)
 
+    def evidence_maps(self):
+        return self.filter(document_type=Document.TYPE.evidence_map)
+
+    def systematic_reviews(self):
+        return self.filter(document_type=Document.TYPE.systematic)
+
+    def cost_effective_models(self):
+        return self.filter(document_type=Document.TYPE.cost)
+
     def external_reviews(self):
         return self.filter(document_type=Document.TYPE.external_review)
 
     def submission_forms(self):
         return self.filter(document_type=Document.TYPE.submission_form)
+
+    def others(self):
+        return self.filter(document_type=Document.TYPE.other)
 
 
 def review_document_path(instance, filename=None):
@@ -52,7 +64,11 @@ class Document(TimeStampedModel):
         ("cover_sheet", _("Coversheet")),
         ("submission_form", _("Submission form")),
         ("evidence_review", _("Evidence review")),
+        ("evidence_map", _("Evidence map")),
+        ("cost", _("Cost-effective model")),
+        ("systematic", _("Systematic review")),
         ("external_review", _("External review")),
+        ("other", _("Other")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
@@ -87,7 +103,8 @@ class Document(TimeStampedModel):
         return self.upload.storage.exists(self.upload.name)
 
     def delete_file(self):
-        self.upload.storage.delete(self.upload.name)
+        if self.upload.name:
+            self.upload.storage.delete(self.upload.name)
 
 
 @receiver(models.signals.post_delete, sender=Document)

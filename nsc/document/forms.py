@@ -8,14 +8,14 @@ from .models import Document
 
 
 def review_document_formset_form_factory(
-    _document_type, _filename, required_error_message
+    _document_type, required_error_message, required=True, review=None,
 ):
     class ReviewDocumentFormsetForm(forms.ModelForm):
-        filename = _filename
         document_type = _document_type
         upload = forms.FileField(
             label=_("Upload a file"),
             error_messages={"required": required_error_message},
+            required=required,
         )
 
         class Meta:
@@ -35,16 +35,19 @@ def review_document_formset_form_factory(
             if f"{self.prefix}-upload" in self.files and self.orig_filename:
                 self.instance.upload.storage.delete(self.orig_filename)
             self.instance.document_type = self.document_type
-            self.instance.name = self.filename
-            return super().save(commit=False)
+            self.instance.name = self.instance.upload.name
+
+            if review:
+                self.instance.review = review
+
+            return super().save(commit=commit)
 
     return ReviewDocumentFormsetForm
 
 
 class ReviewDocumentForm(forms.ModelForm):
     document_type = None
-    file_name = "Document"
-    requires_error_message = _("Select the file for upload")
+    required_error_message = _("Select the file for upload")
 
     class Meta:
         model = Review
@@ -57,13 +60,13 @@ class ReviewDocumentForm(forms.ModelForm):
             min_num=1,
             extra=0,
             form=review_document_formset_form_factory(
-                self.document_type, self.file_name, self.requires_error_message,
+                self.document_type, self.required_error_message,
             ),
             fields=["upload"],
         )(
             data=self.data or None,
             files=self.files or None,
-            queryset=self.instance.get_external_review(),
+            queryset=Document.objects.none(),
             prefix="document",
         )
 
@@ -83,7 +86,7 @@ class ReviewDocumentForm(forms.ModelForm):
 class ExternalReviewForm(ReviewDocumentForm):
     document_type = Document.TYPE.external_review
     file_name = "External review"
-    requires_error_message = _("Select the external review for upload")
+    required_error_message = _("Select the external review for upload")
 
 
 class SubmissionForm(forms.ModelForm):
@@ -106,22 +109,98 @@ class SubmissionForm(forms.ModelForm):
         self.fields["review"].widget = HiddenInput()
 
 
-class ReviewDocumentsForm(forms.Form):
+class ReviewDocumentsForm(forms.ModelForm):
 
-    evidence_review = forms.FileField(
-        label=_("Cover sheet"),
-        error_messages={"required": _("Select the evidence review for upload")},
+    cover_sheet = forms.FileField(label=_("Cover sheet"), required=False,)
+
+    evidence_review = forms.FileField(label=_("Evidence review"), required=False,)
+
+    evidence_map = forms.FileField(label=_("Evidence map"), required=False,)
+
+    cost_effective_model = forms.FileField(
+        label=_("Cost-effective model"), required=False,
     )
 
-    cover_sheet = forms.FileField(
-        label=_("Cover sheet"),
-        error_messages={"required": _("Select the cover sheet for upload")},
-    )
+    systematic_review = forms.FileField(label=_("Systematic review"), required=False,)
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    class Meta:
+        model = Review
+        fields = ()
 
-        self.fields["evidence_review"].widget.attrs.update(
-            {"class": "govuk-file-upload"}
+    def __init__(self, instance=None, initial=None, **kwargs):
+        initial = {
+            "cover_sheet": getattr(instance.cover_sheet, "upload", None),
+            "evidence_review": getattr(instance.evidence_review, "upload", None),
+            "evidence_map": getattr(instance.evidence_map, "upload", None),
+            "cost_effective_model": getattr(
+                instance.cost_effective_model, "upload", None
+            ),
+            "systematic_review": getattr(instance.systematic_review, "upload", None),
+            **(initial or {}),
+        }
+
+        super().__init__(instance=instance, initial=initial, **kwargs)
+
+        if Review.TYPE.evidence not in self.instance.review_type:
+            del self.fields["evidence_review"]
+
+        if Review.TYPE.map not in self.instance.review_type:
+            del self.fields["evidence_map"]
+
+        if Review.TYPE.cost not in self.instance.review_type:
+            del self.fields["cost_effective_model"]
+
+        if Review.TYPE.systematic not in self.instance.review_type:
+            del self.fields["systematic_review"]
+
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "govuk-file-upload"})
+
+    @cached_property
+    def others_formset(self):
+        return modelformset_factory(
+            Document,
+            min_num=0,
+            extra=0,
+            form=review_document_formset_form_factory(
+                Document.TYPE.other,
+                _("Select on other file for upload"),
+                required=False,
+                review=self.instance,
+            ),
+            fields=["upload"],
+        )(
+            data=self.data or None,
+            files=self.files or None,
+            prefix="document",
+            queryset=Document.objects.none(),
         )
-        self.fields["cover_sheet"].widget.attrs.update({"class": "govuk-file-upload"})
+
+    def is_valid(self):
+        others_is_valid = self.others_formset.is_valid()
+        return super().is_valid() and others_is_valid
+
+    def update_doc(self, doc_type, field_name):
+        if field_name in self.files:
+            existing = getattr(self.instance, field_name, None)
+            if existing and existing.id:
+                existing.delete()
+
+            Document.objects.create(
+                review=self.instance,
+                document_type=doc_type,
+                upload=self.cleaned_data[field_name],
+                name=Document.TYPE[doc_type],
+            )
+
+    def save(self, commit=True):
+        self.update_doc(Document.TYPE.cover_sheet, "cover_sheet")
+        self.update_doc(Document.TYPE.evidence_review, "evidence_review")
+        self.update_doc(Document.TYPE.evidence_map, "evidence_map")
+        self.update_doc(Document.TYPE.cost, "cost_effective_model")
+        self.update_doc(Document.TYPE.systematic, "systematic_review")
+
+        if self.others_formset:
+            self.others_formset.save()
+
+        return self.instance

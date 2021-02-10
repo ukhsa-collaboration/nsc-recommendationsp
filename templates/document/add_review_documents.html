@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n utils %}
 
 {% block back %}
-  {% blocktrans asvar back_title with review.name as name %}
-    Back to {{ name }}
-  {% endblocktrans %}
   {% url 'review:detail' review.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
@@ -32,8 +29,12 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/file_upload.html" with field=form.evidence_review %}
-    {% include "widgets/file_upload.html" with field=form.cover_sheet %}
+    {% for field in form %}
+      {% include "widgets/file_upload.html" with document=review|get:field.name %}
+    {% endfor %}
+
+    <label class="govuk-label">{% trans "Other supporting documents" %}</label>
+    {% include "forms/multi-file-upload.html" with formset=form.others_formset existing_documents=review.get_other_review_documents %}
 
     <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}

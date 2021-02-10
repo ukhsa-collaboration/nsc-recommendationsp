@@ -63,13 +63,12 @@ class AddSubmissionFormView(generic.CreateView):
         return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
 
 
-class AddReviewDocumentsView(generic.FormView):
+class AddReviewDocumentsView(generic.UpdateView):
     template_name = "document/add_review_documents.html"
     form_class = ReviewDocumentsForm
-
-    def get_context_data(self, **kwargs):
-        review = Review.objects.get(slug=self.kwargs["slug"])
-        return super().get_context_data(review=review, **kwargs)
+    model = Review
+    slug_url_kwarg = "slug"
+    context_object_name = "review"
 
     def get_success_url(self):
         return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
@@ -92,3 +91,10 @@ class DownloadView(generic.DetailView):
             as_attachment=True,
             content_type=mime_type,
         )
+
+
+class DeleteView(generic.DeleteView):
+    model = Document
+
+    def get_success_url(self):
+        return self.request.GET.get("next") or reverse("dashboard")

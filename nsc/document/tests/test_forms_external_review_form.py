@@ -28,7 +28,6 @@ def form_data(form_pdf):
 def test_form_configuration():
     formset = ExternalReviewForm(instance=baker.make(Review)).formset
     assert Document == formset.form._meta.model
-    assert "External review" == formset.form.filename
     assert Document.TYPE.external_review == formset.form.document_type
     assert "upload" in formset.form._meta.fields
 

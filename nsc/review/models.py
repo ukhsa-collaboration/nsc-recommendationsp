@@ -5,6 +5,7 @@ from django.core.files.storage import default_storage
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -147,11 +148,47 @@ class Review(TimeStampedModel):
     def get_submission_form(self):
         return Document.objects.for_review(self).submission_forms().first()
 
+    @cached_property
+    def submission_form(self):
+        return self.get_submission_form()
+
     def get_cover_sheet(self):
         return Document.objects.for_review(self).cover_sheets().first()
 
+    @cached_property
+    def cover_sheet(self):
+        return self.get_cover_sheet()
+
     def get_evidence_review(self):
         return Document.objects.for_review(self).evidence_reviews().first()
+
+    @cached_property
+    def evidence_review(self):
+        return self.get_evidence_review()
+
+    def get_cost_effective_model(self):
+        return Document.objects.for_review(self).cost_effective_models().first()
+
+    @cached_property
+    def cost_effective_model(self):
+        return self.get_cost_effective_model()
+
+    def get_evidence_map(self):
+        return Document.objects.for_review(self).evidence_maps().first()
+
+    @cached_property
+    def evidence_map(self):
+        return self.get_evidence_map()
+
+    def get_systematic_review(self):
+        return Document.objects.for_review(self).systematic_reviews().first()
+
+    @cached_property
+    def systematic_review(self):
+        return self.get_systematic_review()
+
+    def get_other_review_documents(self):
+        return Document.objects.for_review(self).others()
 
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
@@ -190,6 +227,28 @@ class Review(TimeStampedModel):
 
     def has_evidence_review(self):
         return Document.objects.for_review(self).evidence_reviews().exists()
+
+    def has_supporting_documents(self):
+        required_document_types = {
+            Document.TYPE.cover_sheet,
+            *map(
+                lambda item: item[1],
+                filter(
+                    lambda item: item[0] in self.review_type,
+                    [
+                        (self.TYPE.evidence, Document.TYPE.evidence_review),
+                        (self.TYPE.map, Document.TYPE.evidence_map),
+                        (self.TYPE.cost, Document.TYPE.cost),
+                        (self.TYPE.systematic, Document.TYPE.systematic),
+                    ],
+                ),
+            ),
+        }
+
+        return (
+            set(self.documents.values_list("document_type", flat=True))
+            & required_document_types
+        ) == required_document_types
 
     def has_submission_form(self):
         return Document.objects.for_review(self).submission_forms().exists()

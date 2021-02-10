@@ -1,5 +1,3 @@
-import os
-
 from django.urls import reverse
 
 import pytest
@@ -57,27 +55,5 @@ def test_document_created(minimal_pdf, django_app):
     )
     assert document is not None
     assert document.file_exists()
-    document.delete()
-    review.delete()
-
-
-def test_existing_document_is_replaced(external_review, minimal_pdf, django_app):
-    """
-    Test any existing external review document is replaced by the new upload.
-    """
-    review = external_review.review
-    existing = external_review.upload.name
-
-    form = django_app.get(
-        reverse("review:add-external-review", kwargs={"slug": review.slug})
-    ).form
-    form["document-TOTAL_FORMS"] = 1
-    form["document-0-id"] = external_review.id
-    form["document-0-upload"] = ("new.pdf", minimal_pdf.encode(), "application/pdf")
-    form.submit().follow()
-    document = review.get_external_review().first()
-    assert os.path.basename(document.upload.name) == "new.pdf"
-    assert document.file_exists()
-    assert not document.upload.storage.exists(existing)
     document.delete()
     review.delete()
