@@ -20,9 +20,9 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: test
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-          
+
       redis:
-        image: postgres
+        image: redis
         ports:
           - 6379:6379
 
