@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 from celery import Celery
+from celery.schedules import crontab
 from configurations import importer
 
 
@@ -22,4 +23,9 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
-app.conf.beat_schedule = {}
+app.conf.beat_schedule = {
+    "send-emails": {
+        "task": "nsc.notify.tasks.send_pending_emails",
+        "schedule": crontab(minute="*"),
+    },
+}
