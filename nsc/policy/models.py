@@ -116,7 +116,7 @@ class Policy(TimeStampedModel):
         verbose_name=_("Search keywords"), blank=True, default=""
     )
 
-    archived = models.BooleanField(default=True)
+    archived = models.BooleanField(default=False)
     archived_reason = models.TextField(verbose_name=_("Archived Reason"), blank=True)
     archived_reason_html = models.TextField(
         verbose_name=_("HTML Archived Reason"), blank=True
@@ -146,6 +146,8 @@ class Policy(TimeStampedModel):
         return reverse("policy:edit", kwargs={"slug": self.slug})
 
     def recommendation_display(self):
+        if self.archived:
+            return _("archived")
         return _("Recommended") if self.recommendation else _("Not recommended")
 
     def last_review_display(self):
