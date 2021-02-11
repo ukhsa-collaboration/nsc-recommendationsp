@@ -2,22 +2,25 @@ from distutils.util import strtobool
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.forms import modelformset_factory
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ngettext_lazy
 
 from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
+from ..document.models import Document
 
 from ..policy.formsets import PolicySelectionFormset
 from ..policy.models import Policy
 from ..stakeholder.formsets import StakeholderSelectionFormset
 from .models import Review, SummaryDraft
+from ..utils.markdown import convert
 
 
 class SearchForm(forms.Form):
@@ -534,11 +537,68 @@ class ReviewHistoryForm(forms.ModelForm):
 class ReviewRecommendationForm(forms.ModelForm):
 
     recommendation = forms.TypedChoiceField(
-        label=_("What is the recommended decision for screening?"),
-        choices=Choices((True, _("Recommened")), (False, _("Not recommended"))),
+        choices=Choices((True, _("Recommended")), (False, _("Not recommended"))),
         widget=forms.RadioSelect,
     )
 
     class Meta:
         model = Review
         fields = ["recommendation"]
+
+
+class ReviewPublishForm(forms.ModelForm):
+
+    published = forms.TypedChoiceField(
+        choices=Choices((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+    )
+
+    class Meta:
+        model = Review
+        fields = ["published"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        conditions = list(self.instance.policies.values_list("name", flat=True))
+        joined_conditions = conditions[0]
+        if len(conditions) > 1:
+            joined_conditions = _("{list} and {final}").format(
+                list=', '.join(conditions[:-1]), final=conditions[-1]
+            )
+
+        self.fields["published"].help_text = ngettext_lazy(
+            "This will publish the recommendation decision, plain text summary and supporting "
+            "documents to the public {conditions} page",
+            "This will publish the recommendation decision, plain text summary and supporting "
+            "documents to the public {conditions} pages",
+            len(conditions),
+        ).format(
+            conditions=joined_conditions
+        )
+
+    def save(self, commit=True):
+        summaries = self.instance.summary_drafts.values_list("policy_id", "text")
+
+        with transaction.atomic():
+            # update the recommendation on each policy
+            self.instance.policies.update(recommendation=self.instance.recommendation)
+
+            # attach the documents to the policies
+            self.instance.documents.filter(document_type__in=[
+                Document.TYPE.cover_sheet,
+                Document.TYPE.evidence_review,
+                Document.TYPE.evidence_map,
+                Document.TYPE.cost,
+                Document.TYPE.systematic,
+                Document.TYPE.other,
+            ]).update(policies=self.instance.policies)
+
+            # update the plain english summary of each policy
+            for policy_id, text in summaries:
+                Policy.objects.filter(id=policy_id).update(
+                    summary=text,
+                    summary_html=convert(text)
+                )
+
+            return super().save(commit=commit)

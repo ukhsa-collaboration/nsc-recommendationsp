@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
@@ -12,7 +12,7 @@ from .forms import (
     ReviewHistoryForm,
     ReviewRecommendationForm,
     ReviewStakeholdersForm,
-    ReviewSummaryForm,
+    ReviewSummaryForm, ReviewPublishForm,
 )
 from .models import Review
 
@@ -122,6 +122,22 @@ class ReviewRecommendation(generic.UpdateView):
     lookup_field = "slug"
     form_class = ReviewRecommendationForm
     template_name = "review/review_recommendation.html"
+
+    def get_success_url(self):
+        return reverse("review:publish", kwargs={"slug": self.object.slug})
+
+
+class ReviewPublish(generic.UpdateView):
+    model = Review
+    lookup_field = "slug"
+    form_class = ReviewPublishForm
+    template_name = "review/review_publish.html"
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            **kwargs,
+            decision=_("Recommended") if self.object.recommendation else _("Not Recommended"),
+        )
 
 
 class ReviewDateConfirmation(generic.UpdateView):

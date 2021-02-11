@@ -109,6 +109,8 @@ class Review(TimeStampedModel):
         Email, related_name="reviews"
     )
 
+    published = models.NullBooleanField()
+
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
 
@@ -241,7 +243,7 @@ class Review(TimeStampedModel):
         return self.background and len(self.background) > 0
 
     def has_recommendation(self):
-        return self.recommendation is not None
+        return self.published
 
     def status(self):
         today = get_today()
