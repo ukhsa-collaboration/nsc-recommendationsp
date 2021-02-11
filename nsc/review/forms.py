@@ -2,6 +2,7 @@ from distutils.util import strtobool
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import modelformset_factory
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
@@ -14,8 +15,9 @@ from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
 from ..policy.formsets import PolicySelectionFormset
+from ..policy.models import Policy
 from ..stakeholder.formsets import StakeholderSelectionFormset
-from .models import Review
+from .models import Review, SummaryDraft
 
 
 class SearchForm(forms.Form):
@@ -452,20 +454,67 @@ class ReviewStakeholdersForm(forms.ModelForm):
         return self.instance
 
 
-class ReviewSummaryForm(forms.ModelForm):
-
-    summary = forms.CharField(
-        label=_("Upload plain English summary"),
-        help_text=_("Use markdown to format the text"),
-        widget=forms.Textarea,
-        error_messages={
-            "required": "Enter the summary of the recommendation made for this review."
-        },
-    )
+class SummaryDraftFormsetForm(forms.ModelForm):
+    review = forms.ModelChoiceField(Review.objects.all(), widget=forms.HiddenInput)
+    policy = forms.ModelChoiceField(Policy.objects.all(), widget=forms.HiddenInput)
 
     class Meta:
+        model = SummaryDraft
+        fields = (
+            "review",
+            "policy",
+            "text",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["text"].label = self.instance.policy.name
+        self.fields["text"].help_text = _(
+            "Use markdown to complete the text field below."
+        )
+
+    def save(self, commit=True):
+        self.instance.updated = True
+        return super().save(commit=commit)
+
+
+class ReviewSummaryForm(forms.ModelForm):
+    class Meta:
         model = Review
-        fields = ["summary"]
+        fields = []
+
+    @cached_property
+    def formset(self):
+        summaries = {s.policy: s for s in self.instance.summary_drafts.all()}
+        policies = self.instance.policies.all()
+        for p in policies:
+            if p not in summaries:
+                SummaryDraft.objects.create(
+                    policy=p, review=self.instance, text=p.summary
+                )
+
+        return modelformset_factory(
+            SummaryDraft,
+            form=SummaryDraftFormsetForm,
+            min_num=len(policies),
+            max_num=len(policies),
+            can_delete=False,
+            can_order=False,
+            extra=False,
+        )(
+            queryset=self.instance.summary_drafts.all().order_by("policy__name"),
+            prefix="summary",
+            data=self.data or None,
+        )
+
+    def is_valid(self):
+        formset_valid = self.formset.is_valid()
+        return super().is_valid() and formset_valid
+
+    def save(self, commit=True):
+        self.formset.save(commit=commit)
+        return super().save(commit=commit)
 
 
 class ReviewHistoryForm(forms.ModelForm):

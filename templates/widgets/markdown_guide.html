@@ -1,47 +1,42 @@
 {% load i18n %}
 
-<h2 class="govuk-heading-m">
-  {% trans 'Formatting' %}
+<h2 class="govuk-heading-l">
+  {% trans 'More descriptive instructions?' %}
 </h2>
 
-<p class="govuk-body">
-  {% blocktrans %}
-  To put a title in your template, use a hash:
-  {% endblocktrans %}
-
-  <div class="govuk-inset-text">
-    {% blocktrans %}
-    # This is a title
-    {% endblocktrans %}
+<div class="govuk-body">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">{% trans "Headings" %}</h2>
+      <p>
+        # {% trans "Section or chapter heading (1, 2, 3 etc.)" %}<br/>
+        # {% trans "Subheading (1.1, 1.2 etc.)" %}<br/>
+        # {% trans "Section for chapter heading (1, 2, 3 etc.)" %}
+      </p>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">{% trans "Numbered lists" %}</h2>
+      <p>
+        1. {% trans "Item 1" %}<br/>
+        2. {% trans "Item 2" %}<br/>
+        {% trans "Numbered lists show an order of steps or priorities" %}
+      </p>
+    </div>
   </div>
-</p>
-
-<p class="govuk-body">
-  {% blocktrans %}
-  To make bullet points, use asterisks:
-  {% endblocktrans %}
-
-  <div class="govuk-inset-text">
-    {% blocktrans %}
-    * point 1<br>
-    * point 2<br>
-    * point 3<br>
-    {% endblocktrans %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">{% trans "Bullet lists" %}</h2>
+      <p>
+        * {% trans "item 1" %}<br/>
+        * {% trans "item 2" %}<br/>
+        {% trans "All bullets must start with a lowercase letter" %}
+      </p>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">{% trans "Links (external sites)" %}</h2>
+      <p>
+        [{% trans "Link text" %}](http://www.example.com)
+      </p>
+    </div>
   </div>
-</p>
-
-<h2 class="govuk-heading-m">
-  {% trans 'Links and URLs' %}
-</h2>
-
-<p class="govuk-body">
-  {% blocktrans %}
-  Always use full URLs, starting with https://
-  {% endblocktrans %}
-
-  <div class="govuk-inset-text">
-    {% blocktrans %}
-    Apply now at https://www.gov.uk/example
-    {% endblocktrans %}
-  </div>
-</p>
+</div>
