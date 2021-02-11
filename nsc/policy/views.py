@@ -1,11 +1,27 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, UpdateView
 
 from django_filters.views import FilterView
 
 from .filters import SearchFilter
-from .forms import PolicyForm, SearchForm
+from .forms import PolicyForm, SearchForm, ArchiveForm
 from .models import Policy
+
+
+class PublishPreviewMixin:
+    def is_preview(self):
+        return self.request.POST.get("preview")
+
+    def is_publish(self):
+        return self.request.POST.get("publish")
+
+    def form_valid(self, form):
+        if self.is_publish():
+            return super().form_valid(form=form)
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form, preview=self.is_preview())
+            )
 
 
 class PolicyList(FilterView):
@@ -28,23 +44,41 @@ class PolicyDetail(DetailView):
     template_name = "policy/admin/policy_detail.html"
 
 
-class PolicyEdit(UpdateView):
+class PolicyEdit(PublishPreviewMixin, UpdateView):
     model = Policy
     lookup_field = "slug"
     form_class = PolicyForm
     template_name = "policy/admin/policy_form.html"
     success_url = reverse_lazy("policy:list")
 
-    def is_preview(self):
-        return self.request.POST.get("preview")
 
-    def is_publish(self):
-        return self.request.POST.get("publish")
+class ArchiveDetail(DetailView):
+    model = Policy
+    lookup_field = "slug"
+    context_object_name = "policy"
+    template_name = "policy/admin/archive/detail.html"
 
-    def form_valid(self, form):
-        if self.is_publish():
-            return super().form_valid(form=form)
-        else:
-            return self.render_to_response(
-                self.get_context_data(form=form, preview=self.is_preview())
-            )
+
+class ArchiveUploadDetail(DetailView):
+    model = Policy
+    lookup_field = "slug"
+    context_object_name = "policy"
+    template_name = "policy/admin/archive/upload.html"
+
+
+class ArchiveUpdate(PublishPreviewMixin, UpdateView):
+    form_class = ArchiveForm
+    model = Policy
+    lookup_field = "slug"
+    context_object_name = "policy"
+    template_name = "policy/admin/archive/update.html"
+
+    def get_success_url(self):
+        return reverse("policy:archive:complete", args=(self.get_object().slug,))
+
+
+class ArchiveComplete(DetailView):
+    model = Policy
+    lookup_field = "slug"
+    context_object_name = "policy"
+    template_name = "policy/admin/archive/complete.html"

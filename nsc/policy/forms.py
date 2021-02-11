@@ -128,3 +128,38 @@ class PolicySelectionForm(forms.Form):
 
         self.fields["policy"].widget.attrs.update({"class": "govuk-select"})
         self.fields["policy"].queryset = Policy.objects.all()
+
+
+class ArchiveForm(forms.ModelForm):
+    archived_reason_error = _("You must add a public statement before pressing Archive.")
+    archived_reason_initial = _("This condition has been archived because:")
+
+    archived_reason = forms.CharField(
+        required=True,
+        label=_("Why has this form recommendation been archived?"),
+        help_text=_(
+            "Write a public statement to explain reasons for archiving recommendation (mandatory)"
+            "<br/>"
+            "Use markdown to format the text."),
+        widget=forms.Textarea,
+        initial=archived_reason_initial
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["archived_reason"]
+
+    def clean_archived_reason(self):
+        value = self.cleaned_data["archived_reason"]
+
+        if not value:
+            raise ValidationError(self.archived_reason_error)
+
+        if value == self.archived_reason_initial:
+            raise ValidationError(self.archived_reason_error)
+
+        return value
+
+    def save(self, commit=True):
+        self.instance.archived = True
+        return super().save(commit=commit)

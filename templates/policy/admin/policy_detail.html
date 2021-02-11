@@ -49,6 +49,9 @@
         <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
           {% trans 'Edit information' %}
         </a>
+        <a id="archive-link-id" href="{% url 'policy:archive:detail' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
+          {% trans 'Archive recommendation' %}
+        </a>
       </div>
     </div>
 

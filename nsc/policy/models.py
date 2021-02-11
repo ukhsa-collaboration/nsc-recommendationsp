@@ -116,6 +116,10 @@ class Policy(TimeStampedModel):
         verbose_name=_("Search keywords"), blank=True, default=""
     )
 
+    archived = models.BooleanField(default=True)
+    archived_reason = models.TextField(verbose_name=_("Archived Reason"), blank=True)
+    archived_reason_html = models.TextField(verbose_name=_("HTML Archived Reason"), blank=True)
+
     reviews = models.ManyToManyField(
         "review.Review", verbose_name=_("reviews"), related_name="policies"
     )
@@ -167,6 +171,7 @@ class Policy(TimeStampedModel):
         self.condition_html = convert(self.condition)
         self.summary_html = convert(self.summary)
         self.background_html = convert(self.background)
+        self.archived_reason_html = convert(self.archived_reason)
 
     def latest_review(self):
         return self.reviews.all().published().first()

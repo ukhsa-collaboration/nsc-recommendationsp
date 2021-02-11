@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+    {% url "policy:detail" policy.slug as back_url %}
+    {% trans "Back to policy" as back_title %}
+    {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-m">
+            Archive recommendation
+        </span>
+            <h1 class="govuk-heading-l">
+                {% block title %}{{ policy.name }}{% endblock %}
+            </h1>
+
+            <h2 class="govuk-heading-l">
+                Are you sure you want to archive this recommendation?
+            </h2>
+
+            <p class="govuk-body">
+                Press Continue only if the UK NSC has instructed the
+                removal of this condition from the committee's review list.
+            </p>
+
+            <a id="archive-continue-link-id" href="{% url 'policy:archive:upload' policy.slug %}" role="button"
+               class="govuk-button">
+                {% trans 'Continue' %}
+            </a>
+            or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+    {% url "policy:archive:detail" policy.slug as back_url %}
+    {% trans "Back to recommendation" as back_title %}
+    {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <span class="govuk-caption-m">
+                Archive recommendation
+            </span>
+            <h1 class="govuk-heading-l">
+                {% block title %}{{ policy.name }}{% endblock %}
+            </h1>
+
+            <p class="govuk-body">
+                Upload any documents supporting the UK NSC decision to archive this recommendation (optional).
+                Press Continue if there are no documents to upload.
+            </p>
+
+            <p class="govuk-body">
+                <a href="#">Upload attachment</a>
+            </p>
+
+            <a id="archive-continue-link-id" href="{% url 'policy:archive:update' policy.slug %}" role="button"
+               class="govuk-button">
+                {% trans 'Continue' %}
+            </a>
+            or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+
+        </div>
+    </div>
+{% endblock %}
