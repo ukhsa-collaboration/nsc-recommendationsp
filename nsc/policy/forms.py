@@ -190,7 +190,7 @@ class ArchiveDocumentForm(forms.ModelForm):
                 policy=self.instance,
                 source=DocumentPolicy.SOURCE.archive,
             ),
-            fields=["upload"],
+            fields=["upload", "name"],
         )(
             data=self.data or None,
             files=self.files or None,
