@@ -4,13 +4,13 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from ..review.models import Review
-from .models import Document
+from .models import Document, DocumentPolicy
 
 
-def review_document_formset_form_factory(
-    _document_type, required_error_message, required=True, review=None,
+def document_formset_form_factory(
+    _document_type, required_error_message, required=True, review=None, policy=None, source=None
 ):
-    class ReviewDocumentFormsetForm(forms.ModelForm):
+    class DocumentFormsetForm(forms.ModelForm):
         document_type = _document_type
         upload = forms.FileField(
             label=_("Upload a file"),
@@ -40,9 +40,12 @@ def review_document_formset_form_factory(
             if review:
                 self.instance.review = review
 
+            if policy:
+                DocumentPolicy.objects.create(document=self.instance, policy=policy, source=source)
+
             return super().save(commit=commit)
 
-    return ReviewDocumentFormsetForm
+    return DocumentFormsetForm
 
 
 class ReviewDocumentForm(forms.ModelForm):
@@ -59,7 +62,7 @@ class ReviewDocumentForm(forms.ModelForm):
             Document,
             min_num=1,
             extra=0,
-            form=review_document_formset_form_factory(
+            form=document_formset_form_factory(
                 self.document_type, self.required_error_message,
             ),
             fields=["upload"],
@@ -162,7 +165,7 @@ class ReviewDocumentsForm(forms.ModelForm):
             Document,
             min_num=0,
             extra=0,
-            form=review_document_formset_form_factory(
+            form=document_formset_form_factory(
                 Document.TYPE.other,
                 _("Select on other file for upload"),
                 required=False,

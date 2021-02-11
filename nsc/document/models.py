@@ -58,6 +58,17 @@ def review_document_path(instance, filename=None):
         return path
 
 
+class DocumentPolicy(TimeStampedModel):
+    SOURCE = Choices(
+        ("review", _("Review")),
+        ("archive", _("Archive")),
+    )
+
+    document = models.ForeignKey("Document", on_delete=models.CASCADE)
+    policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE)
+    source = models.CharField(max_length=7, choices=SOURCE, default=SOURCE.review)
+
+
 class Document(TimeStampedModel):
 
     TYPE = Choices(
@@ -81,6 +92,14 @@ class Document(TimeStampedModel):
         on_delete=models.CASCADE,
         verbose_name=_("review"),
         related_name="documents",
+        null=True
+    )
+
+    policies = models.ManyToManyField(
+        "policy.Policy",
+        through="DocumentPolicy",
+        related_name="policy_documents",
+        null=True
     )
 
     history = HistoricalRecords()
