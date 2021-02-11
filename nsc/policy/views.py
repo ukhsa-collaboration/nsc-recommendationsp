@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, UpdateView
 
@@ -9,6 +10,8 @@ from .models import Policy
 
 
 class PublishPreviewMixin:
+    success_message = None
+
     def is_preview(self):
         return self.request.POST.get("preview")
 
@@ -17,7 +20,11 @@ class PublishPreviewMixin:
 
     def form_valid(self, form):
         if self.is_publish():
-            return super().form_valid(form=form)
+            response = super().form_valid(form=form)
+            success_message = self.success_message
+            if success_message:
+                messages.success(self.request, success_message)
+            return response
         else:
             return self.render_to_response(
                 self.get_context_data(form=form, preview=self.is_preview())
@@ -83,13 +90,7 @@ class ArchiveUpdate(PublishPreviewMixin, UpdateView):
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/update.html"
+    success_message = "The UK NSC recommendation for this condition has been archived"
 
     def get_success_url(self):
-        return reverse("policy:archive:complete", args=(self.get_object().slug,))
-
-
-class ArchiveComplete(DetailView):
-    model = Policy
-    lookup_field = "slug"
-    context_object_name = "policy"
-    template_name = "policy/admin/archive/complete.html"
+        return reverse("policy:detail", kwargs={"slug": self.kwargs["slug"]})

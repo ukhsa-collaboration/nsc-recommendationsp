@@ -3,14 +3,26 @@
 <h2 class="govuk-heading-m">
   {% trans 'Documents' %}
 </h2>
-<p class="govuk-body">
-    <dl class="govuk-summary-list">
-      {% for file in policy.get_archive_documents %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          <a class="govuk-link" href="{% url 'document:download' pk=file.id %}">{{ file.name }}</a>
-        </dt>
+{% with documents=policy.get_archive_documents %}
+    {% if documents %}
+        <p class="govuk-body">
+            <dl class="govuk-summary-list">
+              {% for file in documents %}
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                  <a class="govuk-link" href="{% url 'document:download' pk=file.id %}">{{ file.name }}</a>
+                </dt>
+              </div>
+              {% endfor %}
+            </dl>
+        </p>
+    {% else %}
+      <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+          <span class="govuk-warning-text__assistive">Warning</span>
+            {% trans 'There are no archive documents for this condition.' %}
+        </strong>
       </div>
-      {% endfor %}
-    </dl>
-</p>
+    {% endif %}
+{% endwith %}
