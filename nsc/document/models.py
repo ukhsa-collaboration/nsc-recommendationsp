@@ -92,6 +92,7 @@ class Document(TimeStampedModel):
         on_delete=models.CASCADE,
         verbose_name=_("review"),
         related_name="documents",
+        null=True
     )
 
     policies = models.ManyToManyField(
