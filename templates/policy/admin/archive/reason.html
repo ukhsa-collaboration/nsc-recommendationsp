@@ -1,7 +1,5 @@
 {% load i18n %}
 
-{% if policy.archived %}
-  <p class="govuk-body">
-    {{ policy.archived_reason_html|safe }}
-  </p>
-{% endif %}
+<p class="govuk-body">
+{{ policy.archived_reason_html|safe }}
+</p>

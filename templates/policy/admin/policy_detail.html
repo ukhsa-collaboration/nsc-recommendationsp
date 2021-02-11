@@ -25,34 +25,43 @@
           {% block title %}{{ policy.name }}{% endblock %}
         </h1>
 
-        {% include "policy/admin/recommendation.html" %}
-        {% include "policy/admin/last_review.html" %}
-        {% include "policy/admin/next_review.html" %}
-        {% include "policy/admin/documents.html" %}
-        {% include "policy/admin/summary.html" %}
-        {% include "policy/admin/condition.html" %}
-        {% include "policy/admin/review_history.html" %}
-        {% include "policy/admin/stakeholders.html" %}
-
-      </div>
-
-      <div class="govuk-grid-column-one-third">
-        {% if policy.reviews.in_progress %}
-          <a id="manage-review-link-id" href="{% url 'review:detail' policy.reviews.in_progress.first.slug %}" role="button" class="govuk-button" style="float:right">
-            {% trans 'Manage product' %}
-          </a>
+        {% if policy.archived %}
+            {% include "policy/admin/recommendation.html" %}
+            {% include "policy/admin/condition.html" %}
+            {% include "policy/admin/archive/reason.html" %}
+            {% include "policy/admin/archive/documents.html" %}
         {% else %}
-          <a id="create-review-link-id" href="{% url 'review:add' %}?policy={{ policy.slug }}" role="button" class="govuk-button" style="float:right">
-            {% trans 'Create a new product' %}
-          </a>
+            {% include "policy/admin/recommendation.html" %}
+            {% include "policy/admin/last_review.html" %}
+            {% include "policy/admin/next_review.html" %}
+            {% include "policy/admin/documents.html" %}
+            {% include "policy/admin/summary.html" %}
+            {% include "policy/admin/condition.html" %}
+            {% include "policy/admin/review_history.html" %}
+            {% include "policy/admin/stakeholders.html" %}
         {% endif %}
-        <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
-          {% trans 'Edit information' %}
-        </a>
-        <a id="archive-link-id" href="{% url 'policy:archive:detail' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
-          {% trans 'Archive recommendation' %}
-        </a>
+
       </div>
+
+      {% if not policy.archived %}
+          <div class="govuk-grid-column-one-third">
+            {% if policy.reviews.in_progress %}
+              <a id="manage-review-link-id" href="{% url 'review:detail' policy.reviews.in_progress.first.slug %}" role="button" class="govuk-button" style="float:right">
+                {% trans 'Manage product' %}
+              </a>
+            {% else %}
+              <a id="create-review-link-id" href="{% url 'review:add' %}?policy={{ policy.slug }}" role="button" class="govuk-button" style="float:right">
+                {% trans 'Create a new product' %}
+              </a>
+            {% endif %}
+            <a id="edit-link-id" href="{% url 'policy:edit' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
+              {% trans 'Edit information' %}
+            </a>
+            <a id="archive-link-id" href="{% url 'policy:archive:detail' policy.slug %}" role="button" class="govuk-button govuk-button--secondary" style="float:right">
+              {% trans 'Archive recommendation' %}
+            </a>
+          </div>
+      {% endif %}
     </div>
 
   </main>

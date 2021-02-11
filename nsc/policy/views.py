@@ -1,9 +1,7 @@
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import DetailView, UpdateView
 
 from django_filters.views import FilterView
-
-from nsc.document.models import Document
 
 from .filters import SearchFilter
 from .forms import ArchiveDocumentForm, ArchiveForm, PolicyForm, SearchForm
