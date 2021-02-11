@@ -131,7 +131,9 @@ class PolicySelectionForm(forms.Form):
 
 
 class ArchiveForm(forms.ModelForm):
-    archived_reason_error = _("You must add a public statement before pressing Archive.")
+    archived_reason_error = _(
+        "You must add a public statement before pressing Archive."
+    )
     archived_reason_initial = _("This condition has been archived because:")
 
     archived_reason = forms.CharField(
@@ -140,9 +142,10 @@ class ArchiveForm(forms.ModelForm):
         help_text=_(
             "Write a public statement to explain reasons for archiving recommendation (mandatory)"
             "<br/>"
-            "Use markdown to format the text."),
+            "Use markdown to format the text."
+        ),
         widget=forms.Textarea,
-        initial=archived_reason_initial
+        initial=archived_reason_initial,
     )
 
     class Meta:

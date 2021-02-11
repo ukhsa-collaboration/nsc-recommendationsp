@@ -6,38 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('policy', '0001_initial'),
+        ("policy", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='historicalpolicy',
-            name='archived',
+            model_name="historicalpolicy",
+            name="archived",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='historicalpolicy',
-            name='archived_reason',
-            field=models.TextField(blank=True, verbose_name='Archived Reason'),
+            model_name="historicalpolicy",
+            name="archived_reason",
+            field=models.TextField(blank=True, verbose_name="Archived Reason"),
         ),
         migrations.AddField(
-            model_name='historicalpolicy',
-            name='archived_reason_html',
-            field=models.TextField(blank=True, verbose_name='HTML Archived Reason'),
+            model_name="historicalpolicy",
+            name="archived_reason_html",
+            field=models.TextField(blank=True, verbose_name="HTML Archived Reason"),
         ),
         migrations.AddField(
-            model_name='policy',
-            name='archived',
+            model_name="policy",
+            name="archived",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='policy',
-            name='archived_reason',
-            field=models.TextField(blank=True, verbose_name='Archived Reason'),
+            model_name="policy",
+            name="archived_reason",
+            field=models.TextField(blank=True, verbose_name="Archived Reason"),
         ),
         migrations.AddField(
-            model_name='policy',
-            name='archived_reason_html',
-            field=models.TextField(blank=True, verbose_name='HTML Archived Reason'),
+            model_name="policy",
+            name="archived_reason_html",
+            field=models.TextField(blank=True, verbose_name="HTML Archived Reason"),
         ),
     ]

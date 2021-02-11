@@ -118,7 +118,9 @@ class Policy(TimeStampedModel):
 
     archived = models.BooleanField(default=True)
     archived_reason = models.TextField(verbose_name=_("Archived Reason"), blank=True)
-    archived_reason_html = models.TextField(verbose_name=_("HTML Archived Reason"), blank=True)
+    archived_reason_html = models.TextField(
+        verbose_name=_("HTML Archived Reason"), blank=True
+    )
 
     reviews = models.ManyToManyField(
         "review.Review", verbose_name=_("reviews"), related_name="policies"

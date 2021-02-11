@@ -1,10 +1,10 @@
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, UpdateView
 
 from django_filters.views import FilterView
 
 from .filters import SearchFilter
-from .forms import PolicyForm, SearchForm, ArchiveForm
+from .forms import ArchiveForm, PolicyForm, SearchForm
 from .models import Policy
 
 

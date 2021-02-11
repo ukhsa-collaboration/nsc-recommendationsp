@@ -12,9 +12,13 @@ urlpatterns = [
 archive_urlpatterns = (
     [
         path(r"<slug:slug>/", views.ArchiveDetail.as_view(), name="detail"),
-        path(r"<slug:slug>/upload/", views.ArchiveUploadDetail.as_view(), name="upload"),
+        path(
+            r"<slug:slug>/upload/", views.ArchiveUploadDetail.as_view(), name="upload"
+        ),
         path(r"<slug:slug>/update/", views.ArchiveUpdate.as_view(), name="update"),
-        path(r"<slug:slug>/complete/", views.ArchiveComplete.as_view(), name="complete"),
+        path(
+            r"<slug:slug>/complete/", views.ArchiveComplete.as_view(), name="complete"
+        ),
     ],
     "archive",
 )
