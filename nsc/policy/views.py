@@ -1,10 +1,12 @@
 from django.urls import reverse, reverse_lazy
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from django_filters.views import FilterView
 
+from nsc.document.models import Document
+
 from .filters import SearchFilter
-from .forms import ArchiveForm, PolicyForm, SearchForm
+from .forms import ArchiveDocumentForm, ArchiveForm, PolicyForm, SearchForm
 from .models import Policy
 
 
@@ -59,11 +61,22 @@ class ArchiveDetail(DetailView):
     template_name = "policy/admin/archive/detail.html"
 
 
-class ArchiveUploadDetail(DetailView):
+class ArchiveDocumentDetail(DetailView):
+    model = Policy
+    lookup_field = "slug"
+    context_object_name = "policy"
+    template_name = "policy/admin/archive/document.html"
+
+
+class ArchiveDocumentUploadView(UpdateView):
+    form_class = ArchiveDocumentForm
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/upload.html"
+
+    def get_success_url(self):
+        return reverse("policy:archive:upload", kwargs={"slug": self.kwargs["slug"]})
 
 
 class ArchiveUpdate(PublishPreviewMixin, UpdateView):

@@ -9,6 +9,7 @@ from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
+from nsc.document.models import Document
 from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 from nsc.utils.markdown import convert
@@ -147,7 +148,7 @@ class Policy(TimeStampedModel):
 
     def recommendation_display(self):
         if self.archived:
-            return _("archived")
+            return _("Archived")
         return _("Recommended") if self.recommendation else _("Not recommended")
 
     def last_review_display(self):
@@ -179,3 +180,6 @@ class Policy(TimeStampedModel):
 
     def latest_review(self):
         return self.reviews.all().published().first()
+
+    def get_archive_documents(self):
+        return Document.objects.for_policy(self).archive()

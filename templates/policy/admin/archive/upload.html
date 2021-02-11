@@ -8,30 +8,43 @@
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+    <form enctype="multipart/form-data" method="post" id="form-id">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
             <span class="govuk-caption-m">
                 Archive recommendation
             </span>
-            <h1 class="govuk-heading-l">
-                {% block title %}{{ policy.name }}{% endblock %}
-            </h1>
+                <h1 class="govuk-heading-l">
+                    {% block title %}{{ policy.name }}{% endblock %}
+                </h1>
+                {% csrf_token %}
 
-            <p class="govuk-body">
-                Upload any documents supporting the UK NSC decision to archive this recommendation (optional).
-                Press Continue if there are no documents to upload.
-            </p>
+                <p class="govuk-body">
+                    Upload any documents supporting the UK NSC decision to archive this recommendation (optional).
+                    Press Continue if there are no documents to upload.
+                </p>
 
-            <p class="govuk-body">
-                <a href="#">Upload attachment</a>
-            </p>
+                {% if form.errors %}
+                    {% include "widgets/error_summary.html" %}
+                {% endif %}
 
-            <a id="archive-continue-link-id" href="{% url 'policy:archive:update' policy.slug %}" role="button"
-               class="govuk-button">
-                {% trans 'Continue' %}
-            </a>
-            or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+                {% include "forms/multi-file-upload.html" with formset=form.documents_formset capture_name=True existing_documents=policy.get_archive_documents %}
 
+                <p class="govuk-body">
+                    <button type="submit" class="govuk-button" name="preview" value="preview">
+                        {% trans 'Save documents' %}
+                    </button>
+                </p>
+
+                <p class="govuk-body">
+                    <a id="archive-continue-link-id" href="{% url 'policy:archive:update' policy.slug %}" role="button"
+                       class="govuk-button">
+                        {% trans 'Continue' %}
+                    </a>
+                    or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+                </p>
+            </div>
         </div>
-    </div>
+    </form>
+
 {% endblock %}

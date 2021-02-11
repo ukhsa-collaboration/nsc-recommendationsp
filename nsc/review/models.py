@@ -333,7 +333,7 @@ class SummaryDraft(TimeStampedModel):
 
 @receiver(models.signals.post_delete, sender=Review)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
-    from nsc.document.models import review_document_path
+    from nsc.document.models import document_path
 
-    folder = review_document_path(instance)
+    folder = document_path(instance)
     default_storage.delete(folder)

@@ -30,6 +30,9 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
+    {% if capture_name %}
+        {% include "widgets/text_input.html" with field=f.name %}
+    {% endif %}
     {% include "widgets/file_upload.html" with field=f.upload %}
   </fieldset>
   {% endwith %}
@@ -44,6 +47,9 @@
         {% include "widgets/error_summary.html" %}
       {% endif %}
 
+      {% if capture_name %}
+        {% include "widgets/text_input.html" with field=f.name prefix=f.prefix %}
+      {% endif %}
       {% include "widgets/file_upload.html" with field=f.upload %}
     </fieldset>
   {% endfor %}

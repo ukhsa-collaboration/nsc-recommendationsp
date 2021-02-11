@@ -4,7 +4,7 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
-from nsc.document.models import Document, review_document_path
+from nsc.document.models import Document, document_path
 from nsc.utils.datetime import from_today, get_today
 
 from ..models import Review
@@ -201,5 +201,5 @@ def test_deleting_review_deletes_folder(review_document):
     review.delete()
     assert not review_document.exists()
     assert not review_document.file_exists()
-    folder = review_document_path(review)
+    folder = document_path(review)
     assert not review_document.upload.storage.exists(folder)

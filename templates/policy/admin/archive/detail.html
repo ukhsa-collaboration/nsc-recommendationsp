@@ -26,11 +26,13 @@
                 removal of this condition from the committee's review list.
             </p>
 
-            <a id="archive-continue-link-id" href="{% url 'policy:archive:upload' policy.slug %}" role="button"
-               class="govuk-button">
-                {% trans 'Continue' %}
-            </a>
-            or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+            <p class="govuk-body">
+                <a id="archive-continue-link-id" href="{% url 'policy:archive:upload' policy.slug %}" role="button"
+                   class="govuk-button">
+                    {% trans 'Continue' %}
+                </a>
+                or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+            </p>
 
         </div>
     </div>

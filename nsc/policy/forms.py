@@ -3,10 +3,14 @@ import re
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import modelformset_factory
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils import Choices
 
+from nsc.document.forms import document_formset_form_factory
+from nsc.document.models import Document, DocumentPolicy
 from nsc.utils.datetime import get_today
 
 from .models import Policy
@@ -166,3 +170,38 @@ class ArchiveForm(forms.ModelForm):
     def save(self, commit=True):
         self.instance.archived = True
         return super().save(commit=commit)
+
+
+class ArchiveDocumentForm(forms.ModelForm):
+    class Meta:
+        model = Policy
+        fields = []
+
+    @cached_property
+    def documents_formset(self):
+        return modelformset_factory(
+            Document,
+            min_num=1,
+            extra=0,
+            form=document_formset_form_factory(
+                Document.TYPE.archive,
+                _("Select file for upload"),
+                required=True,
+                policy=self.instance,
+                source=DocumentPolicy.SOURCE.archive,
+            ),
+            fields=["upload"],
+        )(
+            data=self.data or None,
+            files=self.files or None,
+            prefix="document",
+            queryset=Document.objects.none(),
+        )
+
+    def is_valid(self):
+        is_valid = self.documents_formset.is_valid()
+        return super().is_valid() and is_valid
+
+    def save(self, commit=True):
+        self.documents_formset.save()
+        return self.instance

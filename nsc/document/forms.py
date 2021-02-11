@@ -8,7 +8,12 @@ from .models import Document, DocumentPolicy
 
 
 def document_formset_form_factory(
-    _document_type, required_error_message, required=True, review=None, policy=None, source=None
+    _document_type,
+    required_error_message,
+    required=True,
+    review=None,
+    policy=None,
+    source=None,
 ):
     class DocumentFormsetForm(forms.ModelForm):
         document_type = _document_type
@@ -31,19 +36,29 @@ def document_formset_form_factory(
 
             self.fields["upload"].widget.attrs.update({"class": "govuk-file-upload"})
 
+            if policy:
+                self.fields["name"] = forms.CharField(label=_("Name"), required=True)
+
         def save(self, commit=True):
             if f"{self.prefix}-upload" in self.files and self.orig_filename:
                 self.instance.upload.storage.delete(self.orig_filename)
             self.instance.document_type = self.document_type
-            self.instance.name = self.instance.upload.name
+
+            self.instance.name = (
+                self.cleaned_data.get("name") or self.instance.upload.name
+            )
 
             if review:
                 self.instance.review = review
 
-            if policy:
-                DocumentPolicy.objects.create(document=self.instance, policy=policy, source=source)
+            document = super().save(commit=commit)
 
-            return super().save(commit=commit)
+            if policy:
+                DocumentPolicy.objects.create(
+                    document=document, policy=policy, source=source
+                )
+
+            return document
 
     return DocumentFormsetForm
 

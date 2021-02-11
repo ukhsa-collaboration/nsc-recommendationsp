@@ -13,6 +13,9 @@ from nsc.utils.datetime import get_today
 
 
 class DocumentQuerySet(models.QuerySet):
+    def for_policy(self, policy):
+        return self.filter(documentpolicy__policy_id=policy.pk)
+
     def for_review(self, review):
         return self.filter(review_id=review.pk)
 
@@ -40,8 +43,11 @@ class DocumentQuerySet(models.QuerySet):
     def others(self):
         return self.filter(document_type=Document.TYPE.other)
 
+    def archive(self):
+        return self.filter(document_type=Document.TYPE.archive)
 
-def review_document_path(instance, filename=None):
+
+def document_path(instance, filename=None):
     from nsc.review.models import Review
 
     if isinstance(instance, Document):
@@ -50,8 +56,13 @@ def review_document_path(instance, filename=None):
         review = instance
     else:
         raise ValueError("Instance must be either a Review or Document")
-    year = review.review_start.year if review.review_start else get_today().year
-    path = os.path.join(str(year), review.slug)
+
+    year = get_today().year
+    path = os.path.join(str(year))
+    if review and review.review_start:
+        year = review.review_start.year
+        path = os.path.join(str(year), review.slug)
+
     if filename:
         return os.path.join(path, filename)
     else:
@@ -59,10 +70,7 @@ def review_document_path(instance, filename=None):
 
 
 class DocumentPolicy(TimeStampedModel):
-    SOURCE = Choices(
-        ("review", _("Review")),
-        ("archive", _("Archive")),
-    )
+    SOURCE = Choices(("review", _("Review")), ("archive", _("Archive")),)
 
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE)
@@ -79,6 +87,7 @@ class Document(TimeStampedModel):
         ("cost", _("Cost-effective model")),
         ("systematic", _("Systematic review")),
         ("external_review", _("External review")),
+        ("archive", _("Archive")),
         ("other", _("Other")),
     )
 
@@ -86,20 +95,20 @@ class Document(TimeStampedModel):
     document_type = models.CharField(
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
-    upload = models.FileField(verbose_name=_("upload"), upload_to=review_document_path)
+    upload = models.FileField(verbose_name=_("upload"), upload_to=document_path)
     review = models.ForeignKey(
         "review.Review",
         on_delete=models.CASCADE,
         verbose_name=_("review"),
         related_name="documents",
-        null=True
+        null=True,
     )
 
     policies = models.ManyToManyField(
         "policy.Policy",
         through="DocumentPolicy",
         related_name="policy_documents",
-        null=True
+        null=True,
     )
 
     history = HistoricalRecords()

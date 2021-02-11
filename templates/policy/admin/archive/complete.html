@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block back %}
-    {% url "policy:list" policy.slug as back_url %}
+    {% url "policy:list" as back_url %}
     {% trans "Back to conditions" as back_title %}
     {% include 'widgets/back_link.html' %}
 {% endblock %}
