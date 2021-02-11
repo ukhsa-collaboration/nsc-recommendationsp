@@ -90,7 +90,7 @@ class ArchiveUpdate(PublishPreviewMixin, UpdateView):
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/update.html"
-    success_message = "The UK NSC recommendation for this condition has been archived"
+    success_message = "Thi recommendation has been archived"
 
     def get_success_url(self):
         return reverse("policy:detail", kwargs={"slug": self.kwargs["slug"]})
