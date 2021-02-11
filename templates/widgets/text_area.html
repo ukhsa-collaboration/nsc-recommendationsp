@@ -16,7 +16,7 @@
   {% include "widgets/field_errors.html" %}
 
   {% with widget=field.field.widget %}
-    <textarea name="{{ field.name }}"
+    <textarea name="{{ field.html_name }}"
               class="govuk-textarea{% if word_limit %} govuk-js-character-count{% endif %}{% if field.errors %} govuk-textarea--error{% endif %}"
               id="{{ field.id_for_label }}"
               {% if field.help_text or field.errors %}
