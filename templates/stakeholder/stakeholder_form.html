@@ -2,7 +2,11 @@
 {% load i18n %}
 
 {% block back %}
-  {% include 'widgets/back_link.html' %}
+  {% if request.GET.next %}
+    {% include 'widgets/back_link.html' with back_url=request.GET.next back_title="Back" %}
+  {% else %}
+    {% include 'widgets/back_link.html' %}
+  {% endif %}
 {% endblock %}
 
 {% block title %}
@@ -86,7 +90,6 @@
         {% for formset_form in formset %}
           <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
             {{ formset_form.non_field_errors }}
-
             <div class="govuk-grid-row">
             {% for field in formset_form %}
               {% if field.is_hidden %}
@@ -112,9 +115,11 @@
           </fieldset>
         {% endfor %}
 
-        <a id="add-contact" type="button" href="#" data-nsc-formset-add="">
-          {% trans 'add another contact' %}
-        </a>
+        <div class="govuk-form-group">
+            <a class="govuk-link" id="add-contact" type="button" href="#" data-nsc-formset-add="">
+              {% trans 'add another contact' %}
+            </a>
+        </div>
 
       </div>
 

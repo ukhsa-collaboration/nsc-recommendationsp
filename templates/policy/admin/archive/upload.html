@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+    {% url "policy:archive:detail" policy.slug as back_url %}
+    {% trans "Back to recommendation" as back_title %}
+    {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block content %}
+    <form enctype="multipart/form-data" method="post" id="form-id">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+            <span class="govuk-caption-m">
+                Archive recommendation
+            </span>
+                <h1 class="govuk-heading-l">
+                    {% block title %}{{ policy.name }}{% endblock %}
+                </h1>
+                {% csrf_token %}
+
+                <p class="govuk-body">
+                    Upload any documents supporting the UK NSC decision to archive this recommendation (optional).
+                    Press Continue if there are no documents to upload.
+                </p>
+
+                {% if form.errors %}
+                    {% include "widgets/error_summary.html" %}
+                {% endif %}
+
+                {% include "forms/multi-file-upload.html" with formset=form.documents_formset capture_name=True existing_documents=policy.get_archive_documents %}
+
+                <p class="govuk-body">
+                    <button type="submit" class="govuk-button" name="preview" value="preview">
+                        {% trans 'Save documents' %}
+                    </button>
+                </p>
+
+                <p class="govuk-body">
+                    <a id="archive-continue-link-id" href="{% url 'policy:archive:update' policy.slug %}" role="button"
+                       class="govuk-button">
+                        {% trans 'Continue' %}
+                    </a>
+                    or <a href="{% url 'policy:detail' policy.slug %}">cancel</a>
+                </p>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

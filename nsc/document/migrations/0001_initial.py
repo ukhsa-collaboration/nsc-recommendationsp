@@ -134,7 +134,7 @@ class Migration(migrations.Migration):
                 (
                     "upload",
                     models.FileField(
-                        upload_to=nsc.document.models.review_document_path,
+                        upload_to=nsc.document.models.document_path,
                         verbose_name="upload",
                     ),
                 ),

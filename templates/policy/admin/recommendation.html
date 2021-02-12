@@ -1,7 +1,15 @@
 {% load i18n %}
 
-<h2 class="govuk-heading-m">
-  {% trans 'Recommendation status' %}
-</h2>
+{% if policy.archived %}
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+      <div class="govuk-error-summary__body">
+        This recommendation has been archived and is no longer regularly reviewed by the UK NSC.
+      </div>
+    </div>
+{% else %}
+    <h2 class="govuk-heading-m">
+      {% trans 'Current recommendation' %}
+    </h2>
 
-<p class="govuk-body">{{ policy.recommendation_display }}</p>
+    <p class="govuk-body">{{ policy.recommendation_display }}</p>
+{% endif %}

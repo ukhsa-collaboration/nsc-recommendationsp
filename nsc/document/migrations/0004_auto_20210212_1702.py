@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name="upload",
             field=models.FileField(
                 max_length=256,
-                upload_to=nsc.document.models.review_document_path,
+                upload_to=nsc.document.models.document_path,
                 verbose_name="upload",
             ),
         ),

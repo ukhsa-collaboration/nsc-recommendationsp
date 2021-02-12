@@ -21,10 +21,10 @@
       {% block back %}
         {% if preview %}
           <a href="" class="govuk-back-link" onclick="document.forms['form-id'].submit(); return false">
-            {% trans 'Back to edit policy' %}
+            {% trans 'Back to edit condition' %}
           </a>
         {% else %}
-          {% trans "Back to policy" as back_title %}
+          {% trans "Back to condition" as back_title %}
           {% include 'widgets/back_link.html' with back_url=object.get_admin_url %}
         {% endif %}
       {% endblock %}
@@ -33,12 +33,12 @@
         <div class="govuk-grid-column-two-thirds">
 
           {% if preview %}
-            <span class="govuk-caption-l">{% trans 'Preview policy' %}</span>
+            <span class="govuk-caption-l">{% trans 'Preview condition' %}</span>
             <h1 class="govuk-heading-l">
               {{ policy.name }}
             </h1>
           {% else %}
-            <span class="govuk-caption-l">{% trans 'Edit policy' %}</span>
+            <span class="govuk-caption-l">{% trans 'Edit condition' %}</span>
             <h1 class="govuk-heading-l">
               {{ form.instance.name }}
             </h1>
@@ -90,7 +90,7 @@
               </button>
           {% else %}
             <button type="submit" class="govuk-button" name="preview" value="preview" style="float: right">
-              {% trans 'Preview' %}
+              {% trans 'Save and preview' %}
             </button>
           {% endif %}
         </div>

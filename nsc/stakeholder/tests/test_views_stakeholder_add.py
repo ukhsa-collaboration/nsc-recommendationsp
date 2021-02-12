@@ -43,6 +43,17 @@ def test_back_link(dom):
     assert link.text.strip() == _("Back to stakeholders")
 
 
+def test_back_link__next(django_app):
+    """
+    Test the back link returns to the stakeholder list page
+    """
+    response = django_app.get(reverse("stakeholder:add") + "?next=/")
+    dom = BeautifulSoup(response.content, "html.parser")
+    link = dom.find(id="back-link-id")
+    assert link["href"] == "/"
+    assert link.text.strip() == _("Back")
+
+
 def test_success_url(policy, response):
     """
     Test saving a contact returns to the stakeholder list page.
@@ -57,6 +68,23 @@ def test_success_url(policy, response):
     form["policies-0-policy"] = policy.id
     actual = form.submit().follow()
     assert actual.request.path == Stakeholder.objects.first().get_detail_url()
+
+
+def test_success_url__next(policy, django_app):
+    """
+    Test saving a contact returns to the stakeholder list page.
+    """
+    response = django_app.get(f'{reverse("stakeholder:add")}?next=/')
+    form = response.form
+    form["name"] = "Name"
+    form["is_public"] = True
+    form["type"] = Stakeholder.TYPE_INDIVIDUAL
+    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["contacts-0-name"] = "Name"
+    form["contacts-0-email"] = "name@example.com"
+    form["policies-0-policy"] = policy.id
+    actual = form.submit().follow()
+    assert actual.request.path == "/"
 
 
 def test_stakeholder_created(policy, response):

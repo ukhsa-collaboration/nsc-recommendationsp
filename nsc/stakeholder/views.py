@@ -32,7 +32,9 @@ class StakeholderAdd(generic.CreateView):
     form_class = StakeholderForm
 
     def get_success_url(self):
-        return reverse("stakeholder:detail", kwargs={"pk": self.object.pk})
+        return self.request.GET.get("next") or reverse(
+            "stakeholder:detail", kwargs={"pk": self.object.pk}
+        )
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(
@@ -47,7 +49,9 @@ class StakeholderEdit(generic.UpdateView):
     form_class = StakeholderForm
 
     def get_success_url(self):
-        return reverse("stakeholder:detail", kwargs={"pk": self.object.pk})
+        return self.request.GET.get("next") or reverse(
+            "stakeholder:detail", kwargs={"pk": self.object.pk}
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
