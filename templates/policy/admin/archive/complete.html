@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+    {% url "policy:list" as back_url %}
+    {% trans "Back to conditions" as back_title %}
+    {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-m">
+            Archive recommendation
+        </span>
+            <h1 class="govuk-heading-l">
+                {% block title %}{{ policy.name }}{% endblock %}
+            </h1>
+
+            {% include "policy/admin/recommendation.html" %}
+
+            <p class="govuk-body">
+                This recommendation has been archived.
+            </p>
+        </div>
+    </div>
+{% endblock %}

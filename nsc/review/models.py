@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
-from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.dispatch import receiver
@@ -51,25 +50,6 @@ class ReviewQuerySet(models.QuerySet):
                 & models.Q(consultation_end__gte=today)
             )
         )
-
-
-class MultipleTypeField(ArrayField):
-    def __init__(self, *args, choices=None, **kwargs):
-        self.multiple_choices = choices or []
-        super().__init__(*args, **kwargs)
-
-    def validate(self, value, model_instance):
-        if not isinstance(value, list):
-            raise ValidationError("Value should be a list.")
-
-        valid_values = [db for db, _ in self.multiple_choices]
-        invalid_values = [v for v in value if v not in valid_values]
-        if invalid_values:
-            raise ValidationError(
-                [f"{v} is not a valid choice." for v in invalid_values]
-            )
-
-        return super().validate(value, model_instance)
 
 
 class Review(TimeStampedModel):
@@ -254,7 +234,8 @@ class Review(TimeStampedModel):
         return Document.objects.for_review(self).submission_forms().exists()
 
     def has_summary(self):
-        return self.summary and len(self.summary) > 0
+        all_summary_drafts = list(self.summary_drafts.all())
+        return len(all_summary_drafts) and all(d.updated for d in all_summary_drafts)
 
     def has_history(self):
         return self.background and len(self.background) > 0
@@ -336,9 +317,23 @@ class Review(TimeStampedModel):
             )
 
 
+class SummaryDraft(TimeStampedModel):
+    text = models.TextField()
+    policy = models.ForeignKey(
+        "policy.Policy", on_delete=models.CASCADE, related_name="summary_drafts"
+    )
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name="summary_drafts"
+    )
+    updated = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Plain English Summary for {self.policy} (review {self.review})."
+
+
 @receiver(models.signals.post_delete, sender=Review)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
-    from nsc.document.models import review_document_path
+    from nsc.document.models import document_path
 
-    folder = review_document_path(instance)
+    folder = document_path(instance)
     default_storage.delete(folder)

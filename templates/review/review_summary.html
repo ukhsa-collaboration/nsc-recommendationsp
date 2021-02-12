@@ -10,7 +10,9 @@
 {% endblock %}
 
 {% block title %}
-  {% trans "Upload plain English summary" %}
+  {% block page_title %}
+    {% trans "Upload plain English summary" %}
+  {% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +28,23 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/text_area.html" with field=form.summary show_legend=True %}
+    {{ form.formset.management_form }}
+
+    {% for formset_form in form.formset %}
+      <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
+        {{ formset_form.non_field_errors }}
+
+        {% for field in formset_form %}
+          {% if field.is_hidden %}
+            {{ field }}
+          {% else %}
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+              {% include "widgets/text_area.html" with show_legend=True %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </fieldset>
+    {% endfor %}
 
     <button type="submit" class="govuk-button" name="submit" value="submit">
       {% trans 'Save and continue' %}

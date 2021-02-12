@@ -16,13 +16,13 @@
   {% include "widgets/field_errors.html" %}
 
   {% with widget=field.field.widget %}
-    <textarea name="{{ field.name }}"
+    <textarea name="{{ field.html_name }}"
               class="govuk-textarea{% if word_limit %} govuk-js-character-count{% endif %}{% if field.errors %} govuk-textarea--error{% endif %}"
               id="{{ field.id_for_label }}"
               {% if field.help_text or field.errors %}
                 aria-describedby="{% if field.help_text %}{{ field.id_for_label }}-hint {% endif %}{% if field.errors %}{{ field.id_for_label }}-error{% endif %}"
               {% endif %}
-              {% include "widgets/field_attrs.html" %}>{% if field.value %}{{ field.value }}{% endif %}</textarea>
+              {% include "widgets/field_attrs.html" %}>{% if field.value %}{{ field.value }}{% elif field.field.initial %}{{ field.field.initial }}{% endif %}</textarea>
   {% endwith %}
 
   {% if word_limit %}

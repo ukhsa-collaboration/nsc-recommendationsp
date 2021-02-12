@@ -9,6 +9,7 @@ from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
+from nsc.document.models import Document
 from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 from nsc.utils.markdown import convert
@@ -116,6 +117,12 @@ class Policy(TimeStampedModel):
         verbose_name=_("Search keywords"), blank=True, default=""
     )
 
+    archived = models.BooleanField(default=False)
+    archived_reason = models.TextField(verbose_name=_("Archived Reason"), blank=True)
+    archived_reason_html = models.TextField(
+        verbose_name=_("HTML Archived Reason"), blank=True
+    )
+
     reviews = models.ManyToManyField(
         "review.Review", verbose_name=_("reviews"), related_name="policies"
     )
@@ -140,6 +147,8 @@ class Policy(TimeStampedModel):
         return reverse("policy:edit", kwargs={"slug": self.slug})
 
     def recommendation_display(self):
+        if self.archived:
+            return _("Archived")
         return _("Recommended") if self.recommendation else _("Not recommended")
 
     def last_review_display(self):
@@ -167,6 +176,10 @@ class Policy(TimeStampedModel):
         self.condition_html = convert(self.condition)
         self.summary_html = convert(self.summary)
         self.background_html = convert(self.background)
+        self.archived_reason_html = convert(self.archived_reason)
 
     def latest_review(self):
         return self.reviews.all().published().first()
+
+    def get_archive_documents(self):
+        return Document.objects.for_policy(self).archive()
