@@ -206,6 +206,15 @@ def test_summary_markdown_conversion():
     assert instance.summary_html == '<h1 class="govuk-heading-xl">Heading</h1>'
 
 
+def test_archived_reason_markdown_conversion():
+    """
+    Test the markdown in the archived_reason attribute is converted to HTML when the model is cleaned.
+    """
+    instance = baker.make(Policy, archived_reason="# Heading", archived_reason_html="")
+    instance.clean()
+    assert instance.archived_reason_html == '<h1 class="govuk-heading-xl">Heading</h1>'
+
+
 @pytest.mark.parametrize(
     "start,end,count",
     [

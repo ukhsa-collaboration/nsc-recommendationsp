@@ -22,6 +22,15 @@ def test_detail_view(django_app):
     assert response.context["policy"] == instance
 
 
+def test_detail_view__when_achived(django_app):
+    """
+    Test that we can view an instance via the detail view when archived.
+    """
+    instance = baker.make(Policy, archived=True)
+    response = django_app.get(instance.get_admin_url())
+    assert response.context["policy"] == instance
+
+
 def test_back_link(django_app):
     """
     Test the back link returns to the policy list page.

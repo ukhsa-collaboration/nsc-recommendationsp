@@ -4,13 +4,18 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from ..review.models import Review
-from .models import Document
+from .models import Document, DocumentPolicy
 
 
-def review_document_formset_form_factory(
-    _document_type, required_error_message, required=True, review=None,
+def document_formset_form_factory(
+    _document_type,
+    required_error_message,
+    required=True,
+    review=None,
+    policy=None,
+    source=None,
 ):
-    class ReviewDocumentFormsetForm(forms.ModelForm):
+    class DocumentFormsetForm(forms.ModelForm):
         document_type = _document_type
         upload = forms.FileField(
             label=_("Upload a file"),
@@ -31,18 +36,31 @@ def review_document_formset_form_factory(
 
             self.fields["upload"].widget.attrs.update({"class": "govuk-file-upload"})
 
+            if policy:
+                self.fields["name"] = forms.CharField(label=_("Name"), required=True)
+
         def save(self, commit=True):
             if f"{self.prefix}-upload" in self.files and self.orig_filename:
                 self.instance.upload.storage.delete(self.orig_filename)
             self.instance.document_type = self.document_type
-            self.instance.name = self.instance.upload.name
+
+            self.instance.name = (
+                self.cleaned_data.get("name") or self.instance.upload.name
+            )
 
             if review:
                 self.instance.review = review
 
-            return super().save(commit=commit)
+            document = super().save(commit=commit)
 
-    return ReviewDocumentFormsetForm
+            if policy:
+                DocumentPolicy.objects.create(
+                    document=document, policy=policy, source=source
+                )
+
+            return document
+
+    return DocumentFormsetForm
 
 
 class ReviewDocumentForm(forms.ModelForm):
@@ -59,7 +77,7 @@ class ReviewDocumentForm(forms.ModelForm):
             Document,
             min_num=1,
             extra=0,
-            form=review_document_formset_form_factory(
+            form=document_formset_form_factory(
                 self.document_type, self.required_error_message,
             ),
             fields=["upload"],
@@ -162,7 +180,7 @@ class ReviewDocumentsForm(forms.ModelForm):
             Document,
             min_num=0,
             extra=0,
-            form=review_document_formset_form_factory(
+            form=document_formset_form_factory(
                 Document.TYPE.other,
                 _("Select on other file for upload"),
                 required=False,
