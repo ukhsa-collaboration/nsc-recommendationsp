@@ -136,7 +136,7 @@ class PolicySelectionForm(forms.Form):
 
 class ArchiveForm(forms.ModelForm):
     archived_reason_error = _(
-        "You must add a public statement before pressing Archive."
+        "You must add to the template provided a public statement before pressing Archive."
     )
     archived_reason_initial = _("This condition has been archived because:")
 
