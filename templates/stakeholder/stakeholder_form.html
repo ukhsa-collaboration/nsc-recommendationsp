@@ -2,7 +2,11 @@
 {% load i18n %}
 
 {% block back %}
-  {% include 'widgets/back_link.html' %}
+  {% if request.GET.next %}
+    {% include 'widgets/back_link.html' with back_url=request.GET.next back_title="Back" %}
+  {% else %}
+    {% include 'widgets/back_link.html' %}
+  {% endif %}
 {% endblock %}
 
 {% block title %}

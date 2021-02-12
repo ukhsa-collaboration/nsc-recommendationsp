@@ -8,7 +8,10 @@
   {% for stakeholder in policy.stakeholders.all %}
     <li>
       {% if form %}
-        <a class="govuk-link" href="{% url "stakeholder:edit" stakeholder.pk %}?next={% url "policy:edit" policy.slug %}">{{ stakeholder.name }}</a>
+        <a class="govuk-link"
+           href="{% url "stakeholder:edit" stakeholder.pk %}?next={% url "policy:edit" policy.slug %}">
+            {{ stakeholder.name }}
+        </a>
       {% else %}
         <a class="govuk-link" href="{{ stakeholder.url }}">{{ stakeholder.name }}</a>
       {% endif %}

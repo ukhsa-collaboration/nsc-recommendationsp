@@ -43,6 +43,17 @@ def test_back_link(dom):
     assert link.text.strip() == _("Back to stakeholders")
 
 
+def test_back_link__next(django_app):
+    """
+    Test the back link returns to the stakeholder list page
+    """
+    response = django_app.get(reverse("stakeholder:add") + "?next=/")
+    dom = BeautifulSoup(response.content, "html.parser")
+    link = dom.find(id="back-link-id")
+    assert link["href"] == "/"
+    assert link.text.strip() == _("Back")
+
+
 def test_success_url(policy, response):
     """
     Test saving a contact returns to the stakeholder list page.
