@@ -59,6 +59,24 @@ def test_success_url(policy, response):
     assert actual.request.path == Stakeholder.objects.first().get_detail_url()
 
 
+def test_success_url__next(policy, django_app):
+    """
+    Test saving a contact returns to the stakeholder list page.
+    """
+    policy_edit = reverse("policy:edit", args=(policy.slug,))
+    response = django_app.get(f'{reverse("stakeholder:add")}?next={policy_edit}')
+    form = response.form
+    form["name"] = "Name"
+    form["is_public"] = True
+    form["type"] = Stakeholder.TYPE_INDIVIDUAL
+    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["contacts-0-name"] = "Name"
+    form["contacts-0-email"] = "name@example.com"
+    form["policies-0-policy"] = policy.id
+    actual = form.submit().follow()
+    assert actual.request.path == policy_edit
+
+
 def test_stakeholder_created(policy, response):
     """
     Test that the stakeholder object is created.

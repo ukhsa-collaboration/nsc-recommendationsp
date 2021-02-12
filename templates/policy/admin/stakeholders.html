@@ -7,7 +7,11 @@
 <ul class="govuk-list">
   {% for stakeholder in policy.stakeholders.all %}
     <li>
-      <a class="govuk-link" href="{{ stakeholder.url }}">{{ stakeholder.name }}</a>
+      {% if form %}
+        <a class="govuk-link" href="{% url "stakeholder:edit" stakeholder.pk %}?next={% url "policy:edit" policy.slug %}">{{ stakeholder.name }}</a>
+      {% else %}
+        <a class="govuk-link" href="{{ stakeholder.url }}">{{ stakeholder.name }}</a>
+      {% endif %}
       {% if not stakeholder.is_public %}(not public){% endif %}
     </li>
   {% empty %}
@@ -18,5 +22,5 @@
 </ul>
 
 {% if form %}
-    <a class="govuk-link" href="{% url "stakeholder:add" %}">Add a stakeholder to notify.</a>
+    <a class="govuk-link" href="{% url "stakeholder:add" %}?next={% url "policy:edit" policy.slug %}">Add a stakeholder to notify.</a>
 {% endif %}
