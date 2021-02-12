@@ -71,7 +71,9 @@ class AddReviewDocumentsView(generic.UpdateView):
     context_object_name = "review"
 
     def get_success_url(self):
-        return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
+        return self.request.GET.get("next") or reverse(
+            "review:detail", kwargs={"slug": self.kwargs["slug"]}
+        )
 
 
 class DownloadView(generic.DetailView):

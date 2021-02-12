@@ -170,6 +170,10 @@ class Review(TimeStampedModel):
     def get_other_review_documents(self):
         return Document.objects.for_review(self).others()
 
+    @cached_property
+    def other_review_documents(self):
+        return self.get_other_review_documents()
+
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
 
@@ -201,12 +205,6 @@ class Review(TimeStampedModel):
 
     def has_external_review(self):
         return Document.objects.for_review(self).external_reviews().exists()
-
-    def has_cover_sheet(self):
-        return Document.objects.for_review(self).cover_sheets().exists()
-
-    def has_evidence_review(self):
-        return Document.objects.for_review(self).evidence_reviews().exists()
 
     def has_supporting_documents(self):
         required_document_types = {

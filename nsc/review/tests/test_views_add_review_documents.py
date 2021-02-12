@@ -20,6 +20,42 @@ def test_view(make_review, django_app):
     assert response.status == "200 OK"
 
 
+def test_success_url(make_review, django_app, minimal_pdf):
+    """
+    Test success url on submit.
+    """
+    review = make_review(slug="abc")
+    response = django_app.get(
+        reverse("review:add-review-documents", kwargs={"slug": review.slug})
+    )
+    form = response.form
+    form["cover_sheet"] = (
+        "document.pdf",
+        minimal_pdf.encode(),
+        "application/pdf",
+    )
+    actual = form.submit().follow()
+    assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
+
+
+def test_success_url__next(make_review, django_app, minimal_pdf):
+    """
+    Test success url is next when provided.
+    """
+    review = make_review(slug="abc")
+    response = django_app.get(
+        reverse("review:add-review-documents", kwargs={"slug": review.slug}) + "?next=/"
+    )
+    form = response.form
+    form["cover_sheet"] = (
+        "document.pdf",
+        minimal_pdf.encode(),
+        "application/pdf",
+    )
+    actual = form.submit().follow()
+    assert actual.request.path == "/"
+
+
 @pytest.mark.parametrize(
     "review_type,expected_field",
     (

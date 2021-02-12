@@ -63,8 +63,7 @@ def test_success_url__next(policy, django_app):
     """
     Test saving a contact returns to the stakeholder list page.
     """
-    policy_edit = reverse("policy:edit", args=(policy.slug,))
-    response = django_app.get(f'{reverse("stakeholder:add")}?next={policy_edit}')
+    response = django_app.get(f'{reverse("stakeholder:add")}?next=/')
     form = response.form
     form["name"] = "Name"
     form["is_public"] = True
@@ -74,7 +73,7 @@ def test_success_url__next(policy, django_app):
     form["contacts-0-email"] = "name@example.com"
     form["policies-0-policy"] = policy.id
     actual = form.submit().follow()
-    assert actual.request.path == policy_edit
+    assert actual.request.path == "/"
 
 
 def test_stakeholder_created(policy, response):
