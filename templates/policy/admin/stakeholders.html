@@ -5,9 +5,10 @@
 </h2>
 
 <ul class="govuk-list">
-  {% for stakeholder in policy.stakeholder.all %}
+  {% for stakeholder in policy.stakeholders.all %}
     <li>
       <a class="govuk-link" href="{{ stakeholder.url }}">{{ stakeholder.name }}</a>
+      {% if not stakeholder.is_public %}(not public){% endif %}
     </li>
   {% empty %}
     <li>
@@ -15,3 +16,7 @@
     </li>
   {% endfor %}
 </ul>
+
+{% if form %}
+    <a class="govuk-link" href="{% url "stakeholder:add" %}">Add a stakeholder to notify.</a>
+{% endif %}

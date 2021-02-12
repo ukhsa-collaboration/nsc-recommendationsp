@@ -15,9 +15,9 @@ ContactFormSet = inlineformset_factory(
     Contact,
     fields=("name", "role", "email", "phone", "stakeholder"),
     form=ContactForm,
-    extra=0,
+    extra=1,
     can_delete=False,
-    min_num=1,
+    min_num=0,
     max_num=5,
     validate_min=True,
 )

@@ -86,7 +86,6 @@
         {% for formset_form in formset %}
           <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
             {{ formset_form.non_field_errors }}
-
             <div class="govuk-grid-row">
             {% for field in formset_form %}
               {% if field.is_hidden %}
