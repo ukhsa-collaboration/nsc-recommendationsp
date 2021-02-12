@@ -57,6 +57,7 @@ class PolicyEdit(PublishPreviewMixin, UpdateView):
     form_class = PolicyForm
     template_name = "policy/admin/policy_form.html"
     success_url = reverse_lazy("policy:list")
+    success_message = "Published changes to conditions page."
 
 
 class ArchiveDetail(DetailView):
@@ -90,7 +91,7 @@ class ArchiveUpdate(PublishPreviewMixin, UpdateView):
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/update.html"
-    success_message = "Thi recommendation has been archived"
+    success_message = "This recommendation has been archived"
 
     def get_success_url(self):
         return reverse("policy:detail", kwargs={"slug": self.kwargs["slug"]})
