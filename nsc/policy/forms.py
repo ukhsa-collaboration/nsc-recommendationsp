@@ -53,7 +53,7 @@ class PolicyForm(forms.ModelForm):
 
     next_review = forms.CharField(
         required=False,
-        label=_("Expected next review start date"),
+        label=_("Date next review expected to open"),
         help_text=_("Enter the year in which the policy will be reviewed next"),
     )
     condition = forms.CharField(
