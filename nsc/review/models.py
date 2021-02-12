@@ -70,8 +70,8 @@ class Review(TimeStampedModel):
         ("other", _("Other")),
     )
 
-    name = models.CharField(verbose_name=_("name"), max_length=256)
-    slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
+    name = models.CharField(verbose_name=_("name"), max_length=100)
+    slug = models.SlugField(verbose_name=_("slug"), max_length=100, unique=True)
 
     review_type = ArrayField(
         models.CharField(max_length=10, choices=TYPE), verbose_name=_("type of review"),
@@ -106,7 +106,11 @@ class Review(TimeStampedModel):
     stakeholders_confirmed = models.BooleanField(default=False)
 
     open_consultation_notifications = models.ManyToManyField(
-        Email, related_name="reviews"
+        Email, related_name="open_consultation_reviews"
+    )
+
+    decision_published_notifications = models.ManyToManyField(
+        Email, related_name="publish_notification_reviews"
     )
 
     published = models.NullBooleanField()
@@ -289,18 +293,21 @@ class Review(TimeStampedModel):
 
         return super(Review, self).save(**kwargs)
 
-    def send_open_consultation_notifications(self):
-        email_context = {"review": self.name}
+    def get_email_context(self, **extra):
+        return {"review": self.name, "url": self.get_absolute_url(), **extra}
+
+    def send_notifications(
+        self, relation, stakeholder_template, comms_template, extra_context=None
+    ):
+        email_context = self.get_email_context(**(extra_context or {}))
 
         # find each stakeholder without a notification object and create one
-        existing_notification_emails = self.open_consultation_notifications.values_list(
-            "address", flat=True
-        )
-        self.open_consultation_notifications.add(
+        existing_notification_emails = relation.values_list("address", flat=True)
+        relation.add(
             *Email.objects.bulk_create(
                 Email(
                     address=contact.email,
-                    template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+                    template_id=stakeholder_template,
                     context=email_context,
                 )
                 for contact in Contact.objects.with_email()
@@ -310,13 +317,27 @@ class Review(TimeStampedModel):
         )
 
         if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
-            self.open_consultation_notifications.add(
+            relation.add(
                 Email.objects.create(
                     address=settings.PHE_COMMUNICATIONS_EMAIL,
-                    template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+                    template_id=comms_template,
                     context=email_context,
                 )
             )
+
+    def send_open_consultation_notifications(self):
+        self.send_notifications(
+            self.open_consultation_notifications,
+            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+        )
+
+    def send_decision_notifications(self):
+        self.send_notifications(
+            self.decision_published_notifications,
+            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+        )
 
 
 class SummaryDraft(TimeStampedModel):
@@ -329,8 +350,27 @@ class SummaryDraft(TimeStampedModel):
     )
     updated = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = (("policy", "review"),)
+
     def __str__(self):
         return f"Plain English Summary for {self.policy} (review {self.review})."
+
+
+class ReviewRecommendation(TimeStampedModel):
+    recommendation = models.NullBooleanField()
+    policy = models.ForeignKey(
+        "policy.Policy", on_delete=models.CASCADE, related_name="review_recommendations"
+    )
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name="review_recommendations"
+    )
+
+    class Meta:
+        unique_together = (("policy", "review"),)
+
+    def __str__(self):
+        return f"Review recommendation for {self.policy} (review {self.review})."
 
 
 @receiver(models.signals.post_delete, sender=Review)

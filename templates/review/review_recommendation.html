@@ -25,7 +25,24 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/radio_buttons.html" with field=form.recommendation show_legend=False size='m' inline=True %}
+    {{ form.formset.management_form }}
+
+    {% for formset_form in form.formset %}
+      <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
+        {{ formset_form.non_field_errors }}
+
+        {% for field in formset_form %}
+          {% if field.is_hidden %}
+            {{ field }}
+          {% else %}
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+              {% include "widgets/radio_buttons.html" with show_legend=True size='m' inline=True %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </fieldset>
+    {% endfor %}
+
 
     <p class="govuk-body">
       {% now "Y" as current_year %}

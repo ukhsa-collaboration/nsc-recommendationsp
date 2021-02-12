@@ -8,7 +8,12 @@ from .models import Document, DocumentPolicy
 
 
 def document_formset_form_factory(
-    _document_type, required_error_message, required=True, review=None, policy=None, source=None
+    _document_type,
+    required_error_message,
+    required=True,
+    review=None,
+    policy=None,
+    source=None,
 ):
     class DocumentFormsetForm(forms.ModelForm):
         document_type = _document_type
@@ -41,7 +46,9 @@ def document_formset_form_factory(
                 self.instance.review = review
 
             if policy:
-                DocumentPolicy.objects.create(document=self.instance, policy=policy, source=source)
+                DocumentPolicy.objects.create(
+                    document=self.instance, policy=policy, source=source
+                )
 
             return super().save(commit=commit)
 

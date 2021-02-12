@@ -6,18 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0012_summarydraft_updated'),
+        ("review", "0012_summarydraft_updated"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='historicalreview',
-            name='published',
+            model_name="historicalreview",
+            name="published",
             field=models.NullBooleanField(),
         ),
         migrations.AddField(
-            model_name='review',
-            name='published',
-            field=models.NullBooleanField(),
+            model_name="review", name="published", field=models.NullBooleanField(),
         ),
     ]

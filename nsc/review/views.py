@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
@@ -10,9 +10,10 @@ from .forms import (
     ReviewDatesForm,
     ReviewForm,
     ReviewHistoryForm,
+    ReviewPublishForm,
     ReviewRecommendationForm,
     ReviewStakeholdersForm,
-    ReviewSummaryForm, ReviewPublishForm,
+    ReviewSummaryForm,
 )
 from .models import Review
 
@@ -136,7 +137,9 @@ class ReviewPublish(generic.UpdateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(
             **kwargs,
-            decision=_("Recommended") if self.object.recommendation else _("Not Recommended"),
+            decision=_("Recommended")
+            if self.object.recommendation
+            else _("Not Recommended"),
         )
 
 

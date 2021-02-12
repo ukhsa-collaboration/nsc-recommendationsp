@@ -59,10 +59,7 @@ def review_document_path(instance, filename=None):
 
 
 class DocumentPolicy(TimeStampedModel):
-    SOURCE = Choices(
-        ("review", _("Review")),
-        ("archive", _("Archive")),
-    )
+    SOURCE = Choices(("review", _("Review")), ("archive", _("Archive")),)
 
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE)
@@ -86,20 +83,22 @@ class Document(TimeStampedModel):
     document_type = models.CharField(
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
-    upload = models.FileField(verbose_name=_("upload"), upload_to=review_document_path)
+    upload = models.FileField(
+        verbose_name=_("upload"), upload_to=review_document_path, max_length=256
+    )
     review = models.ForeignKey(
         "review.Review",
         on_delete=models.CASCADE,
         verbose_name=_("review"),
         related_name="documents",
-        null=True
+        null=True,
     )
 
     policies = models.ManyToManyField(
         "policy.Policy",
         through="DocumentPolicy",
         related_name="policy_documents",
-        null=True
+        null=True,
     )
 
     history = HistoricalRecords()
