@@ -39,10 +39,11 @@
             {% trans 'Filter conditions by:' %}
           </h2>
 
-          {% include 'widgets/text_input.html' with field=form.name %}
-          {% include 'widgets/radio_buttons.html' with field=form.comments %}
-          {% include 'widgets/radio_buttons.html' with field=form.affects %}
-          {% include 'widgets/radio_buttons.html' with field=form.screen %}
+          {% include 'widgets/text_input.html' with field=form.name show_legend=True %}
+          {% include 'widgets/radio_buttons.html' with field=form.comments show_legend=True %}
+          {% include 'widgets/radio_buttons.html' with field=form.affects show_legend=True %}
+          {% include 'widgets/radio_buttons.html' with field=form.screen show_legend=True %}
+          {% include 'widgets/checkbox.html' with field=form.archived show_legend=True label="Display archived recommendations" %}
 
           <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
             {% trans 'Search' %}
@@ -72,10 +73,12 @@
             <td class="govuk-table__cell"><a
                 href="{{ object.get_public_url }}">{{ object.name }}</a></td>
             <td class="govuk-table__cell">{{ object.ages_display }}</td>
-            <td class="govuk-table__cell">{{ object.recommendation_display }}</td>
+            <td class="govuk-table__cell">
+                {{ object.recommendation_display }}
+            </td>
             <td class="govuk-table__cell">
               {% if object.reviews_in_consultation %}
-                <strong class="govuk-tag govuk-tag--blue">
+                <strong class="govuk-tag govuk-tag">
                   {% trans 'OPEN' %}
                 </strong>
               {% endif %}

@@ -76,6 +76,10 @@ class PolicyQuerySet(models.QuerySet):
             )
         )
 
+    def exclude_archived(self):
+        return self.filter(archived=False)
+
+
 
 class Policy(TimeStampedModel):
 

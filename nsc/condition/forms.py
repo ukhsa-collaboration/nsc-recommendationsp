@@ -34,6 +34,12 @@ class SearchForm(forms.Form):
         required=False,
     )
 
+    archived = forms.TypedChoiceField(
+        label=_("Archive recommendations"),
+        choices=(("yes", _("Yes")), ("no", _("No"))),
+        widget=forms.CheckboxInput,
+        required=False,
+    )
 
 class PublicCommentForm(forms.Form):
 

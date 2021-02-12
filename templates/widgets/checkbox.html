@@ -1,0 +1,31 @@
+{% load i18n %}
+
+<div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+{% if show_legend %}
+{% include "widgets/field_legend.html" %}
+{% else %}
+{% include "widgets/field_label.html" %}
+{% endif %}
+
+{% include "widgets/field_help.html" %}
+{% include "widgets/field_errors.html" %}
+
+<div class="govuk-checkboxes--small{% if inline %} govuk-checkboxes--inline{% endif %}">
+    <div class="govuk-checkboxes__item">
+      <input
+        type="checkbox"
+        name="{{ field.name }}"
+        class="govuk-checkboxes__input"
+        id="{{ field.id_for_label }}"
+        {% if field.value %}
+          checked="checked"
+        {% endif %}
+        {% include "widgets/field_attrs.html" with widget=field.data %}
+      >
+
+      <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
+        {% if label %}{{ label }}{% else %}{{ field.label }}{% endif %}
+      </label>
+    </div>
+</div>
+</div>
