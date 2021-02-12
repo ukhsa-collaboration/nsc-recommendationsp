@@ -192,7 +192,7 @@ def test_closed_for_comments(start, end, count):
     assert count == actual
 
 
-@pytest.skip()
+@pytest.mark.skip(reason="needs reworking re DocumentPolicy")
 def test_deleting_review_deletes_folder(review_document):
     """
     TODO - given model changes re Review or DocumentPolicy this will need to change, will pick up in next PR. JO.
