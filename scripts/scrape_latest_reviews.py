@@ -50,7 +50,7 @@ def run():
         review.save()
 
         policy = Policy.objects.get(slug=entry["slug"])
-        policy.last_review = last_review_date
+        policy.legacy_last_review = last_review_date
         policy.next_review = last_review_date + relativedelta(years=3)
         policy.summary = review.summary
 

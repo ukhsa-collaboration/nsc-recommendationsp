@@ -11,7 +11,7 @@
 {% endif %}
 
 <p class="govuk-body">
-  {% blocktrans with year=policy.last_review.year %}
+  {% blocktrans with year=policy.legacy_last_review.year %}
   Date previous review completed: {{ year }}
   {% endblocktrans %}
 </p>

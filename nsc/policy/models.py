@@ -99,8 +99,13 @@ class Policy(TimeStampedModel):
         verbose_name=_("recommendation"), default=False
     )
 
-    last_review = models.DateField(verbose_name=_("last review"), null=True, blank=True)
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
+    legacy_last_review = models.DateField(
+        verbose_name=_("last review"),
+        null=True,
+        blank=True,
+        help_text="Populated via scrape, used when no reviews are completed via this app."
+    )
 
     ages = ChoiceArrayField(
         models.CharField(
@@ -155,10 +160,10 @@ class Policy(TimeStampedModel):
             return _("Archived")
         return _("Recommended") if self.recommendation else _("Not recommended")
 
-    def last_review_display(self):
+    def legacy_last_review_display(self):
         return (
-            self.last_review.strftime("%B %Y")
-            if self.last_review
+            self.legacy_last_review.strftime("%B %Y")
+            if self.legacy_last_review
             else _("This policy has not been reviewed")
         )
 

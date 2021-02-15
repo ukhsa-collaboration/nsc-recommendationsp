@@ -11,7 +11,7 @@ class PolicyAdmin(admin.ModelAdmin):
         "name",
         "ages_display",
         "recommendation",
-        "last_review",
+        "legacy_last_review",
         "next_review",
         "is_active",
     )
