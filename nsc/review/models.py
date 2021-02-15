@@ -94,8 +94,6 @@ class Review(TimeStampedModel):
         verbose_name=_("NSC meeting date"), null=True, blank=True
     )
 
-    recommendation = models.NullBooleanField(verbose_name=_("recommendation"))
-
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
 
@@ -246,6 +244,13 @@ class Review(TimeStampedModel):
 
     def has_recommendation(self):
         return self.published
+
+    @cached_property
+    def recommendation(self):
+        review_recommendation = self.review_recommendations.first()
+        if review_recommendation:
+            return review_recommendation.recommendation
+        return False
 
     def status(self):
         today = get_today()

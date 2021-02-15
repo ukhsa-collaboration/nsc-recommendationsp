@@ -13,7 +13,7 @@
 
 {% block content %}
 
-  {% if current_review %}
+  {% if policy.current_review %}
     <div class="govuk-warning-text govuk-body nsc-open-for-comment">
       <div class="govuk-!-font-weight-bold">
         {% trans 'We are currently accepting public comments on this condition.' %}
@@ -27,13 +27,13 @@
         </a>
       </div>
       <div>
-        {% blocktrans with closing_date=current_review.consultation_end_display %}
+        {% blocktrans with closing_date=policy.current_review.consultation_end_display %}
           Closing date: {{ closing_date }}.
         {% endblocktrans %}
       </div>
-      {% if current_review.nsc_meeting_date %}
+      {% if policy.current_review.nsc_meeting_date %}
         <div>
-          {% blocktrans with review_date=current_review.nsc_meeting_date_display %}
+          {% blocktrans with review_date=policy.current_review.nsc_meeting_date_display %}
             Scheduled UK NSC meeting date: {{ review_date }}.
           {% endblocktrans %}
         </div>
@@ -44,6 +44,7 @@
   {% include "policy/public/condition.html" %}
   {% include "policy/public/summary.html" %}
   {% include "policy/public/documents.html" %}
+  {% include "policy/public/screening.html" %}
   {% include "policy/public/review_cycle.html" %}
   {% include "policy/public/stakeholders.html" %}
 {% endblock %}

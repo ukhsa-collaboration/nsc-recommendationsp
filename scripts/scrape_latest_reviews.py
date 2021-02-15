@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
 
 from nsc.policy.models import Policy
-from nsc.review.models import Review
+from nsc.review.models import Review, ReviewRecommendation
 
 
 def run():
@@ -41,6 +41,7 @@ def run():
             review = Review(name=name)
 
         review.review_type = [Review.TYPE.other]
+
         review.recommendation = entry["recommendation"]
         review.review_start = review_start
         review.review_end = review_end
@@ -57,6 +58,8 @@ def run():
         policy.save()
 
         policy.reviews.add(review)
+
+        ReviewRecommendation.objects.create(recommendation=entry["recommendation"], review=review, policy=policy)
 
     print("Finished")
 

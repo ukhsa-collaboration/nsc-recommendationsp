@@ -1,6 +1,6 @@
 {% load i18n %}
 
-{% for review in policy.reviews.published %}
+{% for review in policy.reviews_for_public_documents %}
     <h2 class="govuk-heading-s">
       {% blocktrans with year=review.review_end.year %}
       Supporting documents from the {{ year }} review

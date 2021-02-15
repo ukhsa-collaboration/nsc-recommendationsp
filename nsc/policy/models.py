@@ -176,8 +176,23 @@ class Policy(TimeStampedModel):
         self.archived_reason_html = convert(self.archived_reason)
 
     @cached_property
+    def current_review(self):
+        return self.reviews.open_for_comments().first()
+
+    @cached_property
     def latest_review(self):
         return self.reviews.published().first()
+
+    @cached_property
+    def reviews_for_public_documents(self):
+        """
+        Two cycles of supporting documents are shown for public,
+        once a in open consultation only one is show.
+        """
+        limit = 2
+        if self.current_review:
+            limit = 1
+        return self.reviews.published()[:limit]
 
     def get_archive_documents(self):
         return Document.objects.for_policy(self).archive()
