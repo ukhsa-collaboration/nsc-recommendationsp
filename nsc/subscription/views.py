@@ -34,13 +34,18 @@ class ManageSubscription(GetObjectFromTokenMixin, generic.UpdateView):
         )
 
 
-class Subscribe(generic.CreateView):
+class Subscribe(generic.UpdateView):
     model = Subscription
     form_class = CreateSubscriptionForm
     template_name = "subscription/subscription_creation_form.html"
 
     def get_initial(self):
         return {"policies": self.request.GET.getlist("policies", [])}
+
+    def get_object(self, queryset=None):
+        data = self.request.POST or {}
+
+        return Subscription.objects.filter(email=data.get("email", None)).first()
 
     def get_success_url(self):
         return reverse(

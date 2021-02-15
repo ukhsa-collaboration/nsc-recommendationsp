@@ -40,6 +40,14 @@ class CreateSubscriptionForm(ManageSubscriptionsForm):
 
         self.fields["policies"].widget.attrs.update({"hidden": True})
 
+    def clean_policies(self):
+        value = self.cleaned_data["policies"]
+
+        if self.instance and self.instance.id:
+            return [*value, *self.instance.policies.all()]
+
+        return value
+
     def clean(self):
         cleaned_data = super().clean()
 
