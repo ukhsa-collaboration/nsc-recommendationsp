@@ -1,0 +1,26 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block body %}
+  <form
+    method="{% if subscription %}post{% else %}get{% endif %}"
+    action="{% if not subscription %}{% url "subscription:subscribe" %}{% endif %}"
+  >
+    {% if subscription %}{% csrf_token %}{% endif %}
+
+    {{ form.non_field_errors }}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {% include "widgets/multi_input.html" with field=form.policies %}
+      </div>
+    </div>
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="save" value="save">
+        {% trans 'Continue' %}
+      </button>
+    </div>
+
+  </form>
+{% endblock %}
