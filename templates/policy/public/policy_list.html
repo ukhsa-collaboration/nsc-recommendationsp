@@ -73,7 +73,7 @@
             <td class="govuk-table__cell"><a
                 href="{{ object.get_public_url }}">{{ object.name }}</a></td>
             <td class="govuk-table__cell">{{ object.ages_display }}</td>
-            <td class="govuk-table__cell">
+            <td class="govuk-table__cell {% if object.archived %}archived{% endif %}">
                 {{ object.recommendation_display }}
             </td>
             <td class="govuk-table__cell">
