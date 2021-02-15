@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -95,3 +97,47 @@ def test_consultation_closing_date(review_in_consultation, django_app):
     page = django_app.get(policy.get_public_url())
     date = get_date_display(review_in_consultation.consultation_end)
     assert str(_("Closing date: %s" % date)) in page
+
+
+def test_previous_documents__in_consultation(
+    review_in_consultation, make_review, make_review_recommendation, django_app
+):
+    """
+    Test that the correct number of review documents is shown when in consultation.
+    """
+    instance = review_in_consultation.policies.first()
+    for year in [2019, 2018]:
+        review = make_review(
+            name="review_a",
+            review_start=date(year, 1, 1),
+            review_end=date(year, 2, 1),
+            published=True,
+        )
+        instance.reviews.add(review)
+        make_review_recommendation(policy=instance, review=review, recommendation=True)
+
+    page = django_app.get(instance.get_public_url())
+    assert str("Supporting documents from the 2019 review") in page
+    assert str("Supporting documents from the 2018 review") not in page
+
+
+def test_previous_documents__not_in_consultation(
+    make_review, make_review_recommendation, django_app
+):
+    """
+    Test that the correct number of review documents is shown when not in consultation.
+    """
+    instance = baker.make(Policy)
+    for year in [2019, 2018]:
+        review = make_review(
+            name="review_a",
+            review_start=date(year, 1, 1),
+            review_end=date(year, 2, 1),
+            published=True,
+        )
+        instance.reviews.add(review)
+        make_review_recommendation(policy=instance, review=review, recommendation=True)
+
+    page = django_app.get(instance.get_public_url())
+    assert str("Supporting documents from the 2019 review") in page
+    assert str("Supporting documents from the 2018 review") in page

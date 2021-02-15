@@ -20,11 +20,11 @@
           <a class="govuk-link" target="_blank" href="{{ review.evidence_review.upload.url }}">{{ review.evidence_review.name }}</a>
           <br/>
           {% blocktrans %}
-             This is the previous evidence review conducted to investigate whether the condition should be screened or not.\
+             This is the previous evidence review conducted to investigate whether the condition should be screened or not.
           {% endblocktrans %}
         </p>
       {% endif %}
-      {% if latest_review.cover_sheet %}
+      {% if review.cover_sheet %}
         <p>
           <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.upload.url }}">{{ review.cover_sheet.name }}</a>
           <br/>

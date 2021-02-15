@@ -50,7 +50,7 @@ class PolicyQuerySet(models.QuerySet):
         today = get_today()
         return self.filter(
             reviews__consultation_start__lte=today, reviews__consultation_end__gte=today
-        )
+        ).exclude(reviews__published=True)
 
     def closed_for_comments(self):
         """

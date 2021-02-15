@@ -45,6 +45,10 @@ def run():
         review.recommendation = entry["recommendation"]
         review.review_start = review_start
         review.review_end = review_end
+
+        if review.review_end:
+            review.published = True
+
         review.summary = get_summary(page)
 
         review.clean()
