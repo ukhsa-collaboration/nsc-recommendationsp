@@ -50,6 +50,11 @@ class PolicyDetail(DetailView):
     context_object_name = "policy"
     template_name = "policy/admin/policy_detail.html"
 
+    def get_object(self, queryset=None):
+        return super().get_object(
+            queryset=self.get_queryset().prefetch_related("reviews")
+        )
+
 
 class PolicyEdit(PublishPreviewMixin, UpdateView):
     model = Policy

@@ -31,9 +31,9 @@
           Closing date: {{ closing_date }}.
         {% endblocktrans %}
       </div>
-      {% if current_review.discussion_date %}
+      {% if current_review.nsc_meeting_date %}
         <div>
-          {% blocktrans with review_date=current_review.discussion_date_display %}
+          {% blocktrans with review_date=current_review.nsc_meeting_date_display %}
             Scheduled UK NSC meeting date: {{ review_date }}.
           {% endblocktrans %}
         </div>

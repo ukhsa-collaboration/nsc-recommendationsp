@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Prefetch, Q
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -100,12 +101,6 @@ class Policy(TimeStampedModel):
     )
 
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
-    legacy_last_review = models.DateField(
-        verbose_name=_("last review"),
-        null=True,
-        blank=True,
-        help_text="Populated via scrape, used when no reviews are completed via this app."
-    )
 
     ages = ChoiceArrayField(
         models.CharField(
@@ -160,13 +155,6 @@ class Policy(TimeStampedModel):
             return _("Archived")
         return _("Recommended") if self.recommendation else _("Not recommended")
 
-    def legacy_last_review_display(self):
-        return (
-            self.legacy_last_review.strftime("%B %Y")
-            if self.legacy_last_review
-            else _("This policy has not been reviewed")
-        )
-
     def next_review_display(self):
         today = get_today()
         if self.next_review is None:
@@ -187,8 +175,9 @@ class Policy(TimeStampedModel):
         self.background_html = convert(self.background)
         self.archived_reason_html = convert(self.archived_reason)
 
+    @cached_property
     def latest_review(self):
-        return self.reviews.all().published().first()
+        return self.reviews.published().first()
 
     def get_archive_documents(self):
         return Document.objects.for_policy(self).archive()

@@ -39,10 +39,9 @@ class ConditionDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
-        latest = self.object.reviews.published().first()
         current = self.object.reviews.open_for_comments().first()
         context.update(
-            {"back_url": referer, "latest_review": latest, "current_review": current}
+            {"back_url": referer, "current_review": current}
         )
         return context
 
