@@ -91,8 +91,8 @@ class Policy(TimeStampedModel):
         ("all", _("All ages")),
     )
 
-    name = models.CharField(verbose_name=_("name"), max_length=256)
-    slug = models.SlugField(verbose_name=_("slug"), max_length=256, unique=True)
+    name = models.CharField(verbose_name=_("name"), max_length=100)
+    slug = models.SlugField(verbose_name=_("slug"), max_length=100, unique=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
     recommendation = models.BooleanField(

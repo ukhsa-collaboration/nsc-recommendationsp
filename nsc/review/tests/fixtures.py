@@ -6,15 +6,15 @@ from nsc.document.models import Document
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
-from ..models import Review
+from ..models import Review, ReviewRecommendation, SummaryDraft
 
 
 @pytest.fixture
 def make_review(make_stakeholder):
-    def _make_review(add_stakeholders=False, **kwargs):
-        policy = baker.make(Policy, name="condition", ages="{child}")
+    def _make_review(add_stakeholders=False, policies=None, **kwargs):
+        policies = policies or [baker.make(Policy, name="condition", ages="{child}")]
         review = baker.make(Review, **kwargs)
-        review.policies.add(policy)
+        review.policies.add(*policies)
 
         if add_stakeholders:
             review.stakeholders.add(make_stakeholder(_make_contact=True))
@@ -150,3 +150,19 @@ def review_published(make_review):
         review=review,
     )
     return review
+
+
+@pytest.fixture
+def make_review_recommendation():
+    def _make(**kwargs):
+        return baker.make(ReviewRecommendation, **kwargs)
+
+    return _make
+
+
+@pytest.fixture
+def make_summary_draft():
+    def _make(**kwargs):
+        return baker.make(SummaryDraft, **kwargs)
+
+    return _make

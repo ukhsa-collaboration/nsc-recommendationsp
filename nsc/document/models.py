@@ -95,7 +95,9 @@ class Document(TimeStampedModel):
     document_type = models.CharField(
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
-    upload = models.FileField(verbose_name=_("upload"), upload_to=document_path)
+    upload = models.FileField(
+        verbose_name=_("upload"), upload_to=document_path, max_length=256
+    )
     review = models.ForeignKey(
         "review.Review",
         on_delete=models.SET_NULL,
