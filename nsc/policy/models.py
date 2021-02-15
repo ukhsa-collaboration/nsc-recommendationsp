@@ -81,7 +81,6 @@ class PolicyQuerySet(models.QuerySet):
         return self.filter(archived=False)
 
 
-
 class Policy(TimeStampedModel):
 
     AGE_GROUPS = Choices(

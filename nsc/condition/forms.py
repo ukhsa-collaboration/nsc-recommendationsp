@@ -41,6 +41,7 @@ class SearchForm(forms.Form):
         required=False,
     )
 
+
 class PublicCommentForm(forms.Form):
 
     name = forms.CharField(

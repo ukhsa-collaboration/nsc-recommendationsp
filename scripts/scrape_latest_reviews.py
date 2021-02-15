@@ -59,7 +59,9 @@ def run():
 
         policy.reviews.add(review)
 
-        ReviewRecommendation.objects.create(recommendation=entry["recommendation"], review=review, policy=policy)
+        ReviewRecommendation.objects.create(
+            recommendation=entry["recommendation"], review=review, policy=policy
+        )
 
     print("Finished")
 

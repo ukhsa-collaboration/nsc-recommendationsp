@@ -1,5 +1,6 @@
 from django import forms
-from django_filters import CharFilter, Filter, FilterSet, BooleanFilter
+
+from django_filters import BooleanFilter, CharFilter, Filter, FilterSet
 
 from nsc.condition.forms import SearchForm
 

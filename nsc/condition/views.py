@@ -39,9 +39,7 @@ class ConditionDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
-        context.update(
-            {"back_url": referer}
-        )
+        context.update({"back_url": referer})
         return context
 
 
