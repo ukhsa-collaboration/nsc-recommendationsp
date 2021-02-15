@@ -70,10 +70,10 @@ def test_reviews_have_confirmed_dates_in_the_past_emails_are_created(make_review
     assert Email.objects.filter(
         address__in=target_contact_emails,
         status=Email.STATUS.pending,
-        context={"review": target.name},
+        context=target.get_email_context(),
     ).count() == len(target_contact_emails)
     assert Email.objects.filter(
         address=settings.PHE_COMMUNICATIONS_EMAIL,
         status=Email.STATUS.pending,
-        context={"review": target.name},
+        context=target.get_email_context(),
     ).exists()

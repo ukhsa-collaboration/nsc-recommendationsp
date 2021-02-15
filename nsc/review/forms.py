@@ -2,10 +2,12 @@ from distutils.util import strtobool
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.forms import modelformset_factory
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
+from django.utils.translation import ngettext_lazy
 from django.utils.translation import ugettext_lazy as _
 
 from dateutil.relativedelta import relativedelta
@@ -14,10 +16,12 @@ from model_utils import Choices
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
+from ..document.models import Document
 from ..policy.formsets import PolicySelectionFormset
 from ..policy.models import Policy
 from ..stakeholder.formsets import StakeholderSelectionFormset
-from .models import Review, SummaryDraft
+from ..utils.markdown import convert
+from .models import Review, ReviewRecommendation, SummaryDraft
 
 
 class SearchForm(forms.Form):
@@ -457,14 +461,11 @@ class ReviewStakeholdersForm(forms.ModelForm):
 class SummaryDraftFormsetForm(forms.ModelForm):
     review = forms.ModelChoiceField(Review.objects.all(), widget=forms.HiddenInput)
     policy = forms.ModelChoiceField(Policy.objects.all(), widget=forms.HiddenInput)
+    updated = forms.NullBooleanField(widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = SummaryDraft
-        fields = (
-            "review",
-            "policy",
-            "text",
-        )
+        fields = ("review", "policy", "text", "updated")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -474,9 +475,12 @@ class SummaryDraftFormsetForm(forms.ModelForm):
             "Use markdown to complete the text field below."
         )
 
-    def save(self, commit=True):
-        self.instance.updated = True
-        return super().save(commit=commit)
+    def has_changed(self):
+        # force the form to update the "updated" status even if the text is unchanged
+        return True
+
+    def clean_updated(self):
+        return True
 
 
 class ReviewSummaryForm(forms.ModelForm):
@@ -531,14 +535,132 @@ class ReviewHistoryForm(forms.ModelForm):
         fields = ["background"]
 
 
-class ReviewRecommendationForm(forms.ModelForm):
-
+class RecommendationFormsetForm(forms.ModelForm):
+    review = forms.ModelChoiceField(Review.objects.all(), widget=forms.HiddenInput)
+    policy = forms.ModelChoiceField(Policy.objects.all(), widget=forms.HiddenInput)
     recommendation = forms.TypedChoiceField(
-        label=_("What is the recommended decision for screening?"),
-        choices=Choices((True, _("Recommened")), (False, _("Not recommended"))),
+        choices=Choices((True, _("Yes")), (False, _("No"))),
         widget=forms.RadioSelect,
+        required=True,
+    )
+
+    class Meta:
+        model = ReviewRecommendation
+        fields = (
+            "review",
+            "policy",
+            "recommendation",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["recommendation"].label = self.instance.policy.name
+
+
+class ReviewRecommendationForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = []
+
+    @cached_property
+    def formset(self):
+        summaries = {s.policy: s for s in self.instance.review_recommendations.all()}
+        policies = self.instance.policies.all()
+        for p in policies:
+            if p not in summaries:
+                ReviewRecommendation.objects.create(
+                    policy=p, review=self.instance, recommendation=None
+                )
+
+        return modelformset_factory(
+            ReviewRecommendation,
+            form=RecommendationFormsetForm,
+            min_num=len(policies),
+            max_num=len(policies),
+            can_delete=False,
+            can_order=False,
+            extra=False,
+        )(
+            queryset=self.instance.review_recommendations.all().order_by(
+                "policy__name"
+            ),
+            prefix="recommendation",
+            data=self.data or None,
+        )
+
+    def is_valid(self):
+        formset_valid = self.formset.is_valid()
+        return super().is_valid() and formset_valid
+
+    def save(self, commit=True):
+        self.formset.save(commit=commit)
+        return super().save(commit=commit)
+
+
+class ReviewPublishForm(forms.ModelForm):
+
+    published = forms.BooleanField(
+        widget=forms.RadioSelect(choices=Choices((True, _("Yes")), (False, _("No")))),
     )
 
     class Meta:
         model = Review
-        fields = ["recommendation"]
+        fields = ["published"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        conditions = list(self.instance.policies.values_list("name", flat=True))
+        joined_conditions = conditions[0]
+        if len(conditions) > 1:
+            joined_conditions = _("{list} and {final}").format(
+                list=", ".join(conditions[:-1]), final=conditions[-1]
+            )
+
+        self.fields["published"].help_text = ngettext_lazy(
+            "This will publish the recommendation decision, plain text summary and supporting "
+            "documents to the public {conditions} page",
+            "This will publish the recommendation decision, plain text summary and supporting "
+            "documents to the public {conditions} pages",
+            len(conditions),
+        ).format(conditions=joined_conditions)
+
+    def save(self, commit=True):
+        if not self.cleaned_data["published"]:
+            return self.instance
+
+        summaries = self.instance.summary_drafts.values_list("policy_id", "text")
+        recommendations = self.instance.review_recommendations.values_list(
+            "policy_id", "recommendation"
+        )
+
+        with transaction.atomic():
+            # attach the supporting documents to the policies
+            supporting_document_types = [
+                Document.TYPE.cover_sheet,
+                Document.TYPE.evidence_review,
+                Document.TYPE.evidence_map,
+                Document.TYPE.cost,
+                Document.TYPE.systematic,
+                Document.TYPE.other,
+            ]
+            supporting_documents = self.instance.documents.filter(
+                document_type__in=supporting_document_types
+            )
+            for doc in supporting_documents:
+                doc.policies.set(self.instance.policies.all())
+
+            # update the plain english summary of each policy
+            for policy_id, text in summaries:
+                Policy.objects.filter(id=policy_id).update(
+                    summary=text, summary_html=convert(text)
+                )
+
+            # update the recommendation of each policy
+            for policy_id, recommendation in recommendations:
+                Policy.objects.filter(id=policy_id).update(
+                    recommendation=recommendation
+                )
+
+            return super().save(commit=commit)
