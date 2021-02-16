@@ -9,23 +9,37 @@ from nsc.review.models import SummaryDraft
 pytestmark = pytest.mark.django_db
 
 
-def test_view(make_review, django_app):
+def test_view(erm_user, make_review, django_app):
     """
     Test that the page can be displayed.
     """
     review = make_review()
-    response = django_app.get(reverse("review:summary", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:summary", kwargs={"slug": review.slug}), user=erm_user
+    )
     assert response.status == "200 OK"
 
 
+def test_view__no_user(make_review, test_access_no_user):
+    review = make_review()
+    test_access_no_user(url=reverse("review:summary", kwargs={"slug": review.slug}))
+
+
+def test_view__incorrect_permission(make_review, test_access_forbidden):
+    review = make_review()
+    test_access_forbidden(url=reverse("review:summary", kwargs={"slug": review.slug}))
+
+
 def test_not_all_summaries_are_updated_errors_are_raised(
-    make_review, make_policy, django_app
+    erm_user, make_review, make_policy, django_app
 ):
     first_policy = make_policy(name="first", summary="")
     second_policy = make_policy(name="second", summary="")
     review = make_review(policies=[first_policy, second_policy])
 
-    response = django_app.get(reverse("review:summary", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:summary", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["summary-0-text"] = "first content"
@@ -52,13 +66,15 @@ def test_not_all_summaries_are_updated_errors_are_raised(
 
 
 def test_default_value_is_the_original_policy_summary(
-    make_review, make_policy, django_app
+    erm_user, make_review, make_policy, django_app
 ):
     first_policy = make_policy(name="first", summary="orig first content")
     second_policy = make_policy(name="second", summary="orig second content")
     review = make_review(policies=[first_policy, second_policy])
 
-    response = django_app.get(reverse("review:summary", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:summary", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["summary-0-text"] = "first content"
