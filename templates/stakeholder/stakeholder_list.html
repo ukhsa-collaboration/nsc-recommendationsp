@@ -64,8 +64,12 @@
             </td>
             <td class="govuk-table__cell">
               <ul class="govuk-list govuk-list--bullet">
-                {% for policy in object.policies.all %}
-                  <li>{{ policy.name }}</li>
+                {% for policy in object.policies.all|slice:4 %}
+                  {% if forloop.counter == 4 %}
+                      <li><a href="{{ object.get_detail_url }}">More</a></li>
+                  {% else %}
+                    <li>{{ policy.name }}</li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </td>
