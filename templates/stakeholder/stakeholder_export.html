@@ -31,7 +31,7 @@
 
                 {% include "widgets/radio_buttons.html" with field=form.export_type show_legend=True %}
 
-                <button type="submit" class="govuk-button">
+                <button type="submit" class="govuk-button" name="export" value="export">
                     {% trans 'Export stakeholders' %}
                 </button>
 
