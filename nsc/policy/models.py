@@ -189,7 +189,7 @@ class Policy(TimeStampedModel):
         once a in open consultation only one is show.
         """
         limit = 2
-        if self.current_review and self.current_review.preparing():
+        if self.current_review and self.current_review.in_consultation():
             limit = 1
         return self.reviews.published()[:limit]
 

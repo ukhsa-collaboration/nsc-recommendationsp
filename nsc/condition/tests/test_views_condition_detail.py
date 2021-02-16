@@ -37,7 +37,7 @@ def test_back_link(django_app):
     assert results.request.url == referer.request.url
 
 
-def test_submission_link_for_review_in_pre_consultation(
+def test_consultation_status_for_review_in_pre_consultation(
     review_in_pre_consultation, django_app
 ):
     """
@@ -47,9 +47,14 @@ def test_submission_link_for_review_in_pre_consultation(
     policy = review_in_pre_consultation.policies.first()
     page = django_app.get(policy.get_public_url())
     assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in page
+    assert (
+        "We are currently preparing to open a consultation on this condition." in page
+    )
 
 
-def test_submission_link_for_review_in_consultation(review_in_consultation, django_app):
+def test_consultation_status_for_review_in_consultation(
+    review_in_consultation, django_app
+):
     """
     Test the link to submit a comment is not visible when a review is
     in the pre-consultation phase.
@@ -57,9 +62,10 @@ def test_submission_link_for_review_in_consultation(review_in_consultation, djan
     policy = review_in_consultation.policies.first()
     page = django_app.get(policy.get_public_url())
     assert reverse("condition:consultation", kwargs={"slug": policy.slug}) in page
+    assert "We are currently accepting public comments on this condition." in page
 
 
-def test_submission_link_for_review_in_post_consultation(
+def test_consultation_status_for_review_in_post_consultation(
     review_in_post_consultation, django_app
 ):
     """
@@ -69,9 +75,10 @@ def test_submission_link_for_review_in_post_consultation(
     policy = review_in_post_consultation.policies.first()
     page = django_app.get(policy.get_public_url())
     assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in page
+    assert "We are no longer accepting comments on this condition." in page
 
 
-def test_submission_link_for_review_is_completed(review_completed, django_app):
+def test_consultation_status_for_review_is_completed(review_completed, django_app):
     """
     Test the link to submit a comment is not visible when a review has been completed.
     """
@@ -80,7 +87,7 @@ def test_submission_link_for_review_is_completed(review_completed, django_app):
     assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in page
 
 
-def test_submission_link_for_published_review(review_published, django_app):
+def test_consultation_status_for_published_review(review_published, django_app):
     """
     Test the link to submit a comment is not visible when a review has been published.
     """
