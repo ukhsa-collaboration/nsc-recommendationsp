@@ -2,12 +2,14 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
+from nsc.permissions import AdminRequiredMixin
+
 from .filters import SearchFilter
 from .forms import SearchForm, StakeholderForm
 from .models import Stakeholder
 
 
-class StakeholderList(generic.ListView):
+class StakeholderList(AdminRequiredMixin, generic.ListView):
     queryset = Stakeholder.objects.all().prefetch_related("policies").order_by("name")
     paginate_by = 20
 
@@ -19,7 +21,7 @@ class StakeholderList(generic.ListView):
         return super().get_context_data(form=form)
 
 
-class StakeholderDetail(generic.DetailView):
+class StakeholderDetail(AdminRequiredMixin, generic.DetailView):
     model = Stakeholder
 
     def get_context_data(self, **kwargs):
@@ -27,7 +29,7 @@ class StakeholderDetail(generic.DetailView):
         return super().get_context_data(**kwargs)
 
 
-class StakeholderAdd(generic.CreateView):
+class StakeholderAdd(AdminRequiredMixin, generic.CreateView):
     model = Stakeholder
     form_class = StakeholderForm
 
@@ -44,7 +46,7 @@ class StakeholderAdd(generic.CreateView):
         )
 
 
-class StakeholderEdit(generic.UpdateView):
+class StakeholderEdit(AdminRequiredMixin, generic.UpdateView):
     model = Stakeholder
     form_class = StakeholderForm
 
@@ -60,6 +62,6 @@ class StakeholderEdit(generic.UpdateView):
         return context
 
 
-class StakeholderDelete(generic.DeleteView):
+class StakeholderDelete(AdminRequiredMixin, generic.DeleteView):
     model = Stakeholder
     success_url = reverse_lazy("stakeholder:list")
