@@ -32,6 +32,7 @@ def test_access_forbidden(non_user, django_app):
     def _test_access_forbidden(url):
         response = django_app.get(url, user=non_user, expect_errors=True)
         assert response.status == "403 Forbidden"
+
     return _test_access_forbidden
 
 
@@ -41,6 +42,7 @@ def test_access_no_user(django_app):
         response = django_app.get(url)
         assert response.status == "302 Found"
         assert response.url == f"/accounts/login/?next={url}"
+
     return _test_access_forbidden
 
 
