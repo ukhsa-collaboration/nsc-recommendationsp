@@ -1,4 +1,6 @@
-from django_filters import CharFilter, Filter, FilterSet
+from django import forms
+
+from django_filters import BooleanFilter, CharFilter, Filter, FilterSet
 
 from nsc.condition.forms import SearchForm
 
@@ -21,6 +23,7 @@ class SearchFilter(FilterSet):
     comments = CharFilter(method="in_consultation")
     affects = CharFilter(field_name="ages", lookup_expr="icontains")
     screen = YesNoFilter(field_name="recommendation")
+    archived = BooleanFilter(method="include_archived", widget=forms.CheckboxInput)
 
     def search_name(self, queryset, name, value):
         return queryset.search(value)
@@ -32,3 +35,9 @@ class SearchFilter(FilterSet):
             return queryset.closed_for_comments()
         else:
             return queryset
+
+    def include_archived(self, queryset, name, value):
+        if value:
+            return queryset
+        else:
+            return queryset.exclude_archived()

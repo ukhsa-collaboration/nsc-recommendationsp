@@ -29,18 +29,16 @@ class ReviewQuerySet(models.QuerySet):
         return self.dates_confirmed().filter(consultation_start__lte=get_today())
 
     def published(self):
-        return self.filter(review_end__lte=get_today()).order_by("-review_start")
+        return self.filter(published=True).order_by("-review_start")
 
     def in_progress(self):
-        today = get_today()
-        return self.filter(
-            models.Q(review_start__lte=today)
-            & (models.Q(review_end__isnull=True) | models.Q(review_end__gte=today))
-        )
+        return self.exclude(published=True)
 
     def open_for_comments(self):
         today = get_today()
-        return self.filter(consultation_start__lte=today, consultation_end__gte=today)
+        return self.in_progress().filter(
+            consultation_start__lte=today, consultation_end__gte=today
+        )
 
     def closed_for_comments(self):
         today = get_today()
@@ -93,8 +91,6 @@ class Review(TimeStampedModel):
     nsc_meeting_date = models.DateField(
         verbose_name=_("NSC meeting date"), null=True, blank=True
     )
-
-    recommendation = models.NullBooleanField(verbose_name=_("recommendation"))
 
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
@@ -246,6 +242,13 @@ class Review(TimeStampedModel):
 
     def has_recommendation(self):
         return self.published
+
+    @cached_property
+    def recommendation(self):
+        review_recommendation = self.review_recommendations.first()
+        if review_recommendation:
+            return review_recommendation.recommendation
+        return False
 
     def status(self):
         today = get_today()

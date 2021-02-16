@@ -119,52 +119,77 @@ def test_cover_sheet_document(review_published):
 
 
 @pytest.mark.parametrize(
-    "start,end,count",
-    [
-        (get_today(), None, 1),  # valid: review started
-        (from_today(-30), from_today(-1), 0),  # valid: review completed
-        (None, None, 0),  # error: review created with start date not set
-        (from_today(+1), None, 0),  # error: review created with start date in future
-        (get_today(), from_today(+7), 1),  # error: review started but end already set
-        (None, from_today(-1), 0),  # error: review completed but start date not set
-        (from_today(+1), from_today(+30), 0),  # error: review completed in future
-    ],
+    "published,count",
+    [(False, 1), (True, 0)],  # valid: review started  # valid: review completed
 )
-def test_in_progress(start, end, count):
+def test_in_progress(published, count):
     """
     Test the queryset method in_progress only returns Review objects which are
     currently in review.
-
-    The review_start field gets set when a review is created so we have to force
-    it to be None.
     """
-    instance = baker.make(Review, review_start=start, review_end=end)
-    if start is None:
-        instance.review_start = None
-        instance.save()
+    baker.make(Review, published=published)
     actual = Review.objects.in_progress().count()
     assert count == actual
 
 
 @pytest.mark.parametrize(
-    "start,end,count",
+    "start,end,published,count",
     [
-        (None, None, 0),  # valid: review in pre-consultation
-        (from_today(+1), from_today(+30), 0),  # valid: consultation dates set
-        (get_today(), from_today(+7), 1),  # valid: consultation period opens today
-        (from_today(-30), get_today(), 1),  # valid: consultation period closes today
-        (from_today(-30), from_today(-1), 0),  # valid: review in post-consultation
-        (from_today(+1), None, 0),  # error: pre-consultation but only start date set
-        (get_today(), None, 0),  # error: consultation opens but only start date set
-        (None, from_today(-1), 0),  # error: post-consultation but only end date set
+        (None, None, False, 0),  # valid: review in pre-consultation
+        (from_today(+1), from_today(+30), False, 0),  # valid: consultation dates set
+        (
+            get_today(),
+            from_today(+7),
+            False,
+            1,
+        ),  # valid: consultation period opens today
+        (
+            from_today(-30),
+            get_today(),
+            False,
+            1,
+        ),  # valid: consultation period closes today
+        (
+            from_today(-30),
+            from_today(-1),
+            False,
+            0,
+        ),  # valid: review in post-consultation
+        (
+            from_today(+1),
+            None,
+            False,
+            0,
+        ),  # error: pre-consultation but only start date set
+        (
+            get_today(),
+            None,
+            False,
+            0,
+        ),  # error: consultation opens but only start date set
+        (
+            None,
+            from_today(-1),
+            False,
+            0,
+        ),  # error: post-consultation but only end date set
+        (None, None, True, 0),  # error: already published
+        (from_today(+1), from_today(+30), True, 0),  # error: already published
+        (get_today(), from_today(+7), True, 0),  # error: already published
+        (from_today(-30), get_today(), True, 0),  # error: already published
+        (from_today(-30), from_today(-1), True, 0),  # error: already published
     ],
 )
-def test_open_for_comments(start, end, count):
+def test_open_for_comments(start, end, published, count):
     """
     Test the queryset method open_for_comments only returns Review objects which are
     currently accepting comments from the public.
+
+    Must also not yet be published.
     """
-    baker.make(Review, consultation_start=start, consultation_end=end)
+    baker.make(
+        Review, consultation_start=start, consultation_end=end, published=published
+    )
     actual = Review.objects.open_for_comments().count()
     assert count == actual
 

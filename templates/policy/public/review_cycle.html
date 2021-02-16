@@ -11,7 +11,7 @@
 {% endif %}
 
 <p class="govuk-body">
-  {% blocktrans with year=policy.last_review.year %}
+  {% blocktrans with year=policy.latest_review.review_end.year %}
   Date previous review completed: {{ year }}
   {% endblocktrans %}
 </p>
@@ -24,7 +24,7 @@
 
 <p class="govuk-body">
   {% blocktrans %}
-  Previous evidence reviews, are available on the UK NSC archive.
+  To see previous evidence reviews, visit the <a class="govuk-link" target="_blank" href="https://legacyscreening.phe.org.uk/">UK NSC archive</a>.
   {% endblocktrans %}
 </p>
 

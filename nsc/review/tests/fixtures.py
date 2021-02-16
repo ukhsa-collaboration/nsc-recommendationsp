@@ -113,7 +113,7 @@ def review_completed(make_review):
 
 
 @pytest.fixture
-def review_published(make_review):
+def review_published(make_review, form_pdf):
     review_start = get_today() - relativedelta(months=8)
     consultation_start = review_start + relativedelta(months=2)
     consultation_end = consultation_start + relativedelta(months=3)
@@ -130,24 +130,28 @@ def review_published(make_review):
         name="External Review",
         document_type=Document.TYPE.external_review,
         review=review,
+        upload=form_pdf,
     )
     baker.make(
         Document,
         name="Submission Form",
         document_type=Document.TYPE.submission_form,
         review=review,
+        upload=form_pdf,
     )
     baker.make(
         Document,
         name="Cover sheet",
         document_type=Document.TYPE.cover_sheet,
         review=review,
+        upload=form_pdf,
     )
     baker.make(
         Document,
         name="Evidence review",
         document_type=Document.TYPE.evidence_review,
         review=review,
+        upload=form_pdf,
     )
     return review
 

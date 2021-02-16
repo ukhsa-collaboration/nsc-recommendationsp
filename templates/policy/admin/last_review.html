@@ -3,5 +3,4 @@
 <h2 class="govuk-heading-m">
   {% trans 'Date previous review completed' %}
 </h2>
-
-<p class="govuk-body">{{ policy.last_review_display }}</p>
+<p class="govuk-body">{{ policy.latest_review.review_end|date:"M Y" }}</p>

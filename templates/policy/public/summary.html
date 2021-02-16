@@ -3,14 +3,14 @@
 <h2 class="govuk-heading-m">
   {% trans 'UK NSC screening recommendation' %}
   <span class="govuk-caption-m">
-    {% blocktrans with date=policy.last_review_display %}
-      Based on the last UK NSC review of this condition that occurred in {{ date}}.
+    {% blocktrans with date=policy.latest_review.review_end|date:"M Y" %}
+      Based on the last UK NSC review of this condition that occurred in {{ date }}.
     {% endblocktrans %}
   </span>
 </h2>
 
 <div class="govuk-body">
-  {% if policy.is_screened %}
+  {% if policy.recommendation %}
     <div class="nsc-message-success">
       {% trans 'Screening for this condition is recommended.' %}
     </div>

@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Prefetch, Q
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -49,7 +50,7 @@ class PolicyQuerySet(models.QuerySet):
         today = get_today()
         return self.filter(
             reviews__consultation_start__lte=today, reviews__consultation_end__gte=today
-        )
+        ).exclude(reviews__published=True)
 
     def closed_for_comments(self):
         """
@@ -76,6 +77,9 @@ class PolicyQuerySet(models.QuerySet):
             )
         )
 
+    def exclude_archived(self):
+        return self.filter(archived=False)
+
 
 class Policy(TimeStampedModel):
 
@@ -95,7 +99,6 @@ class Policy(TimeStampedModel):
         verbose_name=_("recommendation"), default=False
     )
 
-    last_review = models.DateField(verbose_name=_("last review"), null=True, blank=True)
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
 
     ages = ChoiceArrayField(
@@ -151,13 +154,6 @@ class Policy(TimeStampedModel):
             return _("Archived")
         return _("Recommended") if self.recommendation else _("Not recommended")
 
-    def last_review_display(self):
-        return (
-            self.last_review.strftime("%B %Y")
-            if self.last_review
-            else _("This policy has not been reviewed")
-        )
-
     def next_review_display(self):
         today = get_today()
         if self.next_review is None:
@@ -178,8 +174,24 @@ class Policy(TimeStampedModel):
         self.background_html = convert(self.background)
         self.archived_reason_html = convert(self.archived_reason)
 
+    @cached_property
+    def current_review(self):
+        return self.reviews.open_for_comments().first()
+
+    @cached_property
     def latest_review(self):
-        return self.reviews.all().published().first()
+        return self.reviews.published().first()
+
+    @cached_property
+    def reviews_for_public_documents(self):
+        """
+        Two cycles of supporting documents are shown for public,
+        once a in open consultation only one is show.
+        """
+        limit = 2
+        if self.current_review:
+            limit = 1
+        return self.reviews.published()[:limit]
 
     def get_archive_documents(self):
         return Document.objects.for_policy(self).archive()

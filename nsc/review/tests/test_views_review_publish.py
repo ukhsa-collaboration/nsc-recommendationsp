@@ -2,9 +2,12 @@ from django.urls import reverse
 
 import pytest
 
-# All tests require the database
 from nsc.document.models import Document
+from nsc.utils.datetime import get_today
 from nsc.utils.markdown import convert
+
+
+# All tests require the database
 
 
 pytestmark = pytest.mark.django_db
@@ -123,6 +126,28 @@ def test_response_is_yes_recommendations_are_updated(
     second_policy.refresh_from_db()
     assert first_policy.recommendation is True
     assert second_policy.recommendation is False
+
+
+def test_response_is_yes_no_review_end_set(
+    make_review, make_policy, make_review_recommendation, django_app
+):
+    first_policy = make_policy(name="first", recommendation=False)
+    second_policy = make_policy(name="second", recommendation=True)
+    review = make_review(policies=[first_policy, second_policy], review_end=None)
+
+    make_review_recommendation(policy=first_policy, review=review, recommendation=True)
+    make_review_recommendation(
+        policy=second_policy, review=review, recommendation=False
+    )
+
+    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+
+    form = response.form
+    form["published"] = True
+    form.submit()
+
+    review.refresh_from_db()
+    assert review.review_end == get_today()
 
 
 def test_response_is_yes_summaries_not_updated(
