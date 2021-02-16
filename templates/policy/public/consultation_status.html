@@ -1,4 +1,6 @@
 {% load i18n %}
+{% url "subscription:landing"  as subscription_url %}
+
 <div class="govuk-warning-text govuk-body nsc-open-for-comment">
     {% if policy.current_review.preparing %}
         <div class="govuk-!-font-weight-bold">
@@ -9,7 +11,7 @@
         <div>
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             {% blocktrans %}
-                <a href="#">Register for updates</a> and we will notify you when we are accepting comments.
+                <a href="{{ subscription_url }}">Register for updates</a> and we will notify you when we are accepting comments.
             {% endblocktrans %}
         </div>
     {% elif policy.current_review.in_consultation %}
@@ -45,7 +47,7 @@
             <div>
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 {% blocktrans %}
-                    <a href="#">Register for updates</a> and we will notify you when we have reviewed all
+                    <a href="{{ subscription_url }}">Register for updates</a> and we will notify you when we have reviewed all
                     comments along with the scientific evidence.
                 {% endblocktrans %}
             </div>
