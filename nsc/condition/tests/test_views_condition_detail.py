@@ -106,6 +106,18 @@ def test_consultation_closing_date(review_in_consultation, django_app):
     assert str(_("Closing date: %s" % date)) in page
 
 
+def test_consultation_archived(django_app):
+    """
+    Test the link to submit a comment is not visible when a review has been published.
+    """
+    policy = baker.make(Policy, name="condition", archived=True)
+    page = django_app.get(policy.get_public_url())
+    assert (
+        "This recommendation has been archived and is no longer regularly reviewed by the UK NSC."
+        in page
+    )
+
+
 def test_previous_documents__in_consultation(
     review_in_consultation, make_review, make_review_recommendation, django_app
 ):
