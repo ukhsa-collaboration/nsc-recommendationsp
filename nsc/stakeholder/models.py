@@ -97,5 +97,8 @@ class Stakeholder(TimeStampedModel):
             "<br>/".join([contact.name for contact in self.contacts.all()])
         )
 
+    def contacts_emails(self):
+        return [contact.email for contact in self.contacts.all() if contact.email]
+
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))

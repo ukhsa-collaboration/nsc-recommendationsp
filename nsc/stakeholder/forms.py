@@ -8,6 +8,16 @@ from ..policy.formsets import PolicySelectionFormset
 from .models import Stakeholder
 
 
+class ExportForm(forms.Form):
+    export_type = forms.ChoiceField(
+        label=_("Select type of export:"),
+        choices=(
+            ("conditions", "Conditions stakeholders are interested in"),
+            ("individual", "Individual contact details"),
+        ),
+    )
+
+
 class SearchForm(forms.Form):
 
     name = forms.CharField(label=_("Stakeholder name"), required=False)
