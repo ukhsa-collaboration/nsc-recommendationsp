@@ -75,6 +75,5 @@ class StakeholderSubscriptionStart(generic.CreateView):
     success_url = reverse_lazy("subscription:stakeholder-complete")
 
 
-class StakeholderSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
-    model = Subscription
+class StakeholderSubscriptionComplete(generic.TemplateView):
     template_name = "subscription/stakeholder_subscription_complete.html"
