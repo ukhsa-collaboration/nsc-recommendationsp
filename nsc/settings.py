@@ -147,6 +147,7 @@ class Common(Configuration):
         "nsc.review",
         "nsc.notify",
         "nsc.utils",
+        "nsc.subscription",
     ]
 
     MIDDLEWARE = [
