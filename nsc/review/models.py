@@ -252,7 +252,7 @@ class Review(TimeStampedModel):
 
     def status(self):
         today = get_today()
-        if self.dates_confirmed and self.review_end and self.review_end <= today:
+        if self.published:
             return self.STATUS.completed
         elif (
             self.dates_confirmed
@@ -273,6 +273,15 @@ class Review(TimeStampedModel):
 
     def status_display(self):
         return self.STATUS[self.status()]
+
+    def preparing(self):
+        return self.status() in [self.STATUS.development, self.STATUS.pre_consultation]
+
+    def in_consultation(self):
+        return self.status() == self.STATUS.in_consultation
+
+    def post_consultation(self):
+        return self.status() == self.STATUS.post_consultation
 
     @property
     def policy_stakeholders(self):

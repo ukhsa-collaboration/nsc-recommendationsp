@@ -176,7 +176,7 @@ class Policy(TimeStampedModel):
 
     @cached_property
     def current_review(self):
-        return self.reviews.open_for_comments().first()
+        return self.reviews.in_progress().first()
 
     @cached_property
     def latest_review(self):
@@ -189,7 +189,7 @@ class Policy(TimeStampedModel):
         once a in open consultation only one is show.
         """
         limit = 2
-        if self.current_review:
+        if self.current_review and self.current_review.preparing():
             limit = 1
         return self.reviews.published()[:limit]
 

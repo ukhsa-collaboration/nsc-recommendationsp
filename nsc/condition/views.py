@@ -7,6 +7,7 @@ from notifications_python_client.errors import HTTPError
 
 from nsc.notify.client import submit_public_comment, submit_stakeholder_comment
 from nsc.policy.models import Policy
+from nsc.review.models import Review
 
 from .filters import SearchFilter
 from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
@@ -39,7 +40,7 @@ class ConditionDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
-        context.update({"back_url": referer})
+        context.update({"back_url": referer, "status_options": Review.STATUS})
         return context
 
 
