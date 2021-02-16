@@ -10,8 +10,13 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(stakeholder, django_app):
-    return django_app.get(reverse("stakeholder:edit", kwargs={"pk": stakeholder.pk}))
+def url(stakeholder):
+    return reverse("stakeholder:edit", kwargs={"pk": stakeholder.pk})
+
+
+@pytest.fixture
+def response(url, erm_user, django_app):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture
@@ -27,6 +32,14 @@ def test_edit_view(stakeholder, response):
     assert response.context["stakeholder"] == stakeholder
 
 
+def test_edit_view__no_user(url, test_access_no_user):
+    test_access_no_user(url=url)
+
+
+def test_edit_view__incorrect_permission(url, test_access_forbidden):
+    test_access_forbidden(url=url)
+
+
 def test_back_link(stakeholder, dom):
     """
     Test the back link returns to the list of stakeholders.
@@ -37,13 +50,13 @@ def test_back_link(stakeholder, dom):
     assert link.text.strip() == ugettext("Back to %s" % stakeholder.name)
 
 
-def test_success_url__next(stakeholder, make_policy, django_app):
+def test_success_url__next(erm_user, stakeholder, make_policy, django_app):
     """
     Test saving a contact returns to the stakeholder list page.
     """
     policy = make_policy()
     stakeholder_edit = reverse("stakeholder:edit", args=(stakeholder.pk,))
-    response = django_app.get(f"{stakeholder_edit}?next=/")
+    response = django_app.get(f"{stakeholder_edit}?next=/", user=erm_user)
     form = response.form
     form["policies-0-policy"] = policy.id
     actual = form.submit().follow()

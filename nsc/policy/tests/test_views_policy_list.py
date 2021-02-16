@@ -64,20 +64,20 @@ def test_search_field_blank(erm_user, django_app):
     assert form["name"].value == ""
 
 
-def test_search_on_condition_name(django_app_form):
+def test_search_on_condition_name(erm_user, django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
     baker.make(Policy, name="name")
-    response = django_app_form(policy_list_url, name="other")
+    response = django_app_form(policy_list_url, name="other", user=erm_user)
     assert not response.context["object_list"]
 
 
-def test_search_field_shows_name_term(django_app_form):
+def test_search_field_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the search field shows the entered condition name.
     """
-    form = django_app_form(policy_list_url, name="name").form
+    form = django_app_form(policy_list_url, name="name", user=erm_user).form
     assert form["name"].value == "name"
 
 
