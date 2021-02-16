@@ -11,3 +11,14 @@ class Subscription(TimeStampedModel):
 
     def __str__(self):
         return self.email
+
+
+class StakeholderSubscription(TimeStampedModel):
+    title = models.CharField(max_length=10)
+    first_name = models.CharField(max_length=256)
+    last_name = models.CharField(max_length=256)
+    organisation = models.CharField(max_length=256)
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.email

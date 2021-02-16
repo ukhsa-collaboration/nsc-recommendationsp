@@ -17,7 +17,7 @@ def test_subscription_start_forwards_to_creation_form(
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
 
-    url = reverse("subscription:start")
+    url = reverse("subscription:public-start")
 
     response = django_app.get(url)
 
@@ -25,7 +25,7 @@ def test_subscription_start_forwards_to_creation_form(
     form["policies"] = [s.pk for s in selected_policies]
     response = form.submit()
 
-    assert response.request.path == reverse("subscription:subscribe")
+    assert response.request.path == reverse("subscription:public-subscribe")
     assert set(response.request.GET.getall("policies")) == {
         str(s.pk) for s in selected_policies
     }
@@ -37,7 +37,7 @@ def test_emails_dont_match_subscription_isnt_created(
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
 
-    url = reverse("subscription:subscribe")
+    url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", selected_policies))
 
     response = django_app.get(f"{url}?{policies_url_args}")
@@ -56,7 +56,7 @@ def test_emails_match_subscription_is_created(
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
 
-    url = reverse("subscription:subscribe")
+    url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", selected_policies))
 
     response = django_app.get(f"{url}?{policies_url_args}")
@@ -73,7 +73,7 @@ def test_emails_match_subscription_is_created(
         s.id for s in selected_policies
     }
     assert response.location == reverse(
-        "subscription:complete",
+        "subscription:public-complete",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
@@ -87,7 +87,7 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
 
     make_subscription(email="foo@example.com", policies=selected_policies)
 
-    url = reverse("subscription:subscribe")
+    url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", new_policies))
 
     response = django_app.get(f"{url}?{policies_url_args}")
@@ -104,6 +104,6 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
         s.id for s in chain(selected_policies, new_policies)
     }
     assert response.location == reverse(
-        "subscription:complete",
+        "subscription:public-complete",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )

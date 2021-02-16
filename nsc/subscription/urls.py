@@ -1,16 +1,39 @@
 from django.urls import path
 
-from .views import ManageSubscription, Subscribe, SubscribeStart, SubscriptionComplete
+from .views import (
+    PublicSubscribe,
+    PublicSubscribeStart,
+    StakeholderSubscribeStart,
+    StakeholderSubscriptionComplete,
+    SubscribeLanding,
+    SubscriptionComplete,
+    publicManageSubscription,
+)
 
 
 urlpatterns = [
-    path("start/", SubscribeStart.as_view(), name="start"),
-    path("subscribe/", Subscribe.as_view(), name="subscribe"),
-    path("manage/<int:pk>/<slug:token>/", ManageSubscription.as_view(), name="manage"),
+    path("", SubscribeLanding.as_view(), name="landing"),
+    path("public-start/", PublicSubscribeStart.as_view(), name="public-start"),
+    path("public-subscribe/", PublicSubscribe.as_view(), name="public-subscribe"),
     path(
-        "complete/<int:pk>/<slug:token>/",
+        "public-manage/<int:pk>/<slug:token>/",
+        publicManageSubscription.as_view(),
+        name="public-manage",
+    ),
+    path(
+        "public-complete/<int:pk>/<slug:token>/",
         SubscriptionComplete.as_view(),
-        name="complete",
+        name="public-complete",
+    ),
+    path(
+        "stakeholder-start/",
+        StakeholderSubscribeStart.as_view(),
+        name="stakeholder-start",
+    ),
+    path(
+        "stakeholder-complete/",
+        StakeholderSubscriptionComplete.as_view(),
+        name="stakeholder-complete",
     ),
 ]
 

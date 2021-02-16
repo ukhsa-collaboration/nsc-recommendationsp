@@ -1,0 +1,40 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block body %}
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {% include "widgets/text_input.html" with field=form.title %}
+      </div>
+      <div class="govuk-grid-column-three-quarter">
+        <div class="govuk-grid-column-one-half">
+          {% include "widgets/text_input.html" with field=form.first_name %}
+        </div>
+        <div class="govuk-grid-column-one-half">
+          {% include "widgets/text_input.html" with field=form.last_name %}
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      {% include "widgets/text_input.html" with field=form.organisation %}
+    </div>
+
+    <div class="govuk-grid-row">
+      {% include "widgets/text_input.html" with field=form.email %}
+    </div>
+
+    <div class="govuk-grid-row">
+      {% include "widgets/text_input.html" with field=form.email_confirmation %}
+    </div>
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="save" value="save">
+        {% trans 'Continue' %}
+      </button>
+    </div>
+  </form>
+{% endblock %}

@@ -15,7 +15,7 @@ def test_object_does_not_exist_result_is_not_found(django_app, make_subscription
     sub = make_subscription()
 
     url = reverse(
-        "subscription:manage",
+        "subscription:public-manage",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
@@ -28,7 +28,7 @@ def test_signature_is_incorrect_result_is_not_found(django_app, make_subscriptio
     sub1, sub2 = make_subscription(_quantity=2)
 
     url = reverse(
-        "subscription:manage",
+        "subscription:public-manage",
         kwargs={"token": get_object_signature(sub1), "pk": sub2.id},
     )
 
@@ -39,7 +39,7 @@ def test_signature_is_correct_result_is_found(django_app, make_subscription):
     sub = make_subscription()
 
     url = reverse(
-        "subscription:manage",
+        "subscription:public-manage",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
@@ -56,7 +56,7 @@ def test_emails_match_subscription_is_created(
     sub = make_subscription(policies=selected_policies)
 
     url = reverse(
-        "subscription:manage",
+        "subscription:public-manage",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
@@ -72,6 +72,6 @@ def test_emails_match_subscription_is_created(
         s.id for s in chain(selected_policies, new_selected_policies)
     }
     assert response.location == reverse(
-        "subscription:complete",
+        "subscription:public-complete",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )

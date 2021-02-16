@@ -4,7 +4,7 @@
 {% block body %}
   <form
     method="{% if subscription %}post{% else %}get{% endif %}"
-    action="{% if not subscription %}{% url "subscription:subscribe" %}{% endif %}"
+    action="{% if not subscription %}{% url "subscription:public-subscribe" %}{% endif %}"
   >
     {% if subscription %}{% csrf_token %}{% endif %}
 

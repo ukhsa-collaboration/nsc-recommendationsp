@@ -1,9 +1,14 @@
 from django.http import Http404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from .forms import CreateSubscriptionForm, ManageSubscriptionsForm, SubscriptionStart
-from .models import Subscription
+from .forms import (
+    CreateStakeholderSubscriptionForm,
+    CreateSubscriptionForm,
+    ManageSubscriptionsForm,
+    SubscriptionStart,
+)
+from .models import StakeholderSubscription, Subscription
 from .signer import check_object, get_object_signature
 
 
@@ -17,24 +22,28 @@ class GetObjectFromTokenMixin:
         return obj
 
 
-class SubscribeStart(generic.FormView):
+class SubscribeLanding(generic.TemplateView):
+    template_name = "subscription/subscription_landing.html"
+
+
+class PublicSubscribeStart(generic.FormView):
     form_class = SubscriptionStart
     template_name = "subscription/subscription_management_form.html"
 
 
-class ManageSubscription(GetObjectFromTokenMixin, generic.UpdateView):
+class publicManageSubscription(GetObjectFromTokenMixin, generic.UpdateView):
     model = Subscription
     form_class = ManageSubscriptionsForm
     template_name = "subscription/subscription_management_form.html"
 
     def get_success_url(self):
         return reverse(
-            "subscription:complete",
+            "subscription:public-complete",
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
 
 
-class Subscribe(generic.UpdateView):
+class PublicSubscribe(generic.UpdateView):
     model = Subscription
     form_class = CreateSubscriptionForm
     template_name = "subscription/subscription_creation_form.html"
@@ -49,7 +58,7 @@ class Subscribe(generic.UpdateView):
 
     def get_success_url(self):
         return reverse(
-            "subscription:complete",
+            "subscription:public-complete",
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
 
@@ -57,3 +66,15 @@ class Subscribe(generic.UpdateView):
 class SubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
     model = Subscription
     template_name = "subscription/subscription_complete.html"
+
+
+class StakeholderSubscribeStart(generic.CreateView):
+    model = StakeholderSubscription
+    template_name = "subscription/subscription_stakeholder_creation.html"
+    form_class = CreateStakeholderSubscriptionForm
+    success_url = reverse_lazy("subscription:stakeholder-complete")
+
+
+class StakeholderSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
+    model = Subscription
+    template_name = "subscription/subscription_stakeholder_complete.html"
