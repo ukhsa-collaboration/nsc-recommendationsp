@@ -183,3 +183,11 @@ class Policy(TimeStampedModel):
 
     def get_archive_documents(self):
         return Document.objects.for_policy(self).archive()
+
+    def get_ages_display(self):
+        return ', '.join(
+            map(
+                lambda a: str(self.AGE_GROUPS[a]),
+                self.ages
+            )
+        )
