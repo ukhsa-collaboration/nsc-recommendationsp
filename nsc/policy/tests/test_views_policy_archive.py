@@ -12,25 +12,25 @@ from nsc.utils.markdown import convert
 pytestmark = pytest.mark.django_db
 
 
-def test_detail__back_link(django_app):
+def test_detail__back_link(erm_user, django_app):
     """
     Test the back link returns to the detail page.
     """
     instance = baker.make(Policy)
     detail_page = django_app.get(
-        reverse("policy:archive:detail", args=(instance.slug,))
+        reverse("policy:archive:detail", args=(instance.slug,)), user=erm_user
     )
     next_page = detail_page.click(linkid="back-link-id")
     assert next_page.request.path == instance.get_admin_url()
 
 
-def test_upload__back_link(django_app):
+def test_upload__back_link(erm_user, django_app):
     """
     Test the back link returns to the detail page.
     """
     instance = baker.make(Policy)
     upload_page = django_app.get(
-        reverse("policy:archive:upload", args=(instance.slug,))
+        reverse("policy:archive:upload", args=(instance.slug,)), user=erm_user
     )
     next_page = upload_page.click(linkid="back-link-id")
     assert next_page.request.path == reverse(
@@ -38,13 +38,13 @@ def test_upload__back_link(django_app):
     )
 
 
-def test_update__back_link(django_app):
+def test_update__back_link(erm_user, django_app):
     """
     Test the back link returns to the detail page.
     """
     instance = baker.make(Policy)
     update_page = django_app.get(
-        reverse("policy:archive:update", args=(instance.slug,))
+        reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
     next_page = update_page.click(linkid="back-link-id")
     assert next_page.request.path == reverse(
@@ -52,23 +52,35 @@ def test_update__back_link(django_app):
     )
 
 
-def test_detail_view(django_app):
+def test_detail_view(erm_user, django_app):
     """
     Test that we can view an instance via the detail view.
     """
     instance = baker.make(Policy)
-    response = django_app.get(reverse("policy:archive:detail", args=(instance.slug,)))
+    response = django_app.get(
+        reverse("policy:archive:detail", args=(instance.slug,)), user=erm_user
+    )
     assert response.context["policy"] == instance
 
 
-def test_upload_view__create_document(minimal_pdf, django_app):
+def test_detail_view__no_user(test_access_no_user):
+    instance = baker.make(Policy)
+    test_access_no_user(url=reverse("policy:archive:detail", args=(instance.slug,)))
+
+
+def test_detail_view__incorrect_permission(test_access_forbidden):
+    instance = baker.make(Policy)
+    test_access_forbidden(url=reverse("policy:archive:detail", args=(instance.slug,)))
+
+
+def test_upload_view__create_document(erm_user, minimal_pdf, django_app):
     """
     Test that we can create a document via the upload view.
     """
 
     instance = baker.make(Policy, slug="abc")
     upload_url = reverse("policy:archive:upload", args=(instance.slug,))
-    form = django_app.get(upload_url).form
+    form = django_app.get(upload_url, user=erm_user).form
     form["document-TOTAL_FORMS"] = 1
     form["document-0-name"] = "Some name"
     form["document-0-upload"] = (
@@ -88,14 +100,25 @@ def test_upload_view__create_document(minimal_pdf, django_app):
     assert document_policy.source == "archive"
 
 
-def test_update_view__preview(django_app):
+def test_upload_view__no_user(test_access_no_user):
+    instance = baker.make(Policy)
+    test_access_no_user(url=reverse("policy:archive:upload", args=(instance.slug,)))
+
+
+def test_upload_view__incorrect_permission(test_access_forbidden):
+    instance = baker.make(Policy)
+    test_access_forbidden(url=reverse("policy:archive:upload", args=(instance.slug,)))
+
+
+def test_update_view__preview(erm_user, django_app):
+
     """
     Test the preview page.
     """
     instance = baker.make(Policy, archived_reason="# heading")
 
     update_page = django_app.get(
-        reverse("policy:archive:update", args=(instance.slug,))
+        reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
     update_form = update_page.form
     update_form["archived_reason"] = "# updated"
@@ -108,14 +131,14 @@ def test_update_view__preview(django_app):
     assert preview_page.context.get("publish") is None
 
 
-def test_update_view__published(django_app):
+def test_update_view__published(erm_user, django_app):
     """
     Test the preview page.
     """
     instance = baker.make(Policy, archived_reason="# heading", archived=False)
 
     update_page = django_app.get(
-        reverse("policy:archive:update", args=(instance.slug,))
+        reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
     update_form = update_page.form
     update_form["archived_reason"] = "# updated"
@@ -132,3 +155,13 @@ def test_update_view__published(django_app):
     assert instance.archived
     assert instance.archived_reason == "# updated"
     assert instance.archived_reason_html == convert("# updated")
+
+
+def test_update_view__no_user(test_access_no_user):
+    instance = baker.make(Policy)
+    test_access_no_user(url=reverse("policy:archive:update", args=(instance.slug,)))
+
+
+def test_update_view__incorrect_permission(test_access_forbidden):
+    instance = baker.make(Policy)
+    test_access_forbidden(url=reverse("policy:archive:update", args=(instance.slug,)))

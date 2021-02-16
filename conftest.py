@@ -36,7 +36,7 @@ pytest_plugins = [
 
 
 @pytest.fixture
-def django_app_form(db, django_app):
+def django_app_form(erm_user, db, django_app):
     """
     Wrapper for django_app fixture - GET a form, fill it out and POST it back
 
@@ -47,7 +47,7 @@ def django_app_form(db, django_app):
     """
 
     def get_and_post(url, **form_args):
-        form = django_app.get(url).form
+        form = django_app.get(url, user=erm_user).form
         for field, value in form_args.items():
             form[field] = value
         return form.submit()
