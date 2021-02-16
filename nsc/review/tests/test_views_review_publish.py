@@ -28,8 +28,18 @@ non_supporting_document_types = set(Document.TYPE._db_values) ^ set(
 )
 
 
+def test_view__no_user(make_review, test_access_no_user):
+    review = make_review()
+    test_access_no_user(url=reverse("review:publish", kwargs={"slug": review.slug}))
+
+
+def test_view__incorrect_permission(make_review, test_access_forbidden):
+    review = make_review()
+    test_access_forbidden(url=reverse("review:publish", kwargs={"slug": review.slug}))
+
+
 def test_response_is_no_recommendations_are_not_updated(
-    make_review, make_policy, make_review_recommendation, django_app
+    erm_user, make_review, make_policy, make_review_recommendation, django_app
 ):
     first_policy = make_policy(name="first", recommendation=False)
     second_policy = make_policy(name="second", recommendation=True)
@@ -40,7 +50,9 @@ def test_response_is_no_recommendations_are_not_updated(
         policy=second_policy, review=review, recommendation=False
     )
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = False
@@ -53,7 +65,7 @@ def test_response_is_no_recommendations_are_not_updated(
 
 
 def test_response_is_no_summaries_are_not_updated(
-    make_review, make_policy, make_summary_draft, django_app
+    erm_user, make_review, make_policy, make_summary_draft, django_app
 ):
     first_policy = make_policy(
         name="first", summary="first summary", summary_html=convert("first summary")
@@ -70,7 +82,9 @@ def test_response_is_no_summaries_are_not_updated(
         policy=second_policy, review=review, text="**new** ~second~ `summary`"
     )
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = False
@@ -86,7 +100,7 @@ def test_response_is_no_summaries_are_not_updated(
 
 @pytest.mark.parametrize("doc_type", Document.TYPE._db_values)
 def test_response_is_no_documents_arent_updated(
-    doc_type, make_review, make_policy, make_document, django_app
+    erm_user, doc_type, make_review, make_policy, make_document, django_app
 ):
     first_policy = make_policy(name="first")
     second_policy = make_policy(name="second")
@@ -94,7 +108,9 @@ def test_response_is_no_documents_arent_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = False
@@ -105,7 +121,7 @@ def test_response_is_no_documents_arent_updated(
 
 
 def test_response_is_yes_recommendations_are_updated(
-    make_review, make_policy, make_review_recommendation, django_app
+    erm_user, make_review, make_policy, make_review_recommendation, django_app
 ):
     first_policy = make_policy(name="first", recommendation=False)
     second_policy = make_policy(name="second", recommendation=True)
@@ -116,7 +132,9 @@ def test_response_is_yes_recommendations_are_updated(
         policy=second_policy, review=review, recommendation=False
     )
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = True
@@ -129,7 +147,7 @@ def test_response_is_yes_recommendations_are_updated(
 
 
 def test_response_is_yes_no_review_end_set(
-    make_review, make_policy, make_review_recommendation, django_app
+    erm_user, make_review, make_policy, make_review_recommendation, django_app
 ):
     first_policy = make_policy(name="first", recommendation=False)
     second_policy = make_policy(name="second", recommendation=True)
@@ -140,7 +158,9 @@ def test_response_is_yes_no_review_end_set(
         policy=second_policy, review=review, recommendation=False
     )
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = True
@@ -151,7 +171,7 @@ def test_response_is_yes_no_review_end_set(
 
 
 def test_response_is_yes_summaries_not_updated(
-    make_review, make_policy, make_summary_draft, django_app
+    erm_user, make_review, make_policy, make_summary_draft, django_app
 ):
     first_policy = make_policy(
         name="first", summary="first summary", summary_html=convert("first summary")
@@ -168,7 +188,9 @@ def test_response_is_yes_summaries_not_updated(
         policy=second_policy, review=review, text="**new** ~second~ `summary`"
     )
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = True
@@ -184,7 +206,7 @@ def test_response_is_yes_summaries_not_updated(
 
 @pytest.mark.parametrize("doc_type", supporting_document_types)
 def test_response_is_yes_supporting_documents_are_updated(
-    doc_type, make_review, make_policy, make_document, django_app
+    erm_user, doc_type, make_review, make_policy, make_document, django_app
 ):
     first_policy = make_policy(name="first")
     second_policy = make_policy(name="second")
@@ -192,7 +214,9 @@ def test_response_is_yes_supporting_documents_are_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = True
@@ -207,7 +231,7 @@ def test_response_is_yes_supporting_documents_are_updated(
 
 @pytest.mark.parametrize("doc_type", non_supporting_document_types)
 def test_response_is_yes_non_supporting_documents_arent_updated(
-    doc_type, make_review, make_policy, make_document, django_app
+    erm_user, doc_type, make_review, make_policy, make_document, django_app
 ):
     first_policy = make_policy(name="first")
     second_policy = make_policy(name="second")
@@ -215,7 +239,9 @@ def test_response_is_yes_non_supporting_documents_arent_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    response = django_app.get(reverse("review:publish", kwargs={"slug": review.slug}))
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
 
     form = response.form
     form["published"] = True

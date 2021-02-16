@@ -4,6 +4,8 @@ from django.views.generic import DetailView, UpdateView
 
 from django_filters.views import FilterView
 
+from nsc.permissions import AdminRequiredMixin
+
 from .filters import SearchFilter
 from .forms import ArchiveDocumentForm, ArchiveForm, PolicyForm, SearchForm
 from .models import Policy
@@ -31,7 +33,7 @@ class PublishPreviewMixin:
             )
 
 
-class PolicyList(FilterView):
+class PolicyList(AdminRequiredMixin, FilterView):
     queryset = Policy.objects.active().prefetch_reviews_in_consultation()
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
@@ -44,7 +46,7 @@ class PolicyList(FilterView):
         return super().get_context_data(form=form)
 
 
-class PolicyDetail(DetailView):
+class PolicyDetail(AdminRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
@@ -56,7 +58,7 @@ class PolicyDetail(DetailView):
         )
 
 
-class PolicyEdit(PublishPreviewMixin, UpdateView):
+class PolicyEdit(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
     model = Policy
     lookup_field = "slug"
     form_class = PolicyForm
@@ -65,21 +67,21 @@ class PolicyEdit(PublishPreviewMixin, UpdateView):
     success_message = "Published changes to conditions page."
 
 
-class ArchiveDetail(DetailView):
+class ArchiveDetail(AdminRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/detail.html"
 
 
-class ArchiveDocumentDetail(DetailView):
+class ArchiveDocumentDetail(AdminRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/document.html"
 
 
-class ArchiveDocumentUploadView(UpdateView):
+class ArchiveDocumentUploadView(AdminRequiredMixin, UpdateView):
     form_class = ArchiveDocumentForm
     model = Policy
     lookup_field = "slug"
@@ -90,7 +92,7 @@ class ArchiveDocumentUploadView(UpdateView):
         return reverse("policy:archive:upload", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveUpdate(PublishPreviewMixin, UpdateView):
+class ArchiveUpdate(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
     form_class = ArchiveForm
     model = Policy
     lookup_field = "slug"

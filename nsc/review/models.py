@@ -115,6 +115,9 @@ class Review(TimeStampedModel):
     objects = ReviewQuerySet.as_manager()
 
     class Meta:
+        permissions = [
+            ("evidence_review_manager", "Evidence Review Manager"),
+        ]
         ordering = ("name", "pk")
         verbose_name_plural = _("reviews")
 

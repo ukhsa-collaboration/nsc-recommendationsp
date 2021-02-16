@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -23,6 +24,8 @@ urlpatterns = [
     path(r"subscription/", include("nsc.subscription.urls", namespace="subscription")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
+    # TODO remove once AD is in place.
+    path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -12,33 +12,43 @@ from nsc.utils.datetime import get_today
 pytestmark = pytest.mark.django_db
 
 
-def test_view(django_app):
+def test_view(erm_user, django_app):
     """
     Test that the page can be displayed.
     """
-    response = django_app.get(reverse("review:add"))
+    response = django_app.get(reverse("review:add"), user=erm_user)
     assert response.status == "200 OK"
 
 
-def test_initialize_form_for_policy(django_app):
+def test_view__no_user(test_access_no_user):
+    test_access_no_user(url=reverse("review:add"))
+
+
+def test_view__incorrect_permission(test_access_forbidden):
+    test_access_forbidden(url=reverse("review:add"))
+
+
+def test_initialize_form_for_policy(erm_user, django_app):
     """
     Test passing the policy as a query parameter initializes the form.
     """
     policy = baker.make(Policy, name="name", slug="name")
-    response = django_app.get("%s?policy=%s" % (reverse("review:add"), policy.slug))
+    response = django_app.get(
+        "%s?policy=%s" % (reverse("review:add"), policy.slug), user=erm_user
+    )
     form = response.context["form"]
     assert form.initial["name"] == "%s %d review" % (policy.name, get_today().year)
     assert form.initial["policies"] == [policy.pk]
 
 
-def test_review_is_created(django_app):
+def test_review_is_created(erm_user, django_app):
     """
     Test submitting the form creates a new review for a condition.
     """
     policy = baker.make(Policy, name="name", slug="name")
     assert policy.reviews.count() == 0
 
-    form = django_app.get(reverse("review:add")).form
+    form = django_app.get(reverse("review:add"), user=erm_user).form
     form["name"] = "Review"
     form["review_type"] = [Review.TYPE.evidence]
     form["policies-TOTAL_FORMS"] = 1

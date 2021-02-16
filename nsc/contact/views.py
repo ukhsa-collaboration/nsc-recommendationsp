@@ -1,13 +1,14 @@
 from django.urls import reverse
 from django.views import generic
 
+from nsc.permissions import AdminRequiredMixin
 from nsc.stakeholder.models import Stakeholder
 
 from .forms import ContactForm
 from .models import Contact
 
 
-class ContactAdd(generic.CreateView):
+class ContactAdd(AdminRequiredMixin, generic.CreateView):
     model = Contact
     form_class = ContactForm
 
@@ -27,7 +28,7 @@ class ContactAdd(generic.CreateView):
         return super().get_context_data(stakeholder=stakeholder, **kwargs)
 
 
-class ContactEdit(generic.UpdateView):
+class ContactEdit(AdminRequiredMixin, generic.UpdateView):
     model = Contact
     form_class = ContactForm
 
@@ -39,7 +40,7 @@ class ContactEdit(generic.UpdateView):
         return reverse("stakeholder:detail", kwargs={"pk": self.object.stakeholder.pk})
 
 
-class ContactDelete(generic.DeleteView):
+class ContactDelete(AdminRequiredMixin, generic.DeleteView):
     model = Contact
 
     def get_success_url(self):

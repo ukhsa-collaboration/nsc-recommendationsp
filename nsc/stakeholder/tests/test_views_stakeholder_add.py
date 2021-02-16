@@ -18,8 +18,13 @@ def policy(make_policy):
 
 
 @pytest.fixture
-def response(django_app):
-    return django_app.get(reverse("stakeholder:add"))
+def url():
+    return reverse("stakeholder:add")
+
+
+@pytest.fixture
+def response(url, erm_user, django_app):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture
@@ -34,6 +39,14 @@ def test_add_view(response):
     assert response.status == "200 OK"
 
 
+def test_add_view__no_user(url, test_access_no_user):
+    test_access_no_user(url=url)
+
+
+def test_add_view__incorrect_permission(url, test_access_forbidden):
+    test_access_forbidden(url=url)
+
+
 def test_back_link(dom):
     """
     Test the back link returns to the stakeholder list page
@@ -43,11 +56,11 @@ def test_back_link(dom):
     assert link.text.strip() == _("Back to stakeholders")
 
 
-def test_back_link__next(django_app):
+def test_back_link__next(erm_user, django_app):
     """
     Test the back link returns to the stakeholder list page
     """
-    response = django_app.get(reverse("stakeholder:add") + "?next=/")
+    response = django_app.get(reverse("stakeholder:add") + "?next=/", user=erm_user)
     dom = BeautifulSoup(response.content, "html.parser")
     link = dom.find(id="back-link-id")
     assert link["href"] == "/"
@@ -70,11 +83,11 @@ def test_success_url(policy, response):
     assert actual.request.path == Stakeholder.objects.first().get_detail_url()
 
 
-def test_success_url__next(policy, django_app):
+def test_success_url__next(erm_user, policy, django_app):
     """
     Test saving a contact returns to the stakeholder list page.
     """
-    response = django_app.get(f'{reverse("stakeholder:add")}?next=/')
+    response = django_app.get(f'{reverse("stakeholder:add")}?next=/', user=erm_user)
     form = response.form
     form["name"] = "Name"
     form["is_public"] = True
