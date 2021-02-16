@@ -13,39 +13,28 @@
 
 {% block content %}
 
-  {% if policy.current_review %}
-    <div class="govuk-warning-text govuk-body nsc-open-for-comment">
-      <div class="govuk-!-font-weight-bold">
-        {% trans 'We are currently accepting public comments on this condition.' %}
-      </div>
-      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-      <div class="govuk-!-font-weight-bold">
-        <a href="{% url 'condition:consultation' policy.slug %}">
-          {% blocktrans with name=policy.name.lower %}
-          Submit comments on {{ name }}
-          {% endblocktrans %}
-        </a>
-      </div>
-      <div>
-        {% blocktrans with closing_date=policy.current_review.consultation_end_display %}
-          Closing date: {{ closing_date }}.
-        {% endblocktrans %}
-      </div>
-      {% if policy.current_review.nsc_meeting_date %}
-        <div>
-          {% blocktrans with review_date=policy.current_review.nsc_meeting_date_display %}
-            Scheduled UK NSC meeting date: {{ review_date }}.
-          {% endblocktrans %}
+  {% if policy.archived %}
+    <div class="govuk-body ce">
+        <div class="nsc-message-error ">
+          This recommendation has been archived and is no longer regularly reviewed by the UK NSC.
         </div>
-      {% endif %}
     </div>
-  {% endif %}
 
-  {% include "policy/public/condition.html" %}
-  {% include "policy/public/summary.html" %}
-  {% include "policy/public/documents.html" %}
-  {% include "policy/public/screening.html" %}
-  {% include "policy/public/review_cycle.html" %}
-  {% include "policy/public/stakeholders.html" %}
+    {% include "policy/public/condition.html" %}
+    {% include "policy/archive/reason.html" %}
+    {% include "policy/archive/documents.html" %}
+  {% else %}
+
+    {% if policy.current_review %}
+      {% include "policy/public/consultation_status.html" %}
+    {% endif %}
+
+    {% include "policy/public/condition.html" %}
+    {% include "policy/public/summary.html" %}
+    {% include "policy/public/documents.html" %}
+    {% include "policy/public/screening.html" %}
+    {% include "policy/public/review_cycle.html" %}
+    {% include "policy/public/stakeholders.html" %}
+  {% endif %}
 {% endblock %}
 

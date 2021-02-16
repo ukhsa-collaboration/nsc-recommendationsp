@@ -34,7 +34,7 @@
 
                 {% with policy=form.instance %}
                     {% if preview %}
-                        {% include "policy/admin/archive/reason.html" %}
+                        {% include "policy/archive/reason.html" %}
                         {{ form.archived_reason.as_hidden }}
                     {% else %}
                         {% include "widgets/text_area.html" with field=form.archived_reason show_legend=True %}

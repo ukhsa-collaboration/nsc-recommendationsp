@@ -44,6 +44,7 @@ def review_in_consultation(make_review):
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
+        dates_confirmed=True,
     )
     baker.make(
         Document,
@@ -70,6 +71,7 @@ def review_in_post_consultation(make_review):
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
+        dates_confirmed=True,
     )
     baker.make(
         Document,
@@ -96,6 +98,7 @@ def review_completed(make_review):
         review_start=review_start,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
+        published=True,
     )
     baker.make(
         Document,
@@ -124,6 +127,7 @@ def review_published(make_review, form_pdf):
         review_end=review_end,
         consultation_start=consultation_start,
         consultation_end=consultation_end,
+        published=True,
     )
     baker.make(
         Document,

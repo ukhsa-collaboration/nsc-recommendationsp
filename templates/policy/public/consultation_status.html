@@ -1,0 +1,53 @@
+{% load i18n %}
+<div class="govuk-warning-text govuk-body nsc-open-for-comment">
+    {% if policy.current_review.preparing %}
+        <div class="govuk-!-font-weight-bold">
+            {% blocktrans %}
+                We are currently preparing to open a consultation on this condition.
+            {% endblocktrans %}
+        </div>
+        <div>
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            {% blocktrans %}
+                <a href="#">Register for updates</a> and we will notify you when we are accepting comments.
+            {% endblocktrans %}
+        </div>
+    {% elif policy.current_review.in_consultation %}
+        <div class="govuk-!-font-weight-bold">
+            {% trans 'We are currently accepting public comments on this condition.' %}
+        </div>
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <div class="govuk-!-font-weight-bold">
+            <a href="{% url 'condition:consultation' policy.slug %}">
+                {% blocktrans with name=policy.name.lower %}
+                    Submit comments on {{ name }}
+                {% endblocktrans %}
+            </a>
+        </div>
+        <div>
+            {% blocktrans with closing_date=policy.current_review.consultation_end_display %}
+                Closing date: {{ closing_date }}.
+            {% endblocktrans %}
+        </div>
+        {% if policy.current_review.nsc_meeting_date %}
+            <div>
+                {% blocktrans with review_date=policy.current_review.nsc_meeting_date_display %}
+                    Scheduled UK NSC meeting date: {{ review_date }}.
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+    {% elif policy.current_review.post_consultation %}
+            <div class="govuk-!-font-weight-bold">
+                {% blocktrans %}
+                    We are no longer accepting comments on this condition.
+                {% endblocktrans %}
+            </div>
+            <div>
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                {% blocktrans %}
+                    <a href="#">Register for updates</a> and we will notify you when we have reviewed all
+                    comments along with the scientific evidence.
+                {% endblocktrans %}
+            </div>
+    {% endif %}
+</div>
