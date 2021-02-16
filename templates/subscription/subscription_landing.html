@@ -1,0 +1,15 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block body %}
+  <p class="govuk-body">
+    <a class="govuk-button" href="{% url "subscription:public-start" %}">
+      {% trans "Subscribe as a member of the public" %}
+    </a>
+  </p>
+  <p class="govuk-body">
+    <a class="govuk-button" href="{% url "subscription:stakeholder-start" %}">
+      {% trans "Subscribe as a health professional or organisation" %}
+    </a>
+  </p>
+{% endblock %}
