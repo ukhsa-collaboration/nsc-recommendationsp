@@ -37,7 +37,10 @@
 
                 {# It's not recommended to exceed 2000 chars in a mailto #}
                 {% if mailto|length > 2000 %}
-                    <p class="govuk-body">Too many emails to provide a mail to link, please export instead.</p>
+                    <p class="govuk-body">Too many emails to provide a mailto link, please copy from below to your email client.</p>
+                    <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+                        <textarea name="mailto" class="govuk-textarea" id="mailto">{{ mailto }}</textarea>
+                    </div>
                 {% else %}
                     <a class="govuk-button govuk-button--secondary" href="mailto:{{ mailto }}">
                         {% trans 'Email stakeholders' %}
