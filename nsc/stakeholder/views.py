@@ -9,6 +9,7 @@ from django.views import generic
 from django.views.generic import FormView
 
 from nsc.permissions import AdminRequiredMixin
+from nsc.utils.datetime import get_today
 
 from .filters import SearchFilter
 from .forms import ExportForm, SearchForm, StakeholderForm
@@ -45,21 +46,26 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
     form_class = ExportForm
     template_name = "stakeholder/stakeholder_export.html"
 
-    def get_context_data(self, **kwargs):
-        stakeholders = self.get_queryset()
+    @staticmethod
+    def get_mailto(stakeholders):
         mailto = []
         for stakeholder in stakeholders:
             for email in stakeholder.contacts_emails():
                 mailto.append(email)
+        return mailto
+
+    def get_context_data(self, **kwargs):
+        stakeholders = self.get_queryset()
+        mailto = self.get_mailto(stakeholders)
 
         return super().get_context_data(
             total=Stakeholder.objects.count(),
             object_list=self.get_queryset(),
             mailto=",".join(mailto),
-            **kwargs
+            **kwargs,
         )
 
-    def _as_individual_contact(self, writer):
+    def export_as_individual_contact(self, writer):
         writer.writerow(
             [
                 "Stakeholder name",
@@ -81,40 +87,58 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
                     ]
                 )
 
-    def _as_conditions(self, writer):
+    def export_as_conditions(self, writer):
+        country_headers = [
+            f"Country: {label}" for _, label in Stakeholder.COUNTRY_CHOICES
+        ]
         writer.writerow(
             [
                 "Stakeholder name",
-                "Contact Name",
-                "Contact Email",
-                "Contact Role",
-                "Contact Phone",
+                "Stakeholder Type",
+                *country_headers,
+                "Website",
+                "Twitter",
+                "Comments",
+                "Show on website",
+                "Conditions interested in",
             ]
         )
         for stakeholder in self.get_queryset():
-            for contact in stakeholder.contacts.all():
-                writer.writerow(
-                    [
-                        stakeholder.name,
-                        contact.name,
-                        contact.email,
-                        contact.role,
-                        contact.phone,
-                    ]
-                )
+            if stakeholder.countries:
+                country_values = [
+                    "y" if value in stakeholder.countries else ""
+                    for value, _ in Stakeholder.COUNTRY_CHOICES
+                ]
+            else:
+                country_values = [""] * len(Stakeholder.COUNTRY_CHOICES)
+
+            writer.writerow(
+                [
+                    stakeholder.name,
+                    stakeholder.get_type_display(),
+                    *country_values,
+                    stakeholder.url,
+                    stakeholder.twitter,
+                    stakeholder.comments,
+                    "y" if stakeholder.is_public else "",
+                    ", ".join([c.name for c in stakeholder.policies.all()]),
+                ]
+            )
 
     def form_valid(self, form):
         """
         Export stakeholders - format depending on form.
         """
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="stakeholders.csv"'
+        response[
+            "Content-Disposition"
+        ] = f'attachment; filename="stakeholders{get_today().isoformat()}.csv"'
         writer = csv.writer(response)
 
         if form.cleaned_data["export_type"] == "individual":
-            self._as_individual_contact(writer)
+            self.export_as_individual_contact(writer)
         else:
-            self._as_conditions(writer)
+            self.export_as_conditions(writer)
 
         return response
 
@@ -140,7 +164,7 @@ class StakeholderAdd(AdminRequiredMixin, generic.CreateView):
         return super().get_context_data(
             back_title=_("Back to stakeholders"),
             back_url=reverse_lazy("stakeholder:list"),
-            **kwargs
+            **kwargs,
         )
 
 

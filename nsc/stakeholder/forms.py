@@ -15,6 +15,7 @@ class ExportForm(forms.Form):
             ("conditions", "Conditions stakeholders are interested in"),
             ("individual", "Individual contact details"),
         ),
+        widget=forms.RadioSelect,
     )
 
 
