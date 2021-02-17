@@ -34,9 +34,9 @@
           </h2>
 
           {% include 'widgets/text_input.html' with field=form.name show_legend=True %}
-          {% include 'widgets/radio_buttons.html' with field=form.comments %}
-          {% include 'widgets/radio_buttons.html' with field=form.affects %}
-          {% include 'widgets/radio_buttons.html' with field=form.screen %}
+          {% include 'widgets/radio_buttons.html' with field=form.review_status show_legend=True %}
+          {% include 'widgets/radio_buttons.html' with field=form.recommendation show_legend=True %}
+          {% include 'widgets/checkbox.html' with field=form.archived show_legend=True %}
 
           <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
             {% trans 'Search' %}

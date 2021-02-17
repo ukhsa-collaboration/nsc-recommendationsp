@@ -21,30 +21,30 @@ from .models import Policy
 
 
 class SearchForm(forms.Form):
-
-    CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))
-    YES_NO_CHOICES = Choices(("yes", _("Yes")), ("no", _("No")))
+    CONSULTATION = Choices(
+        ("due", _("Due to be reviewed")),
+        ("in_review", _("In Review")),
+        ("in_consultation", _("In consultation")),
+        ("post_consultation", _("Post Consultation")),
+    )
 
     name = forms.CharField(label=_("Condition name"), required=False)
-
-    comments = forms.TypedChoiceField(
-        label=_("Public comments"),
+    review_status = forms.TypedChoiceField(
+        label=_("Review status"),
         choices=CONSULTATION,
         widget=forms.RadioSelect,
         required=False,
     )
-
-    affects = forms.TypedChoiceField(
-        label=_("Who the condition affects"),
-        choices=Policy.AGE_GROUPS,
+    recommendation = forms.TypedChoiceField(
+        label=_("Current recommendation"),
+        choices=Choices(("yes", _("Recommended")), ("no", _("Not recommended"))),
         widget=forms.RadioSelect,
         required=False,
     )
-
-    screen = forms.TypedChoiceField(
-        label=_("Current recommendation"),
-        choices=YES_NO_CHOICES,
-        widget=forms.RadioSelect,
+    archived = forms.TypedChoiceField(
+        label=_("Archive recommendations"),
+        choices=(("yes", _("Yes")), ("no", _("No"))),
+        widget=forms.CheckboxInput,
         required=False,
     )
 

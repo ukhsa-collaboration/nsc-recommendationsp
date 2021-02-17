@@ -42,6 +42,12 @@ class PolicyQuerySet(models.QuerySet):
             Q(name__icontains=keywords) | Q(keywords__icontains=keywords)
         )
 
+    def in_progress(self):
+        """
+        Get the policies which have a review in progress of any state.
+        """
+        return self.exclude(reviews__published=True)
+
     def open_for_comments(self):
         """
         Get the policies which are currently in review and where the period for
@@ -63,7 +69,7 @@ class PolicyQuerySet(models.QuerySet):
                 models.Q(reviews__consultation_start__lte=today)
                 & models.Q(reviews__consultation_end__gte=today)
             )
-        )
+        ).exclude(reviews__published=True)
 
     def prefetch_reviews_in_consultation(self):
         """
