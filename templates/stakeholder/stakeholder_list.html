@@ -27,7 +27,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
       <div class="filter-box">
-        <form>
+        <form id="stakeholder-filter">
 
           <h2 class="govuk-heading-m">
             {% trans 'Filter stakeholders by:' %}
@@ -46,7 +46,7 @@
               {% trans 'Clear search' %}
           </a>
 
-          <button type="submit" name="export" value="export" class="govuk-button search-b-button govuk-!-margin-right-8">
+          <button type="submit" id="export-button" name="export" value="export" class="govuk-button search-b-button govuk-!-margin-right-8">
             {% trans 'Export' %}
           </button>
         </form>
