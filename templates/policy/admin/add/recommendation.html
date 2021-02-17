@@ -1,0 +1,8 @@
+{% extends "policy/admin/add/base.html" %}
+
+{% block title %}What is the recommendation decision{% endblock %}
+
+{% block form_fields %}
+    {% include "widgets/radio_buttons.html" with field=form.recommendation style="radios" %}
+    {% include "widgets/text_input.html" with field=form.next_review width=4 %}
+{% endblock %}

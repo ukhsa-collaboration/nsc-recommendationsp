@@ -8,7 +8,7 @@
 
   {% if show_legend %}
     {% include "widgets/field_legend.html" %}
-  {% else %}
+  {% elif not hide_label %}
     {% include "widgets/field_label.html" %}
   {% endif %}
 

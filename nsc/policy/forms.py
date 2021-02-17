@@ -20,6 +20,24 @@ from .models import Policy
 #      check later once the development is finished to see if it can be shared.
 
 
+class NextReviewToYearMixin:
+    def clean_next_review(self):
+        value = self.cleaned_data["next_review"]
+
+        if not value:
+            return None
+
+        if re.match(r"\d{4}", value) is None:
+            raise ValidationError(_("Please enter a valid year"))
+
+        value = int(value)
+
+        if value < get_today().year:
+            raise ValidationError(_("The next review cannot be in the past"))
+
+        return datetime.date(year=value, month=1, day=1)
+
+
 class SearchForm(forms.Form):
     CONSULTATION = Choices(
         ("due", _("Due to be reviewed")),
@@ -49,7 +67,91 @@ class SearchForm(forms.Form):
     )
 
 
-class PolicyForm(forms.ModelForm):
+class PolicyAddForm(forms.ModelForm):
+    name = forms.CharField(label=_("Enter condition name"), widget=forms.Textarea,)
+
+    condition = forms.CharField(
+        label=_("Condition description English summary"),
+        help_text=_(
+            "Insert the condition description here. Ensure that this is in plain English. Use markdown to format the text."
+        ),
+        widget=forms.Textarea,
+    )
+    ages = forms.MultipleChoiceField(
+        label=_("Who does this condition affect?"),
+        help_text=_("Select all that apply"),
+        choices=Policy.AGE_GROUPS,
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["name", "condition", "ages"]
+
+    def clean_name(self):
+        value = self.cleaned_data["name"]
+
+        if Policy.objects.filter(name=value).exists():
+            raise ValidationError(_("A policy already exists with this name."))
+
+        return value
+
+    def save(self, commit=True):
+        self.instance.is_active = False
+        return super().save(commit=commit)
+
+
+class PolicyAddSummaryForm(forms.ModelForm):
+    summary = forms.CharField(
+        help_text=_("Use markdown to format the text."), widget=forms.Textarea,
+    )
+    background = forms.CharField(
+        required=False,
+        label=_("Condition history (optional)"),
+        help_text=_(
+            "Here you can add information about where this condition came from. If this condition has been added from an Annual Call, you "
+            "could include some information here. Use markdown to format the text."
+        ),
+        widget=forms.Textarea,
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["summary", "background"]
+
+
+class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
+    recommendation = forms.TypedChoiceField(
+        choices=Choices(
+            (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\A")),
+        ),
+        widget=forms.RadioSelect,
+        required=True,
+    )
+
+    next_review = forms.CharField(
+        required=False,
+        label=_("Set review year"),
+        help_text=_(
+            "The condition will automatically be 'in review'. If you want to set a future date, please add it below."
+        ),
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["recommendation", "next_review"]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.initial["next_review"] = get_today().year
+
+    def save(self, commit=True):
+        self.instance.is_active = True
+        return super().save(commit=commit)
+
+
+class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
 
     next_review = forms.CharField(
         required=False,
@@ -107,22 +209,6 @@ class PolicyForm(forms.ModelForm):
         self.fields["condition"].label = _("More about %s" % self.instance.name)
         self.fields["keywords"].widget.attrs.update({"rows": 3})
 
-    def clean_next_review(self):
-        value = self.cleaned_data["next_review"]
-
-        if not value:
-            return None
-
-        if re.match(r"\d{4}", value) is None:
-            raise ValidationError(_("Please enter a valid year"))
-
-        value = int(value)
-
-        if value < get_today().year:
-            raise ValidationError(_("The next review cannot be in the past"))
-
-        return datetime.date(year=value, month=1, day=1)
-
 
 class PolicySelectionForm(forms.Form):
     policy = forms.ModelChoiceField(Policy.objects.none())
@@ -172,7 +258,10 @@ class ArchiveForm(forms.ModelForm):
         return super().save(commit=commit)
 
 
-class ArchiveDocumentForm(forms.ModelForm):
+class PolicyDocumentForm(forms.ModelForm):
+    document_extra = 0
+    document_min_num = 1
+
     class Meta:
         model = Policy
         fields = []
@@ -181,8 +270,8 @@ class ArchiveDocumentForm(forms.ModelForm):
     def documents_formset(self):
         return modelformset_factory(
             Document,
-            min_num=1,
-            extra=0,
+            min_num=self.document_min_num,
+            extra=self.document_extra,
             form=document_formset_form_factory(
                 Document.TYPE.archive,
                 _("Select file for upload"),
@@ -205,3 +294,8 @@ class ArchiveDocumentForm(forms.ModelForm):
     def save(self, commit=True):
         self.documents_formset.save()
         return self.instance
+
+
+class OptionalPolicyDocumentForm(PolicyDocumentForm):
+    document_extra = 1
+    document_min_num = 0

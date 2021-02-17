@@ -2,17 +2,17 @@ import pytest
 
 from nsc.utils.datetime import get_today
 
-from ..forms import PolicyForm
+from ..forms import PolicyEditForm
 from ..models import Policy
 
 
 def test_form_configuration():
-    assert Policy == PolicyForm.Meta.model
-    assert "next_review" in PolicyForm.Meta.fields
-    assert "condition" in PolicyForm.Meta.fields
-    assert "keywords" in PolicyForm.Meta.fields
-    assert "summary" in PolicyForm.Meta.fields
-    assert "background" in PolicyForm.Meta.fields
+    assert Policy == PolicyEditForm.Meta.model
+    assert "next_review" in PolicyEditForm.Meta.fields
+    assert "condition" in PolicyEditForm.Meta.fields
+    assert "keywords" in PolicyEditForm.Meta.fields
+    assert "summary" in PolicyEditForm.Meta.fields
+    assert "background" in PolicyEditForm.Meta.fields
 
 
 @pytest.mark.parametrize(
@@ -32,7 +32,7 @@ def test_condition_validation(condition, expected):
         "summary": "A summary",
         "background": "Some background",
     }
-    assert PolicyForm(data=data).is_valid() == expected
+    assert PolicyEditForm(data=data).is_valid() == expected
 
 
 @pytest.mark.parametrize(
@@ -55,7 +55,7 @@ def test_next_review_validation(next_review, expected):
         "summary": "A summary",
         "background": "Some background",
     }
-    assert PolicyForm(data=data).is_valid() == expected
+    assert PolicyEditForm(data=data).is_valid() == expected
 
 
 @pytest.mark.parametrize("next_review", ["", " "])
@@ -70,6 +70,6 @@ def test_next_review_is_cleaned(next_review):
         "summary": "A summary",
         "background": "Some background",
     }
-    form = PolicyForm(data=data)
+    form = PolicyEditForm(data=data)
     assert form.is_valid() is True
     assert form.cleaned_data["next_review"] is None

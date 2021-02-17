@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'policy:list' as back_url %}
+  {% include 'widgets/back_link.html' with back_title="Back to all conditions" %}
+{% endblock %}
+
+{% block content %}
+    <form method="post" id="form-id">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l">
+                    {% block title %}{{ title }}{% endblock %}
+                </h1>
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+
+                {% if form.errors %}
+                {% include "widgets/error_summary.html" %}
+                {% endif %}
+
+                {% block form_fields %}{% endblock %}
+
+                <button type="submit" class="govuk-button" name="preview" value="preview">
+                    {% trans 'Save and continue' %}
+                </button>
+
+                {% if markdown_guide %}
+                    {% include "widgets/markdown_guide.html" %}
+                {% endif %}
+            </div>
+        </div>
+    </form>
+{% endblock %}

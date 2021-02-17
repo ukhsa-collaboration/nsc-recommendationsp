@@ -1,0 +1,21 @@
+{% extends "policy/admin/add/base.html" %}
+
+{% block title %}Upload documents (optional){% endblock %}
+
+{% block form_fields %}
+    <p class="govuk-body">
+        If there were any documents - like an evidence map - to prompt this condition addition, upload
+        them here. Documents added here are not for public consultation.
+    </p>
+    <p class="govuk-body">
+        If you have documents for consultation, you can ignore this step and 'create a product after
+        creating this condition.
+    </p>
+
+    {% if form.errors %}
+    {% include "widgets/error_summary.html" %}
+    {% endif %}
+
+    {% include "forms/multi-file-upload.html" with formset=form.documents_formset existing_documents=policy.get_archive_documents %}
+
+{% endblock %}

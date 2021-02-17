@@ -101,8 +101,8 @@ class Policy(TimeStampedModel):
     slug = models.SlugField(verbose_name=_("slug"), max_length=100, unique=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
-    recommendation = models.BooleanField(
-        verbose_name=_("recommendation"), default=False
+    recommendation = models.NullBooleanField(
+        verbose_name=_("recommendation"), default=None
     )
 
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
@@ -119,8 +119,8 @@ class Policy(TimeStampedModel):
     summary = models.TextField(verbose_name=_("summary"))
     summary_html = models.TextField(verbose_name=_("HTML summary"))
 
-    background = models.TextField(verbose_name=_("summary"))
-    background_html = models.TextField(verbose_name=_("HTML summary"))
+    background = models.TextField(verbose_name=_("background"))
+    background_html = models.TextField(verbose_name=_("HTML background"))
 
     keywords = models.TextField(
         verbose_name=_("Search keywords"), blank=True, default=""
