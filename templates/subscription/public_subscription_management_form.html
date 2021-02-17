@@ -44,72 +44,44 @@
     </div>
   </div>
 
-  {{ form.non_field_errors }}
+  {% if form.errors %}
+    {% include "widgets/error_summary.html" %}
+  {% endif %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-      <div class="filter-box">
-        <form>
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="display: none">{{ form.hidden_policies }}</div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <div class="filter-box">
           <h2 class="govuk-heading-m">{% trans "Filter conditions by" %}:</h2>
 
           <div class="govuk-form-group">
             <label class="govuk-label" for="id_name"><b>{% trans "Condition name" %}</b></label>
-            <input type="text" name="name" class="govuk-input" id="id_name">
+            {% include "widgets/text_input.html" with field=form.search_filter.form.name %}
           </div>
 
           <div class="govuk-form-group">
             <fieldset class="govuk-fieldset" role="group" aria-describedby=" ">
               <label class="govuk-label" for="id_name"><b>{% trans "Who the condition affects" %}</b></label>
-              <div class="govuk-radios--small">
-
-                <div class="govuk-radios__item">
-                  <input type="radio" name="affects" class="govuk-radios__input" id="id_affects_0" value="antenatal">
-                  <label class="govuk-label govuk-radios__label" for="id_affects_0">{% trans "Antenatal" %}</label>
-                </div>
-
-                <div class="govuk-radios__item">
-                  <input type="radio" name="affects" class="govuk-radios__input" id="id_affects_1" value="newborn">
-                  <label class="govuk-label govuk-radios__label" for="id_affects_1">{% trans "Newborn" %}</label>
-                </div>
-
-                <div class="govuk-radios__item">
-                  <input type="radio" name="affects" class="govuk-radios__input" id="id_affects_2" value="child">
-                  <label class="govuk-label govuk-radios__label" for="id_affects_2">{% trans "Child" %}</label>
-                </div>
-
-                <div class="govuk-radios__item">
-                  <input type="radio" name="affects" class="govuk-radios__input" id="id_affects_3" value="adult">
-                  <label class="govuk-label govuk-radios__label" for="id_affects_3">{% trans "Adult" %}</label>
-                </div>
-
-                <div class="govuk-radios__item">
-                  <input type="radio" name="affects" class="govuk-radios__input" id="id_affects_4" value="all">
-                  <label class="govuk-label govuk-radios__label" for="id_affects_4">{% trans "All ages" %}</label>
-                </div>
-
-              </div>
+              {% include "widgets/radio_buttons.html" with field=form.search_filter.form.affects %}
             </fieldset>
           </div>
 
-          <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
+          <button type="submit" name="search" class="govuk-button search-b-button govuk-!-margin-right-8">
             Search
           </button>
 
-          <a href="{{ request.path }}" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">
+          <button type="submit" name="clear-search" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">
               Clear search
-          </a>
-        </form>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="govuk-grid-column-two-thirds">
-      <form
-        method="{% if subscription %}post{% else %}get{% endif %}"
-        action="{% if not subscription %}{% url "subscription:public-subscribe" %}{% endif %}"
-      >
-        {% if subscription %}{% csrf_token %}{% endif %}
-
-        <table class="govuk-table policy-table">
+      <div class="govuk-grid-column-two-thirds">
+        <table class="govuk-table policy-table" id="id___all__">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
               <th class="govuk-table__header">
@@ -124,13 +96,22 @@
             </tr>
           </thead>
           <tbody class="govuk-table__body">
-            {% for policy in form.fields.policies.choices.queryset %}
+            {% for policy in form.policies.field.queryset %}
             <tr class="govuk-table__row">
               <td class="govuk-table__cell">
                 <div class="govuk-checkboxes">
                   <div class="govuk-checkboxes__item">
-                    <input type="checkbox" name="policies" class="govuk-checkboxes__input" id="id_policies_{{ policy.id }}" value="{{ policy.id }}">
-                    <label class="govuk-label govuk-checkboxes__label" for="id_policies_{{ policy.id }}">{{ policy.name }}</label>
+                    {% with str_id=policy.id|stringformat:"i" %}
+                    <input
+                        type="checkbox"
+                        name="policies"
+                        class="govuk-checkboxes__input"
+                        id="id_policies_{{ str_id }}"
+                        value="{{ str_id }}"
+                        {% if str_id in form.policies.data %}checked="checked"{% endif %}
+                    >
+                    <label class="govuk-label govuk-checkboxes__label" for="id_policies_{{ str_id }}">{{ policy.name }}</label>
+                    {% endwith %}
                   </div>
                 </div>
               </td>
@@ -145,7 +126,8 @@
             {% trans 'Continue' %}
           </button>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
+  </form>
+
 {% endblock %}

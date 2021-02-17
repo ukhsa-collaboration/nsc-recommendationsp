@@ -46,9 +46,7 @@ def test_signature_is_correct_result_is_found(django_app, make_subscription):
     assert django_app.get(url).status_code == 200
 
 
-def test_emails_match_subscription_is_created(
-    django_app, make_subscription, make_policy
-):
+def test_subscription_is_updated(django_app, make_subscription, make_policy):
     selected_policies = make_policy(_quantity=3)
     new_selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
@@ -64,7 +62,7 @@ def test_emails_match_subscription_is_created(
 
     form = response.form
     form["policies"] = [p.id for p in chain(selected_policies, new_selected_policies)]
-    response = form.submit()
+    response = form.submit("save")
 
     sub.refresh_from_db()
     assert Subscription.objects.count() == 1

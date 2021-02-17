@@ -1,4 +1,5 @@
 from itertools import chain
+from urllib.parse import parse_qs, urlparse
 
 from django.urls import reverse
 
@@ -23,10 +24,11 @@ def test_subscription_start_forwards_to_creation_form(
 
     form = response.form
     form["policies"] = [s.pk for s in selected_policies]
-    response = form.submit()
+    response = form.submit("save")
 
-    assert response.request.path == reverse("subscription:public-subscribe")
-    assert set(response.request.GET.getall("policies")) == {
+    redirect = urlparse(response.location)
+    assert redirect.path == reverse("subscription:public-subscribe")
+    assert set(parse_qs(redirect.query)["policies"]) == {
         str(s.pk) for s in selected_policies
     }
 

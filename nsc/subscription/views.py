@@ -1,4 +1,6 @@
-from django.http import Http404
+from itertools import chain
+
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
@@ -30,6 +32,21 @@ class PublicSubscriptionStart(generic.FormView):
     form_class = SubscriptionStart
     template_name = "subscription/public_subscription_management_form.html"
 
+    def form_valid(self, form):
+        if "save" in form.data:
+            url = reverse("subscription:public-subscribe")
+
+            selected_policies = chain(
+                form.cleaned_data["hidden_policies"], form.cleaned_data["policies"],
+            )
+            selected_policies_qs = "&".join(
+                map(lambda p: f"policies={p.id}", selected_policies,)
+            )
+
+            return HttpResponseRedirect(f"{url}?{selected_policies_qs}")
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
 
 class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
     model = Subscription
@@ -41,6 +58,12 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
             "subscription:public-complete",
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
+
+    def form_valid(self, form):
+        if "save" in form.data:
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
 
 class PublicSubscriptionEmails(generic.UpdateView):

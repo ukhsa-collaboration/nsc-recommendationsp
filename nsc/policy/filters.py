@@ -1,7 +1,8 @@
+from django import forms
 from django.contrib.admin.filters import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 
-from django_filters import CharFilter, Filter, FilterSet
+from django_filters import CharFilter, ChoiceFilter, Filter, FilterSet
 
 from .forms import SearchForm
 from .models import Policy
@@ -68,7 +69,13 @@ class SearchFilter(FilterSet):
 
     name = CharFilter(field_name="name", method="search_name")
     comments = CharFilter(method="in_consultation")
-    affects = CharFilter(field_name="ages", lookup_expr="icontains")
+    affects = ChoiceFilter(
+        field_name="ages",
+        lookup_expr="icontains",
+        choices=Policy.AGE_GROUPS,
+        empty_label=None,
+        widget=forms.RadioSelect,
+    )
     screen = YesNoFilter(field_name="recommendation")
 
     def search_name(self, queryset, name, value):
