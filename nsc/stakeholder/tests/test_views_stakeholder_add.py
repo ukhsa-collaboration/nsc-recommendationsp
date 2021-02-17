@@ -75,7 +75,7 @@ def test_success_url(policy, response):
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
     form["contacts-0-name"] = "Name"
     form["contacts-0-email"] = "name@example.com"
     form["policies-0-policy"] = policy.id
@@ -92,7 +92,7 @@ def test_success_url__next(erm_user, policy, django_app):
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
     form["contacts-0-name"] = "Name"
     form["contacts-0-email"] = "name@example.com"
     form["policies-0-policy"] = policy.id
@@ -109,7 +109,7 @@ def test_stakeholder_created(policy, response):
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
     form["contacts-0-name"] = "Name"
     form["contacts-0-email"] = "name@example.com"
     form["policies-0-policy"] = policy.id
@@ -126,7 +126,7 @@ def test_contact_created(policy, response):
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
     form["contacts-0-name"] = "Name"
     form["contacts-0-email"] = "name@example.com"
     form["policies-0-policy"] = policy.id
@@ -143,7 +143,7 @@ def test_policy_is_linked(policy, response):
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["country"] = Stakeholder.COUNTRY_ENGLAND
+    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
     form["contacts-0-name"] = "Name"
     form["contacts-0-email"] = "name@example.com"
     form["policies-0-policy"] = policy.id

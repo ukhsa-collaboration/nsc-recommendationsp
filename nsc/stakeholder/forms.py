@@ -57,12 +57,24 @@ class StakeholderForm(forms.ModelForm):
 
     class Meta:
         model = Stakeholder
-        fields = ["name", "url", "is_public", "type", "twitter", "country", "comments"]
+        fields = [
+            "name",
+            "url",
+            "is_public",
+            "type",
+            "twitter",
+            "countries",
+            "comments",
+        ]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.fields["url"].label = _("Website")
+        self.fields["countries"].widget = forms.CheckboxSelectMultiple(
+            choices=Stakeholder.COUNTRY_CHOICES
+        )
+        self.fields["countries"].required = False
 
     def is_valid(self):
         formsets_valid = all([formset.is_valid() for formset in self.formsets])

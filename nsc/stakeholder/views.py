@@ -35,7 +35,9 @@ class StakeholderList(AdminRequiredMixin, StakeholderFilterMixin, generic.ListVi
 
     def get(self, *args, **kwargs):
         if self.request.GET.get("export"):
-            return redirect(reverse("stakeholder:export") + "?" + urlencode(self.request.GET))
+            return redirect(
+                reverse("stakeholder:export") + "?" + urlencode(self.request.GET)
+            )
         return super().get(*args, **kwargs)
 
 
@@ -58,23 +60,55 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
         )
 
     def _as_individual_contact(self, writer):
-        writer.writerow(['Stakeholder name', 'Contact Name', 'Contact Email', 'Contact Role', 'Contact Phone'])
+        writer.writerow(
+            [
+                "Stakeholder name",
+                "Contact Name",
+                "Contact Email",
+                "Contact Role",
+                "Contact Phone",
+            ]
+        )
         for stakeholder in self.get_queryset():
             for contact in stakeholder.contacts.all():
-                writer.writerow([stakeholder.name, contact.name, contact.email, contact.role, contact.phone])
+                writer.writerow(
+                    [
+                        stakeholder.name,
+                        contact.name,
+                        contact.email,
+                        contact.role,
+                        contact.phone,
+                    ]
+                )
 
     def _as_conditions(self, writer):
-        writer.writerow(['Stakeholder name', 'Contact Name', 'Contact Email', 'Contact Role', 'Contact Phone'])
+        writer.writerow(
+            [
+                "Stakeholder name",
+                "Contact Name",
+                "Contact Email",
+                "Contact Role",
+                "Contact Phone",
+            ]
+        )
         for stakeholder in self.get_queryset():
             for contact in stakeholder.contacts.all():
-                writer.writerow([stakeholder.name, contact.name, contact.email, contact.role, contact.phone])
+                writer.writerow(
+                    [
+                        stakeholder.name,
+                        contact.name,
+                        contact.email,
+                        contact.role,
+                        contact.phone,
+                    ]
+                )
 
     def form_valid(self, form):
         """
         Export stakeholders - format depending on form.
         """
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="stakeholders.csv"'
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="stakeholders.csv"'
         writer = csv.writer(response)
 
         if form.cleaned_data["export_type"] == "individual":

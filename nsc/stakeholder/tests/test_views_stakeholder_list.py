@@ -43,7 +43,7 @@ def test_list_view_query_count(
     """
     baker.make(Stakeholder, _quantity=num_stakeholders)
     django_app.get("/", user=erm_user)  # login before test
-    with django_assert_num_queries(7):  # 3 for view, 4 for login.
+    with django_assert_num_queries(8):  # 4 for view, 4 for login.
         django_app.get(stakeholder_list_url, user=erm_user)
 
 
@@ -90,8 +90,8 @@ def test_search_on_stakeholder_country(erm_user, django_app_form):
     """
     Test the list of stakeholders can be filtered by the stakeholder country.
     """
-    expected = baker.make(Stakeholder, country=Stakeholder.COUNTRY_ENGLAND)
-    baker.make(Stakeholder, country=Stakeholder.COUNTRY_NORTHERN_IRELAND)
+    expected = baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_ENGLAND])
+    baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_NORTHERN_IRELAND])
     response = django_app_form(
         stakeholder_list_url, country=Stakeholder.COUNTRY_ENGLAND, user=erm_user
     )
