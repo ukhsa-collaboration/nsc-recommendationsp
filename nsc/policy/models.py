@@ -13,9 +13,8 @@ from simple_history.models import HistoricalRecords
 from nsc.document.models import Document
 from nsc.review.models import Review
 from nsc.utils.datetime import get_today
+from nsc.utils.forms import ChoiceArrayField
 from nsc.utils.markdown import convert
-
-from .fields import ChoiceArrayField
 
 
 class PolicyQuerySet(models.QuerySet):
