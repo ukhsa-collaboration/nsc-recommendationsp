@@ -1,10 +1,12 @@
 from itertools import chain
 from urllib.parse import parse_qs, urlparse
 
+from django.conf import settings
 from django.urls import reverse
 
 import pytest
 
+from ...notify.models import Email
 from ..models import Subscription
 from ..signer import get_object_signature
 
@@ -74,6 +76,18 @@ def test_emails_match_subscription_is_created(
     assert set(sub.policies.values_list("id", flat=True)) == {
         s.id for s in selected_policies
     }
+    assert Email.objects.filter(
+        address=sub.email,
+        template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
+        context={
+            "manage_url": response.request.relative_url(
+                reverse(
+                    "subscription:public-manage",
+                    kwargs={"pk": sub.id, "token": get_object_signature(sub)},
+                )
+            )
+        },
+    ).exists()
     assert response.location == reverse(
         "subscription:public-complete",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},

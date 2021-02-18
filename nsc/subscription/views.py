@@ -78,7 +78,13 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
 
     def form_valid(self, form):
         if "save" in form.data:
-            return super().form_valid(form)
+            with transaction.atomic():
+                Email.objects.create(
+                    address=self.object.email,
+                    template_id=settings.NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION,
+                    context={"manage_url": self.request.build_absolute_uri()},
+                )
+                return super().form_valid(form)
         elif "delete" in form.data and self.object.id:
             return self.handle_delete()
         else:
@@ -103,6 +109,27 @@ class PublicSubscriptionEmails(generic.UpdateView):
             "subscription:public-complete",
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
+
+    def form_valid(self, form):
+        res = super().form_valid(form)
+
+        Email.objects.create(
+            address=self.object.email,
+            template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
+            context={
+                "manage_url": self.request.build_absolute_uri(
+                    reverse(
+                        "subscription:public-manage",
+                        kwargs={
+                            "pk": form.instance.id,
+                            "token": get_object_signature(form.instance),
+                        },
+                    )
+                )
+            },
+        )
+
+        return res
 
 
 class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):

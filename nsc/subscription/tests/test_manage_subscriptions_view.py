@@ -71,6 +71,18 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
     assert set(sub.policies.values_list("id", flat=True)) == {
         s.id for s in chain(selected_policies, new_selected_policies)
     }
+    assert Email.objects.filter(
+        address=sub.email,
+        template_id=settings.NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION,
+        context={
+            "manage_url": response.request.relative_url(
+                reverse(
+                    "subscription:public-manage",
+                    kwargs={"pk": sub.id, "token": get_object_signature(sub)},
+                )
+            )
+        },
+    ).exists()
     assert response.location == reverse(
         "subscription:public-complete",
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
