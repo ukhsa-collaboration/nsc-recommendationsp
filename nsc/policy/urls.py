@@ -18,6 +18,9 @@ archive_urlpatterns = (
             name="upload",
         ),
         path(r"<slug:slug>/update/", views.ArchiveUpdate.as_view(), name="update"),
+        path(
+            r"<slug:slug>/complete/", views.ArchiveComplete.as_view(), name="complete"
+        ),
     ],
     "archive",
 )

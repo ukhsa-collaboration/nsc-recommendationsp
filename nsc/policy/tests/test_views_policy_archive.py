@@ -149,7 +149,10 @@ def test_update_view__published(erm_user, django_app):
     assert instance.archived_reason == "# heading"
 
     preview_form = preview_page.form
-    preview_form.submit(name="publish")
+    result = preview_form.submit(name="publish")
+
+    assert result.status == "302 Found"
+    assert result.url == reverse("policy:archive:complete", args=(instance.slug,))
 
     instance.refresh_from_db()
     assert instance.archived
@@ -165,3 +168,21 @@ def test_update_view__no_user(test_access_no_user):
 def test_update_view__incorrect_permission(test_access_forbidden):
     instance = baker.make(Policy)
     test_access_forbidden(url=reverse("policy:archive:update", args=(instance.slug,)))
+
+
+def test_complete_view(erm_user, django_app):
+    instance = baker.make(Policy, archived=True)
+    response = django_app.get(
+        reverse("policy:archive:complete", args=(instance.slug,)), user=erm_user
+    )
+    assert response.context["policy"] == instance
+
+
+def test_complete_view__no_user(test_access_no_user):
+    instance = baker.make(Policy, archived=True)
+    test_access_no_user(url=reverse("policy:archive:complete", args=(instance.slug,)))
+
+
+def test_complete_view__incorrect_permission(test_access_forbidden):
+    instance = baker.make(Policy, archived=True)
+    test_access_forbidden(url=reverse("policy:archive:complete", args=(instance.slug,)))

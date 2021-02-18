@@ -98,7 +98,13 @@ class ArchiveUpdate(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/update.html"
-    success_message = "This recommendation has been archived"
 
     def get_success_url(self):
-        return reverse("policy:detail", kwargs={"slug": self.kwargs["slug"]})
+        return reverse("policy:archive:complete", kwargs={"slug": self.kwargs["slug"]})
+
+
+class ArchiveComplete(AdminRequiredMixin, PublishPreviewMixin, DetailView):
+    model = Policy
+    lookup_field = "slug"
+    context_object_name = "policy"
+    template_name = "policy/admin/archive/complete.html"
