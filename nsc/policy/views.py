@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
@@ -112,19 +113,15 @@ class PolicyAddDocument(PolicyAddMixin, UpdateView):
     next_section = "recommendation"
 
 
-class PolicyAddRecommendation(PolicyAddMixin, UpdateView):
+class PolicyAddRecommendation(SuccessMessageMixin, PolicyAddMixin, UpdateView):
     form_class = PolicyAddRecommendationForm
     lookup_field = "slug"
     template_name = "policy/admin/add/recommendation.html"
     section = "recommendation"
-    next_section = "complete"
+    success_message = "Condition recommendation has been created"
 
-
-class PolicyAddComplete(PolicyAddMixin, DetailView):
-    lookup_field = "slug"
-    success_url = reverse_lazy("policy:list")
-    template_name = "policy/admin/add/complete.html"
-    section = "complete"
+    def get_success_url(self):
+        return reverse("review:add") + f"?policy={self.object.slug}"
 
 
 class PolicyEdit(AdminRequiredMixin, PublishPreviewMixin, UpdateView):

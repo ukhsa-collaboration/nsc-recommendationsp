@@ -85,9 +85,26 @@ class PolicyAddForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
     )
 
+    keywords = forms.CharField(
+        required=False,
+        label=_("Search keywords"),
+        help_text=_("Enter keywords which can help people find a condition."),
+        error_messages={
+            "required": _(
+                "Enter keywords to make it easier for people to find a condition."
+            )
+        },
+        widget=forms.Textarea,
+    )
+
     class Meta:
         model = Policy
-        fields = ["name", "condition", "ages"]
+        fields = ["name", "condition", "ages", "keywords"]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.fields["keywords"].widget.attrs.update({"rows": 3})
 
     def clean_name(self):
         value = self.cleaned_data["name"]
@@ -104,7 +121,14 @@ class PolicyAddForm(forms.ModelForm):
 
 class PolicyAddSummaryForm(forms.ModelForm):
     summary = forms.CharField(
-        help_text=_("Use markdown to format the text."), widget=forms.Textarea,
+        label=_("Plain English summary"),
+        help_text=_("Use markdown to format the text."),
+        widget=forms.Textarea,
+        error_messages={
+            "required": _(
+                "Enter a simple description of the condition that people would find easy to understand."
+            )
+        },
     )
     background = forms.CharField(
         required=False,
@@ -134,7 +158,8 @@ class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
     next_review = forms.CharField(
         label=_("Set review year"),
         help_text=_(
-            "The condition will automatically be 'in review'. If you want to set a future date, please add it below."
+            "The condition will automatically be 'Due review'. \
+            You will be taken to the new product page on completion."
         ),
     )
 
@@ -161,7 +186,6 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
     )
     condition = forms.CharField(
         required=True,
-        label=_("Expected next review start date"),
         help_text=_("Use markdown to format the text"),
         widget=forms.Textarea,
     )
