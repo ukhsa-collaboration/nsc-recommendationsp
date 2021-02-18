@@ -20,7 +20,7 @@ class SubscriptionPolicySearchFormMixin(metaclass=DeclarativeFieldsMetaclass):
         Policy.objects, widget=forms.CheckboxSelectMultiple, required=False
     )
 
-    def __init__(self, *args, data=None, **kwargs):
+    def __init__(self, *args, data=None, instance=None, **kwargs):
         if data and "clear-search" in data:
             self.search_filter = SearchFilter(queryset=Policy.objects.all())
         else:
@@ -40,13 +40,20 @@ class SubscriptionPolicySearchFormMixin(metaclass=DeclarativeFieldsMetaclass):
 
         if data:
             data = data.copy()
-            selected_policies = [
-                str(p)
-                for p in chain(
-                    data.getlist("policies", []),
-                    data.getlist("hidden_policies", []),
-                )
-            ]
+
+            if "policies" in data or "hidden_policies" in data:
+                selected_policies = [
+                    str(p)
+                    for p in chain(
+                        data.getlist("policies", []),
+                        data.getlist("hidden_policies", []),
+                    )
+                ]
+            elif instance and instance.pk:
+                selected_policies = [str(p) for p in instance.policies.values_list("id", flat=True)]
+            else:
+                selected_policies = []
+
             data.setlist(
                 "policies",
                 [p for p in selected_policies if str(p) in visible_policy_ids],
