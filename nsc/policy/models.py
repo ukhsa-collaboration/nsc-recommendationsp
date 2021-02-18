@@ -97,8 +97,14 @@ class Policy(TimeStampedModel):
         ("all", _("All ages")),
     )
 
+    CONDITION_TYPES = Choices(
+        ("general", _("General Population")),
+        ("targeted", _("Targeted")),
+    )
+
     name = models.CharField(verbose_name=_("name"), max_length=100)
     slug = models.SlugField(verbose_name=_("slug"), max_length=100, unique=True)
+    condition_type = models.CharField(choices=CONDITION_TYPES, max_length=8, null=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
     recommendation = models.NullBooleanField(

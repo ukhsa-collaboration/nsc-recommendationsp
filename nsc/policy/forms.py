@@ -69,7 +69,11 @@ class SearchForm(forms.Form):
 
 class PolicyAddForm(forms.ModelForm):
     name = forms.CharField(label=_("Enter condition name"), widget=forms.Textarea,)
-
+    condition_type = forms.TypedChoiceField(
+        label=_("What type of condition is this?"),
+        choices=Policy.CONDITION_TYPES,
+        widget=forms.RadioSelect,
+    )
     condition = forms.CharField(
         label=_("Condition description"),
         help_text=_(
@@ -99,7 +103,7 @@ class PolicyAddForm(forms.ModelForm):
 
     class Meta:
         model = Policy
-        fields = ["name", "condition", "ages", "keywords"]
+        fields = ["name", "condition_type", "condition", "ages", "keywords"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -184,6 +188,11 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
         label=_("Date next review expected to open"),
         help_text=_("Enter the year in which the policy will be reviewed next"),
     )
+    condition_type = forms.TypedChoiceField(
+        label=_("What type of condition is this?"),
+        choices=Policy.CONDITION_TYPES,
+        widget=forms.RadioSelect,
+    )
     condition = forms.CharField(
         required=True,
         help_text=_("Use markdown to format the text"),
@@ -223,7 +232,7 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
 
     class Meta:
         model = Policy
-        fields = ["next_review", "condition", "keywords", "summary", "background"]
+        fields = ["next_review", "condition_type", "condition", "keywords", "summary", "background"]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -1,0 +1,10 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Condition Type' %}
+</h2>
+
+<p class="govuk-body">
+{{ policy.get_condition_type_display|default:'' }}
+</p>
+

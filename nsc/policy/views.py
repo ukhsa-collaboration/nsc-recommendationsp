@@ -106,6 +106,7 @@ class PolicyAddDocument(PolicyAddMixin, UpdateView):
     Note - after a discussion with Adrian, this overlaps with review and for now will not be used
     until there is a document that needs to be capture and is therefore not used in the add flow.
     """
+
     form_class = OptionalPolicyDocumentForm
     lookup_field = "slug"
     template_name = "policy/admin/add/document.html"
