@@ -67,6 +67,7 @@
               {% include "policy/admin/stakeholders.html" %}
               {{ form.next_review.as_hidden }}
               {{ form.condition_type.as_hidden }}
+              {{ form.ages.as_hidden }}
               {{ form.summary.as_hidden }}
               {{ form.condition.as_hidden }}
               {{ form.keywords.as_hidden }}
@@ -76,6 +77,7 @@
               {% include "policy/admin/last_review.html" %}
               {% include "widgets/text_input.html" with field=form.next_review show_legend=True width=4 %}
               {% include "widgets/radio_buttons.html" with field=form.condition_type show_legend=True width=4 %}
+              {% include "widgets/checkboxes.html" with field=form.ages show_legend=True %}
               {% include "policy/admin/documents.html" %}
               {% include "widgets/text_area.html" with field=form.summary show_legend=True word_limit=500 %}
               {% include "widgets/text_area.html" with field=form.condition show_legend=True word_limit=1000 %}

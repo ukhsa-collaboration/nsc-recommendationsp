@@ -154,7 +154,7 @@ class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
     recommendation = forms.TypedChoiceField(
         required=False,
         choices=Choices(
-            (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\A")),
+            (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\\A")),
         ),
         widget=forms.RadioSelect,
     )
@@ -193,6 +193,12 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
         label=_("What type of condition is this?"),
         choices=Policy.CONDITION_TYPES,
         widget=forms.RadioSelect,
+    )
+    ages = forms.MultipleChoiceField(
+        label=_("Who does this condition affect?"),
+        help_text=_("Select all that apply"),
+        choices=Policy.AGE_GROUPS,
+        widget=forms.CheckboxSelectMultiple,
     )
     condition = forms.CharField(
         required=True,
@@ -236,6 +242,7 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
         fields = [
             "next_review",
             "condition_type",
+            "ages",
             "condition",
             "keywords",
             "summary",
