@@ -74,7 +74,7 @@
             Search
           </button>
 
-          <button type="submit" name="clear-search" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">
+          <button type="submit" name="clear-search" class="as-link" style="float: right">
               Clear search
           </button>
         </div>
@@ -127,6 +127,11 @@
           <button type="submit" class="govuk-button" name="save" value="save">
             {% trans 'Continue' %}
           </button>
+          {% if subscription.id %}
+          <button type="submit" class="as-link" name="delete" value="delete" style="float: right">
+            {% trans 'Unsubscribe from everything' %}
+          </button>
+          {% endif %}
         </div>
       </div>
     </div>

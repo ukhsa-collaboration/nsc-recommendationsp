@@ -1,9 +1,9 @@
 from itertools import chain
 
 from django import forms
+from django.core.paginator import EmptyPage, Paginator
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.utils.translation import gettext_lazy as _
-from django.core.paginator import Paginator, EmptyPage
 
 from ..policy.filters import SearchFilter
 from ..policy.models import Policy
@@ -20,7 +20,9 @@ class SubscriptionPolicySearchFormMixin(metaclass=DeclarativeFieldsMetaclass):
         Policy.objects, widget=forms.CheckboxSelectMultiple, required=False
     )
 
-    def __init__(self, *args, data=None, instance=None, **kwargs):
+    def __init__(self, *args, data=None, **kwargs):
+        instance = kwargs.get("instance")
+
         if data and "clear-search" in data:
             self.search_filter = SearchFilter(queryset=Policy.objects.all())
         else:
@@ -50,7 +52,9 @@ class SubscriptionPolicySearchFormMixin(metaclass=DeclarativeFieldsMetaclass):
                     )
                 ]
             elif instance and instance.pk:
-                selected_policies = [str(p) for p in instance.policies.values_list("id", flat=True)]
+                selected_policies = [
+                    str(p) for p in instance.policies.values_list("id", flat=True)
+                ]
             else:
                 selected_policies = []
 

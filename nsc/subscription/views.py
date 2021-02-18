@@ -1,9 +1,12 @@
 from itertools import chain
 
+from django.conf import settings
+from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
+from ..notify.models import Email
 from .forms import (
     CreateStakeholderSubscriptionForm,
     CreateSubscriptionForm,
@@ -59,9 +62,25 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
 
+    def handle_delete(self):
+        with transaction.atomic():
+            Email.objects.create(
+                address=self.object.email,
+                template_id=settings.NOTIFY_TEMPLATE_UNSUBSCRIBE,
+                context={
+                    "resub_url": self.request.build_absolute_uri(
+                        reverse("subscription:stakeholder-start")
+                    ),
+                },
+            )
+            self.object.delete()
+        return HttpResponseRedirect(reverse("subscription:public-deleted"))
+
     def form_valid(self, form):
         if "save" in form.data:
             return super().form_valid(form)
+        elif "delete" in form.data and self.object.id:
+            return self.handle_delete()
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
