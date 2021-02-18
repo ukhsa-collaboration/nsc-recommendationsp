@@ -86,9 +86,9 @@
             <tr class="govuk-table__row">
               <th class="govuk-table__header">
                 <div class="govuk-checkboxes">
-                  <div class="govuk-checkboxes__item">
-                    <input type="checkbox" name="policies" class="govuk-checkboxes__input" id="id_policies_all" value="all">
-                    <label class="govuk-label govuk-checkboxes__label" for="id_policies_all"><b>{% trans "Condition" %}</b></label>
+                  <div class="govuk-checkboxes__item js-required">
+                    <input type="checkbox" name="select_all" class="govuk-checkboxes__input js-required" id="id_select_all" value="all">
+                    <label class="govuk-label govuk-checkboxes__label" for="id_select_all"><b>{% trans "Condition" %}</b></label>
                   </div>
                 </div>
               </th>
@@ -132,4 +132,22 @@
     </div>
   </form>
 
+{% endblock %}
+
+{% block extra_script %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var selectAllToggle = document.getElementById("id_select_all");
+
+        selectAllToggle.addEventListener("change", function(e) {
+            var newCheckedValue = e.target.checked
+
+            var policyCheckBoxes = document.getElementsByName("policies");
+
+            for(var i=0; i<policyCheckBoxes.length; ++i) {
+                policyCheckBoxes[i].checked = newCheckedValue;
+            }
+        })
+    })
+  </script>
 {% endblock %}
