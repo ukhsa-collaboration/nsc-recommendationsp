@@ -96,11 +96,15 @@ class PolicyAddSummary(PolicyAddMixin, UpdateView):
     lookup_field = "slug"
     template_name = "policy/admin/add/summary.html"
     section = "summary"
-    next_section = "document"
+    next_section = "recommendation"
     markdown_guide = True
 
 
 class PolicyAddDocument(PolicyAddMixin, UpdateView):
+    """
+    Note - after a discussion with Adrian, this overlaps with review and for now will not be used
+    until there is a document that needs to be capture and is therefore not used in the add flow.
+    """
     form_class = OptionalPolicyDocumentForm
     lookup_field = "slug"
     template_name = "policy/admin/add/document.html"

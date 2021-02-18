@@ -9,9 +9,10 @@ add_urlpatterns = (
     [
         path(r"", views.PolicyAdd.as_view(), name="start"),
         path(r"summary/<slug:slug>/", views.PolicyAddSummary.as_view(), name="summary"),
-        path(
-            r"document/<slug:slug>/", views.PolicyAddDocument.as_view(), name="document"
-        ),
+        # NB - not to be used in initial version, will come in later.
+        # path(
+        #     r"document/<slug:slug>/", views.PolicyAddDocument.as_view(), name="document"
+        # ),
         path(
             r"recommendation/<slug:slug>/",
             views.PolicyAddRecommendation.as_view(),

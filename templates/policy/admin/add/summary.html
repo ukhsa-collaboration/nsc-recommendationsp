@@ -2,7 +2,7 @@
 
 {% block title %}Upload plain English summary{% endblock %}
 
-{% block form_fields %}
+{% block form_content %}
     {% include "widgets/text_area.html" with field=form.summary word_limit=500 hide_label=True %}
     {% include "widgets/text_area.html" with field=form.background show_legend=True word_limit=500 %}
 {% endblock %}

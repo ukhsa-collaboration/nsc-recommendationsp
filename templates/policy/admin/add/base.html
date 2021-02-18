@@ -7,22 +7,23 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" id="form-id">
+    <form method="post" enctype="multipart/form-data" id="form-id">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-l">
                     {% block title %}{{ title }}{% endblock %}
                 </h1>
                 {% csrf_token %}
+
                 {% for hidden in form.hidden_fields %}
                     {{ hidden }}
                 {% endfor %}
 
                 {% if form.errors %}
-                {% include "widgets/error_summary.html" %}
+                    {% include "widgets/error_summary.html" %}
                 {% endif %}
 
-                {% block form_fields %}{% endblock %}
+                {% block form_content %}{% endblock %}
 
                 <button type="submit" class="govuk-button" name="preview" value="preview">
                     {% trans 'Save and continue' %}

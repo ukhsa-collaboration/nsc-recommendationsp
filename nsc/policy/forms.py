@@ -71,9 +71,10 @@ class PolicyAddForm(forms.ModelForm):
     name = forms.CharField(label=_("Enter condition name"), widget=forms.Textarea,)
 
     condition = forms.CharField(
-        label=_("Condition description English summary"),
+        label=_("Condition description"),
         help_text=_(
-            "Insert the condition description here. Ensure that this is in plain English. Use markdown to format the text."
+            "Insert the condition description here. Ensure that this is "
+            "in plain English. Use markdown to format the text."
         ),
         widget=forms.Textarea,
     )
@@ -107,9 +108,10 @@ class PolicyAddSummaryForm(forms.ModelForm):
     )
     background = forms.CharField(
         required=False,
-        label=_("Condition history (optional)"),
+        label=_("Review history (optional)"),
         help_text=_(
-            "Here you can add information about where this condition came from. If this condition has been added from an Annual Call, you "
+            "Here you can add information about where this condition "
+            "came from. If this condition has been added from an Annual Call, you "
             "could include some information here. Use markdown to format the text."
         ),
         widget=forms.Textarea,
@@ -122,15 +124,14 @@ class PolicyAddSummaryForm(forms.ModelForm):
 
 class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
     recommendation = forms.TypedChoiceField(
+        required=False,
         choices=Choices(
             (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\A")),
         ),
         widget=forms.RadioSelect,
-        required=True,
     )
 
     next_review = forms.CharField(
-        required=False,
         label=_("Set review year"),
         help_text=_(
             "The condition will automatically be 'in review'. If you want to set a future date, please add it below."
