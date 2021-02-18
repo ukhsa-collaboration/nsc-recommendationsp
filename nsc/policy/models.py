@@ -98,8 +98,7 @@ class Policy(TimeStampedModel):
     )
 
     CONDITION_TYPES = Choices(
-        ("general", _("General Population")),
-        ("targeted", _("Targeted")),
+        ("general", _("General Population")), ("targeted", _("Targeted")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=100)

@@ -160,6 +160,7 @@ class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
     )
 
     next_review = forms.CharField(
+        required=False,
         label=_("Set review year"),
         help_text=_(
             "The condition will automatically be 'Due review'. \
@@ -232,7 +233,14 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
 
     class Meta:
         model = Policy
-        fields = ["next_review", "condition_type", "condition", "keywords", "summary", "background"]
+        fields = [
+            "next_review",
+            "condition_type",
+            "condition",
+            "keywords",
+            "summary",
+            "background",
+        ]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
