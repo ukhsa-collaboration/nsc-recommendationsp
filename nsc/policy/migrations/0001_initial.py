@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 import django_extensions.db.fields
-import nsc.policy.fields
+import nsc.utils.forms
 import simple_history.models
 
 
@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "ages",
-                    nsc.policy.fields.ChoiceArrayField(
+                    nsc.utils.forms.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("antenatal", "Antenatal"),
@@ -144,7 +144,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "ages",
-                    nsc.policy.fields.ChoiceArrayField(
+                    nsc.utils.forms.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 ("antenatal", "Antenatal"),
