@@ -64,6 +64,17 @@
   }
 }
 
+button.pagination__link {
+  background-color: transparent;
+  border: 0;
+  font-size: 1em;
+  color: $govuk-link-colour;
+
+  &.current {
+    color: inherit;
+  }
+}
+
 .pagination__summary {
   font-family: 'Inter UI', sans-serif;
   -webkit-font-smoothing: antialiased;

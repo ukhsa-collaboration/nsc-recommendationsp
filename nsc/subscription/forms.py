@@ -3,6 +3,7 @@ from itertools import chain
 from django import forms
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.utils.translation import gettext_lazy as _
+from django.core.paginator import Paginator, EmptyPage
 
 from ..policy.filters import SearchFilter
 from ..policy.models import Policy
@@ -10,6 +11,8 @@ from .models import StakeholderSubscription, Subscription
 
 
 class SubscriptionPolicySearchFormMixin(metaclass=DeclarativeFieldsMetaclass):
+    PAGE_SIZE = 15
+
     hidden_policies = forms.ModelMultipleChoiceField(
         Policy.objects.all(), widget=forms.CheckboxSelectMultiple, required=False
     )
@@ -23,41 +26,51 @@ class SubscriptionPolicySearchFormMixin(metaclass=DeclarativeFieldsMetaclass):
         else:
             self.search_filter = SearchFilter(data=data, queryset=Policy.objects.all())
 
-        visible_policies = self.search_filter.qs
+        self.paginator = Paginator(self.search_filter.qs, self.PAGE_SIZE)
+        if data and "page" in data:
+            try:
+                self.page = self.paginator.page(int(data["page"]))
+            except (EmptyPage, ValueError):
+                self.page = self.paginator.page(1)
+        else:
+            self.page = self.paginator.page(1)
+
+        visible_policy_ids = [str(p.id) for p in self.page.object_list]
         hidden_policy_ids = []
 
         if data:
             data = data.copy()
-
-            if data:
-                data = data.copy()
-                visible_policy_ids = [str(v.id) for v in visible_policies]
-                selected_policies = [
-                    str(p)
-                    for p in chain(
-                        data.getlist("policies", []),
-                        data.getlist("hidden_policies", []),
-                    )
-                ]
-                data.setlist(
-                    "policies",
-                    [p for p in selected_policies if str(p) in visible_policy_ids],
+            selected_policies = [
+                str(p)
+                for p in chain(
+                    data.getlist("policies", []),
+                    data.getlist("hidden_policies", []),
                 )
+            ]
+            data.setlist(
+                "policies",
+                [p for p in selected_policies if str(p) in visible_policy_ids],
+            )
 
-                hidden_policy_ids = [
-                    p for p in selected_policies if str(p) not in visible_policy_ids
-                ]
-                data.setlist("hidden_policies", hidden_policy_ids)
+            hidden_policy_ids = [
+                p for p in selected_policies if str(p) not in visible_policy_ids
+            ]
+            data.setlist("hidden_policies", hidden_policy_ids)
 
         super().__init__(*args, data=data, **kwargs)
 
-        self.fields["policies"].queryset = visible_policies
+        self.fields["policies"].queryset = Policy.objects.filter(
+            id__in=visible_policy_ids
+        )
         self.fields["hidden_policies"].queryset = Policy.objects.filter(
             id__in=hidden_policy_ids
         )
 
     def clean(self):
         cleaned_data = super().clean()
+
+        if "save" not in self.data:
+            return cleaned_data
 
         if not cleaned_data.get("policies") and not cleaned_data.get("hidden_policies"):
             self.add_error(None, _("At least 1 condition must be selected"))

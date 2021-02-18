@@ -121,6 +121,8 @@
           </tbody>
         </table>
 
+        {% include "widgets/form-pagination.html" with page_obj=form.page paginator=form.paginator %}
+
         <div class="govuk-body">
           <button type="submit" class="govuk-button" name="save" value="save">
             {% trans 'Continue' %}
