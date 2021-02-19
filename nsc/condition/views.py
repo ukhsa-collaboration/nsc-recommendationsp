@@ -80,6 +80,9 @@ class PublicCommentView(ConsultationMixin, FormView):
         condition = self.get_condition(slug=self.kwargs["slug"])
         context["condition"] = condition
         context["form"].initial["condition"] = condition.name
+        context["comment_fields"] = [
+            context["form"][f] for f in self.form_class.COMMENT_FIELDS.keys()
+        ]
         return context
 
     def form_valid(self, form):
