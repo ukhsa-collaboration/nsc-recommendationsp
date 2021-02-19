@@ -6,6 +6,7 @@ from django.views.generic import DetailView, FormView, ListView, TemplateView
 from nsc.notify.models import Email
 from nsc.policy.models import Policy
 from nsc.review.models import Review
+from nsc.subscription.models import Subscription
 
 from .filters import SearchFilter
 from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
@@ -89,6 +90,12 @@ class PublicCommentView(ConsultationMixin, FormView):
                 template_id=settings.NOTIFY_TEMPLATE_PUBLIC_COMMENT,
                 context=form.cleaned_data,
             )
+
+            if form.cleaned_data.get("notify") == "True":
+                subscription, _ = Subscription.objects.get_or_create(
+                    email=form.cleaned_data.get("email")
+                )
+                subscription.policies.add(self.get_condition(slug=self.kwargs["slug"]))
 
         return valid
 
