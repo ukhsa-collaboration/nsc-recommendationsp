@@ -13,7 +13,7 @@
       </div>
     </dl>
   {% else %}
-    {% if not hide_label %}{% include "widgets/field_label.html" %}{% endif %}
+    {% if not hide_label %}{% include "widgets/field_label.html" with label_class="govuk-heading-m" %}{% endif %}
     {% include "widgets/field_help.html" %}
     {% include "widgets/field_errors.html" %}
     {{ field }}
