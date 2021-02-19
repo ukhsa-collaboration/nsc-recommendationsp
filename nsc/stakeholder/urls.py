@@ -5,12 +5,14 @@ from .views import (
     StakeholderDelete,
     StakeholderDetail,
     StakeholderEdit,
+    StakeholderExport,
     StakeholderList,
 )
 
 
 urlpatterns = [
     path(r"", StakeholderList.as_view(), name="list"),
+    path(r"export/", StakeholderExport.as_view(), name="export"),
     path(r"add/", StakeholderAdd.as_view(), name="add"),
     path(r"<pk>/", StakeholderDetail.as_view(), name="detail"),
     path(r"<pk>/delete/", StakeholderDelete.as_view(), name="delete"),

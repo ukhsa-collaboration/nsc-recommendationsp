@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
+from nsc.utils.forms import ChoiceArrayField
+
 
 class StakeholderQuerySet(QuerySet):
     def public(self, policy=None):
@@ -52,8 +54,11 @@ class Stakeholder(TimeStampedModel):
     type = models.CharField(
         verbose_name=_("stakeholder type"), max_length=13, choices=TYPE_CHOICES,
     )
-    country = models.CharField(
-        choices=COUNTRY_CHOICES, max_length=max(len(c) for c in CHOICE_DB_VALUES),
+    countries = ChoiceArrayField(
+        models.CharField(
+            choices=COUNTRY_CHOICES, max_length=max(len(c) for c in CHOICE_DB_VALUES)
+        ),
+        null=True,
     )
     url = models.URLField(verbose_name=_("url"), max_length=256, blank=True)
     twitter = models.URLField(verbose_name=_("twitter"), max_length=256, blank=True,)
@@ -97,5 +102,15 @@ class Stakeholder(TimeStampedModel):
             "<br>/".join([contact.name for contact in self.contacts.all()])
         )
 
+    def contacts_emails(self):
+        return [contact.email for contact in self.contacts.all() if contact.email]
+
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
+
+    def get_countries_display(self):
+        choices = dict(self.COUNTRY_CHOICES)
+        if self.countries:
+            countries = [str(choices[c]) for c in self.countries]
+            return ", ".join(countries)
+        return ""

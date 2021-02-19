@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+    {% url "stakeholder:list" as back_url %}
+    {% trans "Back" as back_title %}
+    {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block content %}
+    <form method="post" id="form-id">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l">
+                    {% block title %}Export stakeholders{% endblock %}
+                </h1>
+
+                <p class="govuk-body">
+                    This will export details of
+                    <span class="govuk-!-font-weight-bold">{{ object_list.count }} out of {{ total }}</span>
+                    stakeholders in spreadsheet format.
+                </p>
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+
+                {% if form.errors %}
+                    {% include "widgets/error_summary.html" %}
+                {% endif %}
+
+                {% include "widgets/radio_buttons.html" with field=form.export_type show_legend=True %}
+
+                <button type="submit" class="govuk-button" name="export" value="export">
+                    {% trans 'Export stakeholders' %}
+                </button>
+
+                {# It's not recommended to exceed 2000 chars in a mailto #}
+                {% if mailto|length > 2000 %}
+                    <p class="govuk-body">Too many emails to provide a mailto link, please copy from below to your email client.</p>
+                    <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+                        <textarea name="mailto" class="govuk-textarea" id="mailto">{{ mailto }}</textarea>
+                    </div>
+                {% else %}
+                    <a class="govuk-button govuk-button--secondary" href="mailto:{{ mailto }}">
+                        {% trans 'Email stakeholders' %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -20,7 +20,7 @@ def generate_ages():
     return random.choice(all_ages)
 
 
-baker.generators.add("nsc.policy.fields.ChoiceArrayField", "conftest.generate_ages")
+baker.generators.add("nsc.utils.forms.ChoiceArrayField", "conftest.generate_ages")
 
 
 pytest_plugins = [

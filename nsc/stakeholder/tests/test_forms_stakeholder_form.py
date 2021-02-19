@@ -22,7 +22,7 @@ def test_name_validation(value, expected, make_policy):
         "name": value,
         "is_public": True,
         "type": Stakeholder.TYPE_INDIVIDUAL,
-        "country": Stakeholder.COUNTRY_ENGLAND,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
         "policies-TOTAL_FORMS": 1,
         "policies-INITIAL_FORMS": 1,
         "policies-MIN_NUM_FORMS": 1,
@@ -54,7 +54,7 @@ def test_url_validation(value, expected, make_policy):
         "url": value,
         "is_public": True,
         "type": Stakeholder.TYPE_INDIVIDUAL,
-        "country": Stakeholder.COUNTRY_ENGLAND,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
         "policies-TOTAL_FORMS": 1,
         "policies-INITIAL_FORMS": 1,
         "policies-MIN_NUM_FORMS": 1,
@@ -72,15 +72,16 @@ def test_url_validation(value, expected, make_policy):
 @pytest.mark.parametrize(
     "value,expected",
     [
-        (None, False),  # None is allowed (will be saved as an empty string)
-        ("", False),  # An empty string is allowed
+        (None, True),  # None is allowed (will be saved as an empty string)
+        ("", True),  # An empty string is allowed
         (" ", False),  # Only spaces is allowed (will be saved as an empty string)
-        (Stakeholder.COUNTRY_ENGLAND, True),  # England
-        (Stakeholder.COUNTRY_SCOTLAND, True),  # Scotland
-        (Stakeholder.COUNTRY_WALES, True),  # Wales
-        (Stakeholder.COUNTRY_NORTHERN_IRELAND, True),  # Northern ireland
-        (Stakeholder.COUNTRY_UK, True),  # UK
-        (Stakeholder.COUNTRY_INTERNATIONAL, True),  # International
+        ([Stakeholder.COUNTRY_ENGLAND], True),  # England
+        ([Stakeholder.COUNTRY_SCOTLAND], True),  # Scotland
+        ([Stakeholder.COUNTRY_WALES], True),  # Wales
+        ([Stakeholder.COUNTRY_NORTHERN_IRELAND], True),  # Northern ireland
+        ([Stakeholder.COUNTRY_UK], True),  # UK
+        ([Stakeholder.COUNTRY_INTERNATIONAL], True),  # International
+        ([Stakeholder.COUNTRY_UK, Stakeholder.COUNTRY_INTERNATIONAL], True),  # Multi
     ],
 )
 def test_country_validation(value, expected, make_policy):
@@ -89,7 +90,7 @@ def test_country_validation(value, expected, make_policy):
         "url": "",
         "is_public": True,
         "type": Stakeholder.TYPE_INDIVIDUAL,
-        "country": value,
+        "countries": value,
         "policies-TOTAL_FORMS": 1,
         "policies-INITIAL_FORMS": 1,
         "policies-MIN_NUM_FORMS": 1,
@@ -124,7 +125,7 @@ def test_type_validation(value, expected, make_policy):
         "url": "",
         "is_public": True,
         "type": value,
-        "country": Stakeholder.COUNTRY_UK,
+        "countries": [Stakeholder.COUNTRY_UK],
         "policies-TOTAL_FORMS": 1,
         "policies-INITIAL_FORMS": 1,
         "policies-MIN_NUM_FORMS": 1,
@@ -163,7 +164,7 @@ def test_is_public_validation(value, expected, make_policy):
         "url": "www.phe.gov.uk",
         "is_public": value,
         "type": Stakeholder.TYPE_INDIVIDUAL,
-        "country": Stakeholder.COUNTRY_ENGLAND,
+        "countries": [Stakeholder.COUNTRY_UK],
         "policies-TOTAL_FORMS": 1,
         "policies-INITIAL_FORMS": 1,
         "policies-MIN_NUM_FORMS": 1,

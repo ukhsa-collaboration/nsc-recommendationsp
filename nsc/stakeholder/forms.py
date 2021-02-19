@@ -8,10 +8,26 @@ from ..policy.formsets import PolicySelectionFormset
 from .models import Stakeholder
 
 
+class ExportForm(forms.Form):
+    export_type = forms.ChoiceField(
+        label=_("Select type of export:"),
+        choices=(
+            ("conditions", "Conditions stakeholders are interested in"),
+            ("individual", "Individual contact details"),
+        ),
+        widget=forms.RadioSelect,
+    )
+
+
 class SearchForm(forms.Form):
 
     name = forms.CharField(label=_("Stakeholder name"), required=False)
     condition = forms.CharField(label=_("Condition of interest"), required=False)
+    country = forms.ChoiceField(
+        label=_("Country"),
+        required=False,
+        choices=(("", ""),) + Stakeholder.COUNTRY_CHOICES,
+    )
 
 
 class StakeholderForm(forms.ModelForm):
@@ -42,12 +58,24 @@ class StakeholderForm(forms.ModelForm):
 
     class Meta:
         model = Stakeholder
-        fields = ["name", "url", "is_public", "type", "twitter", "country", "comments"]
+        fields = [
+            "name",
+            "url",
+            "is_public",
+            "type",
+            "twitter",
+            "countries",
+            "comments",
+        ]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.fields["url"].label = _("Website")
+        self.fields["countries"].widget = forms.CheckboxSelectMultiple(
+            choices=Stakeholder.COUNTRY_CHOICES
+        )
+        self.fields["countries"].required = False
 
     def is_valid(self):
         formsets_valid = all([formset.is_valid() for formset in self.formsets])

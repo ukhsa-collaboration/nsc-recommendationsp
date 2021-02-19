@@ -35,11 +35,12 @@
       <div class="govuk-grid-column-one-half">
         {% include "widgets/select_input.html" with field=form.type %}
       </div>
-      <div class="govuk-grid-column-one-half">
-          {% include "widgets/select_input.html" with field=form.country %}
+    </div>
+    <div class="govuk-grid-row">
+     <div class="govuk-grid-column-one-half">
+          {% include "widgets/checkboxes.html" with field=form.countries %}
       </div>
     </div>
-
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         {% include "widgets/text_input.html" with field=form.url %}
