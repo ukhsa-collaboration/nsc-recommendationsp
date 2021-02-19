@@ -1,0 +1,13 @@
+<button
+  class="pagination__link{% if is_current %} current{% endif %}"
+  name="{{ page_name|default:"page" }}"
+  value="{{ page_number }}"
+  {% if is_current %}aria-current="true"{% endif %}
+  aria-label="{% if label %}{{ label }}{% else %}Page {{ page_number }}{% if is_current %}, current{% endif %}{% endif %}"
+>
+  {% if content %}
+  {% include content %}
+  {% else %}
+  {{ page_number }}
+  {% endif %}
+</button>

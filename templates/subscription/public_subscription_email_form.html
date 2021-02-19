@@ -1,7 +1,42 @@
 {% extends "narrow.html" %}
 {% load i18n %}
 
-{% block body %}
+{% block back %}
+  {% url "subscription:landing" as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Enter your email address" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    {% blocktrans %}
+      You're subscribing to get email notifications about:
+    {% endblocktrans %}
+  </p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    {% for p in form.policies %}
+      {% if p.data.selected %}<li>{{ p.choice_label }}</li>{% endif %}
+    {% endfor %}
+  </ul>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      UK National Screening Committee recommendations.
+    {% endblocktrans %}
+  </p>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      You'll get an email when the UK NSC starts or ends a public consultation on the condition(s).
+    {% endblocktrans %}
+  </p>
+
   <form method="post">
     {% csrf_token %}
 
@@ -27,5 +62,12 @@
       </button>
     </div>
 
+    <p class="govuk-body">
+      {# We need to inject the real privacy policy url here when we have it #}
+      {% blocktrans with privacy_policy_url="/privacy-policy" %}
+        We wont share your email address with anyone. Read our
+        <a class="govuk-link" href="{{ privacy_policy_url }}" target="_blank">privacy policy</a> (opens in a new tab).
+      {% endblocktrans %}
+    </p>
   </form>
 {% endblock %}

@@ -1,0 +1,13 @@
+body:not(.js-enabled) .govuk-checkboxes__item.js-required {
+  input {
+    display: none;
+  }
+
+  label {
+    cursor: revert;
+
+    &::before, &::after {
+      display: none;
+    }
+  }
+}
