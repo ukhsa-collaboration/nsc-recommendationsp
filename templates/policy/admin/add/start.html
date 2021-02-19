@@ -1,0 +1,11 @@
+{% extends "policy/admin/add/base.html" %}
+
+{% block title %}Create a new condition{% endblock %}
+
+{% block form_content %}
+    {% include "widgets/text_input.html" with field=form.name %}
+    {% include "widgets/radio_buttons.html" with field=form.condition_type show_legend=True %}
+    {% include "widgets/text_area.html" with field=form.condition show_legend=True word_limit=500 %}
+    {% include "widgets/checkboxes.html" with field=form.ages show_legend=True word_limit=500 %}
+    {% include "widgets/text_area.html" with field=form.keywords show_legend=True word_limit=100 %}
+{% endblock %}

@@ -19,6 +19,9 @@
       <a id="create-review-link-id" href="{% url 'review:add' %}" role="button" class="govuk-button" style="float: right">
         {% trans 'Create a new product' %}
       </a>
+      <a id="create-review-link-id" href="{% url 'policy:add:start' %}" role="button" class="govuk-button" style="float: right">
+        {% trans 'Create a new condition' %}
+      </a>
     </div>
   </div>
 {% endblock %}
@@ -34,9 +37,9 @@
           </h2>
 
           {% include 'widgets/text_input.html' with field=form.name show_legend=True %}
-          {% include 'widgets/radio_buttons.html' with field=form.comments %}
-          {% include 'widgets/radio_buttons.html' with field=form.affects %}
-          {% include 'widgets/radio_buttons.html' with field=form.screen %}
+          {% include 'widgets/radio_buttons.html' with field=form.review_status show_legend=True %}
+          {% include 'widgets/radio_buttons.html' with field=form.recommendation show_legend=True %}
+          {% include 'widgets/checkbox.html' with field=form.archived show_legend=True %}
 
           <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
             {% trans 'Search' %}
@@ -57,7 +60,6 @@
           <th class="govuk-table__header">{% trans 'Condition' %}</th>
           <th class="govuk-table__header">{% trans 'Who it affects' %}</th>
           <th class="govuk-table__header">{% trans 'Recommended' %}</th>
-          <th class="govuk-table__header">{% trans 'Public comments' %}</th>
         </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -67,13 +69,6 @@
                 href="{{ object.get_admin_url }}">{{ object.name }}</a></td>
             <td class="govuk-table__cell">{{ object.ages_display }}</td>
             <td class="govuk-table__cell">{{ object.recommendation_display }}</td>
-            <td class="govuk-table__cell">
-              {% if object.reviews_in_consultation %}
-                <strong class="govuk-tag govuk-tag--blue">
-                  {% trans 'OPEN' %}
-                </strong>
-              {% endif %}
-            </td>
           </tr>
           {% empty %}
           <tr class="govuk-table__row">

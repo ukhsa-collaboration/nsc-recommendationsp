@@ -212,7 +212,7 @@ def test_closed_for_comments(start, end, count):
     Test the queryset method closed_for_comments only returns Review objects which are
     not accepting comments from the public.
     """
-    baker.make(Review, consultation_start=start, consultation_end=end)
+    baker.make(Review, consultation_start=start, consultation_end=end, published=False)
     actual = Review.objects.closed_for_comments().count()
     assert count == actual
 

@@ -1,0 +1,8 @@
+{% extends "policy/admin/add/base.html" %}
+
+{% block title %}Plain English summary{% endblock %}
+
+{% block form_content %}
+    {% include "widgets/text_area.html" with field=form.summary word_limit=1000 hide_label=True %}
+    {% include "widgets/text_area.html" with field=form.background show_legend=True word_limit=1000 %}
+{% endblock %}

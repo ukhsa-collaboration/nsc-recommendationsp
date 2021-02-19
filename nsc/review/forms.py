@@ -93,7 +93,7 @@ class ReviewForm(forms.ModelForm):
                     for p in self.instance.policies.values_list("id", flat=True)
                 ]
                 if self.instance.id
-                else None
+                else [{"policy": policy} for policy in self.initial.get("policies", [])]
             ),
         )
 

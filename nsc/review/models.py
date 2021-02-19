@@ -47,7 +47,7 @@ class ReviewQuerySet(models.QuerySet):
                 models.Q(consultation_start__lte=today)
                 & models.Q(consultation_end__gte=today)
             )
-        )
+        ).exclude(published=True)
 
 
 class Review(TimeStampedModel):

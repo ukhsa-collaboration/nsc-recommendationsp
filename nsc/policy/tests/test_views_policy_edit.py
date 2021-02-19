@@ -55,6 +55,8 @@ def test_preview_page(erm_user, django_app):
     edit_page = django_app.get(instance.get_edit_url(), user=erm_user)
     edit_form = edit_page.form
     edit_form["next_review"] = year
+    edit_form["condition_type"] = Policy.CONDITION_TYPES.general
+    edit_form["ages"] = [Policy.AGE_GROUPS.antenatal]
     edit_form["condition"] = "# updated"
 
     preview_page = edit_form.submit(name="preview")
@@ -76,6 +78,8 @@ def test_changes_are_published(erm_user, django_app):
     edit_page = django_app.get(instance.get_edit_url(), user=erm_user)
     edit_form = edit_page.form
     edit_form["next_review"] = today().year
+    edit_form["condition_type"] = Policy.CONDITION_TYPES.general
+    edit_form["ages"] = [Policy.AGE_GROUPS.antenatal]
     edit_form["condition"] = "# updated"
 
     preview_page = edit_form.submit(name="preview")
