@@ -343,12 +343,22 @@ class Review(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
         )
 
+        # send notifications to all subscribers to the conditions
+        for policy in self.policies.all():
+            policy.send_open_consultation_notifications(
+                self.open_consultation_notifications
+            )
+
     def send_decision_notifications(self):
         self.send_notifications(
             self.decision_published_notifications,
-            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
-            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+            settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
+            settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
         )
+
+        # send notifications to all subscribers to the conditions
+        for policy in self.policies.all():
+            policy.send_decision_notifications(self.decision_published_notifications)
 
     @property
     def is_open(self):

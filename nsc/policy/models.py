@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import Prefetch, Q
 from django.urls import reverse
@@ -11,6 +12,7 @@ from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.document.models import Document
+from nsc.notify.models import Email
 from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 from nsc.utils.forms import ChoiceArrayField
@@ -197,3 +199,32 @@ class Policy(TimeStampedModel):
 
     def get_ages_display(self):
         return ", ".join(map(lambda a: str(self.AGE_GROUPS[a]), self.ages))
+
+    def get_email_context(self, **extra):
+        return {"url": self.get_public_url(), **extra}
+
+    def send_notifications(self, relation, template, extra_context=None):
+        email_context = self.get_email_context(**(extra_context or {}))
+
+        # find each stakeholder without a notification object and create one
+        existing_notification_emails = relation.values_list("address", flat=True)
+        relation.add(
+            *Email.objects.bulk_create(
+                Email(address=sub.email, template_id=template, context=email_context,)
+                for sub in self.subscriptions.all().exclude(
+                    email__in=existing_notification_emails
+                )
+            )
+        )
+
+    def send_open_consultation_notifications(self, review_notification_relation):
+        self.send_notifications(
+            review_notification_relation,
+            settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
+        )
+
+    def send_decision_notifications(self, review_notification_relation):
+        self.send_notifications(
+            review_notification_relation,
+            settings.NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED,
+        )

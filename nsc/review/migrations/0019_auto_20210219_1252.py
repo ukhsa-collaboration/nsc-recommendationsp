@@ -6,58 +6,64 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0018_auto_20210216_1132'),
+        ("review", "0018_auto_20210216_1132"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalreview',
-            name='background',
-            field=models.TextField(blank=True, verbose_name='history'),
+            model_name="historicalreview",
+            name="background",
+            field=models.TextField(blank=True, verbose_name="history"),
         ),
         migrations.AlterField(
-            model_name='historicalreview',
-            name='background_html',
-            field=models.TextField(blank=True, verbose_name='HTML history'),
+            model_name="historicalreview",
+            name="background_html",
+            field=models.TextField(blank=True, verbose_name="HTML history"),
         ),
         migrations.AlterField(
-            model_name='historicalreview',
-            name='summary',
-            field=models.TextField(blank=True, verbose_name='summary'),
+            model_name="historicalreview",
+            name="summary",
+            field=models.TextField(blank=True, verbose_name="summary"),
         ),
         migrations.AlterField(
-            model_name='historicalreview',
-            name='summary_html',
-            field=models.TextField(blank=True, verbose_name='HTML summary'),
+            model_name="historicalreview",
+            name="summary_html",
+            field=models.TextField(blank=True, verbose_name="HTML summary"),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='background',
-            field=models.TextField(blank=True, verbose_name='history'),
+            model_name="review",
+            name="background",
+            field=models.TextField(blank=True, verbose_name="history"),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='background_html',
-            field=models.TextField(blank=True, verbose_name='HTML history'),
+            model_name="review",
+            name="background_html",
+            field=models.TextField(blank=True, verbose_name="HTML history"),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='decision_published_notifications',
-            field=models.ManyToManyField(blank=True, related_name='publish_notification_reviews', to='notify.Email'),
+            model_name="review",
+            name="decision_published_notifications",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="publish_notification_reviews",
+                to="notify.Email",
+            ),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='open_consultation_notifications',
-            field=models.ManyToManyField(blank=True, related_name='open_consultation_reviews', to='notify.Email'),
+            model_name="review",
+            name="open_consultation_notifications",
+            field=models.ManyToManyField(
+                blank=True, related_name="open_consultation_reviews", to="notify.Email"
+            ),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='summary',
-            field=models.TextField(blank=True, verbose_name='summary'),
+            model_name="review",
+            name="summary",
+            field=models.TextField(blank=True, verbose_name="summary"),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='summary_html',
-            field=models.TextField(blank=True, verbose_name='HTML summary'),
+            model_name="review",
+            name="summary_html",
+            field=models.TextField(blank=True, verbose_name="HTML summary"),
         ),
     ]
