@@ -1,13 +1,9 @@
 from django.conf import settings
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, TemplateView
 
-from notifications_python_client.errors import HTTPError
-
-from nsc.notify.client import submit_public_comment, submit_stakeholder_comment
+from nsc.notify.models import Email
 from nsc.policy.models import Policy
 from nsc.review.models import Review
 
@@ -86,16 +82,15 @@ class PublicCommentView(ConsultationMixin, FormView):
         return context
 
     def form_valid(self, form):
-        try:
-            submit_public_comment(form.cleaned_data)
-        except HTTPError:
-            form.add_error(
-                None,
-                _("There was a problem submitting your comment. Please try again."),
+        valid = super().form_valid(form)
+        if valid:
+            Email.objects.create(
+                address=settings.CONSULTATION_COMMENT_ADDRESS,
+                template_id=settings.NOTIFY_TEMPLATE_PUBLIC_COMMENT,
+                context=form.cleaned_data,
             )
-            return super().form_invalid(form)
 
-        return super().form_valid(form)
+        return valid
 
 
 class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
@@ -130,16 +125,15 @@ class StakeholderCommentView(ConsultationMixin, FormView):
         return context
 
     def form_valid(self, form):
-        try:
-            submit_stakeholder_comment(form.cleaned_data)
-        except HTTPError:
-            form.add_error(
-                None,
-                _("There was a problem submitting your comment. Please try again."),
+        valid = super().form_valid(form)
+        if valid:
+            Email.objects.create(
+                address=settings.CONSULTATION_COMMENT_ADDRESS,
+                template_id=settings.NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT,
+                context=form.cleaned_data,
             )
-            return super().form_invalid(form)
 
-        return super().form_valid(form)
+        return valid
 
 
 class StakeholderCommentSubmittedView(ConsultationMixin, TemplateView):

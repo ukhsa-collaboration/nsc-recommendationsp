@@ -25,15 +25,3 @@ def send_email(address, template, context=None, reference=None):
         personalisation=context,
         reference=reference,
     )
-
-
-def submit_public_comment(context):
-    address = settings.CONSULTATION_COMMENT_ADDRESS
-    template = settings.NOTIFY_TEMPLATE_PUBLIC_COMMENT
-    return send_email(address, template, context)
-
-
-def submit_stakeholder_comment(context):
-    address = settings.CONSULTATION_COMMENT_ADDRESS
-    template = settings.NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
-    return send_email(address, template, context)
