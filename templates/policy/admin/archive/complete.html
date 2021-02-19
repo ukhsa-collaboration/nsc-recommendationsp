@@ -10,18 +10,19 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-        <span class="govuk-caption-m">
-            Archive recommendation
-        </span>
             <h1 class="govuk-heading-l">
                 {% block title %}{{ policy.name }}{% endblock %}
             </h1>
 
-            {% include "policy/admin/recommendation.html" %}
+            <h2 class="govuk-heading-m">
+              {% trans 'Current recommendation' %}
+            </h2>
 
-            <p class="govuk-body">
-                This recommendation has been archived.
-            </p>
+            <p class="govuk-body">{{ policy.recommendation_display }}</p>
+
+            <div class="govuk-panel govuk-panel--confirmation">
+                <div class="govuk-panel__body">This recommendation has been archived.</div>
+            </div>
         </div>
     </div>
 {% endblock %}
