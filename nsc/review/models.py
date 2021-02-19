@@ -130,6 +130,10 @@ class Review(TimeStampedModel):
     def get_external_review(self):
         return Document.objects.for_review(self).external_reviews()
 
+    @cached_property
+    def external_review(self):
+        return self.get_external_review().first()
+
     def get_submission_form(self):
         return Document.objects.for_review(self).submission_forms().first()
 

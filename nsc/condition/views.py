@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, TemplateView
@@ -44,13 +46,19 @@ class ConditionDetail(DetailView):
         return context
 
 
-class ConsultationView(TemplateView):
+class ConsultationMixin:
+    @staticmethod
+    def get_condition(slug):
+        return get_object_or_404(
+            Policy.objects.prefetch_related("reviews").open_for_comments(), slug=slug
+        )
+
+
+class ConsultationView(ConsultationMixin, TemplateView):
     template_name = "policy/public/consultation.html"
 
     def get_context_data(self, **kwargs):
-        condition = Policy.objects.prefetch_related("reviews").get(
-            slug=self.kwargs["slug"]
-        )
+        condition = self.get_condition(slug=self.kwargs["slug"])
         review = condition.reviews.open_for_comments().first()
         email = settings.CONSULTATION_COMMENT_ADDRESS
         return super().get_context_data(
@@ -58,7 +66,7 @@ class ConsultationView(TemplateView):
         )
 
 
-class PublicCommentView(FormView):
+class PublicCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
     form_class = PublicCommentForm
 
@@ -69,7 +77,7 @@ class PublicCommentView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        condition = Policy.objects.get(slug=self.kwargs["slug"])
+        condition = self.get_condition(slug=self.kwargs["slug"])
         context["condition"] = condition
         context["form"].initial["condition"] = condition.name
         return context
@@ -87,13 +95,11 @@ class PublicCommentView(FormView):
         return super().form_valid(form)
 
 
-class PublicCommentSubmittedView(TemplateView):
+class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
     template_name = "policy/public/public_comment_submitted.html"
 
     def get_context_data(self, **kwargs):
-        condition = Policy.objects.prefetch_related("reviews").get(
-            slug=self.kwargs["slug"]
-        )
+        condition = self.get_condition(slug=self.kwargs["slug"])
         review = condition.reviews.open_for_comments().first()
         url = settings.PROJECT_FEEDBACK_URL
         return super().get_context_data(
@@ -101,7 +107,7 @@ class PublicCommentSubmittedView(TemplateView):
         )
 
 
-class StakeholderCommentView(FormView):
+class StakeholderCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
 
@@ -113,9 +119,11 @@ class StakeholderCommentView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        condition = Policy.objects.get(slug=self.kwargs["slug"])
+        condition = self.get_condition(slug=self.kwargs["slug"])
         context["condition"] = condition
+        context["current_review"] = condition.current_review
         context["form"].initial["condition"] = condition.name
+
         return context
 
     def form_valid(self, form):
@@ -131,14 +139,12 @@ class StakeholderCommentView(FormView):
         return super().form_valid(form)
 
 
-class StakeholderCommentSubmittedView(TemplateView):
+class StakeholderCommentSubmittedView(ConsultationMixin, TemplateView):
     template_name = "policy/public/stakeholder_comment_submitted.html"
 
     def get_context_data(self, **kwargs):
-        condition = Policy.objects.prefetch_related("reviews").get(
-            slug=self.kwargs["slug"]
-        )
-        review = condition.reviews.open_for_comments().first()
+        condition = self.get_condition(slug=self.kwargs["slug"])
+        review = condition.current_review
         url = settings.PROJECT_FEEDBACK_URL
         return super().get_context_data(
             condition=condition, review=review, feedback_url=url, **kwargs

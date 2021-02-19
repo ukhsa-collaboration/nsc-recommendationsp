@@ -114,6 +114,13 @@ class StakeholderCommentForm(forms.Form):
             )
         },
     )
+    behalf = forms.TypedChoiceField(
+        label=_(
+            "Is your submission an official response on behalf of your organisation?"
+        ),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
+    )
     comment = forms.CharField(
         label="",
         widget=forms.Textarea,
