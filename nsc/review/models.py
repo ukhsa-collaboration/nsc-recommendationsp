@@ -176,6 +176,15 @@ class Review(TimeStampedModel):
     def systematic_review(self):
         return self.get_systematic_review()
 
+    @cached_property
+    def get_all_type_documents(self):
+        return [
+            self.evidence_review,
+            self.cost_effective_model,
+            self.evidence_map,
+            self.systematic_review,
+        ]
+
     def get_other_review_documents(self):
         return Document.objects.for_review(self).others()
 
