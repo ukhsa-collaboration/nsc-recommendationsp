@@ -297,6 +297,7 @@ class Common(Configuration):
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL")
+    PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL")
     NOTIFY_SERVICE_ENABLED = False
     NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
     CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS")
@@ -318,6 +319,7 @@ class Common(Configuration):
         "NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION"
     )
     NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env("NOTIFY_TEMPLATE_UNSUBSCRIBE")
+    NOTIFY_TEMPLATE_HELP_DESK = get_env("NOTIFY_TEMPLATE_HELP_DESK")
 
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.
