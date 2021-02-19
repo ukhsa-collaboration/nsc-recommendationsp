@@ -20,7 +20,8 @@
 
 {% block content %}
   <div class="govuk-body">
-  {% blocktrans with url=condition.get_public_url %}
+
+  {% blocktrans with url=current_review.external_review.get_download_url name=current_review.external_review.get_document_type_display %}
       <p>
           Members of the public, including patients and family members who have experienced the condition,
           are welcome to submit comments. The UK NSC will review these, along with the scientific evidence and
@@ -31,7 +32,7 @@
           provided by someone else.
       </p>
       <p>
-          We suggest reading the short <a target="_blank" href="{{ url }}">plain English summary of the UK NSC review</a>,
+          We suggest reading <the></the> <a target="_blank" href="{{ url }}">{{ name }}</a>,
           and also our <a target="_blank"  href="https://www.gov.uk/guidance/nhs-population-screening-explained">explanation of screening</a>,
           before submitting this form.
       </p>
