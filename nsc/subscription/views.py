@@ -1,7 +1,12 @@
-from django.http import Http404
+from itertools import chain
+
+from django.conf import settings
+from django.db import transaction
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
+from ..notify.models import Email
 from .forms import (
     CreateStakeholderSubscriptionForm,
     CreateSubscriptionForm,
@@ -30,6 +35,21 @@ class PublicSubscriptionStart(generic.FormView):
     form_class = SubscriptionStart
     template_name = "subscription/public_subscription_management_form.html"
 
+    def form_valid(self, form):
+        if "save" in form.data:
+            url = reverse("subscription:public-subscribe")
+
+            selected_policies = chain(
+                form.cleaned_data["hidden_policies"], form.cleaned_data["policies"],
+            )
+            selected_policies_qs = "&".join(
+                map(lambda p: f"policies={p.id}", selected_policies,)
+            )
+
+            return HttpResponseRedirect(f"{url}?{selected_policies_qs}")
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
 
 class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
     model = Subscription
@@ -41,6 +61,34 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
             "subscription:public-complete",
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
+
+    def handle_delete(self):
+        with transaction.atomic():
+            Email.objects.create(
+                address=self.object.email,
+                template_id=settings.NOTIFY_TEMPLATE_UNSUBSCRIBE,
+                context={
+                    "resub_url": self.request.build_absolute_uri(
+                        reverse("subscription:stakeholder-start")
+                    ),
+                },
+            )
+            self.object.delete()
+        return HttpResponseRedirect(reverse("subscription:public-deleted"))
+
+    def form_valid(self, form):
+        if "save" in form.data:
+            with transaction.atomic():
+                Email.objects.create(
+                    address=self.object.email,
+                    template_id=settings.NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION,
+                    context={"manage_url": self.request.build_absolute_uri()},
+                )
+                return super().form_valid(form)
+        elif "delete" in form.data and self.object.id:
+            return self.handle_delete()
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
 
 class PublicSubscriptionEmails(generic.UpdateView):
@@ -62,6 +110,27 @@ class PublicSubscriptionEmails(generic.UpdateView):
             kwargs={"pk": self.object.pk, "token": get_object_signature(self.object)},
         )
 
+    def form_valid(self, form):
+        res = super().form_valid(form)
+
+        Email.objects.create(
+            address=self.object.email,
+            template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
+            context={
+                "manage_url": self.request.build_absolute_uri(
+                    reverse(
+                        "subscription:public-manage",
+                        kwargs={
+                            "pk": form.instance.id,
+                            "token": get_object_signature(form.instance),
+                        },
+                    )
+                )
+            },
+        )
+
+        return res
+
 
 class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
     model = Subscription
@@ -75,6 +144,5 @@ class StakeholderSubscriptionStart(generic.CreateView):
     success_url = reverse_lazy("subscription:stakeholder-complete")
 
 
-class StakeholderSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
-    model = Subscription
+class StakeholderSubscriptionComplete(generic.TemplateView):
     template_name = "subscription/stakeholder_subscription_complete.html"

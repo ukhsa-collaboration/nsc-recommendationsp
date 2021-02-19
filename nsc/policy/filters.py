@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.admin.filters import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 
-from django_filters import BooleanFilter, CharFilter, Filter, FilterSet
+from django_filters import BooleanFilter, CharFilter, ChoiceFilter, Filter, FilterSet
 
 from .forms import SearchForm
 from .models import Policy
@@ -71,6 +71,14 @@ class SearchFilter(FilterSet):
     review_status = CharFilter(method="in_consultation")
     recommendation = YesNoFilter(field_name="recommendation")
     archived = BooleanFilter(method="include_archived", widget=forms.CheckboxInput)
+    comments = CharFilter(method="in_consultation")
+    affects = ChoiceFilter(
+        field_name="ages",
+        lookup_expr="icontains",
+        choices=Policy.AGE_GROUPS,
+        empty_label=None,
+        widget=forms.RadioSelect,
+    )
 
     def search_name(self, queryset, name, value):
         return queryset.search(value)
