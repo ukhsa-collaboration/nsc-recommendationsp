@@ -1,7 +1,8 @@
+from django import forms
 from django.contrib.admin.filters import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 
-from django_filters import CharFilter, Filter, FilterSet
+from django_filters import BooleanFilter, CharFilter, ChoiceFilter, Filter, FilterSet
 
 from .forms import SearchForm
 from .models import Policy
@@ -67,17 +68,35 @@ class YesNoFilter(Filter):
 class SearchFilter(FilterSet):
 
     name = CharFilter(field_name="name", method="search_name")
+    review_status = CharFilter(method="in_consultation")
+    recommendation = YesNoFilter(field_name="recommendation")
+    archived = BooleanFilter(method="include_archived", widget=forms.CheckboxInput)
     comments = CharFilter(method="in_consultation")
-    affects = CharFilter(field_name="ages", lookup_expr="icontains")
-    screen = YesNoFilter(field_name="recommendation")
+    affects = ChoiceFilter(
+        field_name="ages",
+        lookup_expr="icontains",
+        choices=Policy.AGE_GROUPS,
+        empty_label=None,
+        widget=forms.RadioSelect,
+    )
 
     def search_name(self, queryset, name, value):
         return queryset.search(value)
 
     def in_consultation(self, queryset, name, value):
-        if value == SearchForm.CONSULTATION.open:
+        if value == SearchForm.CONSULTATION.due:
+            return queryset.overdue()
+        elif value == SearchForm.CONSULTATION.in_review:
+            return queryset.in_progress()
+        elif value == SearchForm.CONSULTATION.in_consultation:
             return queryset.open_for_comments()
-        elif value == SearchForm.CONSULTATION.closed:
+        elif value == SearchForm.CONSULTATION.post_consultation:
             return queryset.closed_for_comments()
         else:
             return queryset
+
+    def include_archived(self, queryset, name, value):
+        if value:
+            return queryset
+        else:
+            return queryset.exclude_archived()

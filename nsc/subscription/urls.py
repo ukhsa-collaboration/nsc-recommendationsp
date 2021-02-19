@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from .views import (
     PublicSubscriptionComplete,
@@ -26,6 +27,11 @@ urlpatterns = [
         "public-complete/<int:pk>/<slug:token>/",
         PublicSubscriptionComplete.as_view(),
         name="public-complete",
+    ),
+    path(
+        "public-deleted/",
+        TemplateView.as_view(template_name="subscription/subscription_deleted.html"),
+        name="public-deleted",
     ),
     path(
         "stakeholder-start/",

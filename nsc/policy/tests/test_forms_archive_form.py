@@ -3,7 +3,7 @@ from model_bakery import baker
 
 from nsc.document.models import Document
 
-from ..forms import ArchiveDocumentForm, ArchiveForm
+from ..forms import ArchiveForm, PolicyDocumentForm
 from ..models import Policy
 
 
@@ -51,7 +51,7 @@ def form_data(form_pdf):
 
 
 def test_document_form_configuration():
-    formset = ArchiveDocumentForm(instance=baker.make(Policy)).documents_formset
+    formset = PolicyDocumentForm(instance=baker.make(Policy)).documents_formset
     assert Document == formset.form._meta.model
     assert Document.TYPE.archive == formset.form.document_type
     assert "upload" in formset.form._meta.fields
@@ -61,7 +61,7 @@ def test_document_form_configuration():
 def test_document_is_required(form_data):
     form_data["files"]["document-0-upload"] = None
     form_data["data"]["document-0-name"] = None
-    form = ArchiveDocumentForm(instance=baker.make(Policy), **form_data)
+    form = PolicyDocumentForm(instance=baker.make(Policy), **form_data)
     assert not form.is_valid()
     assert "upload" in form.documents_formset.errors[0]
     assert "name" in form.documents_formset.errors[0]

@@ -1,5 +1,6 @@
 {% load i18n %}
-
+{% if paginator.num_pages > 1 %}
+{% with item_widget_template=item_widget_template|default:"widgets/pagination-link.html" display_range_lower=page_obj.number|add:-1 display_range_upper=page_obj.number|add:1 %}
 <nav role="navigation" aria-label="Pagination" class="govuk-body">
   <div class="pagination__summary">
     {% with start=page_obj.start_index end=page_obj.end_index count=paginator.count %}
@@ -9,37 +10,54 @@
   <ul class="pagination">
     {% if page_obj.has_previous %}
       <li class="pagination__item">
-        <a class="pagination__link"
-           href="{% url namespace %}?page={{ page_obj.previous_page_number }}"
-           aria-label="Previous page">
-          <span aria-hidden="true" role="presentation">&laquo; </span>{% trans 'Previous' %}</a>
+        {% include item_widget_template with label="Previous page" page_number=page_obj.previous_page_number content="widgets/pagination-previous.html" %}
       </li>
     {% endif %}
 
-    {% for i in paginator.page_range %}
-      {% if page_obj.number == i %}
-        <li class="pagination__item">
-          <a class="pagination__link current" href="{% url namespace %}?page={{ i }}"
-             aria-current="true" aria-label="Page {{ i }}, current page">{{ i }}</a>
-        </li>
+    <li class="pagination__item">
+      {% if page_obj.number == 1 %}
+        {% include item_widget_template with page_number=1 is_current=True %}
       {% else %}
-        <li class="pagination__item">
-          <a class="pagination__link" href="{% url namespace %}?page={{ i }}"
-             aria-label="Page {{ i }}">{{ i }}</a>
-        </li>
+        {% include item_widget_template with page_number=1 %}
+      {% endif %}
+    </li>
+
+    {% if display_range_lower > 2 %}
+    <li class="pagination__item">...</li>
+    {% endif %}
+
+    {% for i in paginator.page_range %}
+      {% if i >= display_range_lower and i <= display_range_upper and i != 1 and i != paginator.num_pages %}
+        {% if page_obj.number == i %}
+          <li class="pagination__item">
+            {% include item_widget_template with page_number=i is_current=True %}
+          </li>
+        {% else %}
+          <li class="pagination__item">
+            {% include item_widget_template with page_number=i %}
+          </li>
+        {% endif %}
       {% endif %}
     {% endfor %}
 
+    {% if display_range_upper < paginator.num_pages|add:-1 %}
+    <li class="pagination__item">...</li>
+    {% endif %}
+
+    <li class="pagination__item">
+      {% if page_obj.number == paginator.num_pages %}
+        {% include item_widget_template with page_number=paginator.num_pages is_current=True %}
+      {% else %}
+        {% include item_widget_template with page_number=paginator.num_pages %}
+      {% endif %}
+    </li>
+
     {% if page_obj.has_next %}
       <li class="pagination__item">
-        <a class="pagination__link"
-           href="{% url namespace %}?page={{ page_obj.next_page_number }}"
-           aria-label="Next page">{% trans 'Next' %}
-          <span aria-hidden="true" role="presentation">
-            &raquo;
-          </span>
-        </a>
+        {% include item_widget_template with label="Next page" page_number=page_obj.next_page_number content="widgets/pagination-next.html" %}
       </li>
     {% endif %}
   </ul>
 </nav>
+{% endwith %}
+{% endif %}

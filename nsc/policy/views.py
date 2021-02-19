@@ -1,13 +1,23 @@
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from django_filters.views import FilterView
 
 from nsc.permissions import AdminRequiredMixin
 
 from .filters import SearchFilter
-from .forms import ArchiveDocumentForm, ArchiveForm, PolicyForm, SearchForm
+from .forms import (
+    ArchiveForm,
+    OptionalPolicyDocumentForm,
+    PolicyAddForm,
+    PolicyAddRecommendationForm,
+    PolicyAddSummaryForm,
+    PolicyDocumentForm,
+    PolicyEditForm,
+    SearchForm,
+)
 from .models import Policy
 
 
@@ -58,11 +68,68 @@ class PolicyDetail(AdminRequiredMixin, DetailView):
         )
 
 
+class PolicyAddMixin(AdminRequiredMixin):
+    model = Policy
+    section = None
+    next_section = None
+    markdown_guide = False
+
+    def get_success_url(self):
+        return reverse(f"policy:add:{self.next_section}", args=(self.object.slug,))
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            section=self.section, markdown_guide=self.markdown_guide, **kwargs
+        )
+
+
+class PolicyAdd(PolicyAddMixin, CreateView):
+    form_class = PolicyAddForm
+    model = Policy
+    template_name = "policy/admin/add/start.html"
+    section = "start"
+    next_section = "summary"
+    markdown_guide = True
+
+
+class PolicyAddSummary(PolicyAddMixin, UpdateView):
+    form_class = PolicyAddSummaryForm
+    lookup_field = "slug"
+    template_name = "policy/admin/add/summary.html"
+    section = "summary"
+    next_section = "recommendation"
+    markdown_guide = True
+
+
+class PolicyAddDocument(PolicyAddMixin, UpdateView):
+    """
+    Note - after a discussion with Adrian, this overlaps with review and for now will not be used
+    until there is a document that needs to be capture and is therefore not used in the add flow.
+    """
+
+    form_class = OptionalPolicyDocumentForm
+    lookup_field = "slug"
+    template_name = "policy/admin/add/document.html"
+    section = "document"
+    next_section = "recommendation"
+
+
+class PolicyAddRecommendation(SuccessMessageMixin, PolicyAddMixin, UpdateView):
+    form_class = PolicyAddRecommendationForm
+    lookup_field = "slug"
+    template_name = "policy/admin/add/recommendation.html"
+    section = "recommendation"
+    success_message = "Condition recommendation has been created"
+
+    def get_success_url(self):
+        return reverse("review:add") + f"?policy={self.object.slug}"
+
+
 class PolicyEdit(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
     model = Policy
     lookup_field = "slug"
-    form_class = PolicyForm
-    template_name = "policy/admin/policy_form.html"
+    form_class = PolicyEditForm
+    template_name = "policy/admin/policy_edit_form.html"
     success_url = reverse_lazy("policy:list")
     success_message = "Published changes to conditions page."
 
@@ -82,7 +149,7 @@ class ArchiveDocumentDetail(AdminRequiredMixin, DetailView):
 
 
 class ArchiveDocumentUploadView(AdminRequiredMixin, UpdateView):
-    form_class = ArchiveDocumentForm
+    form_class = PolicyDocumentForm
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"

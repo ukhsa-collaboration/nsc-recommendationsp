@@ -20,45 +20,188 @@ from .models import Policy
 #      check later once the development is finished to see if it can be shared.
 
 
-class SearchForm(forms.Form):
+class NextReviewToYearMixin:
+    def clean_next_review(self):
+        value = self.cleaned_data["next_review"]
 
-    CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))
-    YES_NO_CHOICES = Choices(("yes", _("Yes")), ("no", _("No")))
+        if not value:
+            return None
+
+        if re.match(r"\d{4}", value) is None:
+            raise ValidationError(_("Please enter a valid year"))
+
+        value = int(value)
+
+        if value < get_today().year:
+            raise ValidationError(_("The next review cannot be in the past"))
+
+        return datetime.date(year=value, month=1, day=1)
+
+
+class SearchForm(forms.Form):
+    CONSULTATION = Choices(
+        ("due", _("Due to be reviewed")),
+        ("in_review", _("In Review")),
+        ("in_consultation", _("In consultation")),
+        ("post_consultation", _("Post Consultation")),
+    )
 
     name = forms.CharField(label=_("Condition name"), required=False)
-
-    comments = forms.TypedChoiceField(
-        label=_("Public comments"),
+    review_status = forms.TypedChoiceField(
+        label=_("Review status"),
         choices=CONSULTATION,
         widget=forms.RadioSelect,
         required=False,
     )
-
-    affects = forms.TypedChoiceField(
-        label=_("Who the condition affects"),
-        choices=Policy.AGE_GROUPS,
-        widget=forms.RadioSelect,
-        required=False,
-    )
-
-    screen = forms.TypedChoiceField(
+    recommendation = forms.TypedChoiceField(
         label=_("Current recommendation"),
-        choices=YES_NO_CHOICES,
+        choices=Choices(("yes", _("Recommended")), ("no", _("Not recommended"))),
         widget=forms.RadioSelect,
+        required=False,
+    )
+    archived = forms.TypedChoiceField(
+        label=_("Archive recommendations"),
+        choices=(("yes", _("Yes")), ("no", _("No"))),
+        widget=forms.CheckboxInput,
         required=False,
     )
 
 
-class PolicyForm(forms.ModelForm):
+class PolicyAddForm(forms.ModelForm):
+    name = forms.CharField(label=_("Enter condition name"), widget=forms.Textarea,)
+    condition_type = forms.TypedChoiceField(
+        label=_("What type of condition is this?"),
+        choices=Policy.CONDITION_TYPES,
+        widget=forms.RadioSelect,
+    )
+    condition = forms.CharField(
+        label=_("Condition description"),
+        help_text=_(
+            "Insert the condition description here. Ensure that this is "
+            "in plain English. Use markdown to format the text."
+        ),
+        widget=forms.Textarea,
+    )
+    ages = forms.MultipleChoiceField(
+        label=_("Who does this condition affect?"),
+        help_text=_("Select all that apply"),
+        choices=Policy.AGE_GROUPS,
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    keywords = forms.CharField(
+        required=False,
+        label=_("Search keywords"),
+        help_text=_("Enter keywords which can help people find a condition."),
+        error_messages={
+            "required": _(
+                "Enter keywords to make it easier for people to find a condition."
+            )
+        },
+        widget=forms.Textarea,
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["name", "condition_type", "condition", "ages", "keywords"]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.fields["keywords"].widget.attrs.update({"rows": 3})
+
+    def clean_name(self):
+        value = self.cleaned_data["name"]
+
+        if Policy.objects.filter(name=value).exists():
+            raise ValidationError(_("A policy already exists with this name."))
+
+        return value
+
+    def save(self, commit=True):
+        self.instance.is_active = False
+        return super().save(commit=commit)
+
+
+class PolicyAddSummaryForm(forms.ModelForm):
+    summary = forms.CharField(
+        label=_("Plain English summary"),
+        help_text=_("Use markdown to format the text."),
+        widget=forms.Textarea,
+        error_messages={
+            "required": _(
+                "Enter a simple description of the condition that people would find easy to understand."
+            )
+        },
+    )
+    background = forms.CharField(
+        required=False,
+        label=_("Review history (optional)"),
+        help_text=_(
+            "Here you can add information about where this condition "
+            "came from. If this condition has been added from an Annual Call, you "
+            "could include some information here. Use markdown to format the text."
+        ),
+        widget=forms.Textarea,
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["summary", "background"]
+
+
+class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
+    recommendation = forms.TypedChoiceField(
+        required=False,
+        choices=Choices(
+            (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\\A")),
+        ),
+        widget=forms.RadioSelect,
+    )
+
+    next_review = forms.CharField(
+        required=False,
+        label=_("Set review year"),
+        help_text=_(
+            "The condition will automatically be 'Due review'. \
+            You will be taken to the new product page on completion."
+        ),
+    )
+
+    class Meta:
+        model = Policy
+        fields = ["recommendation", "next_review"]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.initial["next_review"] = get_today().year
+
+    def save(self, commit=True):
+        self.instance.is_active = True
+        return super().save(commit=commit)
+
+
+class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
 
     next_review = forms.CharField(
         required=False,
         label=_("Date next review expected to open"),
         help_text=_("Enter the year in which the policy will be reviewed next"),
     )
+    condition_type = forms.TypedChoiceField(
+        label=_("What type of condition is this?"),
+        choices=Policy.CONDITION_TYPES,
+        widget=forms.RadioSelect,
+    )
+    ages = forms.MultipleChoiceField(
+        label=_("Who does this condition affect?"),
+        help_text=_("Select all that apply"),
+        choices=Policy.AGE_GROUPS,
+        widget=forms.CheckboxSelectMultiple,
+    )
     condition = forms.CharField(
         required=True,
-        label=_("Expected next review start date"),
         help_text=_("Use markdown to format the text"),
         widget=forms.Textarea,
     )
@@ -96,7 +239,15 @@ class PolicyForm(forms.ModelForm):
 
     class Meta:
         model = Policy
-        fields = ["next_review", "condition", "keywords", "summary", "background"]
+        fields = [
+            "next_review",
+            "condition_type",
+            "ages",
+            "condition",
+            "keywords",
+            "summary",
+            "background",
+        ]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -106,22 +257,6 @@ class PolicyForm(forms.ModelForm):
 
         self.fields["condition"].label = _("More about %s" % self.instance.name)
         self.fields["keywords"].widget.attrs.update({"rows": 3})
-
-    def clean_next_review(self):
-        value = self.cleaned_data["next_review"]
-
-        if not value:
-            return None
-
-        if re.match(r"\d{4}", value) is None:
-            raise ValidationError(_("Please enter a valid year"))
-
-        value = int(value)
-
-        if value < get_today().year:
-            raise ValidationError(_("The next review cannot be in the past"))
-
-        return datetime.date(year=value, month=1, day=1)
 
 
 class PolicySelectionForm(forms.Form):
@@ -172,7 +307,10 @@ class ArchiveForm(forms.ModelForm):
         return super().save(commit=commit)
 
 
-class ArchiveDocumentForm(forms.ModelForm):
+class PolicyDocumentForm(forms.ModelForm):
+    document_extra = 0
+    document_min_num = 1
+
     class Meta:
         model = Policy
         fields = []
@@ -181,8 +319,8 @@ class ArchiveDocumentForm(forms.ModelForm):
     def documents_formset(self):
         return modelformset_factory(
             Document,
-            min_num=1,
-            extra=0,
+            min_num=self.document_min_num,
+            extra=self.document_extra,
             form=document_formset_form_factory(
                 Document.TYPE.archive,
                 _("Select file for upload"),
@@ -205,3 +343,8 @@ class ArchiveDocumentForm(forms.ModelForm):
     def save(self, commit=True):
         self.documents_formset.save()
         return self.instance
+
+
+class OptionalPolicyDocumentForm(PolicyDocumentForm):
+    document_extra = 1
+    document_min_num = 0
