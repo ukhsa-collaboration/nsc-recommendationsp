@@ -28,6 +28,88 @@
 
 {% block content %}
 
+  {% if review.is_open and review.status_display == review.STATUS.in_consultation %}
+  <div class="review-status-banner">
+    <p class="govuk-body"><b>Status update:</b></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        {% with num_stakeholders=review.stakeholders.count %}
+          {% blocktrans count count=num_stakeholders %}
+            {{ num_stakeholders }} stakeholder and PHE Comms have been notified.
+          {% plural %}
+            {{ num_stakeholders }} stakeholders and PHE Comms have been notified.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      <li>
+        {% blocktrans with review_name=review.name %}
+          The {{ review_name }} is in open consultation.
+        {% endblocktrans %}
+      </li>
+      {% for condition in review.policies.all %}
+      <li>
+        {% with condition_name=condition.name condition_url=condition.get_absolute_url %}
+          {% blocktrans %}
+            View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% elif not review.is_open and review.status_display == review.STATUS.in_consultation %}
+  <div class="review-status-banner">
+    <p class="govuk-body"><b>Status update:</b></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        {% blocktrans with open_date=review.review_start|date:"d m Y" %}
+          The review will open on {{ open_date }}.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% with num_stakeholders=review.stakeholders.count %}
+          {% blocktrans count count=num_stakeholders %}
+            At this time we will notify {{ num_stakeholders }} stakeholder.
+          {% plural %}
+            At this time we will notify {{ num_stakeholders }} stakeholders.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% for condition in review.policies.all %}
+      <li>
+        {% with condition_name=condition.name condition_url=condition.get_absolute_url %}
+          {% blocktrans %}
+            View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% elif review.status_display == review.STATUS.completed %}
+  <div class="review-status-banner">
+    <p class="govuk-body"><b>Status update:</b></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        {% with review_name=review.name %}
+          {% blocktrans %}
+            The {{ review_name }} is complete.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% for condition in review.policies.all %}
+      <li>
+        {% with condition_name=condition.name condition_url=condition.get_absolute_url %}
+          {% blocktrans %}
+            View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
   <ul class="app-task-list govuk-body">
     <li>
       <h2 class="app-task-list__section">

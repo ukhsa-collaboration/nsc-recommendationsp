@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
@@ -54,10 +55,9 @@ class Review(TimeStampedModel):
 
     STATUS = Choices(
         ("development", _("In review")),
-        ("pre_consultation", _("Pre-consultation")),
-        ("in_consultation", _("In consultation")),
+        ("in_consultation", _("In Open consultation")),
         ("post_consultation", _("Post-consultation")),
-        ("completed", _("Completed")),
+        ("completed", _("Review Complete")),
     )
 
     TYPE = Choices(
@@ -92,21 +92,21 @@ class Review(TimeStampedModel):
         verbose_name=_("NSC meeting date"), null=True, blank=True
     )
 
-    summary = models.TextField(verbose_name=_("summary"))
-    summary_html = models.TextField(verbose_name=_("HTML summary"))
+    summary = models.TextField(verbose_name=_("summary"), blank=True)
+    summary_html = models.TextField(verbose_name=_("HTML summary"), blank=True)
 
-    background = models.TextField(verbose_name=_("history"))
-    background_html = models.TextField(verbose_name=_("HTML history"))
+    background = models.TextField(verbose_name=_("history"), blank=True)
+    background_html = models.TextField(verbose_name=_("HTML history"), blank=True)
 
     stakeholders = models.ManyToManyField(Stakeholder, related_name="reviews")
     stakeholders_confirmed = models.BooleanField(default=False)
 
     open_consultation_notifications = models.ManyToManyField(
-        Email, related_name="open_consultation_reviews"
+        Email, related_name="open_consultation_reviews", blank=True
     )
 
     decision_published_notifications = models.ManyToManyField(
-        Email, related_name="publish_notification_reviews"
+        Email, related_name="publish_notification_reviews", blank=True
     )
 
     published = models.NullBooleanField()
@@ -255,7 +255,7 @@ class Review(TimeStampedModel):
 
     def status(self):
         today = get_today()
-        if self.published:
+        if self.has_supporting_documents() and self.has_summary():
             return self.STATUS.completed
         elif (
             self.dates_confirmed
@@ -269,8 +269,6 @@ class Review(TimeStampedModel):
             and self.consultation_start <= today
         ):
             return self.STATUS.in_consultation
-        elif self.has_external_review():
-            return self.STATUS.pre_consultation
         else:
             return self.STATUS.development
 
@@ -278,7 +276,7 @@ class Review(TimeStampedModel):
         return self.STATUS[self.status()]
 
     def preparing(self):
-        return self.status() in [self.STATUS.development, self.STATUS.pre_consultation]
+        return self.status() == self.STATUS.development
 
     def in_consultation(self):
         return self.status() == self.STATUS.in_consultation
@@ -345,12 +343,26 @@ class Review(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
         )
 
+        # send notifications to all subscribers to the conditions
+        for policy in self.policies.all():
+            policy.send_open_consultation_notifications(
+                self.open_consultation_notifications
+            )
+
     def send_decision_notifications(self):
         self.send_notifications(
             self.decision_published_notifications,
-            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
-            settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+            settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
+            settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
         )
+
+        # send notifications to all subscribers to the conditions
+        for policy in self.policies.all():
+            policy.send_decision_notifications(self.decision_published_notifications)
+
+    @property
+    def is_open(self):
+        return self.review_start <= now().date()
 
 
 class SummaryDraft(TimeStampedModel):

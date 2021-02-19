@@ -28,4 +28,12 @@ app.conf.beat_schedule = {
         "task": "nsc.notify.tasks.send_pending_emails",
         "schedule": crontab(minute="*"),
     },
+    "send-open-review-notifications": {
+        "task": "nsc.review.tasks.send_open_review_notifications",
+        "schedule": crontab(minute="*"),
+    },
+    "send-decided-notifications": {
+        "task": "nsc.review.tasks.send_published_notifications",
+        "schedule": crontab(minute="*"),
+    },
 }
