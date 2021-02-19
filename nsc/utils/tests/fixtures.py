@@ -11,13 +11,17 @@ from model_bakery import baker
 
 
 @pytest.fixture()
-def erm_user():
-    user = baker.make(get_user_model())
-    erm_permission = Permission.objects.get(
+def erm_permission():
+    return Permission.objects.get(
         codename="evidence_review_manager",
         content_type__model="review",
         content_type__app_label="review",
     )
+
+
+@pytest.fixture()
+def erm_user(erm_permission):
+    user = baker.make(get_user_model())
     user.user_permissions.add(erm_permission)
     return user
 
@@ -44,6 +48,17 @@ def test_access_no_user(django_app):
         assert response.url == f"/accounts/login/?next={url}"
 
     return _test_access_forbidden
+
+
+@pytest.fixture()
+def test_access_not_user(erm_permission, django_app):
+    def _test_access_not_user(url):
+        user = baker.make(get_user_model())
+        user.user_permissions.add(erm_permission)
+        response = django_app.get(url, user=user, expect_errors=True)
+        assert response.status == "404 Not Found"
+
+    return _test_access_not_user
 
 
 @pytest.fixture(autouse=True)

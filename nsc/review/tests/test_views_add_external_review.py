@@ -53,7 +53,7 @@ def test_document_created(erm_user, minimal_pdf, django_app):
     """
     Test the external review document is uploaded and the document is created.
     """
-    review = baker.make(Review, name="Review", slug="review")
+    review = baker.make(Review, name="Review", slug="review", user=erm_user)
     form = django_app.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
         user=erm_user,

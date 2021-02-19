@@ -40,6 +40,10 @@ def test_view__incorrect_permission(url, test_access_forbidden):
     test_access_forbidden(url=url)
 
 
+def test_view__not_user(url, test_access_not_user):
+    test_access_not_user(url=url)
+
+
 def test_back_link(response, dom):
     """
     Test the back link returns to the review detail page.
