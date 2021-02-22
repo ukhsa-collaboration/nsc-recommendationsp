@@ -28,13 +28,9 @@
     {% for review in reviews %}
       <tr class="govuk-table__row">
         <td class="govuk-table__cell">
-          {% if review.user == request.user %}
-              <a href="{{ review.get_absolute_url }}">
-                {{ review.name }}
-              </a>
-          {% else %}
-              {{ review.name }}
-          {% endif %}
+          <a href="{{ review.get_absolute_url }}">
+            {{ review.name }}
+          </a>
         </td>
         <td class="govuk-table__cell">
           <ul class="conditions-list">
