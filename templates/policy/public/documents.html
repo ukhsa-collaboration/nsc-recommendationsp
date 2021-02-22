@@ -15,18 +15,20 @@
         </p>
     {% endif %}
     <div class="govuk-body">
-      {% if review.evidence_review %}
-        <p>
-          <a class="govuk-link" target="_blank" href="{{ review.evidence_review.upload.url }}">{{ review.evidence_review.name }}</a>
-          <br/>
-          {% blocktrans %}
-             This is the previous evidence review conducted to investigate whether the condition should be screened or not.
-          {% endblocktrans %}
-        </p>
-      {% endif %}
+      {% for document in review.get_all_type_documents %}
+        {% if document %}
+            <p>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
+              <br/>
+              {% blocktrans with name=document.name|lower %}
+                 This is the previous {{ name }} conducted to investigate whether the condition should be screened or not.
+              {% endblocktrans %}
+            </p>
+        {% endif %}
+      {% endfor %}
       {% if review.cover_sheet %}
         <p>
-          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.upload.url }}">{{ review.cover_sheet.name }}</a>
+          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url }}">{{ review.cover_sheet.name }}</a>
           <br/>
           {% blocktrans %}
           These are the outcomes of the review process including the public consultation comments.

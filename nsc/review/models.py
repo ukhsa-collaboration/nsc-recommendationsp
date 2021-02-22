@@ -130,6 +130,10 @@ class Review(TimeStampedModel):
     def get_external_review(self):
         return Document.objects.for_review(self).external_reviews()
 
+    @cached_property
+    def external_review(self):
+        return self.get_external_review().first()
+
     def get_submission_form(self):
         return Document.objects.for_review(self).submission_forms().first()
 
@@ -171,6 +175,15 @@ class Review(TimeStampedModel):
     @cached_property
     def systematic_review(self):
         return self.get_systematic_review()
+
+    @cached_property
+    def get_all_type_documents(self):
+        return [
+            self.evidence_review,
+            self.cost_effective_model,
+            self.evidence_map,
+            self.systematic_review,
+        ]
 
     def get_other_review_documents(self):
         return Document.objects.for_review(self).others()

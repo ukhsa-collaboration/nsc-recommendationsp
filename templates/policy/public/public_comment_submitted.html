@@ -29,29 +29,20 @@
 
   <p class="govuk-body">
     {% blocktrans with review.consultation_end_display as end %}
-    This consultation closes on {{ end }}. Your comments will be
-    reviewed alongside others received in this consultation.
+    This consultation closes on {{ end }}.
     {% endblocktrans %}
   </p>
 
   <p class="govuk-body">
-    <a href="{% url 'condition:detail' condition.slug %}">
-      {% blocktrans with condition.name as name %}
-        {{ name }} policy page
-      {% endblocktrans %}
-    </a>
+    {% trans 'Your comments will be reviewed alongside others received in this consultation.' %}
   </p>
 
   <p class="govuk-body">
-    <a href="{% url 'condition:list' %}">
-      {% trans 'List of all current UK NSC recommendations' %}
-    </a>
+    {% blocktrans with review.consultation_end_display as end %}
+    The UK NSC makes recommendations on whether screening should be carried out based
+    on evidence available. Comments received will also be taken into account. You will
+    receive a notification email when the recommendation status has been updated.
+    {% endblocktrans %}
   </p>
-
-  <div class="govuk-inset-text">
-    {% trans 'What do you think of this service?' as title %}
-    {% trans 'takes 2 minutes' as suffix %}
-    <a href="{{ feedback_url }}">{{ title }}</a> ({{ suffix }}).
-  </div>
 
 {% endblock %}
