@@ -423,6 +423,7 @@ class Deployed(Build):
     REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
 
     # Settings for the S3 object store
+    AWS_S3_ENDPOINT_URL = get_secret("OBJECT_STORAGE_ENDPOINT_URL")
     AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
     AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
     AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
