@@ -38,9 +38,11 @@ def test_view__incorrect_permission(make_review, test_access_forbidden):
     test_access_forbidden(url=reverse("review:publish", kwargs={"slug": review.slug}))
 
 
-def test_view__not_user(make_review, test_access_not_user):
+def test_view__not_user(make_review, test_access_not_user_can_access):
     review = make_review()
-    test_access_not_user(url=reverse("review:publish", kwargs={"slug": review.slug}))
+    test_access_not_user_can_access(
+        url=reverse("review:publish", kwargs={"slug": review.slug})
+    )
 
 
 def test_response_is_no_recommendations_are_not_updated(

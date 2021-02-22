@@ -39,12 +39,8 @@ class ReviewList(AdminRequiredMixin, generic.TemplateView):
         return super().get_context_data(reviews=reviews)
 
 
-class ReviewUserMixin:
-    def get_queryset(self):
-        return Review.objects.filter(user=self.request.user)
-
-
-class ReviewDetail(AdminRequiredMixin, ReviewUserMixin, generic.DetailView):
+class ReviewDetail(AdminRequiredMixin, generic.DetailView):
+    model = Review
     lookup_field = "slug"
     context_object_name = "review"
 
@@ -70,11 +66,13 @@ class ReviewAdd(AdminRequiredMixin, generic.CreateView):
         return initial
 
 
-class ReviewDelete(AdminRequiredMixin, ReviewUserMixin, generic.DeleteView):
+class ReviewDelete(AdminRequiredMixin, generic.DeleteView):
+    model = Review
     success_url = reverse_lazy("dashboard")
 
 
-class ReviewDates(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewDates(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewDatesForm
     template_name = "review/review_dates.html"
@@ -110,25 +108,29 @@ class ReviewDates(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
         return reverse_lazy("review:open", kwargs={"slug": self.object.slug})
 
 
-class ReviewStakeholders(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewStakeholders(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewStakeholdersForm
     template_name = "review/review_stakeholders.html"
 
 
-class ReviewSummary(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewSummary(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewSummaryForm
     template_name = "review/review_summary.html"
 
 
-class ReviewHistory(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewHistory(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewHistoryForm
     template_name = "review/review_history.html"
 
 
-class ReviewRecommendation(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewRecommendation(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewRecommendationForm
     template_name = "review/review_recommendation.html"
@@ -137,7 +139,8 @@ class ReviewRecommendation(AdminRequiredMixin, ReviewUserMixin, generic.UpdateVi
         return reverse("review:publish", kwargs={"slug": self.object.slug})
 
 
-class ReviewPublish(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewPublish(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewPublishForm
     template_name = "review/review_publish.html"
@@ -151,7 +154,8 @@ class ReviewPublish(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
         )
 
 
-class ReviewDateConfirmation(AdminRequiredMixin, ReviewUserMixin, generic.UpdateView):
+class ReviewDateConfirmation(AdminRequiredMixin, generic.UpdateView):
+    model = Review
     lookup_field = "slug"
     form_class = ReviewDateConfirmationForm
     template_name = "review/review_date_confirmation.html"

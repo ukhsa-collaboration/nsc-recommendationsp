@@ -34,9 +34,9 @@ def test_view__incorrect_permission(make_review, test_access_forbidden):
     )
 
 
-def test_view__not_user(make_review, test_access_not_user):
+def test_view__not_user(make_review, test_access_not_user_can_access):
     review = make_review()
-    test_access_not_user(
+    test_access_not_user_can_access(
         url=reverse("review:recommendation", kwargs={"slug": review.slug})
     )
 
