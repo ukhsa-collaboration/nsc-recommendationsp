@@ -1,0 +1,58 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Contact the PHE Screening helpdesk" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    {% blocktrans %}
+      Use the form below to contact the PHE Screening team. Or call us on
+      <a class="govuk-link" href="tel:02036820890">020 3682 0890</a>. We're here to help local
+      providers, stakeholders and healthcare professionals involved at all stages of the screening
+      pathways.
+    {% endblocktrans %}
+  </p>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      The help desk is not for media enquiries and does not have access to screening results. For
+      queries about results, contact your GP or local screening service. Order screening leaflets at
+      <a class="govuk-link" href="https://www.gov.uk/phe/screening-leaflets">www.gov.uk/phe/screening-leaflets</a>.
+    {% endblocktrans %}
+  </p>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      The helpdesk can only answer queries relating to screening in England.
+    {% endblocktrans %}
+  </p>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      Find out more about the
+      <a class="govuk-link" href="https://phescreening.blog.gov.uk/helpdesk/">PHE Screening helpdesk</a>.
+    {% endblocktrans %}
+  </p>
+
+  {% if form.errors %}
+    {% include "widgets/error_summary.html" %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% include "widgets/text_input.html" with field=form.name %}
+    {% include "widgets/text_input.html" with field=form.organisation %}
+    {% include "widgets/text_input.html" with field=form.role %}
+    {% include "widgets/select_input.html" with field=form.region %}
+    {% include "widgets/text_input.html" with field=form.subject %}
+    {% include "widgets/text_area.html" with field=form.message %}
+    {% include "widgets/text_input.html" with field=form.email %}
+
+    <button type="submit" class="govuk-button">{% trans "Submit" %}</button>
+  </form>
+{% endblock %}

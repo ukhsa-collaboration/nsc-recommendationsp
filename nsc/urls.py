@@ -22,6 +22,7 @@ urlpatterns = [
     path(r"policy/", include("nsc.policy.urls", namespace="policy")),
     path(r"review/", include("nsc.review.urls", namespace="review")),
     path(r"subscription/", include("nsc.subscription.urls", namespace="subscription")),
+    path("help-desk/", include("nsc.support.urls", namespace="support")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
     # TODO remove once AD is in place.
