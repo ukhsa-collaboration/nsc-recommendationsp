@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.db import models
 from django.db.models import Prefetch, Q
@@ -54,23 +55,20 @@ class PolicyQuerySet(models.QuerySet):
         Get the policies which are currently in review and where the period for
         public comments is open.
         """
-        today = get_today()
+        review_model = apps.get_model(app_label="review", model_name="Review")
         return self.filter(
-            reviews__consultation_start__lte=today, reviews__consultation_end__gte=today
-        ).exclude(reviews__published=True)
+            reviews__in=review_model.objects.open_for_comments()
+        ).distinct()
 
     def closed_for_comments(self):
         """
         Get the policies which are currently not open for public comments - either
         because they are not in review or in review but not in that particular phase.
         """
-        today = get_today()
+        review_model = apps.get_model(app_label="review", model_name="Review")
         return self.filter(
-            ~(
-                models.Q(reviews__consultation_start__lte=today)
-                & models.Q(reviews__consultation_end__gte=today)
-            )
-        ).exclude(reviews__published=True)
+            reviews__in=review_model.objects.closed_for_comments()
+        ).distinct()
 
     def prefetch_reviews_in_consultation(self):
         """

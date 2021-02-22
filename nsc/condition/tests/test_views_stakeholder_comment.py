@@ -1,10 +1,14 @@
+from django.conf import settings
 from django.urls import reverse
 
 import pytest
 from bs4 import BeautifulSoup
 
+from nsc.notify.models import Email
+
 
 # All tests require the database
+
 pytestmark = pytest.mark.django_db
 
 
@@ -44,3 +48,39 @@ def test_heading_caption(response, dom):
     condition = response.context["condition"]
     title = dom.find("h1")
     assert condition.name in title.text
+
+
+def test_submission_form_link(response):
+    """
+    Test a link to submission form for comments is displayed.
+    """
+    review = response.context["condition"].current_review
+    assert review.get_submission_form().get_download_url() in response.text
+
+
+def test_submit(response):
+    form = response.form
+
+    form["name"] = "name"
+    form["email"] = "email@email.com"
+    form["role"] = "role"
+    form["organisation"] = "organisation"
+    form["behalf"] = True
+    form["publish"] = True
+    form["comment"] = "comment"
+    form["condition"] = response.context["condition"].pk
+
+    result = form.submit()
+
+    assert result.status == "302 Found"
+    assert result.url == reverse(
+        "condition:stakeholder-comment-submitted",
+        args=(response.context["condition"].slug,),
+    )
+    assert (
+        Email.objects.filter(
+            address=settings.CONSULTATION_COMMENT_ADDRESS,
+            template_id=settings.NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT,
+        ).count()
+        == 1
+    )

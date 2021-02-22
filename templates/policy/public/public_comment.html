@@ -10,15 +10,34 @@
   {% if form.errors %}
     {% trans 'Error:' %}
   {% endif %}
-  {% trans 'Submit your comments'%}
+  {% trans 'Submit your comments as a member of the public'%}
 {% endblock %}
 
 {% block page_title %}
   <span class="govuk-caption-l">{{ condition.name }}</span>
-  {% trans 'Submit your comments' %}
+  {% trans 'Submit your comments as a member of the public' %}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-body">
+
+  {% blocktrans with url=current_review.external_review.get_download_url name=current_review.external_review.get_document_type_display %}
+      <p>
+          Members of the public, including patients and family members who have experienced the condition,
+          are welcome to submit comments. The UK NSC will review these, along with the scientific evidence and
+          comments from professional organisations, charities and researchers.
+      </p>
+      <p>
+          While we welcome all comments, we would prefer to get your individual thoughts rather then standard text
+          provided by someone else.
+      </p>
+      <p>
+          We suggest reading <the></the> <a target="_blank" href="{{ url }}">{{ name }}</a>,
+          and also our <a target="_blank"  href="https://www.gov.uk/guidance/nhs-population-screening-explained">explanation of screening</a>,
+          before submitting this form.
+      </p>
+  {% endblocktrans %}
+  </div>
   <form method="post">
     {% csrf_token %}
 
@@ -36,24 +55,19 @@
 
     {% include "widgets/text_input.html" with field=form.name %}
     {% include "widgets/text_input.html" with field=form.email %}
-
-    {% include "widgets/radio_buttons.html" with field=form.publish %}
-    {% include "widgets/radio_buttons.html" with field=form.notify %}
+    {% include "widgets/radio_buttons.html" with field=form.notify show_legend=True %}
 
     <h2 class="govuk-heading-m">
       {% trans 'Consultation comments' %}
     </h2>
 
     <p class="govuk-body">
-      {% trans 'Provide your views in the following field. Here are some sample questions to help you:' %}
+      {% trans 'Provide your views in the following fields. You do not have to enter something in every field.' %}
     </p>
 
-    <ul class="govuk-list govuk-list--bullet">
-        <li>{% trans 'How has this condition effected your or your loved ones life?' %}</li>
-        <li>{% trans 'Why do you think screening should or should not be recommended?' %}</li>
-    </ul>
-
-    {% include "widgets/text_area.html" with field=form.comment word_limit=5000 %}
+    {% for field in comment_fields %}
+        {% include "widgets/text_area.html" with field=field word_limit=500 show_legend=True %}
+    {% endfor %}
 
     <div class="govuk-body">
       <button type="submit" class="govuk-button" name="submit" value="submit">

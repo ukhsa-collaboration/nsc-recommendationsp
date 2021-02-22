@@ -43,6 +43,16 @@ class SearchForm(forms.Form):
 
 
 class PublicCommentForm(forms.Form):
+    COMMENT_FIELDS = {
+        "comment_affected": "Please tell us if this condition has affected you, your family or your fiends?",
+        "comment_evidence": "Do you have any comments on the evidence considered by the UK NSC in the review? "
+        "For instance, was any important evidence missed?",
+        "comment_discussion": "Do you have any comments on the discussion, conclusion or recommendation in the review?",
+        "comment_recommendation": "Do you think screening should or should not be recommended? Why?",
+        "comment_alternatives": "There could be many alternatives to a screening programme. How else do you think "
+        "the NHS or the government could help people with the condition?",
+        "comment_other": "Do you have any other recommendations?",
+    }
 
     name = forms.CharField(
         label=_("Full name"), error_messages={"required": _("Enter your full name.")}
@@ -54,16 +64,6 @@ class PublicCommentForm(forms.Form):
             "invalid": _(
                 "Enter an email address in the correct format, like name@example.com."
             ),
-        },
-    )
-    publish = forms.TypedChoiceField(
-        label=_("Do you consent to your name being published on the NSC web site?"),
-        choices=((True, _("Yes")), (False, _("No"))),
-        widget=forms.RadioSelect,
-        error_messages={
-            "required": _(
-                "Select yes if you would like to shown as a contributor to this consultation."
-            )
         },
     )
     notify = forms.TypedChoiceField(
@@ -78,12 +78,28 @@ class PublicCommentForm(forms.Form):
             )
         },
     )
-    comment = forms.CharField(
-        label="",
-        widget=forms.Textarea,
-        error_messages={"required": _("Enter your comment")},
-    )
     condition = forms.CharField(required=False, widget=HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field, label in self.COMMENT_FIELDS.items():
+            self.fields[field] = forms.CharField(
+                label=label, widget=forms.Textarea, required=False
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        comment_valid = False
+        for field in self.COMMENT_FIELDS.keys():
+            if cleaned_data.get(field) != "":
+                comment_valid = True
+                break
+
+        if not comment_valid:
+            self.add_error(None, _("Please submit at least one comment."))
+
+        return cleaned_data
 
 
 class StakeholderCommentForm(forms.Form):
@@ -113,6 +129,13 @@ class StakeholderCommentForm(forms.Form):
                 "Select yes if you would like to shown as a contributor to this consultation."
             )
         },
+    )
+    behalf = forms.TypedChoiceField(
+        label=_(
+            "Is your submission an official response on behalf of your organisation?"
+        ),
+        choices=((True, _("Yes")), (False, _("No"))),
+        widget=forms.RadioSelect,
     )
     comment = forms.CharField(
         label="",

@@ -15,15 +15,17 @@
     </div>
 
     <ul class="govuk-list govuk-list--bullet">
-      {% if review.evidence_review %}
-        <li>
-          <a class="govuk-link" target="_blank" href="{{ review.evidence_review.upload.url }}">{{ review.evidence_review.name }}</a>
-        </li>
-      {% endif %}
+      {% for document in review.get_all_type_documents %}
+          {% if document %}
+            <li>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url}}">{{ document.name }}</a>
+            </li>
+          {% endif %}
+      {% endfor %}
       {% if review.cover_sheet %}
-        <li>
-          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.upload.url }}">{{ review.cover_sheet.name }}</a>
-        </li>
+            <li>
+              <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url}}">{{ review.cover_sheet.name }}</a>
+            </li>
       {% endif %}
     </ul>
       {% if review.other_review_documents %}
@@ -31,7 +33,7 @@
         <ul class="govuk-list govuk-list--bullet">
         {% for document in review.other_review_documents %}
           <li>
-            <a class="govuk-link" target="_blank" href="{{ document.upload.url }}">{{ document.name }}</a>
+            <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
           </li>
         {% endfor %}
         </ul>
