@@ -663,6 +663,10 @@ class ReviewPublishForm(forms.ModelForm):
                     recommendation=recommendation
                 )
 
-            self.instance.review_end = get_today()
+            _today = get_today()
+            self.instance.review_end = _today
+            self.instance.policies.update(
+                next_review=_today.replace(year=_today.year + 3)
+            )
 
             return super().save(commit=commit)

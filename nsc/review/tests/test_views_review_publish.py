@@ -146,7 +146,7 @@ def test_response_is_yes_recommendations_are_updated(
     assert second_policy.recommendation is False
 
 
-def test_response_is_yes_no_review_end_set(
+def test_response_is_yes_review_end_set(
     erm_user, make_review, make_policy, make_review_recommendation, django_app
 ):
     first_policy = make_policy(name="first", recommendation=False)
@@ -170,7 +170,7 @@ def test_response_is_yes_no_review_end_set(
     assert review.review_end == get_today()
 
 
-def test_response_is_yes_summaries_not_updated(
+def test_response_is_yes_summaries_are_updated(
     erm_user, make_review, make_policy, make_summary_draft, django_app
 ):
     first_policy = make_policy(
@@ -202,6 +202,46 @@ def test_response_is_yes_summaries_not_updated(
     assert first_policy.summary_html == convert("**new** ~first~ `summary`")
     assert second_policy.summary == "**new** ~second~ `summary`"
     assert second_policy.summary_html == convert("**new** ~second~ `summary`")
+
+
+def test_response_is_no_next_review_is_not_updated(
+    erm_user, make_review, make_policy, make_summary_draft, django_app
+):
+    first_policy, second_policy = make_policy(_quantity=2, next_review=get_today())
+    review = make_review(policies=[first_policy, second_policy])
+
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
+
+    form = response.form
+    form["published"] = False
+    form.submit()
+
+    first_policy.refresh_from_db()
+    second_policy.refresh_from_db()
+    assert first_policy.next_review.year == get_today().year
+    assert second_policy.next_review.year == get_today().year
+
+
+def test_response_is_yes_next_review_is_updated(
+    erm_user, make_review, make_policy, make_summary_draft, django_app
+):
+    first_policy, second_policy = make_policy(_quantity=2, next_review=get_today())
+    review = make_review(policies=[first_policy, second_policy])
+
+    response = django_app.get(
+        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
+    )
+
+    form = response.form
+    form["published"] = True
+    form.submit()
+
+    first_policy.refresh_from_db()
+    second_policy.refresh_from_db()
+    assert first_policy.next_review.year == get_today().year + 3
+    assert second_policy.next_review.year == get_today().year + 3
 
 
 @pytest.mark.parametrize("doc_type", supporting_document_types)
