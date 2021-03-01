@@ -30,3 +30,4 @@ markdown
 notifications-python-client
 python-dateutil
 requests
+django-auth-adfs

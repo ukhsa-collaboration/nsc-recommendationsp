@@ -131,6 +131,7 @@ class Common(Configuration):
         "django.contrib.contenttypes",
         "django.contrib.sessions",
         "django.contrib.messages",
+        "django_auth_adfs",
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "raven.contrib.django.raven_compat",
@@ -324,6 +325,58 @@ class Common(Configuration):
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.
     PROJECT_FEEDBACK_URL = ""
+
+    #
+    # Authentication
+    #
+    AUTH_USE_ACTIVE_DIRECTORY = get_env("AUTH_USE_ACTIVE_DIRECTORY", int)
+    LOGIN_REDIRECT_URL = "/"
+
+    @property
+    def AUTHENTICATION_BACKENDS(self):
+        AUTHENTICATION_BACKENDS = (
+            "django.contrib.auth.backends.ModelBackend",
+        )
+
+        if self.AUTH_USE_ACTIVE_DIRECTORY:
+            return AUTHENTICATION_BACKENDS + ('django_auth_adfs.backend.AdfsAuthCodeBackend', )
+
+        return AUTHENTICATION_BACKENDS
+
+    @property
+    def LOGIN_URL(self):
+        if self.AUTH_USE_ACTIVE_DIRECTORY:
+            return "django_auth_adfs:login"
+        else:
+            return "/accounts/login/"
+
+    @property
+    def AUTH_ADFS(self):
+        if not self.AUTH_USE_ACTIVE_DIRECTORY:
+            return None
+
+        return {
+            "SERVER": get_env("ACTIVE_DIRECTORY_"),
+            "CLIENT_ID": "487d8ff7-80a8-4f62-b926-c2852ab06e94",
+            "RELYING_PARTY_ID": "web.example.com",
+            # Make sure to read the documentation about the AUDIENCE setting
+            # when you configured the identifier as a URL!
+            "AUDIENCE": "microsoft:identityserver:web.example.com",
+            "CA_BUNDLE": False,  # <<<-- !!! DON'T DO THIS IN A PRODUCTION SETUP !!!
+            "CLAIM_MAPPING": {
+                "first_name": "given_name",
+                "last_name": "family_name",
+                "email": "email",
+            },
+            #                   ^^ = Model field   ^^ = Claim
+            "GROUP_TO_FLAG_MAPPING": {
+                "is_superuser":   "django_admins",
+            },
+            #                            ^^ = Model field    ^^ = Group
+            # "BOOLEAN_CLAIM_MAPPING": {"is_staff": "is_staff"},
+            "CONFIG_RELOAD_INTERVAL": 0.1,
+        }
+
 
 
 class Webpack:
