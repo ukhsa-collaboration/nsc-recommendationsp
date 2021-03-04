@@ -10,8 +10,8 @@
     <div class="govuk-grid-column-two-thirds">
       <h3 class="govuk-heading-m">
       {% if policy.ages|length > 1 %}
-        {% with front=policy.ages|slice:":-1" back=policy.ages|slice:"-1" %}
-          {% blocktrans with front_list=front|join:", " %}
+        {% with front=policy.ages|slice:":-1" back=policy.ages|slice:"-1:" %}
+          {% blocktrans with front_list=front|join:", " back=back.0 %}
             {{ front_list }} and {{ back }} screening programme
           {% endblocktrans %}
         {% endwith %}
