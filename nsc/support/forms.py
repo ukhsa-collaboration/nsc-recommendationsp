@@ -8,23 +8,16 @@ class ContactForm(forms.Form):
         max_length=255, required=False, label=_("Organisation (if any)")
     )
     role = forms.CharField(
-        max_length=255,
-        required=False,
-        label=_("Your role (put 'member of the public' if appropriate)"),
+        max_length=255, required=False, label=_("Your role (if appropriate)"),
     )
-    region = forms.ChoiceField(
+    country = forms.ChoiceField(
         choices=(
             ("", ""),
-            ("North", "North"),
-            ("Mids & East", "Mids & East"),
-            ("London", "London"),
-            ("South", "South"),
-            ("National", "National"),
-            ("Scotland", "Scotland"),
-            ("Ireland", "Ireland"),
-            ("Northern Ireland", "Northern Ireland"),
+            ("England", "England"),
             ("Wales", "Wales"),
-            ("International", "International"),
+            ("Scotland", "Scotland"),
+            ("Northern Ireland", "Northern Ireland"),
+            ("Other", "Other"),
         ),
         required=True,
     )
