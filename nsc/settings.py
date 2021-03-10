@@ -356,25 +356,18 @@ class Common(Configuration):
             return None
 
         return {
-            "SERVER": get_env("ACTIVE_DIRECTORY_"),
-            "CLIENT_ID": "487d8ff7-80a8-4f62-b926-c2852ab06e94",
-            "RELYING_PARTY_ID": "web.example.com",
-            # Make sure to read the documentation about the AUDIENCE setting
-            # when you configured the identifier as a URL!
-            "AUDIENCE": "microsoft:identityserver:web.example.com",
-            "CA_BUNDLE": False,  # <<<-- !!! DON'T DO THIS IN A PRODUCTION SETUP !!!
-            "CLAIM_MAPPING": {
-                "first_name": "given_name",
-                "last_name": "family_name",
-                "email": "email",
+            'AUDIENCE': get_env('ACTIVE_DIRECTORY_CLIENT_ID'),
+            'CLIENT_ID': get_env('ACTIVE_DIRECTORY_CLIENT_ID'),
+            'CLIENT_SECRET': get_env('ACTIVE_DIRECTORY_CLIENT_SECRET'),
+            'CLAIM_MAPPING': {
+                'name': 'name',
+                'email': 'upn',
             },
-            #                   ^^ = Model field   ^^ = Claim
-            "GROUP_TO_FLAG_MAPPING": {
-                "is_superuser":   "django_admins",
-            },
-            #                            ^^ = Model field    ^^ = Group
-            # "BOOLEAN_CLAIM_MAPPING": {"is_staff": "is_staff"},
-            "CONFIG_RELOAD_INTERVAL": 0.1,
+            'USERNAME_CLAIM': 'preferred_username',
+            'GROUPS_CLAIM': 'roles',
+            'MIRROR_GROUPS': False,
+            'TENANT_ID': get_env('ACTIVE_DIRECTORY_TENANT_ID'),
+            'RELYING_PARTY_ID': get_env('ACTIVE_DIRECTORY_CLIENT_ID'),
         }
 
 
