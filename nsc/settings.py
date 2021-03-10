@@ -407,6 +407,7 @@ class Deployed(Build):
     """
     Settings which are for a non-local deployment
     """
+    DEBUG = False
 
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
@@ -477,8 +478,6 @@ class Stage(Deployed):
 
 
 class Prod(Deployed):
-    DEBUG = False
-
     RAVEN_CONFIG = {"dsn": ""}
 
 
