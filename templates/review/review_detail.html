@@ -48,7 +48,7 @@
       </li>
       {% for condition in review.policies.all %}
       <li>
-        {% with condition_name=condition.name condition_url=condition.get_absolute_url %}
+        {% with condition_name=condition.name condition_url=condition.get_public_url %}
           {% blocktrans %}
             View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
           {% endblocktrans %}
@@ -77,7 +77,7 @@
       </li>
       {% for condition in review.policies.all %}
       <li>
-        {% with condition_name=condition.name condition_url=condition.get_absolute_url %}
+        {% with condition_name=condition.name condition_url=condition.get_public_url %}
           {% blocktrans %}
             View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
           {% endblocktrans %}
@@ -99,7 +99,7 @@
       </li>
       {% for condition in review.policies.all %}
       <li>
-        {% with condition_name=condition.name condition_url=condition.get_absolute_url %}
+        {% with condition_name=condition.name condition_url=condition.get_public_url %}
           {% blocktrans %}
             View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
           {% endblocktrans %}
