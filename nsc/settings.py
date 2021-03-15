@@ -154,7 +154,9 @@ class Common(Configuration):
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.common.CommonMiddleware",
+        'django.middleware.cache.UpdateCacheMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.cache.FetchFromCacheMiddleware',
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
@@ -291,7 +293,7 @@ class Common(Configuration):
         },
     }
 
-    CELERY_BROKER_URL = "redis://localhost:6379/0"
+    CELERY_BROKER_URL = f"redis://{get_env('REDIS_SERVICE_HOST', '127.0.0.1')}:{get_env('REDIS_SERVICE_PORT', '6379')}/0"
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
@@ -402,6 +404,14 @@ class Build(Common):
     STATIC_ROOT = PUBLIC_ROOT / "static"
     MEDIA_ROOT = PUBLIC_ROOT / "media"
 
+
+class Deployed(Build):
+    """
+    Settings which are for a non-local deployment
+    """
+
+    DEBUG = False
+
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
@@ -436,14 +446,6 @@ class Build(Common):
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
-
-class Deployed(Build):
-    """
-    Settings which are for a non-local deployment
-    """
-
-    DEBUG = False
-
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
@@ -455,8 +457,8 @@ class Deployed(Build):
     NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
 
     # Change default cache
-    REDIS_HOST = get_env("DJANGO_REDIS_HOST", required=True)
-    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+    REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
+    REDIS_PORT = get_env("REDIS_SERVICE_PORT", default=6379, cast=int)
 
     # Settings for the S3 object store
     AWS_S3_ENDPOINT_URL = get_secret("OBJECT_STORAGE_ENDPOINT_URL")
@@ -524,6 +526,7 @@ class Demo(Build):
 
     This should be removed once external services are available
     """
+    DEBUG = False
 
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
@@ -558,7 +561,4 @@ class Demo(Build):
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
     SESSION_CACHE_ALIAS = "default"
 
-    # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
-    # ever turned on when run with a WSGI server
-    DEBUG_TOOLBAR_PATCH_SETTINGS = False
     COMPRESS_OUTPUT_DIR = ""
