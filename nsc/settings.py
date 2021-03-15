@@ -402,6 +402,40 @@ class Build(Common):
     STATIC_ROOT = PUBLIC_ROOT / "static"
     MEDIA_ROOT = PUBLIC_ROOT / "media"
 
+    #  X-Content-Type-Options: nosniff
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    # X-XSS-Protection: 1; mode=block
+    SECURE_BROWSER_XSS_FILTER = True
+
+    # Secure session cookie
+    SESSION_COOKIE_SECURE = True
+
+    # Prevent client-side JS from accessing the session cookie.
+    SESSION_COOKIE_HTTPONLY = True
+
+    # Expire the session on browser closer
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+    # Add preload directive to the Strict-Transport-Security header
+    SECURE_HSTS_PRELOAD = True
+
+    # Secure CSRF cookie
+    CSRF_COOKIE_SECURE = True
+
+    # Disallow iframes from any origin.
+    X_FRAME_OPTIONS = 'DENY'
+
+    # Set Referrer Policy header on all responses.
+    # Django 3.0 only.
+    SECURE_REFERRER_POLICY = 'same-origin'
+
+    # Redirect all non-HTTPS requests to HTTPS.
+    SECURE_SSL_REDIRECT = True
+
+    # Sets HTTP Strict Transport Security header on all responses.
+    SECURE_HSTS_SECONDS = 3600  # Seconds
+
 
 class Deployed(Build):
     """
@@ -480,8 +514,6 @@ class Stage(Deployed):
 
 class Prod(Deployed):
     RAVEN_CONFIG = {"dsn": ""}
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
 
 
 class Demo(Build):
