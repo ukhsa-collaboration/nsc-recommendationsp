@@ -15,6 +15,19 @@ def test_view(erm_user, django_app):
     assert response.status == "200 OK"
 
 
+def test_view__own_reviews(make_review, erm_user, non_user, django_app):
+    """
+    Test that the page can be displayed
+    """
+    expected = make_review()
+    make_review(user=non_user)
+    response = django_app.get(reverse("dashboard"), user=erm_user)
+
+    assert response.status == "200 OK"
+    assert len(response.context["reviews"]) == 1
+    assert response.context["reviews"][0].pk == expected.pk
+
+
 def test_view__no_user(test_access_no_user):
     test_access_no_user(url=reverse("dashboard"))
 

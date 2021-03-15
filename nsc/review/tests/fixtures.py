@@ -10,10 +10,10 @@ from ..models import Review, ReviewRecommendation, SummaryDraft
 
 
 @pytest.fixture
-def make_review(make_stakeholder):
-    def _make_review(add_stakeholders=False, policies=None, **kwargs):
+def make_review(make_stakeholder, erm_user):
+    def _make_review(add_stakeholders=False, policies=None, user=erm_user, **kwargs):
         policies = policies or [baker.make(Policy, name="condition", ages="{child}")]
-        review = baker.make(Review, **kwargs)
+        review = baker.make(Review, user=user, **kwargs)
         review.policies.add(*policies)
 
         if add_stakeholders:

@@ -39,6 +39,10 @@ def test_view__incorrect_permission(url, test_access_forbidden):
     test_access_forbidden(url=url)
 
 
+def test_view__not_user(url, test_access_not_user_can_access):
+    test_access_not_user_can_access(url=url)
+
+
 def test_back_link(dom):
     """
     Test the back link returns to the dashboard.

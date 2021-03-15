@@ -34,6 +34,13 @@ def test_view__incorrect_permission(make_review, test_access_forbidden):
     )
 
 
+def test_view__not_user(make_review, test_access_not_user_can_access):
+    review = make_review()
+    test_access_not_user_can_access(
+        url=reverse("review:recommendation", kwargs={"slug": review.slug})
+    )
+
+
 def test_not_all_recommendations_are_updated_errors_are_raised(
     erm_user, make_review, make_policy, django_app
 ):
