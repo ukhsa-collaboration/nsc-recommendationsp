@@ -407,6 +407,7 @@ class Deployed(Build):
     """
     Settings which are for a non-local deployment
     """
+
     DEBUG = False
 
     # Redefine values which are not optional in a deployed environment

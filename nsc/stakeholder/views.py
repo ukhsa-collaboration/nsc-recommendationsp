@@ -11,6 +11,7 @@ from django.views.generic import FormView
 from nsc.permissions import AdminRequiredMixin
 from nsc.utils.datetime import get_today
 
+from ..utils.urls import clean_url
 from .filters import SearchFilter
 from .forms import ExportForm, SearchForm, StakeholderForm
 from .models import Stakeholder
@@ -156,15 +157,21 @@ class StakeholderAdd(AdminRequiredMixin, generic.CreateView):
     form_class = StakeholderForm
 
     def get_success_url(self):
-        return self.request.GET.get("next") or reverse(
-            "stakeholder:detail", kwargs={"pk": self.object.pk}
+        if self.object:
+            default_next = reverse("stakeholder:detail", kwargs={"pk": self.object.pk})
+        else:
+            default_next = reverse("stakeholder:list")
+
+        return clean_url(
+            self.request.GET.get("next"),
+            default_next,
+            [self.request.get_host()],
+            self.request.is_secure(),
         )
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(
-            back_title=_("Back to stakeholders"),
-            back_url=reverse_lazy("stakeholder:list"),
-            **kwargs,
+            back_title=_("Back"), back_url=reverse_lazy("stakeholder:list"), **kwargs,
         )
 
 
@@ -173,8 +180,11 @@ class StakeholderEdit(AdminRequiredMixin, generic.UpdateView):
     form_class = StakeholderForm
 
     def get_success_url(self):
-        return self.request.GET.get("next") or reverse(
-            "stakeholder:detail", kwargs={"pk": self.object.pk}
+        return clean_url(
+            self.request.GET.get("next"),
+            reverse("stakeholder:detail", kwargs={"pk": self.object.pk}),
+            [self.request.get_host()],
+            self.request.is_secure(),
         )
 
     def get_context_data(self, **kwargs):

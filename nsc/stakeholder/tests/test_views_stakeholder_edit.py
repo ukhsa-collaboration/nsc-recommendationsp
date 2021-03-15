@@ -47,7 +47,7 @@ def test_back_link(stakeholder, dom):
     link = dom.find(id="back-link-id")
     assert link["href"] == reverse("stakeholder:detail", kwargs={"pk": stakeholder.pk})
 
-    assert link.text.strip() == ugettext("Back to %s" % stakeholder.name)
+    assert link.text.strip() == ugettext("Back")
 
 
 def test_success_url__next(erm_user, stakeholder, make_policy, django_app):

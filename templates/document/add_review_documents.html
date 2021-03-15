@@ -2,12 +2,7 @@
 {% load i18n utils %}
 
 {% block back %}
-  {% if request.GET.next %}
-    {% include 'widgets/back_link.html' with back_url=request.GET.next %}
-  {% else %}
-    {% url 'review:detail' review.slug as back_url %}
-    {% include 'widgets/back_link.html' %}
-  {% endif %}
+  {% include 'widgets/back_link.html' with back_url=view.get_success_url %}
 {% endblock %}
 
 {% block title %}
