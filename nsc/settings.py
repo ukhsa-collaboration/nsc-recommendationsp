@@ -480,6 +480,8 @@ class Stage(Deployed):
 
 class Prod(Deployed):
     RAVEN_CONFIG = {"dsn": ""}
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 
 class Demo(Build):
