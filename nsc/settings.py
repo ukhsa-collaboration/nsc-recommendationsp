@@ -1,10 +1,10 @@
 from os import environ
 from pathlib import Path
 
-from celery.schedules import crontab
 from django.utils.translation import gettext_lazy as _
 
 import envdir
+from celery.schedules import crontab
 from configurations import Configuration
 
 
@@ -155,9 +155,9 @@ class Common(Configuration):
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
-        'django.middleware.cache.UpdateCacheMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.cache.FetchFromCacheMiddleware',
+        "django.middleware.cache.UpdateCacheMiddleware",
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.cache.FetchFromCacheMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
@@ -208,6 +208,8 @@ class Common(Configuration):
                 "PASSWORD": self.DATABASE_PASSWORD,
             }
         }
+
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -295,8 +297,8 @@ class Common(Configuration):
     }
 
     # dont use the get_env function here as the property isn't read into the celery config correctly
-    REDIS_HOST = environ.get('REDIS_HOST', '127.0.0.1')
-    REDIS_PORT = int(environ.get('REDIS_PORT', 6379))
+    REDIS_HOST = environ.get("REDIS_HOST", "127.0.0.1")
+    REDIS_PORT = int(environ.get("REDIS_PORT", 6379))
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
@@ -455,11 +457,11 @@ class Deployed(Build):
     CSRF_COOKIE_SECURE = True
 
     # Disallow iframes from any origin.
-    X_FRAME_OPTIONS = 'DENY'
+    X_FRAME_OPTIONS = "DENY"
 
     # Set Referrer Policy header on all responses.
     # Django 3.0 only.
-    SECURE_REFERRER_POLICY = 'same-origin'
+    SECURE_REFERRER_POLICY = "same-origin"
 
     # Redirect all non-HTTPS requests to HTTPS.
     SECURE_SSL_REDIRECT = True
@@ -546,6 +548,7 @@ class Demo(Build):
 
     This should be removed once external services are available
     """
+
     DEBUG = False
 
     # Redefine values which are not optional in a deployed environment
