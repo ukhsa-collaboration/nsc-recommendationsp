@@ -1,6 +1,7 @@
 from os import environ
 from pathlib import Path
 
+from celery.schedules import crontab
 from django.utils.translation import gettext_lazy as _
 
 import envdir
@@ -293,9 +294,29 @@ class Common(Configuration):
         },
     }
 
-    CELERY_BROKER_URL = f"redis://{get_env('REDIS_SERVICE_HOST', '127.0.0.1')}:{get_env('REDIS_SERVICE_PORT', '6379')}/0"
+    # dont use the get_env function here as the property isn't read into the celery config correctly
+    REDIS_HOST = environ.get('REDIS_HOST', '127.0.0.1')
+    REDIS_PORT = int(environ.get('REDIS_PORT', 6379))
+
+    # Settings for celery
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
+
+    CELERY_BEAT_SCHEDULE = {
+        "send-pending-emails": {
+            "task": "nsc.notify.tasks.send_pending_emails",
+            "schedule": crontab(minute="*"),
+        },
+        "send-open-review-notifications": {
+            "task": "nsc.review.tasks.send_open_review_notifications",
+            "schedule": crontab(minute="*"),
+        },
+        "send-published-notifications": {
+            "task": "nsc.review.tasks.send_published_notifications",
+            "schedule": crontab(minute="*"),
+        },
+    }
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL")
@@ -458,7 +479,6 @@ class Deployed(Build):
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
-    REDIS_PORT = get_env("REDIS_SERVICE_PORT", default=6379, cast=int)
 
     # Settings for the S3 object store
     AWS_S3_ENDPOINT_URL = get_secret("OBJECT_STORAGE_ENDPOINT_URL")
