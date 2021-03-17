@@ -451,7 +451,7 @@ parameters:
 - name: APP_CONFIG
   displayName: Application Configuration File Path
   description: Relative path to Gunicorn configuration file (optional).
-  value: ""
+  value: "gunicorn.conf.py"
 - name: DJANGO_CONFIGURATION
   displayName: Django Configuration
   description: The name of the Django settings configuration to use (Stage or Prod)

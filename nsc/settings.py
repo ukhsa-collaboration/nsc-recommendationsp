@@ -4,6 +4,7 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
 import envdir
+from celery.schedules import crontab
 from configurations import Configuration
 
 
@@ -155,7 +156,9 @@ class Common(Configuration):
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.cache.UpdateCacheMiddleware",
         "django.middleware.common.CommonMiddleware",
+        "django.middleware.cache.FetchFromCacheMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
@@ -206,6 +209,8 @@ class Common(Configuration):
                 "PASSWORD": self.DATABASE_PASSWORD,
             }
         }
+
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -292,9 +297,29 @@ class Common(Configuration):
         },
     }
 
-    CELERY_BROKER_URL = "redis://localhost:6379/0"
+    # dont use the get_env function here as the property isn't read into the celery config correctly
+    REDIS_HOST = environ.get("REDIS_HOST", "127.0.0.1")
+    REDIS_PORT = int(environ.get("REDIS_PORT", 6379))
+
+    # Settings for celery
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
+
+    CELERY_BEAT_SCHEDULE = {
+        "send-pending-emails": {
+            "task": "nsc.notify.tasks.send_pending_emails",
+            "schedule": crontab(minute="*"),
+        },
+        "send-open-review-notifications": {
+            "task": "nsc.review.tasks.send_open_review_notifications",
+            "schedule": crontab(minute="*"),
+        },
+        "send-published-notifications": {
+            "task": "nsc.review.tasks.send_published_notifications",
+            "schedule": crontab(minute="*"),
+        },
+    }
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL")
@@ -454,6 +479,42 @@ class Deployed(Build):
     Settings which are for a non-local deployment
     """
 
+    DEBUG = False
+
+    #  X-Content-Type-Options: nosniff
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    # X-XSS-Protection: 1; mode=block
+    SECURE_BROWSER_XSS_FILTER = True
+
+    # Secure session cookie
+    SESSION_COOKIE_SECURE = True
+
+    # Prevent client-side JS from accessing the session cookie.
+    SESSION_COOKIE_HTTPONLY = True
+
+    # Expire the session on browser closer
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+    # Add preload directive to the Strict-Transport-Security header
+    SECURE_HSTS_PRELOAD = True
+
+    # Secure CSRF cookie
+    CSRF_COOKIE_SECURE = True
+
+    # Disallow iframes from any origin.
+    X_FRAME_OPTIONS = "DENY"
+
+    # Set Referrer Policy header on all responses.
+    # Django 3.0 only.
+    SECURE_REFERRER_POLICY = "same-origin"
+
+    # Redirect all non-HTTPS requests to HTTPS.
+    SECURE_SSL_REDIRECT = True
+
+    # Sets HTTP Strict Transport Security header on all responses.
+    SECURE_HSTS_SECONDS = 3600  # Seconds
+
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
@@ -465,8 +526,7 @@ class Deployed(Build):
     NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
 
     # Change default cache
-    REDIS_HOST = get_env("DJANGO_REDIS_HOST", required=True)
-    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+    REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
 
     # Settings for the S3 object store
     AWS_S3_ENDPOINT_URL = get_secret("OBJECT_STORAGE_ENDPOINT_URL")
@@ -523,8 +583,6 @@ class Stage(Deployed):
 
 
 class Prod(Deployed):
-    DEBUG = False
-
     RAVEN_CONFIG = {"dsn": ""}
 
 
@@ -536,6 +594,8 @@ class Demo(Build):
 
     This should be removed once external services are available
     """
+
+    DEBUG = False
 
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
@@ -570,7 +630,4 @@ class Demo(Build):
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
     SESSION_CACHE_ALIAS = "default"
 
-    # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
-    # ever turned on when run with a WSGI server
-    DEBUG_TOOLBAR_PATCH_SETTINGS = False
     COMPRESS_OUTPUT_DIR = ""

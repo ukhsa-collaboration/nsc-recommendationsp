@@ -14,9 +14,9 @@ urlpatterns = [
     path(r"", StakeholderList.as_view(), name="list"),
     path(r"export/", StakeholderExport.as_view(), name="export"),
     path(r"add/", StakeholderAdd.as_view(), name="add"),
-    path(r"<pk>/", StakeholderDetail.as_view(), name="detail"),
-    path(r"<pk>/delete/", StakeholderDelete.as_view(), name="delete"),
-    path(r"<pk>/edit/", StakeholderEdit.as_view(), name="edit"),
+    path(r"<int:pk>/", StakeholderDetail.as_view(), name="detail"),
+    path(r"<int:pk>/delete/", StakeholderDelete.as_view(), name="delete"),
+    path(r"<int:pk>/edit/", StakeholderEdit.as_view(), name="edit"),
 ]
 
 app_name = "stakeholder"

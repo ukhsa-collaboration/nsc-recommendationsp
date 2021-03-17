@@ -53,7 +53,7 @@ def test_back_link(dom):
     """
     link = dom.find(id="back-link-id")
     assert link["href"] == reverse("stakeholder:list")
-    assert link.text.strip() == _("Back to stakeholders")
+    assert link.text.strip() == _("Back")
 
 
 def test_back_link__next(erm_user, django_app):

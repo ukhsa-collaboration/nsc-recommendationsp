@@ -8,6 +8,7 @@ from django.views import generic
 from nsc.permissions import AdminRequiredMixin
 from nsc.review.models import Review
 
+from ..utils.urls import clean_url
 from .forms import ExternalReviewForm, ReviewDocumentsForm, SubmissionForm
 from .models import Document
 
@@ -72,8 +73,11 @@ class AddReviewDocumentsView(AdminRequiredMixin, generic.UpdateView):
     context_object_name = "review"
 
     def get_success_url(self):
-        return self.request.GET.get("next") or reverse(
-            "review:detail", kwargs={"slug": self.kwargs["slug"]}
+        return clean_url(
+            self.request.GET.get("next"),
+            reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
+            [self.request.get_host()],
+            self.request.is_secure(),
         )
 
 
@@ -100,4 +104,9 @@ class DeleteView(AdminRequiredMixin, generic.DeleteView):
     model = Document
 
     def get_success_url(self):
-        return self.request.GET.get("next") or reverse("dashboard")
+        return clean_url(
+            self.request.GET.get("next"),
+            reverse("dashboard"),
+            [self.request.get_host()],
+            self.request.is_secure,
+        )
