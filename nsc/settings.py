@@ -43,7 +43,7 @@ def get_env(name, default=None, required=False, cast=str):
     return property(_lookup)
 
 
-def get_secret(name, cast=str):
+def get_secret(*name, default=None, required=True, cast=str):
     """
     Get a secret from disk
 
@@ -53,20 +53,28 @@ def get_secret(name, cast=str):
 
     Arguments:
 
-        name (str): Name of environment variable
+        name (str[]): Path to the environment variable
+        default (any): The value to use if not set
+        required (bool): Should an error be raised if the value is missing
         cast (Callable): function to call on extracted string value
     """
 
     # We don't want this to be called unless we're in a configuration which uses it
     def _lookup(self):
         if not SECRET_DIR:
-            raise ValueError(
-                f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
-            )
+            if required:
+                raise ValueError(
+                    f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
+                )
+            else:
+                return default
 
-        file = Path(SECRET_DIR) / name
+        file = Path(SECRET_DIR, *name)
         if not file.exists():
-            raise ValueError(f"Secret {file} not found")
+            if required:
+                raise ValueError(f"Secret {file} not found")
+            else:
+                return default
 
         value = file.read_text().strip()
         return cast(value)
@@ -354,17 +362,26 @@ class Common(Configuration):
     #
     # Authentication
     #
-    AUTH_USE_ACTIVE_DIRECTORY = get_env("AUTH_USE_ACTIVE_DIRECTORY", int)
+    AUTH_USE_ACTIVE_DIRECTORY = bool(int(environ.get("AUTH_USE_ACTIVE_DIRECTORY", 0)))
+    ACTIVE_DIRECTORY_CLIENT_ID = get_secret(
+        "azure-ad", "client-id", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+    )
+    ACTIVE_DIRECTORY_CLIENT_SECRET = get_secret(
+        "azure-ad", "secret", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+    )
+    ACTIVE_DIRECTORY_TENANT_ID = get_secret(
+        "azure-ad", "tenant-id", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+    )
     LOGIN_REDIRECT_URL = "/"
 
     @property
     def AUTHENTICATION_BACKENDS(self):
-        AUTHENTICATION_BACKENDS = (
-            "django.contrib.auth.backends.ModelBackend",
-        )
+        AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
         if self.AUTH_USE_ACTIVE_DIRECTORY:
-            return AUTHENTICATION_BACKENDS + ('django_auth_adfs.backend.AdfsAuthCodeBackend', )
+            return AUTHENTICATION_BACKENDS + (
+                "django_auth_adfs.backend.AdfsAuthCodeBackend",
+            )
 
         return AUTHENTICATION_BACKENDS
 
@@ -381,20 +398,17 @@ class Common(Configuration):
             return None
 
         return {
-            'AUDIENCE': get_env('ACTIVE_DIRECTORY_CLIENT_ID'),
-            'CLIENT_ID': get_env('ACTIVE_DIRECTORY_CLIENT_ID'),
-            'CLIENT_SECRET': get_env('ACTIVE_DIRECTORY_CLIENT_SECRET'),
-            'CLAIM_MAPPING': {
-                'name': 'name',
-                'email': 'upn',
-            },
-            'USERNAME_CLAIM': 'preferred_username',
-            'GROUPS_CLAIM': 'roles',
-            'MIRROR_GROUPS': False,
-            'TENANT_ID': get_env('ACTIVE_DIRECTORY_TENANT_ID'),
-            'RELYING_PARTY_ID': get_env('ACTIVE_DIRECTORY_CLIENT_ID'),
+            "AUDIENCE": self.ACTIVE_DIRECTORY_CLIENT_ID,
+            "CLIENT_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
+            "CLIENT_SECRET": self.ACTIVE_DIRECTORY_CLIENT_SECRET,
+            "CLAIM_MAPPING": {"email": "email"},
+            "USERNAME_CLAIM": "name",
+            "GROUPS_CLAIM": "roles",
+            "GROUP_TO_FLAG_MAPPING": {"is_staff": "admin", "is_superuser": "admin"},
+            "MIRROR_GROUPS": False,
+            "TENANT_ID": self.ACTIVE_DIRECTORY_TENANT_ID,
+            "RELYING_PARTY_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
         }
-
 
 
 class Webpack:
@@ -519,19 +533,20 @@ class Deployed(Build):
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
     # Some deployed settings are no longer env vars - collect from the secret store
-    SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
-    DATABASE_USER = get_secret("DATABASE_USER")
-    DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
+    SECRET_KEY = get_secret("django", "secret-key")
+    DATABASE_USER = get_secret("postgresql", "database-password")
+    DATABASE_PASSWORD = get_secret("postgresql", "database-user")
+    DATABASE_name = get_secret("postgresql", "database-name")
     NOTIFY_SERVICE_ENABLED = True
-    NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
+    NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
 
     # Settings for the S3 object store
-    AWS_S3_ENDPOINT_URL = get_secret("OBJECT_STORAGE_ENDPOINT_URL")
-    AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
+    AWS_S3_ENDPOINT_URL = get_secret("s3", "endpoint")
+    AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
+    AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
     AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
     AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
 
