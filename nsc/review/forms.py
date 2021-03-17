@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.forms import modelformset_factory
 from django.utils.functional import cached_property
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ngettext_lazy
@@ -367,7 +368,7 @@ class ReviewDateConfirmationForm(forms.ModelForm):
 
         self.fields["dates_confirmed"].label = _(
             "Confirm you want to open the {review} consultation now?"
-        ).format(review=self.instance)
+        ).format(review=escape(self.instance))
 
         if self.instance.review_start >= get_today():
             self.fields["dates_confirmed"].help_text = _(
@@ -470,7 +471,7 @@ class SummaryDraftFormsetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["text"].label = self.instance.policy.name
+        self.fields["text"].label = escape(self.instance.policy.name)
         self.fields["text"].help_text = _(
             "Use markdown to complete the text field below."
         )
@@ -555,7 +556,7 @@ class RecommendationFormsetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["recommendation"].label = self.instance.policy.name
+        self.fields["recommendation"].label = escape(self.instance.policy.name)
 
 
 class ReviewRecommendationForm(forms.ModelForm):
@@ -624,7 +625,7 @@ class ReviewPublishForm(forms.ModelForm):
             "This will publish the recommendation decision, plain text summary and supporting "
             "documents to the public {conditions} pages",
             len(conditions),
-        ).format(conditions=joined_conditions)
+        ).format(conditions=escape(joined_conditions))
 
     def save(self, commit=True):
         if not self.cleaned_data["published"]:

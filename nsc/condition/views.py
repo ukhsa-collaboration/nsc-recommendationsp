@@ -8,6 +8,7 @@ from nsc.policy.models import Policy
 from nsc.review.models import Review
 from nsc.subscription.models import Subscription
 
+from ..utils.urls import clean_url
 from .filters import SearchFilter
 from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
 
@@ -38,8 +39,21 @@ class ConditionDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        referer = self.request.META.get("HTTP_REFERER", reverse("condition:list"))
-        context.update({"back_url": referer, "status_options": Review.STATUS})
+
+        default_back_url = reverse("condition:list")
+        back_url = self.request.META.get("HTTP_REFERER", default_back_url)
+
+        context.update(
+            {
+                "back_url": clean_url(
+                    back_url,
+                    default_back_url,
+                    [self.request.get_host()],
+                    self.request.is_secure(),
+                ),
+                "status_options": Review.STATUS,
+            }
+        )
         return context
 
 

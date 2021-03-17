@@ -5,6 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
 from django.utils.functional import cached_property
+from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils import Choices
@@ -255,7 +256,7 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
         if self.instance.next_review:
             self.initial["next_review"] = self.instance.next_review.year
 
-        self.fields["condition"].label = _("More about %s" % self.instance.name)
+        self.fields["condition"].label = _("More about %s" % escape(self.instance.name))
         self.fields["keywords"].widget.attrs.update({"rows": 3})
 
 
