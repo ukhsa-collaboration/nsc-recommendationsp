@@ -8,6 +8,8 @@ import datetime
 import json
 import re
 
+from django.contrib.auth import get_user_model
+
 import requests
 from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
@@ -45,6 +47,7 @@ def run():
         review.recommendation = entry["recommendation"]
         review.review_start = review_start
         review.review_end = review_end
+        review.user = get_user_model().objects.get_or_create(username="legacy")[0]
 
         if review.review_end:
             review.published = True
@@ -63,8 +66,10 @@ def run():
 
         policy.reviews.add(review)
 
-        ReviewRecommendation.objects.create(
-            recommendation=entry["recommendation"], review=review, policy=policy
+        ReviewRecommendation.objects.get_or_create(
+            review=review,
+            policy=policy,
+            defaults={"recommendation": entry["recommendation"]},
         )
 
     print("Finished")

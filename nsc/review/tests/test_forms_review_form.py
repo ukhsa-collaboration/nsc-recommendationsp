@@ -73,7 +73,7 @@ def test_policy_list_with_invalid_policy():
     assert "policy" in form.policy_formset.errors[0]
 
 
-def test_review_is_created():
+def test_review_is_created(erm_user):
     """
     Test saving the form creates a new review.
     """
@@ -81,7 +81,7 @@ def test_review_is_created():
     data = form_for_review(
         **{"policies-0-policy": policy.pk, "policies-TOTAL_FORMS": 1}
     )
-    form = ReviewForm(data=data)
+    form = ReviewForm(data=data, instance=Review(user=erm_user))
     instance = form.save()
     assert instance.name == data["name"]
     assert instance.review_type == data["review_type"]

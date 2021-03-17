@@ -3,40 +3,34 @@
 
 {% block title %}
   {% block page_title %}
-    {% trans "Contact the PHE Screening helpdesk" %}
+    {% trans "Contact the UK National Screening Committee" %}
   {% endblock %}
 {% endblock %}
 
 {% block content %}
   <p class="govuk-body">
     {% blocktrans %}
-      Use the form below to contact the PHE Screening team. Or call us on
-      <a class="govuk-link" href="tel:02036820890">020 3682 0890</a>. We're here to help local
-      providers, stakeholders and healthcare professionals involved at all stages of the screening
-      pathways.
+      <a class="govuk-link" href="https://www.gov.uk/government/groups/uk-national-screening-committee-uk-nsc">The UK National Screening Committee</a>
+      (UK NSC) makes recommendations on all aspects of population screening  in the UK. See the
+      <a class="govuk-link" href="https://www.gov.uk/government/publications/uk-nsc-evidence-review-process">UK NSC evidence review process</a>
+      and
+      <a class="govuk-link" href="https://www.gov.uk/government/publications/uk-nsc-evidence-review-process/appendix-c-stakeholder-information">UK NSC stakeholder information</a>
+      for details of how to submit proposals for screening and how to respond to consultations.
     {% endblocktrans %}
   </p>
 
   <p class="govuk-body">
     {% blocktrans %}
-      The help desk is not for media enquiries and does not have access to screening results. For
-      queries about results, contact your GP or local screening service. Order screening leaflets at
-      <a class="govuk-link" href="https://www.gov.uk/phe/screening-leaflets">www.gov.uk/phe/screening-leaflets</a>.
+      Complete and submit this form for any other issues relating to the UK NSC and its recommendations.
     {% endblocktrans %}
   </p>
 
-  <p class="govuk-body">
-    {% blocktrans %}
-      The helpdesk can only answer queries relating to screening in England.
-    {% endblocktrans %}
-  </p>
-
-  <p class="govuk-body">
-    {% blocktrans %}
-      Find out more about the
-      <a class="govuk-link" href="https://phescreening.blog.gov.uk/helpdesk/">PHE Screening helpdesk</a>.
-    {% endblocktrans %}
-  </p>
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      Please do not send or provide any sensitive, confidential or patient identifiable information to the helpdesk.
+    </strong>
+  </div>
 
   {% if form.errors %}
     {% include "widgets/error_summary.html" %}
@@ -48,7 +42,7 @@
     {% include "widgets/text_input.html" with field=form.name %}
     {% include "widgets/text_input.html" with field=form.organisation %}
     {% include "widgets/text_input.html" with field=form.role %}
-    {% include "widgets/select_input.html" with field=form.region %}
+    {% include "widgets/select_input.html" with field=form.country %}
     {% include "widgets/text_input.html" with field=form.subject %}
     {% include "widgets/text_area.html" with field=form.message %}
     {% include "widgets/text_input.html" with field=form.email %}

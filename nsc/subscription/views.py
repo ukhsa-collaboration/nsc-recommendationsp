@@ -35,6 +35,12 @@ class PublicSubscriptionStart(generic.FormView):
     form_class = SubscriptionStart
     template_name = "subscription/public_subscription_management_form.html"
 
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            "data": self.request.POST or self.request.GET or None,
+        }
+
     def form_valid(self, form):
         if "save" in form.data:
             url = reverse("subscription:public-subscribe")

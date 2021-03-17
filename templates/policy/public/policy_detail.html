@@ -5,10 +5,34 @@
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
-{% block title %}
-  {% block page_title %}
-    {{ policy.name }}
-  {% endblock %}
+{% block heading %}
+  <div class="govuk-grid-row sub-heading">
+    <div class="govuk-grid-column-two-thirds">
+      <h3 class="govuk-heading-m">
+      {% if policy.ages|length > 1 %}
+        {% with front=policy.ages|slice:":-1" back=policy.ages|slice:"-1:" %}
+          {% blocktrans with front_list=front|join:", " back=back.0 %}
+            {{ front_list }} and {{ back }} screening programme
+          {% endblocktrans %}
+        {% endwith %}
+      {% else %}
+        {% blocktrans with policy_age=policy.ages.0 %}
+          {{ policy_age }} screening programme
+        {% endblocktrans %}
+      {% endif %}
+      </h3>
+    </div>
+    <div class="govuk-grid-column-one-third">
+      <a class="govuk-link" href="{% url "subscription:public-start" %}?policies={{ policy.id }}">
+        {% trans "Subscribe to alerts on this topic" %}
+      </a>
+    </div>
+  </div>
+  <h1 class="govuk-heading-l">
+    {% block page_title %}
+      {{ policy.name }}
+    {% endblock %}
+  </h1>
 {% endblock %}
 
 {% block content %}

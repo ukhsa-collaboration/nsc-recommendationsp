@@ -111,6 +111,8 @@ class Review(TimeStampedModel):
 
     published = models.NullBooleanField()
 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,)
+
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()
 
@@ -126,6 +128,11 @@ class Review(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("review:detail", kwargs={"slug": self.slug})
+
+    def get_review_type_display(self):
+        return ", ".join(
+            str(self.TYPE[getattr(self.TYPE, rt)]) for rt in self.review_type
+        )
 
     def get_external_review(self):
         return Document.objects.for_review(self).external_reviews()
@@ -205,8 +212,7 @@ class Review(TimeStampedModel):
         return get_date_display(self.nsc_meeting_date)
 
     def manager_display(self):
-        # Todo return the name of the person who is managing the review
-        return ""
+        return self.user.get_full_name() or self.user.username
 
     def has_notified_stakeholders(self):
         return self.stakeholders_confirmed

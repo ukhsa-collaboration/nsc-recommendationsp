@@ -23,7 +23,11 @@ class ReviewDashboardView(AdminRequiredMixin, generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
-        reviews = Review.objects.in_progress()
+        reviews = (
+            Review.objects.in_progress()
+            .select_related("user")
+            .filter(user=self.request.user)
+        )
         return super().get_context_data(reviews=reviews)
 
 
@@ -31,7 +35,7 @@ class ReviewList(AdminRequiredMixin, generic.TemplateView):
     template_name = "review/review_list.html"
 
     def get_context_data(self, **kwargs):
-        reviews = Review.objects.in_progress()
+        reviews = Review.objects.in_progress().select_related("user")
         return super().get_context_data(reviews=reviews)
 
 
@@ -44,6 +48,12 @@ class ReviewDetail(AdminRequiredMixin, generic.DetailView):
 class ReviewAdd(AdminRequiredMixin, generic.CreateView):
     model = Review
     form_class = ReviewForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if not kwargs["instance"]:
+            kwargs["instance"] = self.model(user=self.request.user)
+        return kwargs
 
     def get_initial(self):
         initial = super().get_initial()
