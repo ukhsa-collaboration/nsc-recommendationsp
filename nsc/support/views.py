@@ -17,4 +17,9 @@ class ContactHelpDesk(generic.FormView):
             template_id=settings.NOTIFY_TEMPLATE_HELP_DESK,
             context=form.cleaned_data,
         )
+        Email.objects.create(
+            address=form.cleaned_data["email"],
+            template_id=settings.NOTIFY_TEMPLATE_HELP_DESK_COINFIRMATION,
+            context=form.cleaned_data,
+        )
         return HttpResponseRedirect(reverse("support:complete"))

@@ -18,7 +18,7 @@ def send_open_review_notifications():
 
 @celery.task
 def send_published_notifications():
-    published_reviews = Review.objects.published()
+    published_reviews = Review.objects.published().exclude_legacy()
     published_reviews_without_notifications = published_reviews.annotate(
         notifications_count=Count("decision_published_notifications"),
     ).filter(notifications_count=0)

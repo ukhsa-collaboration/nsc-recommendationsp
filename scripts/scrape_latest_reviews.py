@@ -40,7 +40,7 @@ def run():
         try:
             review = Review.objects.get(name=name)
         except Review.DoesNotExist:
-            review = Review(name=name)
+            review = Review(name=name, is_legacy=True)
 
         review.review_type = [Review.TYPE.other]
 

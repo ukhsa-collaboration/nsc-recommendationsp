@@ -74,8 +74,8 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
                 address=self.object.email,
                 template_id=settings.NOTIFY_TEMPLATE_UNSUBSCRIBE,
                 context={
-                    "resub_url": self.request.build_absolute_uri(
-                        reverse("subscription:stakeholder-start")
+                    "subscribe url": self.request.build_absolute_uri(
+                        reverse("subscription:public-start")
                     ),
                 },
             )
@@ -88,7 +88,17 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
                 Email.objects.create(
                     address=self.object.email,
                     template_id=settings.NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION,
-                    context={"manage_url": self.request.build_absolute_uri()},
+                    context={
+                        "manage subscription url": self.request.build_absolute_uri(
+                            reverse(
+                                "subscription:public-manage",
+                                kwargs={
+                                    "pk": form.instance.id,
+                                    "token": get_object_signature(form.instance),
+                                },
+                            )
+                        )
+                    },
                 )
                 return super().form_valid(form)
         elif "delete" in form.data and self.object.id:
@@ -123,7 +133,8 @@ class PublicSubscriptionEmails(generic.UpdateView):
             address=self.object.email,
             template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
             context={
-                "manage_url": self.request.build_absolute_uri(
+                "policy list": "\n".join(f"* {p}" for p in self.object.policies.values_list("name", flat=True)),
+                "manage subscription url": self.request.build_absolute_uri(
                     reverse(
                         "subscription:public-manage",
                         kwargs={

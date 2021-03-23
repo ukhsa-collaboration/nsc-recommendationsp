@@ -84,7 +84,7 @@ class Email(TimeStampedModel):
         self.attempts += 1
 
         resp = send_email(
-            self.address, self.template_id, context=self.context, reference=self.id
+            self.address, self.template_id, context=self.context, reference=str(self.id)
         )
 
         if "error" not in resp:

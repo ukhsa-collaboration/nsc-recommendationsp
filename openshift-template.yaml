@@ -208,6 +208,9 @@ objects:
             httpGet:
               path: "/_health/"
               port: 8080
+          envFrom:
+            - configMap:
+                name: notify
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -249,6 +252,9 @@ objects:
           - name: secret-notify
             mountPath: "/run/secrets/notify"
             readOnly: true
+          - name: config-notify
+            mountPath: "/run/configs/notify"
+            readOnly: true
         volumes:
         - name: config-common
           configMap:
@@ -265,6 +271,9 @@ objects:
         - name: secret-notify
           secret:
             secretName: notify
+        - name: config-notify
+          configMap:
+            name: notify
 #
 # Redis
 - kind: DeploymentConfig
