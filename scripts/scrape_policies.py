@@ -10,6 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from nsc.policy.models import Policy
+from scripts.parse import parse_html, content_nodes
 
 
 def run():
@@ -51,23 +52,11 @@ def get_page(url):
 
 
 def get_condition(node):
-
-    content = []
-
     regex = re.compile(r"^More about .*")
     node = node.find("h3", string=regex)
-    node = node.next_sibling
 
-    while node.name != "h3":
-        link = node.find("a")
-        if link is None:
-            text = node.text.strip()
-            if text:
-                content.append(text)
-        else:
-            link_url = link["href"]
-            link_text = link.text.strip()
-            content.append("\n[%s](%s)" % (link_text, link_url))
-        node = node.find_next_sibling()
+    if node:
+        node = node.next_sibling
+        return parse_html(content_nodes(node))
 
-    return "\n".join(content)
+    return ""

@@ -8,6 +8,7 @@ import datetime
 import json
 import re
 
+import html2markdown
 from django.contrib.auth import get_user_model
 
 import requests
@@ -16,6 +17,7 @@ from dateutil.relativedelta import relativedelta
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review, ReviewRecommendation
+from scripts.parse import parse_html, content_nodes
 
 
 def run():
@@ -103,20 +105,11 @@ def get_last_review_date(node):
 
 
 def get_summary(node):
-
-    content = []
-
     regex = re.compile(r"^Why is screening (not )?recommended by UK NSC\?")
     node = node.find("h3", string=regex)
 
     if node:
         node = node.next_sibling
-        while node.name != "h3":
-            link = node.find("a")
-            if link is None:
-                text = node.text.strip()
-                if text:
-                    content.append(text)
-            node = node.find_next_sibling()
+        return parse_html(content_nodes(node))
 
-    return "\n".join(content)
+    return ""
