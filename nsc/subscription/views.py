@@ -133,7 +133,12 @@ class PublicSubscriptionEmails(generic.UpdateView):
             address=self.object.email,
             template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
             context={
-                "policy list": "\n".join(f"* {p}" for p in self.object.policies.values_list("name", flat=True)),
+                "policy list": "\n".join(
+                    f"* {p}"
+                    for p in self.object.policies.values_list(
+                        "name", flat=True
+                    ).order_by("name")
+                ),
                 "manage subscription url": self.request.build_absolute_uri(
                     reverse(
                         "subscription:public-manage",
@@ -142,7 +147,7 @@ class PublicSubscriptionEmails(generic.UpdateView):
                             "token": get_object_signature(form.instance),
                         },
                     )
-                )
+                ),
             },
         )
 

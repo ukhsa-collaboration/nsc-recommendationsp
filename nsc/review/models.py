@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _, ngettext
+from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
@@ -32,7 +32,11 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(is_legacy=False)
 
     def consultation_open(self):
-        return self.dates_confirmed().exclude_legacy().filter(consultation_start__lte=get_today())
+        return (
+            self.dates_confirmed()
+            .exclude_legacy()
+            .filter(consultation_start__lte=get_today())
+        )
 
     def published(self):
         return self.filter(published=True).order_by("-review_start")
@@ -333,14 +337,24 @@ class Review(TimeStampedModel):
     def get_email_context(self, **extra):
         condition_names = list(p.name for p in self.policies.all())
 
+        formatted_start_date = (
+            self.consultation_start.strftime("%d %B %Y")
+            if self.consultation_start
+            else ""
+        )
+        formatted_end_date = (
+            self.consultation_end.strftime("%d %B %Y") if self.consultation_end else ""
+        )
         return {
             "review": self.name,
             "policy list": "\n".join(f"* {c}" for c in condition_names),
             "review manager full name": self.user.get_full_name(),
-            "consultation url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()),
-            "consultation start date": self.consultation_start.strftime("%d %B %Y"),
-            "consultation end date": self.consultation_end.strftime("%d %B %Y"),
-            **extra
+            "consultation url": urljoin(
+                settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
+            ),
+            "consultation start date": formatted_start_date,
+            "consultation end date": formatted_end_date,
+            **extra,
         }
 
     def send_notifications(
@@ -355,11 +369,7 @@ class Review(TimeStampedModel):
                 Email(
                     address=contact.email,
                     template_id=stakeholder_template,
-                    context={
-                        "stakeholder name": contact.name,
-                        "recipient name": contact.name,
-                        **email_context
-                    },
+                    context={"recipient name": contact.name, **email_context},
                 )
                 for contact in Contact.objects.with_email()
                 .filter(stakeholder__in=self.stakeholders.all())
@@ -374,7 +384,7 @@ class Review(TimeStampedModel):
                     template_id=comms_template,
                     context={
                         "recipient name": settings.PHE_COMMUNICATIONS_NAME,
-                        **email_context
+                        **email_context,
                     },
                 )
             )
@@ -405,8 +415,10 @@ class Review(TimeStampedModel):
                 self.decision_published_notifications,
                 {
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y"),
-                }
+                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
+                    if self.consultation_end
+                    else "",
+                },
             )
 
     @property

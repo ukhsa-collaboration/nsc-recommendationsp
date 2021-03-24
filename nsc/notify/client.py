@@ -8,15 +8,13 @@ from notifications_python_client.notifications import NotificationsAPIClient
 logger = logging.getLogger(__name__)
 
 
-def get_client():
-    if settings.NOTIFY_SERVICE_ENABLED and settings.NOTIFY_SERVICE_API_KEY:
-        return NotificationsAPIClient(settings.NOTIFY_SERVICE_API_KEY)
-    else:
-        return None
+if settings.NOTIFY_SERVICE_ENABLED and settings.NOTIFY_SERVICE_API_KEY:
+    client = NotificationsAPIClient(settings.NOTIFY_SERVICE_API_KEY)
+else:
+    client = None
 
 
 def send_email(address, template, context=None, reference=None):
-    client = get_client()
     if client is None:
         logger.info(f"[Notify - Send] {address} {template} {context}")
         return

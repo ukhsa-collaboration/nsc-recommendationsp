@@ -3,8 +3,8 @@ from django.urls import reverse
 
 from django_extensions.db.models import TimeStampedModel
 
-from .signer import get_object_signature
 from ..policy.models import Policy
+from .signer import get_object_signature
 
 
 class Subscription(TimeStampedModel):
@@ -18,10 +18,7 @@ class Subscription(TimeStampedModel):
     def management_url(self):
         return reverse(
             "subscription:public-manage",
-            kwargs={
-                "pk": self.pk,
-                "token": get_object_signature(self),
-            }
+            kwargs={"pk": self.pk, "token": get_object_signature(self)},
         )
 
 

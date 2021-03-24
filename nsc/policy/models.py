@@ -215,7 +215,7 @@ class Policy(TimeStampedModel):
         return {
             "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
             "policy": self.name,
-            **extra
+            **extra,
         }
 
     def send_notifications(self, relation, template, extra_context=None):
@@ -230,8 +230,13 @@ class Policy(TimeStampedModel):
                     template_id=template,
                     context={
                         **email_context,
-                        "manage subscription url": urljoin(settings.EMAIL_ROOT_DOMAIN, sub.management_url),
-                        "subscribe url": urljoin(settings.EMAIL_ROOT_DOMAIN, reverse("subscription:public-start")),
+                        "manage subscription url": urljoin(
+                            settings.EMAIL_ROOT_DOMAIN, sub.management_url
+                        ),
+                        "subscribe url": urljoin(
+                            settings.EMAIL_ROOT_DOMAIN,
+                            reverse("subscription:public-start"),
+                        ),
                     },
                 )
                 for sub in self.subscriptions.all().exclude(

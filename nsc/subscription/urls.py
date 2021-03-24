@@ -30,7 +30,9 @@ urlpatterns = [
     ),
     path(
         "public-deleted/",
-        TemplateView.as_view(template_name="subscription/public_subscription_deleted.html"),
+        TemplateView.as_view(
+            template_name="subscription/public_subscription_deleted.html"
+        ),
         name="public-deleted",
     ),
     path(
