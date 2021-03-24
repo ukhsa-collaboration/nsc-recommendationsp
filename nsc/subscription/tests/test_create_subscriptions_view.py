@@ -1,5 +1,5 @@
 from itertools import chain
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 
 from django.conf import settings
 from django.urls import reverse
@@ -80,12 +80,13 @@ def test_emails_match_subscription_is_created(
         address=sub.email,
         template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
         context={
-            "manage_url": response.request.relative_url(
-                reverse(
-                    "subscription:public-manage",
-                    kwargs={"pk": sub.id, "token": get_object_signature(sub)},
-                )
-            )
+            "policy list": "\n".join(
+                f"* {p.name}"
+                for p in sorted(selected_policies, key=lambda p: p.name.lower())
+            ),
+            "manage subscription url": urljoin(
+                response.request.host_url, sub.management_url
+            ),
         },
     ).exists()
     assert response.location == reverse(

@@ -16,7 +16,15 @@ CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
 SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
 
 
-def get_env(name, default=None, required=False, cast=str):
+class NotSetClass:
+    def __bool__(self):
+        return False
+
+
+NotSet = NotSetClass()
+
+
+def get_env(name, default=NotSet, required=False, cast=str):
     """
     Get an environment variable
 
@@ -32,7 +40,7 @@ def get_env(name, default=None, required=False, cast=str):
     def _lookup(self):
         value = environ.get(name)
 
-        if value is None and default is not None:
+        if value is None and default is not NotSet:
             return default
 
         if value is None and required:
@@ -43,7 +51,7 @@ def get_env(name, default=None, required=False, cast=str):
     return property(_lookup)
 
 
-def get_secret(*name, default=None, required=True, cast=str):
+def get_secret(*name, default=NotSet, required=True, cast=str):
     """
     Get a secret from disk
 
@@ -330,30 +338,40 @@ class Common(Configuration):
     }
 
     # Settings for the GDS Notify service for sending emails.
-    PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL")
-    PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL")
-    NOTIFY_SERVICE_ENABLED = False
-    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
-    CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS")
-    NOTIFY_TEMPLATE_CONSULTATION_INVITATION = get_env(
-        "NOTIFY_TEMPLATE_CONSULTATION_INVITATION"
+    PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
+    PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default=None)
+    PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL", default=None)
+    CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS", default=None)
+    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
+    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env(
+        "NOTIFY_TEMPLATE_CONSULTATION_OPEN", default=None
     )
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env("NOTIFY_TEMPLATE_CONSULTATION_OPEN")
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = get_env(
+        "NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS", default=None
+    )
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN"
+        "NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN", default=None
     )
     NOTIFY_TEMPLATE_DECISION_PUBLISHED = get_env("NOTIFY_TEMPLATE_DECISION_PUBLISHED")
     NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED"
+        "NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED", default=None
     )
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
-    NOTIFY_TEMPLATE_SUBSCRIBED = get_env("NOTIFY_TEMPLATE_SUBSCRIBED")
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env(
+        "NOTIFY_TEMPLATE_PUBLIC_COMMENT", default=None
+    )
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env(
+        "NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT", default=None
+    )
+    NOTIFY_TEMPLATE_SUBSCRIBED = get_env("NOTIFY_TEMPLATE_SUBSCRIBED", default=None)
     NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = get_env(
-        "NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION"
+        "NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION", default=None
     )
-    NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env("NOTIFY_TEMPLATE_UNSUBSCRIBE")
-    NOTIFY_TEMPLATE_HELP_DESK = get_env("NOTIFY_TEMPLATE_HELP_DESK")
+    NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env("NOTIFY_TEMPLATE_UNSUBSCRIBE", default=None)
+    NOTIFY_TEMPLATE_HELP_DESK = get_env("NOTIFY_TEMPLATE_HELP_DESK", default=None)
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = get_env(
+        "NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION", default=None
+    )
 
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.
@@ -455,6 +473,7 @@ class Dev(Webpack, Common):
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
+    EMAIL_ROOT_DOMAIN = "http://localhost:8000"
 
     @property
     def INSTALLED_APPS(self):
@@ -539,6 +558,10 @@ class Deployed(Build):
     DATABASE_name = get_secret("postgresql", "database-name")
     NOTIFY_SERVICE_ENABLED = True
     NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
+    PHE_COMMUNICATIONS_EMAIL = get_secret("notify", "phe-comms-email")
+    PHE_COMMUNICATIONS_NAME = get_secret("notify", "phe-comms-name")
+    PHE_HELP_DESK_EMAIL = get_secret("notify", "phe-help-desk-email")
+    CONSULTATION_COMMENT_ADDRESS = get_env("notify", "consultation-comment-address")
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
@@ -594,10 +617,11 @@ class Deployed(Build):
 
 
 class Stage(Deployed):
-    pass
+    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
 
 
 class Prod(Deployed):
+    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
     RAVEN_CONFIG = {"dsn": ""}
 
 

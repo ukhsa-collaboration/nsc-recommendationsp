@@ -82,7 +82,12 @@ def test_email_is_invalid_error_is_raised(form, email, valid_data):
 def test_data_is_valid_email_is_created(form, valid_data):
     res = submit_form(form, valid_data)
 
-    assert Email.objects.count() == 1
+    assert Email.objects.count() == 2
+    assert Email.objects.filter(
+        address=valid_data["email"],
+        template_id=settings.NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION,
+        context=valid_data,
+    )
     assert Email.objects.filter(
         address=settings.PHE_HELP_DESK_EMAIL,
         template_id=settings.NOTIFY_TEMPLATE_HELP_DESK,

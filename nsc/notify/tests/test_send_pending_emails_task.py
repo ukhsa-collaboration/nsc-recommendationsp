@@ -48,7 +48,7 @@ def test_emails_to_be_sent_exist_emails_are_sent_and_statuses_are_updated(
         email_address=email.address,
         template_id=email.template_id,
         personalisation=email.context,
-        reference=email.id,
+        reference=str(email.id),
     )
     assert email.status == Email.STATUS.sending
     assert email.attempts == 1
@@ -81,7 +81,7 @@ def test_notify_service_returns_an_error_error_is_logged_and_email_is_not_update
             email_address=email.address,
             template_id=email.template_id,
             personalisation=email.context,
-            reference=email.id,
+            reference=str(email.id),
         )
         assert email.status == status
         assert email.attempts == 1

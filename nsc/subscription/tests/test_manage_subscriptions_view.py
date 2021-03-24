@@ -1,4 +1,5 @@
 from itertools import chain
+from urllib.parse import urljoin
 
 from django.conf import settings
 from django.urls import reverse
@@ -75,12 +76,9 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
         address=sub.email,
         template_id=settings.NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION,
         context={
-            "manage_url": response.request.relative_url(
-                reverse(
-                    "subscription:public-manage",
-                    kwargs={"pk": sub.id, "token": get_object_signature(sub)},
-                )
-            )
+            "manage subscription url": urljoin(
+                response.request.host_url, sub.management_url
+            ),
         },
     ).exists()
     assert response.location == reverse(
@@ -107,8 +105,8 @@ def test_subscription_is_deleted(django_app, make_subscription):
         address=sub.email,
         template_id=settings.NOTIFY_TEMPLATE_UNSUBSCRIBE,
         context={
-            "resub_url": response.request.relative_url(
-                reverse("subscription:stakeholder-start")
+            "subscribe url": urljoin(
+                response.request.host_url, reverse("subscription:public-start")
             ),
         },
     ).exists()
