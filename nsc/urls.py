@@ -24,9 +24,16 @@ urlpatterns = [
     path("help-desk/", include("nsc.support.urls", namespace="support")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
-    # TODO remove once AD is in place.
-    path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
 ]
+
+if settings.AUTH_USE_ACTIVE_DIRECTORY:
+    urlpatterns += [
+        path("accounts/", include("django_auth_adfs.urls")),
+    ]
+else:
+    urlpatterns += [
+        path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
+    ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

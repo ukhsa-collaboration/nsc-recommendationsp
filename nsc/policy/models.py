@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from django.apps import apps
 from django.conf import settings
 from django.db import models
@@ -210,7 +212,11 @@ class Policy(TimeStampedModel):
         return ", ".join(map(lambda a: str(self.AGE_GROUPS[a]), self.ages))
 
     def get_email_context(self, **extra):
-        return {"url": self.get_public_url(), **extra}
+        return {
+            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
+            "policy": self.name,
+            **extra,
+        }
 
     def send_notifications(self, relation, template, extra_context=None):
         email_context = self.get_email_context(**(extra_context or {}))
@@ -219,7 +225,20 @@ class Policy(TimeStampedModel):
         existing_notification_emails = relation.values_list("address", flat=True)
         relation.add(
             *Email.objects.bulk_create(
-                Email(address=sub.email, template_id=template, context=email_context,)
+                Email(
+                    address=sub.email,
+                    template_id=template,
+                    context={
+                        **email_context,
+                        "manage subscription url": urljoin(
+                            settings.EMAIL_ROOT_DOMAIN, sub.management_url
+                        ),
+                        "subscribe url": urljoin(
+                            settings.EMAIL_ROOT_DOMAIN,
+                            reverse("subscription:public-start"),
+                        ),
+                    },
+                )
                 for sub in self.subscriptions.all().exclude(
                     email__in=existing_notification_emails
                 )
@@ -232,8 +251,9 @@ class Policy(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
         )
 
-    def send_decision_notifications(self, review_notification_relation):
+    def send_decision_notifications(self, review_notification_relation, extra_context):
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED,
+            extra_context,
         )

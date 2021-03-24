@@ -31,3 +31,4 @@ notifications-python-client
 python-dateutil
 requests
 html2markdown
+django-auth-adfs

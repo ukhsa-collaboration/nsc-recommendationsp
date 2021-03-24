@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.core.files.storage import default_storage
@@ -26,14 +28,21 @@ class ReviewQuerySet(models.QuerySet):
     def dates_confirmed(self):
         return self.filter(dates_confirmed=True)
 
+    def exclude_legacy(self):
+        return self.filter(is_legacy=False)
+
     def consultation_open(self):
-        return self.dates_confirmed().filter(consultation_start__lte=get_today())
+        return (
+            self.dates_confirmed()
+            .exclude_legacy()
+            .filter(consultation_start__lte=get_today())
+        )
 
     def published(self):
         return self.filter(published=True).order_by("-review_start")
 
     def in_progress(self):
-        return self.exclude(published=True)
+        return self.exclude_legacy().exclude(published=True)
 
     def open_for_comments(self):
         today = get_today()
@@ -70,6 +79,8 @@ class Review(TimeStampedModel):
 
     name = models.CharField(verbose_name=_("name"), max_length=100)
     slug = models.SlugField(verbose_name=_("slug"), max_length=100, unique=True)
+
+    is_legacy = models.BooleanField(default=False)
 
     review_type = ArrayField(
         models.CharField(max_length=10, choices=TYPE), verbose_name=_("type of review"),
@@ -324,7 +335,27 @@ class Review(TimeStampedModel):
         return super(Review, self).save(**kwargs)
 
     def get_email_context(self, **extra):
-        return {"review": self.name, "url": self.get_absolute_url(), **extra}
+        condition_names = list(p.name for p in self.policies.all())
+
+        formatted_start_date = (
+            self.consultation_start.strftime("%d %B %Y")
+            if self.consultation_start
+            else ""
+        )
+        formatted_end_date = (
+            self.consultation_end.strftime("%d %B %Y") if self.consultation_end else ""
+        )
+        return {
+            "review": self.name,
+            "policy list": "\n".join(f"* {c}" for c in condition_names),
+            "review manager full name": self.user.get_full_name(),
+            "consultation url": urljoin(
+                settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
+            ),
+            "consultation start date": formatted_start_date,
+            "consultation end date": formatted_end_date,
+            **extra,
+        }
 
     def send_notifications(
         self, relation, stakeholder_template, comms_template, extra_context=None
@@ -338,7 +369,7 @@ class Review(TimeStampedModel):
                 Email(
                     address=contact.email,
                     template_id=stakeholder_template,
-                    context=email_context,
+                    context={"recipient name": contact.name, **email_context},
                 )
                 for contact in Contact.objects.with_email()
                 .filter(stakeholder__in=self.stakeholders.all())
@@ -351,7 +382,10 @@ class Review(TimeStampedModel):
                 Email.objects.create(
                     address=settings.PHE_COMMUNICATIONS_EMAIL,
                     template_id=comms_template,
-                    context=email_context,
+                    context={
+                        "recipient name": settings.PHE_COMMUNICATIONS_NAME,
+                        **email_context,
+                    },
                 )
             )
 
@@ -377,7 +411,15 @@ class Review(TimeStampedModel):
 
         # send notifications to all subscribers to the conditions
         for policy in self.policies.all():
-            policy.send_decision_notifications(self.decision_published_notifications)
+            policy.send_decision_notifications(
+                self.decision_published_notifications,
+                {
+                    "review manager full name": self.user.get_full_name(),
+                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
+                    if self.consultation_end
+                    else "",
+                },
+            )
 
     @property
     def is_open(self):

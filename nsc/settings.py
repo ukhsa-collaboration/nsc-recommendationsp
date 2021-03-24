@@ -16,7 +16,15 @@ CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
 SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
 
 
-def get_env(name, default=None, required=False, cast=str):
+class NotSetClass:
+    def __bool__(self):
+        return False
+
+
+NotSet = NotSetClass()
+
+
+def get_env(name, default=NotSet, required=False, cast=str):
     """
     Get an environment variable
 
@@ -32,7 +40,7 @@ def get_env(name, default=None, required=False, cast=str):
     def _lookup(self):
         value = environ.get(name)
 
-        if value is None and default is not None:
+        if value is None and default is not NotSet:
             return default
 
         if value is None and required:
@@ -43,7 +51,7 @@ def get_env(name, default=None, required=False, cast=str):
     return property(_lookup)
 
 
-def get_secret(name, cast=str):
+def get_secret(*name, default=NotSet, required=True, cast=str):
     """
     Get a secret from disk
 
@@ -53,20 +61,28 @@ def get_secret(name, cast=str):
 
     Arguments:
 
-        name (str): Name of environment variable
+        name (str[]): Path to the environment variable
+        default (any): The value to use if not set
+        required (bool): Should an error be raised if the value is missing
         cast (Callable): function to call on extracted string value
     """
 
     # We don't want this to be called unless we're in a configuration which uses it
     def _lookup(self):
         if not SECRET_DIR:
-            raise ValueError(
-                f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
-            )
+            if required:
+                raise ValueError(
+                    f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
+                )
+            else:
+                return default
 
-        file = Path(SECRET_DIR) / name
+        file = Path(SECRET_DIR, *name)
         if not file.exists():
-            raise ValueError(f"Secret {file} not found")
+            if required:
+                raise ValueError(f"Secret {file} not found")
+            else:
+                return default
 
         value = file.read_text().strip()
         return cast(value)
@@ -132,6 +148,7 @@ class Common(Configuration):
         "django.contrib.contenttypes",
         "django.contrib.sessions",
         "django.contrib.messages",
+        "django_auth_adfs",
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "raven.contrib.django.raven_compat",
@@ -321,34 +338,95 @@ class Common(Configuration):
     }
 
     # Settings for the GDS Notify service for sending emails.
-    PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL")
-    PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL")
-    NOTIFY_SERVICE_ENABLED = False
-    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY")
-    CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS")
-    NOTIFY_TEMPLATE_CONSULTATION_INVITATION = get_env(
-        "NOTIFY_TEMPLATE_CONSULTATION_INVITATION"
+    PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
+    PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default=None)
+    PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL", default=None)
+    CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS", default=None)
+    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
+    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env(
+        "NOTIFY_TEMPLATE_CONSULTATION_OPEN", default=None
     )
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env("NOTIFY_TEMPLATE_CONSULTATION_OPEN")
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = get_env(
+        "NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS", default=None
+    )
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN"
+        "NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN", default=None
     )
     NOTIFY_TEMPLATE_DECISION_PUBLISHED = get_env("NOTIFY_TEMPLATE_DECISION_PUBLISHED")
     NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED"
+        "NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED", default=None
     )
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
-    NOTIFY_TEMPLATE_SUBSCRIBED = get_env("NOTIFY_TEMPLATE_SUBSCRIBED")
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env(
+        "NOTIFY_TEMPLATE_PUBLIC_COMMENT", default=None
+    )
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env(
+        "NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT", default=None
+    )
+    NOTIFY_TEMPLATE_SUBSCRIBED = get_env("NOTIFY_TEMPLATE_SUBSCRIBED", default=None)
     NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = get_env(
-        "NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION"
+        "NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION", default=None
     )
-    NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env("NOTIFY_TEMPLATE_UNSUBSCRIBE")
-    NOTIFY_TEMPLATE_HELP_DESK = get_env("NOTIFY_TEMPLATE_HELP_DESK")
+    NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env("NOTIFY_TEMPLATE_UNSUBSCRIBE", default=None)
+    NOTIFY_TEMPLATE_HELP_DESK = get_env("NOTIFY_TEMPLATE_HELP_DESK", default=None)
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = get_env(
+        "NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION", default=None
+    )
 
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.
     PROJECT_FEEDBACK_URL = ""
+
+    #
+    # Authentication
+    #
+    AUTH_USE_ACTIVE_DIRECTORY = bool(int(environ.get("AUTH_USE_ACTIVE_DIRECTORY", 0)))
+    ACTIVE_DIRECTORY_CLIENT_ID = get_secret(
+        "azure-ad", "client-id", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+    )
+    ACTIVE_DIRECTORY_CLIENT_SECRET = get_secret(
+        "azure-ad", "secret", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+    )
+    ACTIVE_DIRECTORY_TENANT_ID = get_secret(
+        "azure-ad", "tenant-id", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+    )
+    LOGIN_REDIRECT_URL = "/"
+
+    @property
+    def AUTHENTICATION_BACKENDS(self):
+        AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
+
+        if self.AUTH_USE_ACTIVE_DIRECTORY:
+            return AUTHENTICATION_BACKENDS + (
+                "django_auth_adfs.backend.AdfsAuthCodeBackend",
+            )
+
+        return AUTHENTICATION_BACKENDS
+
+    @property
+    def LOGIN_URL(self):
+        if self.AUTH_USE_ACTIVE_DIRECTORY:
+            return "django_auth_adfs:login"
+        else:
+            return "/accounts/login/"
+
+    @property
+    def AUTH_ADFS(self):
+        if not self.AUTH_USE_ACTIVE_DIRECTORY:
+            return None
+
+        return {
+            "AUDIENCE": self.ACTIVE_DIRECTORY_CLIENT_ID,
+            "CLIENT_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
+            "CLIENT_SECRET": self.ACTIVE_DIRECTORY_CLIENT_SECRET,
+            "CLAIM_MAPPING": {"email": "email"},
+            "USERNAME_CLAIM": "name",
+            "GROUPS_CLAIM": "roles",
+            "GROUP_TO_FLAG_MAPPING": {"is_staff": "admin", "is_superuser": "admin"},
+            "MIRROR_GROUPS": False,
+            "TENANT_ID": self.ACTIVE_DIRECTORY_TENANT_ID,
+            "RELYING_PARTY_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
+        }
 
 
 class Webpack:
@@ -395,6 +473,7 @@ class Dev(Webpack, Common):
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
+    EMAIL_ROOT_DOMAIN = "http://localhost:8000"
 
     @property
     def INSTALLED_APPS(self):
@@ -473,19 +552,24 @@ class Deployed(Build):
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
     # Some deployed settings are no longer env vars - collect from the secret store
-    SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
-    DATABASE_USER = get_secret("DATABASE_USER")
-    DATABASE_PASSWORD = get_secret("DATABASE_PASSWORD")
+    SECRET_KEY = get_secret("django", "secret-key")
+    DATABASE_USER = get_secret("postgresql", "database-password")
+    DATABASE_PASSWORD = get_secret("postgresql", "database-user")
+    DATABASE_name = get_secret("postgresql", "database-name")
     NOTIFY_SERVICE_ENABLED = True
-    NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
+    NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
+    PHE_COMMUNICATIONS_EMAIL = get_secret("notify", "phe-comms-email")
+    PHE_COMMUNICATIONS_NAME = get_secret("notify", "phe-comms-name")
+    PHE_HELP_DESK_EMAIL = get_secret("notify", "phe-help-desk-email")
+    CONSULTATION_COMMENT_ADDRESS = get_env("notify", "consultation-comment-address")
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
 
     # Settings for the S3 object store
-    AWS_S3_ENDPOINT_URL = get_secret("OBJECT_STORAGE_ENDPOINT_URL")
-    AWS_ACCESS_KEY_ID = get_secret("OBJECT_STORAGE_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = get_secret("OBJECT_STORAGE_SECRET_KEY")
+    AWS_S3_ENDPOINT_URL = get_secret("s3", "endpoint")
+    AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
+    AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
     AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
     AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
 
@@ -533,10 +617,11 @@ class Deployed(Build):
 
 
 class Stage(Deployed):
-    pass
+    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
 
 
 class Prod(Deployed):
+    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
     RAVEN_CONFIG = {"dsn": ""}
 
 

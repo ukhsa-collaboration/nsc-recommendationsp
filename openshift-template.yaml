@@ -208,6 +208,9 @@ objects:
             httpGet:
               path: "/_health/"
               port: 8080
+          envFrom:
+            - configMap:
+                name: notify
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -229,7 +232,7 @@ objects:
           - name: DJANGO_CONFIG_DIR
             value: "/run/configs/common"
           - name: DJANGO_SECRET_DIR
-            value: "/run/secrets/common"
+            value: "/run/secrets"
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
@@ -237,16 +240,40 @@ objects:
           - name: config-common
             mountPath: "/run/configs/common"
             readOnly: true
-          - name: secret-common
-            mountPath: "/run/secrets/common"
+          - name: secret-azure-ad
+            mountPath: "/run/secrets/azure-ad"
+            readOnly: true
+          - name: secret-psql
+            mountPath: "/run/secrets/postgresql"
+            readOnly: true
+          - name: secret-s3
+            mountPath: "/run/secrets/s3"
+            readOnly: true
+          - name: secret-notify
+            mountPath: "/run/secrets/notify"
+            readOnly: true
+          - name: config-notify
+            mountPath: "/run/configs/notify"
             readOnly: true
         volumes:
         - name: config-common
           configMap:
             name: "${NAME}"
-        - name: secret-common
+        - name: secret-azure-ad
           secret:
-            secretName: "${NAME}"
+            secretName: azure-ad
+        - name: secret-psql
+          secret:
+            secretName: postgresql
+        - name: secret-s3
+          secret:
+            secretName: s3
+        - name: secret-notify
+          secret:
+            secretName: notify
+        - name: config-notify
+          configMap:
+            name: notify
 #
 # Redis
 - kind: DeploymentConfig

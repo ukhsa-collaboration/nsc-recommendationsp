@@ -22,8 +22,14 @@ celery==4.4.2
     # via -r requirements.in
 certifi==2019.11.28
     # via requests
+cffi==1.14.5
+    # via cryptography
 chardet==3.0.4
     # via requests
+cryptography==3.4.6
+    # via django-auth-adfs
+django-auth-adfs==1.6.0
+    # via -r requirements.in
 django-clear-cache==0.3
     # via -r requirements.in
 django-configurations==2.2
@@ -43,6 +49,7 @@ django-storages==1.9.1
 django==2.2.19
     # via
     #   -r requirements.in
+    #   django-auth-adfs
     #   django-clear-cache
     #   django-filter
     #   django-model-utils
@@ -80,8 +87,12 @@ notifications-python-client==5.5.1
     # via -r requirements.in
 psycopg2-binary==2.8.4
     # via -r requirements.in
+pycparser==2.20
+    # via cffi
 pyjwt==1.7.1
-    # via notifications-python-client
+    # via
+    #   django-auth-adfs
+    #   notifications-python-client
 python-dateutil==2.8.1
     # via
     #   -r requirements.in
@@ -97,6 +108,7 @@ redis==3.4.1
 requests==2.23.0
     # via
     #   -r requirements.in
+    #   django-auth-adfs
     #   notifications-python-client
 s3transfer==0.3.3
     # via boto3
