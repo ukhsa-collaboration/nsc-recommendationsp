@@ -148,7 +148,7 @@ jmespath==0.9.5
     #   botocore
 kombu==4.6.8
     # via celery
-lxml==4.6.2
+lxml==4.6.3
     # via -r requirements.in
 markdown==3.2.1
     # via -r requirements.in
