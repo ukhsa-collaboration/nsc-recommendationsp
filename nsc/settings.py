@@ -1,4 +1,4 @@
-from os import environ
+from os import environ, walk
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -108,7 +108,9 @@ class Common(Configuration):
         If specified, add config dir to environment
         """
         if CONFIG_DIR:
-            envdir.Env(CONFIG_DIR)
+            for dirpath, dirnames, filenames in walk(CONFIG_DIR):
+                for dirname in dirnames:
+                    envdir.Env(Path(dirpath, dirname))
         super().pre_setup()
 
     # Name of the configuration class in use
