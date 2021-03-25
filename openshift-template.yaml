@@ -209,9 +209,6 @@ objects:
             httpGet:
               path: "/_health/"
               port: 8080
-          envFrom:
-            - configMap:
-                name: notify
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -308,9 +305,6 @@ objects:
         containers:
         - name: celery-worker
           image: " "
-          envFrom:
-            - configMap:
-                name: notify
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -330,7 +324,7 @@ objects:
                 name: "${NAME}"
                 key: APP_CONFIG
           - name: DJANGO_CONFIG_DIR
-            value: "/run/configs/common"
+            value: "/run/configs"
           - name: DJANGO_SECRET_DIR
             value: "/run/secrets"
           resources:
@@ -407,9 +401,6 @@ objects:
         containers:
         - name: celery-beat
           image: " "
-          envFrom:
-            - configMap:
-                name: notify
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -676,58 +667,3 @@ parameters:
   displayName: Consultation comment email address
   description: The email address where comments during the consultation period are sent
   value: 'screening.evidence@nhs.net'
-- name: NOTIFY_TEMPLATE_SUBSCRIBED
-  displayName: Subscribe email template
-  description: The notify template used when a user subscribes to email notifications
-  value: b22e2d9a-68cc-443a-9543-bd8e6ce8e94d
-- name: NOTIFY_TEMPLATE_UNSUBSCRIBE
-  displayName: Unsubscribe email template
-  description: The notify template used when a user unsubscribes from email notifications
-  value: 953bbb30-e2a1-473d-bab5-bbf0198d22de
-- name: NOTIFY_TEMPLATE_HELP_DESK
-  displayName: Help request template
-  description: The notify template used when a user contacts the help desk
-  value: d64c052c-5f53-46e2-9c83-74025a43ebc1
-- name: NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION
-  displayName: User help desck confirmation tempalte
-  description: The notify template used to confirm a request has been made to the help desk by the user
-  value: 11e2083c-0d70-425b-8fb6-6c8954b3d8e4
-- name: NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION
-  displayName: Unsubscribe email template
-  description: The notify template used when a user unsubscribes from email notifications
-  value: 95e8158e-55ec-469f-8286-a939b482e25a
-- name: NOTIFY_TEMPLATE_CONSULTATION_OPEN
-  displayName: Open consultation stakeholder notification
-  description: |-
-    The notify template used to send an email to a stakeholder when a review goes into open consultation
-  value: 45d682bb-8056-47b3-bb2b-00a4d7eb9bde
-- name: NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN
-  displayName: Open consultation subscriber notification
-  description: |-
-    The notify template used to send an email to a subscriber when a review goes into open consultation
-  value: 5397f864-c338-487f-b646-b63a5657808f
-- name: NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS
-  displayName: Open consultation comms notification
-  description: |-
-    The notify template used to send an email to a PHE Comms when a review goes into open consultation
-  value: c62e8459-72fe-4b25-88fc-a07a0c197ccb
-- name: NOTIFY_TEMPLATE_DECISION_PUBLISHED
-  displayName: Stakeholder decsision published
-  description: |-
-    The notify template used to send a notification to stakeholders when a decision is made on a policy
-    they are subscribed to
-  value: 03d86e2a-0e34-45c0-aee5-233e7f7bc837
-- name: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED
-  displayName: Subscriber decsision published
-  description: |-
-    The notify template used to send a notification to subscribers when a decision is made on a policy
-    they are subscribed to
-  value: 073c20e8-9797-41c8-af06-0dacec80fcfe
-- name: NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
-  displayName: Stakeholder review comment template
-  description: The notify template used when a stakeholder makes a comment on a review
-  value: e89d2890-caff-48bd-aa13-a365a0935d30
-- name: NOTIFY_TEMPLATE_PUBLIC_COMMENT
-  displayName: Stakeholder review public comment
-  description: The notify template used when a member of the public comments on a review
-  value: a6f0458d-1acf-4c15-ad8f-f2730ab62976

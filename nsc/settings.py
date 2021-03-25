@@ -311,8 +311,8 @@ class Common(Configuration):
     }
 
     # dont use the get_env function here as the property isn't read into the celery config correctly
-    REDIS_HOST = environ.get("REDIS_HOST", "127.0.0.1")
-    REDIS_PORT = int(environ.get("REDIS_PORT", 6379))
+    REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
+    REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
@@ -561,7 +561,6 @@ class Deployed(Build):
     PHE_COMMUNICATIONS_EMAIL = get_secret("notify", "phe-comms-email")
     PHE_COMMUNICATIONS_NAME = get_secret("notify", "phe-comms-name")
     PHE_HELP_DESK_EMAIL = get_secret("notify", "phe-help-desk-email")
-    CONSULTATION_COMMENT_ADDRESS = get_env("notify", "consultation-comment-address")
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
