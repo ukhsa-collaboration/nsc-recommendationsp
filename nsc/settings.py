@@ -560,9 +560,6 @@ class Deployed(Build):
     DATABASE_name = get_secret("postgresql", "database-name")
     NOTIFY_SERVICE_ENABLED = True
     NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
-    PHE_COMMUNICATIONS_EMAIL = get_secret("notify", "phe-comms-email")
-    PHE_COMMUNICATIONS_NAME = get_secret("notify", "phe-comms-name")
-    PHE_HELP_DESK_EMAIL = get_secret("notify", "phe-help-desk-email")
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
@@ -571,7 +568,7 @@ class Deployed(Build):
     AWS_S3_ENDPOINT_URL = get_secret("s3", "endpoint")
     AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
     AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
-    # AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=True)
+    AWS_STORAGE_BUCKET_NAME = get_env("OBJECT_STORAGE_BUCKET_NAME", required=False, default="bucket")
     # AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
 
     # ToDo: it's not clear whether any files uploaded to the server should be
