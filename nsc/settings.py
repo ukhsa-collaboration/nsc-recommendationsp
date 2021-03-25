@@ -15,6 +15,12 @@ CONFIGURATION = environ["DJANGO_CONFIGURATION"]
 CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
 SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
 
+# If specified, add config dir to environment
+if CONFIG_DIR:
+    for dirpath, dirnames, filenames in walk(CONFIG_DIR):
+        for dirname in dirnames:
+            envdir.Env(Path(dirpath, dirname))
+
 
 class NotSetClass:
     def __bool__(self):
@@ -102,17 +108,6 @@ def csv_to_list(value):
 
 
 class Common(Configuration):
-    @classmethod
-    def pre_setup(cls):
-        """
-        If specified, add config dir to environment
-        """
-        if CONFIG_DIR:
-            for dirpath, dirnames, filenames in walk(CONFIG_DIR):
-                for dirname in dirnames:
-                    envdir.Env(Path(dirpath, dirname))
-        super().pre_setup()
-
     # Name of the configuration class in use
     PROJECT_ENVIRONMENT_SLUG = "{}_{}".format(PROJECT_NAME, CONFIGURATION.lower())
 
