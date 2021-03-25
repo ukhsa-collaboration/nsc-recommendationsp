@@ -132,9 +132,6 @@ class Common(Configuration):
 
     MANAGERS = ADMINS
 
-    # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = get_env("DJANGO_SECRET_KEY", default=PROJECT_NAME)
-
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
@@ -469,6 +466,9 @@ class Webpack:
 
 
 class Dev(Webpack, Common):
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = get_env("DJANGO_SECRET_KEY", default=PROJECT_NAME)
+
     DEBUG = True
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "/tmp/app-emails"

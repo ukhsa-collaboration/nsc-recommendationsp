@@ -33,34 +33,35 @@ objects:
     DJANGO_CONFIGURATION: "${DJANGO_CONFIGURATION}"
     DATABASE_HOST: "${DATABASE_HOST}"
     DATABASE_PORT: "${DATABASE_PORT}"
-    DATABASE_NAME: "${DATABASE_NAME}"
     APP_MODULE: "${APP_MODULE}"
     APP_CONFIG: "${APP_CONFIG}"
     DJANGO_ADMINS: ""
     DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
     DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
     DJANGO_REDIS_PORT: "6379"
-    OBJECT_STORAGE_BUCKET_NAME: "${OBJECT_STORAGE_BUCKET_NAME}"
-    OBJECT_STORAGE_DOMAIN_NAME: "${OBJECT_STORAGE_DOMAIN_NAME}"
-    NOTIFY_TEMPLATE_CONSULTATION_INVITATION: "${NOTIFY_TEMPLATE_CONSULTATION_INVITATION}"
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT: "${NOTIFY_TEMPLATE_PUBLIC_COMMENT}"
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "${NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT}"
-    CONSULTATION_COMMENT_ADDRESS: "${CONSULTATION_COMMENT_ADDRESS}"
 
-#
-# Secrets
-#
-- kind: Secret
+- kind: ConfigMap
   apiVersion: v1
   metadata:
-    name: "${NAME}"
-  stringData:
-    DATABASE_USER: "${DATABASE_USER}"
-    DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
-    DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY}"
-    OBJECT_STORAGE_KEY_ID: "${OBJECT_STORAGE_KEY_ID}"
-    OBJECT_STORAGE_SECRET_KEY: "${OBJECT_STORAGE_SECRET_KEY}"
-    NOTIFY_SERVICE_API_KEY: "${NOTIFY_SERVICE_API_KEY}"
+    name: notify
+  data:
+    NOTIFY_TEMPLATE_UNSUBSCRIBE: "${NOTIFY_TEMPLATE_UNSUBSCRIBE}"
+    NOTIFY_TEMPLATE_HELP_DESK: "${NOTIFY_TEMPLATE_HELP_DESK}"
+    NOTIFY_TEMPLATE_SUBSCRIBED: "${NOTIFY_TEMPLATE_SUBSCRIBED}"
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION: "${NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION}"
+    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION: "${NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION}"
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN: "${NOTIFY_TEMPLATE_CONSULTATION_OPEN}"
+    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED: "${NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED}"
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "${NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT}"
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT: "${NOTIFY_TEMPLATE_PUBLIC_COMMENT}"
+    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN: "${NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN}"
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS: "${NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS}"
+    NOTIFY_TEMPLATE_DECISION_PUBLISHED: "${NOTIFY_TEMPLATE_DECISION_PUBLISHED}"
+    PHE_COMMUNICATIONS_EMAIL: "${PHE_COMMUNICATIONS_EMAIL}"
+    PHE_COMMUNICATIONS_NAME: "${PHE_COMMUNICATIONS_NAME}"
+    PHE_HELP_DESK_EMAIL: "${PHE_HELP_DESK_EMAIL}"
+    CONSULTATION_COMMENT_ADDRESS: "${CONSULTATION_COMMENT_ADDRESS}"
+
 #
 # ImageStreams
 #
@@ -274,6 +275,205 @@ objects:
         - name: config-notify
           configMap:
             name: notify
+
+# Celery worker application
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-celery-worker"
+    annotations:
+      description: Defines how to deploy the celery worker
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - celery-worker
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}:latest"
+    replicas: 1
+    selector:
+      name: "${NAME}-celery-worker"
+    template:
+      metadata:
+        name: "${NAME}-celery-worker"
+        labels:
+          name: "${NAME}-celery-worker"
+      spec:
+        containers:
+        - name: celery-worker
+          image: " "
+          envFrom:
+            - configMap:
+                name: notify
+          # Minimal env vars to get the project running - once started, settings will
+          # look in the mounted DJANGO_CONFIG_DIR
+          env:
+          - name: DJANGO_CONFIGURATION
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: DJANGO_CONFIGURATION
+          - name: APP_MODULE
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: APP_MODULE
+          - name: APP_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: APP_CONFIG
+          - name: DJANGO_CONFIG_DIR
+            value: "/run/configs/common"
+          - name: DJANGO_SECRET_DIR
+            value: "/run/secrets"
+          resources:
+            limits:
+              memory: "${MEMORY_LIMIT}"
+          volumeMounts:
+          - name: config-common
+            mountPath: "/run/configs/common"
+            readOnly: true
+          - name: secret-azure-ad
+            mountPath: "/run/secrets/azure-ad"
+            readOnly: true
+          - name: secret-psql
+            mountPath: "/run/secrets/postgresql"
+            readOnly: true
+          - name: secret-s3
+            mountPath: "/run/secrets/s3"
+            readOnly: true
+          - name: secret-notify
+            mountPath: "/run/secrets/notify"
+            readOnly: true
+          - name: config-notify
+            mountPath: "/run/configs/notify"
+            readOnly: true
+        volumes:
+        - name: config-common
+          configMap:
+            name: "${NAME}"
+        - name: secret-azure-ad
+          secret:
+            secretName: azure-ad
+        - name: secret-psql
+          secret:
+            secretName: postgresql
+        - name: secret-s3
+          secret:
+            secretName: s3
+        - name: secret-notify
+          secret:
+            secretName: notify
+        - name: config-notify
+          configMap:
+            name: notify
+
+# Celery beat application
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-celery-beat"
+    annotations:
+      description: Defines how to deploy the celery beat scheduler
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - celery-beat
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}:latest"
+    replicas: 1
+    selector:
+      name: "${NAME}-celery-beat"
+    template:
+      metadata:
+        name: "${NAME}-celery-beat"
+        labels:
+          name: "${NAME}-celery-beat"
+      spec:
+        containers:
+        - name: celery-beat
+          image: " "
+          envFrom:
+            - configMap:
+                name: notify
+          # Minimal env vars to get the project running - once started, settings will
+          # look in the mounted DJANGO_CONFIG_DIR
+          env:
+          - name: DJANGO_CONFIGURATION
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: DJANGO_CONFIGURATION
+          - name: APP_MODULE
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: APP_MODULE
+          - name: APP_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: "${NAME}"
+                key: APP_CONFIG
+          - name: DJANGO_CONFIG_DIR
+            value: "/run/configs/common"
+          - name: DJANGO_SECRET_DIR
+            value: "/run/secrets"
+          resources:
+            limits:
+              memory: "${MEMORY_LIMIT}"
+          volumeMounts:
+          - name: config-common
+            mountPath: "/run/configs/common"
+            readOnly: true
+          - name: secret-azure-ad
+            mountPath: "/run/secrets/azure-ad"
+            readOnly: true
+          - name: secret-psql
+            mountPath: "/run/secrets/postgresql"
+            readOnly: true
+          - name: secret-s3
+            mountPath: "/run/secrets/s3"
+            readOnly: true
+          - name: secret-notify
+            mountPath: "/run/secrets/notify"
+            readOnly: true
+          - name: config-notify
+            mountPath: "/run/configs/notify"
+            readOnly: true
+        volumes:
+        - name: config-common
+          configMap:
+            name: "${NAME}"
+        - name: secret-azure-ad
+          secret:
+            secretName: azure-ad
+        - name: secret-psql
+          secret:
+            secretName: postgresql
+        - name: secret-s3
+          secret:
+            secretName: s3
+        - name: secret-notify
+          secret:
+            secretName: notify
+        - name: config-notify
+          configMap:
+            name: notify
+
 #
 # Redis
 - kind: DeploymentConfig
@@ -436,12 +636,6 @@ parameters:
   description: The exposed hostname that will route to the Django service, if left
     blank a value will be defaulted.
   value: ''
-- name: GITHUB_WEBHOOK_SECRET
-  displayName: GitHub Webhook Secret
-  description: Github trigger secret.  A difficult to guess string encoded as part
-    of the webhook URL.  Not encrypted.
-  generate: expression
-  from: "[a-zA-Z0-9]{40}"
 #
 # Postgresql
 - name: DATABASE_HOST
@@ -452,17 +646,6 @@ parameters:
   displayName: Database Port
   required: true
   value: "5432"
-- name: DATABASE_NAME
-  displayName: Database Name
-  required: true
-  value: default
-- name: DATABASE_USER
-  displayName: Database Username
-  required: true
-  value: django
-- name: DATABASE_PASSWORD
-  displayName: Database User Password
-  required: true
 #
 # Redis
 - name: REDIS_SERVICE_NAME
@@ -483,48 +666,68 @@ parameters:
   displayName: Django Configuration
   description: The name of the Django settings configuration to use (Stage or Prod)
   required: true
-- name: DJANGO_SECRET_KEY
-  displayName: Django Secret Key
-  description: Set this to a long random string.
-  generate: expression
-  from: "[\\w]{50}"
 - name: PIP_INDEX_URL
   displayName: Custom PyPi Index URL
   description: The custom PyPi index URL (optional)
   value: ''
-- name: OBJECT_STORAGE_KEY_ID
-  displayName: Object store key ID
-  description: The key ID to access the S3-compatible store
-  value: ''
-- name: OBJECT_STORAGE_SECRET_KEY
-  displayName: Object store secret key
-  description: The secret key to access the S3-compatible store
-  value: ''
-- name: OBJECT_STORAGE_BUCKET_NAME
-  displayName: Object store bucket name
-  description: The name of the bucket in the S3-compatible store
-  value: ''
-- name: OBJECT_STORAGE_DOMAIN_NAME
-  displayName: Object store domain
-  description: The domain of the S3-compatible store
-  value: ''
-- name: NOTIFY_SERVICE_API_KEY
-  displayName: API Key for the GOV.UK Notify service
-  description: Set this API key for the PHE NSC project.
-  value: ''
-- name: NOTIFY_TEMPLATE_CONSULTATION_INVITATION
-  displayName: Consultation invitation template identifier
-  description: Set this to UUID for the Consultation Invitation template from the GOV.UK Notify service
-  value: ''
-- name: NOTIFY_TEMPLATE_PUBLIC_COMMENT
-  displayName: Consultation public comment template identifier
-  description: Set this to UUID for the Consultation public comment template from the GOV.UK Notify service
-  value: ''
-- name: NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
-  displayName: Consultation stakeholder comment template identifier
-  description: Set this to UUID for the Consultation stakeholder comment template from the GOV.UK Notify service
-  value: ''
+#
+# notify
 - name: CONSULTATION_COMMENT_ADDRESS
   displayName: Consultation comment email address
   description: The email address where comments during the consultation period are sent
   value: 'screening.evidence@nhs.net'
+- name: NOTIFY_TEMPLATE_SUBSCRIBED
+  displayName: Subscribe email template
+  description: The notify template used when a user subscribes to email notifications
+  value: b22e2d9a-68cc-443a-9543-bd8e6ce8e94d
+- name: NOTIFY_TEMPLATE_UNSUBSCRIBE
+  displayName: Unsubscribe email template
+  description: The notify template used when a user unsubscribes from email notifications
+  value: 953bbb30-e2a1-473d-bab5-bbf0198d22de
+- name: NOTIFY_TEMPLATE_HELP_DESK
+  displayName: Help request template
+  description: The notify template used when a user contacts the help desk
+  value: d64c052c-5f53-46e2-9c83-74025a43ebc1
+- name: NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION
+  displayName: User help desck confirmation tempalte
+  description: The notify template used to confirm a request has been made to the help desk by the user
+  value: 11e2083c-0d70-425b-8fb6-6c8954b3d8e4
+- name: NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION
+  displayName: Unsubscribe email template
+  description: The notify template used when a user unsubscribes from email notifications
+  value: 95e8158e-55ec-469f-8286-a939b482e25a
+- name: NOTIFY_TEMPLATE_CONSULTATION_OPEN
+  displayName: Open consultation stakeholder notification
+  description: |-
+    The notify template used to send an email to a stakeholder when a review goes into open consultation
+  value: 45d682bb-8056-47b3-bb2b-00a4d7eb9bde
+- name: NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN
+  displayName: Open consultation subscriber notification
+  description: |-
+    The notify template used to send an email to a subscriber when a review goes into open consultation
+  value: 5397f864-c338-487f-b646-b63a5657808f
+- name: NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS
+  displayName: Open consultation comms notification
+  description: |-
+    The notify template used to send an email to a PHE Comms when a review goes into open consultation
+  value: c62e8459-72fe-4b25-88fc-a07a0c197ccb
+- name: NOTIFY_TEMPLATE_DECISION_PUBLISHED
+  displayName: Stakeholder decsision published
+  description: |-
+    The notify template used to send a notification to stakeholders when a decision is made on a policy
+    they are subscribed to
+  value: 03d86e2a-0e34-45c0-aee5-233e7f7bc837
+- name: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED
+  displayName: Subscriber decsision published
+  description: |-
+    The notify template used to send a notification to subscribers when a decision is made on a policy
+    they are subscribed to
+  value: 073c20e8-9797-41c8-af06-0dacec80fcfe
+- name: NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
+  displayName: Stakeholder review comment template
+  description: The notify template used when a stakeholder makes a comment on a review
+  value: e89d2890-caff-48bd-aa13-a365a0935d30
+- name: NOTIFY_TEMPLATE_PUBLIC_COMMENT
+  displayName: Stakeholder review public comment
+  description: The notify template used when a member of the public comments on a review
+  value: a6f0458d-1acf-4c15-ad8f-f2730ab62976
