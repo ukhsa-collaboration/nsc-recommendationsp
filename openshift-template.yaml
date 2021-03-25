@@ -289,7 +289,7 @@ objects:
         containers:
         - name: celery-worker
           image: " "
-          entrypoint:
+          command:
             - "celery"
           args:
             - "worker"
@@ -397,7 +397,7 @@ objects:
         containers:
         - name: celery-beat
           image: " "
-          entrypoint:
+          command:
             - "celery"
           args:
             - "beat"
@@ -634,7 +634,7 @@ parameters:
   displayName: Application Hostname
   description: The exposed hostname that will route to the Django service, if left
     blank a value will be defaulted.
-  value: ''
+  value: 'uk-nsc.gov.uk'
 #
 # Postgresql
 - name: DATABASE_HOST

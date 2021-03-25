@@ -557,7 +557,7 @@ class Deployed(Build):
     SECRET_KEY = get_secret("django", "secret-key")
     DATABASE_USER = get_secret("postgresql", "database-user")
     DATABASE_PASSWORD = get_secret("postgresql", "database-password")
-    DATABASE_name = get_secret("postgresql", "database-name")
+    DATABASE_NAME = get_secret("postgresql", "database-name")
     NOTIFY_SERVICE_ENABLED = True
     NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
 
