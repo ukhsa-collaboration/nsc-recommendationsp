@@ -555,8 +555,8 @@ class Deployed(Build):
 
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")
-    DATABASE_USER = get_secret("postgresql", "database-password")
-    DATABASE_PASSWORD = get_secret("postgresql", "database-user")
+    DATABASE_USER = get_secret("postgresql", "database-user")
+    DATABASE_PASSWORD = get_secret("postgresql", "database-password")
     DATABASE_name = get_secret("postgresql", "database-name")
     NOTIFY_SERVICE_ENABLED = True
     NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
