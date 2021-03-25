@@ -40,28 +40,6 @@ objects:
     DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
     DJANGO_REDIS_PORT: "6379"
 
-- kind: ConfigMap
-  apiVersion: v1
-  metadata:
-    name: notify
-  data:
-    NOTIFY_TEMPLATE_UNSUBSCRIBE: "${NOTIFY_TEMPLATE_UNSUBSCRIBE}"
-    NOTIFY_TEMPLATE_HELP_DESK: "${NOTIFY_TEMPLATE_HELP_DESK}"
-    NOTIFY_TEMPLATE_SUBSCRIBED: "${NOTIFY_TEMPLATE_SUBSCRIBED}"
-    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION: "${NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION}"
-    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION: "${NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION}"
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN: "${NOTIFY_TEMPLATE_CONSULTATION_OPEN}"
-    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED: "${NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED}"
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "${NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT}"
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT: "${NOTIFY_TEMPLATE_PUBLIC_COMMENT}"
-    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN: "${NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN}"
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS: "${NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS}"
-    NOTIFY_TEMPLATE_DECISION_PUBLISHED: "${NOTIFY_TEMPLATE_DECISION_PUBLISHED}"
-    PHE_COMMUNICATIONS_EMAIL: "${PHE_COMMUNICATIONS_EMAIL}"
-    PHE_COMMUNICATIONS_NAME: "${PHE_COMMUNICATIONS_NAME}"
-    PHE_HELP_DESK_EMAIL: "${PHE_HELP_DESK_EMAIL}"
-    CONSULTATION_COMMENT_ADDRESS: "${CONSULTATION_COMMENT_ADDRESS}"
-
 #
 # ImageStreams
 #
@@ -238,6 +216,9 @@ objects:
           - name: config-common
             mountPath: "/run/configs/common"
             readOnly: true
+          - name: secret-django
+            mountPath: "/run/secrets/django"
+            readOnly: true
           - name: secret-azure-ad
             mountPath: "/run/secrets/azure-ad"
             readOnly: true
@@ -257,6 +238,9 @@ objects:
         - name: config-common
           configMap:
             name: "${NAME}"
+        - name: secret-django
+          secret:
+            secretName: django
         - name: secret-azure-ad
           secret:
             secretName: azure-ad
@@ -305,6 +289,12 @@ objects:
         containers:
         - name: celery-worker
           image: " "
+          entrypoint:
+            - "celery"
+          args:
+            - "worker"
+            - "-A"
+            - "nsc"
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -334,6 +324,9 @@ objects:
           - name: config-common
             mountPath: "/run/configs/common"
             readOnly: true
+          - name: secret-django
+            mountPath: "/run/secrets/django"
+            readOnly: true
           - name: secret-azure-ad
             mountPath: "/run/secrets/azure-ad"
             readOnly: true
@@ -353,6 +346,9 @@ objects:
         - name: config-common
           configMap:
             name: "${NAME}"
+        - name: secret-django
+          secret:
+            secretName: django
         - name: secret-azure-ad
           secret:
             secretName: azure-ad
@@ -401,6 +397,12 @@ objects:
         containers:
         - name: celery-beat
           image: " "
+          entrypoint:
+            - "celery"
+          args:
+            - "beat"
+            - "-A"
+            - "nsc"
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -430,6 +432,9 @@ objects:
           - name: config-common
             mountPath: "/run/configs/common"
             readOnly: true
+          - name: secret-django
+            mountPath: "/run/secrets/django"
+            readOnly: true
           - name: secret-azure-ad
             mountPath: "/run/secrets/azure-ad"
             readOnly: true
@@ -449,6 +454,9 @@ objects:
         - name: config-common
           configMap:
             name: "${NAME}"
+        - name: secret-django
+          secret:
+            secretName: django
         - name: secret-azure-ad
           secret:
             secretName: azure-ad
