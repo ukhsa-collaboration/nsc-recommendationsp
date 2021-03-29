@@ -55,6 +55,7 @@ click==7.1.1
 coverage==5.0.4
     # via pytest-cov
 cryptography==3.4.6
+    # via
     #   django-auth-adfs
     #   paramiko
 decorator==4.4.2
@@ -204,7 +205,7 @@ pycparser==2.20
     # via cffi
 pyflakes==2.1.1
     # via flake8
-pygments==2.6.1
+pygments==2.7.4
     # via
     #   ipython
     #   sphinx
