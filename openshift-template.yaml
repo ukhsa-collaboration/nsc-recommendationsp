@@ -212,6 +212,8 @@ objects:
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
+            request:
+              memory: "${MEMORY_LIMIT}"
           volumeMounts:
           - name: config-common
             mountPath: "/run/configs/common"
@@ -295,6 +297,8 @@ objects:
             - "worker"
             - "-A"
             - "nsc"
+            - "--concurrency"
+            - "2"
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
@@ -319,6 +323,8 @@ objects:
             value: "/run/secrets"
           resources:
             limits:
+              memory: "${MEMORY_LIMIT}"
+            request:
               memory: "${MEMORY_LIMIT}"
           volumeMounts:
           - name: config-common
@@ -428,6 +434,8 @@ objects:
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
+            request:
+              memory: "${MEMORY_LIMIT}"
           volumeMounts:
           - name: config-common
             mountPath: "/run/configs/common"
@@ -512,7 +520,9 @@ objects:
             protocol: TCP
           resources:
             limits:
-              memory: "${MEMORY_REDIS_LIMIT}"
+              memory: "${MEMORY_LIMIT}"
+            request:
+              memory: "${MEMORY_LIMIT}"
           readinessProbe:
             exec:
               command:
