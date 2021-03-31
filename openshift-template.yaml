@@ -161,15 +161,29 @@ objects:
         from:
           kind: ImageStreamTag
           name: "${NAME}:latest"
-    replicas: 1
+    replicas: 3
     selector:
       name: "${NAME}"
+      matchLabels:
+        name: "${NAME}"
     template:
       metadata:
         name: "${NAME}"
         labels:
           name: "${NAME}"
       spec:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: name
+                        operator: In
+                        values:
+                          - "${NAME}"
+                  topologyKey: "kubernetes.io/hostname"
         containers:
         - name: django-webpack
           image: " "
@@ -259,6 +273,16 @@ objects:
           configMap:
             name: notify
 
+- apiVersion: policy/v1beta1
+  kind: PodDisruptionBudget
+  metadata:
+    name: "${NAME}-pdb"
+  spec:
+    minAvailable: 2
+    selector:
+      matchLabels:
+        app: "${NAME}"
+
 # Celery worker application
 - kind: DeploymentConfig
   apiVersion: v1
@@ -279,7 +303,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: "${NAME}:latest"
-    replicas: 1
+    replicas: 2
     selector:
       name: "${NAME}-celery-worker"
     template:
