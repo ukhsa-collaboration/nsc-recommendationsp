@@ -99,6 +99,8 @@ def test_consultation_start_set_from_fields():
         data = form_for_review(review)
 
         data["consultation_start_day"] = tomorrow.day
+        data["consultation_start_month"] = tomorrow.month
+        data["consultation_start_year"] = tomorrow.year
 
         form = ReviewDatesForm(instance=review, data=data)
 
