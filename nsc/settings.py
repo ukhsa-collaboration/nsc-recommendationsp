@@ -498,6 +498,9 @@ class Build(Common):
     Settings for use when building containers for deployment
     """
 
+    # Fake secret key so that collect static can be ran
+    SECRET_KEY = "not a real secret key"
+
     # New paths
     PUBLIC_ROOT = BASE_DIR.parent / "public"
     STATIC_ROOT = PUBLIC_ROOT / "static"

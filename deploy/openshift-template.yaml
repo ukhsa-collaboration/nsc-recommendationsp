@@ -60,37 +60,7 @@ objects:
 #
 # BuildConfigs
 #
-# Build $NAME-webpack-build, to build the webpack resources
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-    name: "${NAME}-webpack-build"
-    annotations:
-      description: Defines how to build the webpack builder
-  spec:
-    source:
-      type: Git
-      git:
-        uri: ${SOURCE_REPOSITORY_URL}
-        ref: ${SOURCE_REPOSITORY_REF}
-      contextDir: ${CONTEXT_DIR}
-    strategy:
-      type: Source
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: nodejs:${NODE_VERSION}
-        incremental: true
-    output:
-      to:
-        kind: ImageStreamTag
-        name: "${NAME}-webpack-build:latest"
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-#
-# Build django-webpack using webpack-build as a source
+
 - kind: BuildConfig
   apiVersion: v1
   metadata:
@@ -105,26 +75,9 @@ objects:
         uri: "${SOURCE_REPOSITORY_URL}"
         ref: "${SOURCE_REPOSITORY_REF}"
       contextDir: "${CONTEXT_DIR}"
-      images:
-        - from:
-            kind: ImageStreamTag
-            name: "${NAME}-webpack-build:latest"
-          paths:
-            - sourcePath: /opt/app-root/src/frontend/dist
-              destinationDir: frontend
     strategy:
-      type: Source
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: python:${PYTHON_VERSION}
-        env:
-        - name: DJANGO_CONFIGURATION
-          value: "Build"
-        - name: PIP_INDEX_URL
-          value: "${PIP_INDEX_URL}"
-        incremental: true
+      dockerStrategy:
+        dockerfilePath: "deploy/Dockerfile"
     output:
       to:
         kind: ImageStreamTag
@@ -132,11 +85,10 @@ objects:
     triggers:
     - type: ConfigChange
     - type: ImageChange
-    - type: ImageChange
       imageChange:
         from:
           kind: ImageStreamTag
-          name: "${NAME}-webpack-build:latest"
+          name: "python:${PYTHON_VERSION}"
 #
 # DeploymentConfig
 #
@@ -175,15 +127,13 @@ objects:
         affinity:
           podAntiAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
-              - weight: 100
-                podAffinityTerm:
-                  labelSelector:
-                    matchExpressions:
-                      - key: name
-                        operator: In
-                        values:
-                          - "${NAME}"
-                  topologyKey: "kubernetes.io/hostname"
+              - labelSelector:
+                  matchExpressions:
+                    - key: name
+                      operator: In
+                      values:
+                        - "${NAME}"
+                topologyKey: "kubernetes.io/hostname"
         containers:
         - name: django-webpack
           image: " "
@@ -209,16 +159,6 @@ objects:
               configMapKeyRef:
                 name: "${NAME}"
                 key: DJANGO_CONFIGURATION
-          - name: APP_MODULE
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: APP_MODULE
-          - name: APP_CONFIG
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: APP_CONFIG
           - name: DJANGO_CONFIG_DIR
             value: "/run/configs/common"
           - name: DJANGO_SECRET_DIR
@@ -226,7 +166,7 @@ objects:
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
-            request:
+            requests:
               memory: "${MEMORY_LIMIT}"
           volumeMounts:
           - name: config-common
@@ -348,7 +288,7 @@ objects:
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
-            request:
+            requests:
               memory: "${MEMORY_LIMIT}"
           volumeMounts:
           - name: config-common
@@ -458,7 +398,7 @@ objects:
           resources:
             limits:
               memory: "${MEMORY_LIMIT}"
-            request:
+            requests:
               memory: "${MEMORY_LIMIT}"
           volumeMounts:
           - name: config-common
