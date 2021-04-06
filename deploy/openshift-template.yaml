@@ -76,6 +76,7 @@ objects:
         ref: "${SOURCE_REPOSITORY_REF}"
       contextDir: "${CONTEXT_DIR}"
     strategy:
+      type: Source
       dockerStrategy:
         dockerfilePath: "deploy/Dockerfile"
     output:
@@ -255,9 +256,8 @@ objects:
         containers:
         - name: celery-worker
           image: " "
-          command:
-            - "celery"
           args:
+            - "celery"
             - "worker"
             - "-A"
             - "nsc"
@@ -367,9 +367,8 @@ objects:
         containers:
         - name: celery-beat
           image: " "
-          command:
-            - "celery"
           args:
+            - "celery"
             - "beat"
             - "-A"
             - "nsc"

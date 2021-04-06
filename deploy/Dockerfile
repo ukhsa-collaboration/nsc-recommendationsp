@@ -52,4 +52,5 @@ USER 1001
 
 RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput
 
-CMD ["./deploy/entrypoint.sh"]
+ENTRYPOINT ["./deploy/entrypoint.sh"]
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "nsc.wsgi"]
