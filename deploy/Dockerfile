@@ -3,20 +3,21 @@
 #
 FROM node:12.14.1 as FRONT_END_BUILD
 
+ENV SRC_ROOT=/opt/app-root/src/
+
 # get the pinned version of yarn
 RUN npm install -g yarn@1.21.1 --force
 
-
-WORKDIR /opt/apt-root/src/
+WORKDIR $SRC_ROOT
 
 # install yarn requirements
-COPY package.json /opt/apt-root/src/
-COPY yarn.lock /opt/apt-root/src/
+COPY package.json ${SRC_ROOT}
+COPY yarn.lock ${SRC_ROOT}
 RUN yarn install --pure-lockfile
 
 # build the output
-COPY frontend /opt/apt-root/src/frontend
-COPY webpack.config.js /opt/apt-root/src/
+COPY frontend ${SRC_ROOT}frontend
+COPY webpack.config.js ${SRC_ROOT}
 RUN yarn build
 
 #
