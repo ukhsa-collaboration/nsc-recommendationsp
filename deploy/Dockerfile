@@ -25,7 +25,7 @@ RUN yarn build
 
 FROM python:3.6
 
-ENV SRC_ROOT=/opt/apt-root/src/
+ENV SRC_ROOT=/opt/app-root/src/
 ENV RUN_USER=1001
 
 RUN mkdir $SRC_ROOT -p; chown -R $RUN_USER:$RUN_USER $SRC_ROOT..
