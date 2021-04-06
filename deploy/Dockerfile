@@ -46,11 +46,11 @@ COPY requirements.txt ${SRC_ROOT}requirements.txt
 RUN pip install -r ${SRC_ROOT}requirements.txt
 
 # copy the source to the container
-COPY --chown=1001:1001 . ${SRC_ROOT}
+COPY --chown=${RUN_USER}:${RUN_USER} . ${SRC_ROOT}
 
-USER 1001
-
-RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput
+RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput; chown -R ${RUN_USER}:${RUN_USER} ${SRC_ROOT}../public
 
 ENTRYPOINT ["./deploy/entrypoint.sh"]
 CMD ["gunicorn", "-c", "gunicorn.conf.py", "nsc.wsgi"]
+
+USER 1001
