@@ -27,7 +27,10 @@ RUN yarn build
 FROM python:3.6
 
 ENV SRC_ROOT=/opt/app-root/src/
-ENV RUN_USER=1001
+
+# create a non root user to run as
+ENV RUN_USER=django
+RUN groupadd -r $RUN_USER && useradd --no-log-init -r -g $RUN_USER $RUN_USER
 
 RUN mkdir $SRC_ROOT -p; chown -R $RUN_USER:$RUN_USER $SRC_ROOT..
 WORKDIR $SRC_ROOT
@@ -49,9 +52,8 @@ RUN pip install -r ${SRC_ROOT}requirements.txt
 # copy the source to the container
 COPY --chown=${RUN_USER}:${RUN_USER} . ${SRC_ROOT}
 
+USER $RUN_USER
 RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput; chown -R ${RUN_USER}:${RUN_USER} ${SRC_ROOT}../public
 
 ENTRYPOINT ["./deploy/entrypoint.sh"]
 CMD ["gunicorn", "-c", "gunicorn.conf.py", "nsc.wsgi"]
-
-USER 1001
