@@ -28,11 +28,7 @@ FROM python:3.6
 
 ENV SRC_ROOT=/opt/app-root/src/
 
-# create a non root user to run as
-ENV RUN_USER=django
-RUN groupadd -r $RUN_USER && useradd --no-log-init -r -g $RUN_USER $RUN_USER
-
-RUN mkdir $SRC_ROOT -p; chown -R $RUN_USER:$RUN_USER $SRC_ROOT..
+RUN mkdir $SRC_ROOT -p
 WORKDIR $SRC_ROOT
 
 # Build process dependencies
@@ -43,17 +39,23 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # copy the output from the frontend build
-COPY --from=FRONT_END_BUILD --chown=1001:1001 ${SRC_ROOT}frontend/dist ${SRC_ROOT}frontend/dist
+COPY --from=FRONT_END_BUILD ${SRC_ROOT}frontend/dist ${SRC_ROOT}frontend/dist
 
 # install python dependencies
 COPY requirements.txt ${SRC_ROOT}requirements.txt
 RUN pip install -r ${SRC_ROOT}requirements.txt
 
 # copy the source to the container
-COPY --chown=${RUN_USER}:${RUN_USER} . ${SRC_ROOT}
+COPY . ${SRC_ROOT}
 
-USER $RUN_USER
-RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput; chown -R ${RUN_USER}:${RUN_USER} ${SRC_ROOT}../public
+RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput
 
 ENTRYPOINT ["./deploy/entrypoint.sh"]
 CMD ["gunicorn", "-c", "gunicorn.conf.py", "nsc.wsgi"]
+
+# setup the container user so that is can be ran by an arbitrary user
+# https://docs.openshift.com/container-platform/3.3/creating_images/guidelines.html#openshift-container-platform-specific-guidelines
+RUN chgrp -R 0 ${SRC_ROOT}.. && \
+    chmod -R g=u ${SRC_ROOT}..
+
+USER 1001
