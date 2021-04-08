@@ -61,6 +61,36 @@ objects:
 # BuildConfigs
 #
 
+# Build $NAME-webpack-build, to build the webpack resources
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-webpack-build"
+    annotations:
+      description: Defines how to build the webpack builder
+  spec:
+    source:
+      type: Git
+      git:
+        uri: ${SOURCE_REPOSITORY_URL}
+        ref: ${SOURCE_REPOSITORY_REF}
+      contextDir: ${CONTEXT_DIR}
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: nodejs:${NODE_VERSION}
+        incremental: true
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${NAME}-webpack-build:latest"
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+
 - kind: BuildConfig
   apiVersion: v1
   metadata:
@@ -75,10 +105,20 @@ objects:
         uri: "${SOURCE_REPOSITORY_URL}"
         ref: "${SOURCE_REPOSITORY_REF}"
       contextDir: "${CONTEXT_DIR}"
+      images:
+        - from:
+            kind: ImageStreamTag
+            name: "${NAME}-webpack-build:latest"
+          paths:
+            - sourcePath: /opt/app-root/src/frontend/dist
+              destinationDir: frontend
     strategy:
       type: Source
       dockerStrategy:
         dockerfilePath: "deploy/Dockerfile"
+        from:
+          kind: ImageStreamTag
+          name: "python:${PYTHON_VERSION}"
     output:
       to:
         kind: ImageStreamTag
@@ -86,10 +126,11 @@ objects:
     triggers:
     - type: ConfigChange
     - type: ImageChange
+    - type: ImageChange
       imageChange:
         from:
           kind: ImageStreamTag
-          name: "python:${PYTHON_VERSION}"
+          name: "${NAME}-webpack-build:latest"
 #
 # DeploymentConfig
 #
