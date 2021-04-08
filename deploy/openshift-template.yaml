@@ -118,6 +118,7 @@ objects:
         dockerfilePath: "deploy/Dockerfile"
         from:
           kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
           name: "python:${PYTHON_VERSION}"
     output:
       to:

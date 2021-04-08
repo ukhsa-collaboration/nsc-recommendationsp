@@ -7,7 +7,9 @@
 #       This is handled in openshift
 #
 
-FROM python:3.6
+FROM centos/python-36-centos7
+
+USER root
 
 ENV SHELL=/bin/bash
 ENV SRC_ROOT=/opt/app-root/src/
@@ -15,14 +17,8 @@ ENV SRC_ROOT=/opt/app-root/src/
 RUN mkdir $SRC_ROOT -p
 WORKDIR $SRC_ROOT
 
-# Build process dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    gcc \
-    libc6-dev \
-    && rm -rf /var/lib/apt/lists/*
-
 # install python dependencies
+RUN pip install -U pip
 COPY requirements.txt ${SRC_ROOT}requirements.txt
 RUN pip install -r ${SRC_ROOT}requirements.txt
 
