@@ -1,7 +1,7 @@
 #
 # Build the front end static files
 #
-FROM node:12.14.1 as FRONT_END_BUILD
+FROM image-registry.openshift-image-registry.svc:5000/openshift/node:12.14.1 as FRONT_END_BUILD
 
 ENV SRC_ROOT=/opt/app-root/src/
 
@@ -24,7 +24,7 @@ RUN yarn build
 # Build the backend image (incorporating the output from FRONT_END_BUILD)
 #
 
-FROM python:3.6
+FROM image-registry.openshift-image-registry.svc:5000/openshift/python:3.6
 
 ENV SHELL=/bin/bash
 ENV SRC_ROOT=/opt/app-root/src/
