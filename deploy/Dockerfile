@@ -26,6 +26,7 @@ RUN yarn build
 
 FROM python:3.6
 
+ENV SHELL=/bin/bash
 ENV SRC_ROOT=/opt/app-root/src/
 
 RUN mkdir $SRC_ROOT -p

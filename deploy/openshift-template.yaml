@@ -139,19 +139,25 @@ objects:
         - name: django-webpack
           image: " "
           ports:
-          - containerPort: 8080
+          - containerPort: 8000
           readinessProbe:
             timeoutSeconds: 3
             initialDelaySeconds: 3
             httpGet:
               path: "/_health/"
-              port: 8080
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: "${APPLICATION_DOMAIN}"
           livenessProbe:
             timeoutSeconds: 3
             initialDelaySeconds: 30
             httpGet:
               path: "/_health/"
-              port: 8080
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: "${APPLICATION_DOMAIN}"
           # Minimal env vars to get the project running - once started, settings will
           # look in the mounted DJANGO_CONFIG_DIR
           env:
