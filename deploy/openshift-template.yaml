@@ -181,13 +181,13 @@ objects:
         - name: django-webpack
           image: " "
           ports:
-          - containerPort: 8000
+          - containerPort: 8080
           readinessProbe:
             timeoutSeconds: 3
             initialDelaySeconds: 3
             httpGet:
               path: "/_health/"
-              port: 8000
+              port: 8080
               httpHeaders:
                 - name: Host
                   value: "${APPLICATION_DOMAIN}"
@@ -196,7 +196,7 @@ objects:
             initialDelaySeconds: 30
             httpGet:
               path: "/_health/"
-              port: 8000
+              port: 8080
               httpHeaders:
                 - name: Host
                   value: "${APPLICATION_DOMAIN}"
