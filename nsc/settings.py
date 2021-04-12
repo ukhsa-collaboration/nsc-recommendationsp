@@ -566,10 +566,12 @@ class Deployed(Build):
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
 
     # Settings for the S3 object store
-    AWS_S3_ENDPOINT_URL = get_secret("s3", "endpoint")
+    AWS_BUCKET_DOMAIN = get_secret("s3", "endpoint")
+    AWS_S3_ENDPOINT_URL = f"http://{AWS_BUCKET_DOMAIN}"
     AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
     AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
     AWS_STORAGE_BUCKET_NAME = get_env("s3", "bucket-name")
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_BUCKET_DOMAIN}"
     # AWS_S3_CUSTOM_DOMAIN = get_env("OBJECT_STORAGE_DOMAIN_NAME", required=True)
 
     # ToDo: it's not clear whether any files uploaded to the server should be
