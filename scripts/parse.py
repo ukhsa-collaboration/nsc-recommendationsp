@@ -1,5 +1,3 @@
-from itertools import chain
-
 import html2markdown
 
 
@@ -23,8 +21,7 @@ def node_is_parsable(node):
         return True
 
     return (
-        node.name not in unparsed_tags and
-        node.text.strip() != ""
+        node.name not in unparsed_tags and node.text.strip() != ""
     )
 
 

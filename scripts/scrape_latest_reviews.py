@@ -8,7 +8,6 @@ import datetime
 import json
 import re
 
-import html2markdown
 from django.contrib.auth import get_user_model
 
 import requests
