@@ -569,7 +569,7 @@ class Deployed(Build):
     AWS_BUCKET_DOMAIN = get_secret("s3", "endpoint")
     AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
     AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
-    AWS_STORAGE_BUCKET_NAME = get_env("s3", "bucket-name")
+    AWS_STORAGE_BUCKET_NAME = get_secret("s3", "bucket-name")
 
     @property
     def AWS_S3_ENDPOINT_URL(self):
