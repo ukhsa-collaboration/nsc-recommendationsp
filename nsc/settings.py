@@ -542,12 +542,6 @@ class Deployed(Build):
     # Django 3.0 only.
     SECURE_REFERRER_POLICY = "same-origin"
 
-    # Redirect all non-HTTPS requests to HTTPS.
-    SECURE_SSL_REDIRECT = True
-
-    # Allow the _healthz to be pinged by http
-    SECURE_REDIRECT_EXEMPT = ["^_health/$"]
-
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
