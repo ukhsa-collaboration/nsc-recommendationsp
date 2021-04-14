@@ -548,6 +548,79 @@ objects:
             tcpSocket:
               port: 6379
             timeoutSeconds: 1
+
+#
+# Redis
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${MEDIA_PROXY_SERVICE_NAME}"
+    annotations:
+      description: Defines how to deploy the media bucket proxy
+      template.alpha.openshift.io/wait-for-ready: "true"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${MEDIA_PROXY_SERVICE_NAME}"
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: "${MEDIA_PROXY_SERVICE_NAME}:latest"
+    replicas: 3
+    selector:
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
+    template:
+      metadata:
+        labels:
+          name: "${MEDIA_PROXY_SERVICE_NAME}"
+      spec:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                    - key: name
+                      operator: In
+                      values:
+                        - "${MEDIA_PROXY_SERVICE_NAME}"
+                topologyKey: "kubernetes.io/hostname"
+        containers:
+        - name: "${MEDIA_PROXY_SERVICE_NAME}"
+          image: " "
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              memory: "${MEMORY_LIMIT}"
+            request:
+              memory: "${MEMORY_LIMIT}"
+          readinessProbe:
+            initialDelaySeconds: 5
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 1
+          livenessProbe:
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 1
+
+- apiVersion: policy/v1beta1
+  kind: PodDisruptionBudget
+  metadata:
+    name: "${MEDIA_PROXY_SERVICE_NAME}-pdb"
+  spec:
+    minAvailable: 2
+    selector:
+      matchLabels:
+        app: "${MEDIA_PROXY_SERVICE_NAME}"
 #
 # Services
 #
@@ -566,6 +639,22 @@ objects:
       targetPort: 8080
     selector:
       name: "${NAME}"
+#
+# Media Bucket Proxy
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${MEDIA_PROXY_SERVICE_NAME}"
+    annotations:
+      description: Exposes and load balances the bucket proxy pods
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
 #
 # Redis
 - kind: Service
@@ -593,6 +682,23 @@ objects:
     to:
       kind: Service
       name: "${NAME}"
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: "${MEDIA_PROXY_SERVICE_NAME}"
+  spec:
+    # TODO: Uncomment this when domain is known
+    #host: "media.${APPLICATION_DOMAIN}"
+    to:
+      kind: Service
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
 #
 # Parameters
 #
@@ -672,6 +778,12 @@ parameters:
   displayName: Redis Service Name
   required: true
   value: redis
+#
+# Redis
+- name: MEDIA_PROXY_SERVICE_NAME
+  displayName: The name of the media bucket server name
+  required: true
+  value: media-bucket-proxy
 #
 # Django app
 - name: APP_MODULE
