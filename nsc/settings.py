@@ -564,6 +564,7 @@ class Deployed(Build):
     AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
     AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
     AWS_STORAGE_BUCKET_NAME = get_secret("s3", "bucket-name")
+    MEDIA_HOST_DOMAIN = get_env("MEDIA_HOST_DOMAIN")
 
     @property
     def AWS_S3_ENDPOINT_URL(self):
@@ -571,7 +572,7 @@ class Deployed(Build):
 
     @property
     def MEDIA_URL(self):
-        return f"https://{self.AWS_STORAGE_BUCKET_NAME}.{self.AWS_BUCKET_DOMAIN}/"
+        return f"https://{self.MEDIA_HOST_DOMAIN}/"
 
     # ToDo: it's not clear whether any files uploaded to the server should be
     #       cached since it's likely that an admin would want the ability to

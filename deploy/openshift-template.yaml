@@ -39,6 +39,7 @@ objects:
     DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
     DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
     DJANGO_REDIS_PORT: "6379"
+    MEDIA_HOST_DOMAIN: "${MEDIA_HOST_DOMAIN}"
 
 #
 # ImageStreams
@@ -692,7 +693,7 @@ objects:
     name: "${MEDIA_PROXY_SERVICE_NAME}"
   spec:
     # TODO: Uncomment this when domain is known
-    #host: "media.${APPLICATION_DOMAIN}"
+    #host: "${MEDIA_HOST_DOMAIN}"
     to:
       kind: Service
       name: "${MEDIA_PROXY_SERVICE_NAME}"
@@ -779,11 +780,15 @@ parameters:
   required: true
   value: redis
 #
-# Redis
+# Media Bucket Proxy
 - name: MEDIA_PROXY_SERVICE_NAME
   displayName: The name of the media bucket server name
   required: true
   value: media-bucket-proxy
+- name: MEDIA_HOST_DOMAIN
+  displayName: The public host of the media bucket proxy
+  reuired: true
+  value: media-bucket-proxy-uknscr-staging.apps.ocp-por.unix.phe.gov.uk
 #
 # Django app
 - name: APP_MODULE
