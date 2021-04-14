@@ -22,824 +22,832 @@ message: |-
   The following service(s) have been created in your project:
   ${NAME}, ${REDIS_SERVICE_NAME}.
 objects:
-#
-# ConfigMap
-#
-- kind: ConfigMap
-  apiVersion: v1
-  metadata:
-    name: "${NAME}"
-  data:
-    DJANGO_CONFIGURATION: "${DJANGO_CONFIGURATION}"
-    DATABASE_HOST: "${DATABASE_HOST}"
-    DATABASE_PORT: "${DATABASE_PORT}"
-    APP_MODULE: "${APP_MODULE}"
-    APP_CONFIG: "${APP_CONFIG}"
-    DJANGO_ADMINS: ""
-    DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
-    DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
-    DJANGO_REDIS_PORT: "6379"
-    MEDIA_HOST_DOMAIN: "${MEDIA_HOST_DOMAIN}"
+  #
+  # ConfigMap
+  #
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+    data:
+      DJANGO_CONFIGURATION: "${DJANGO_CONFIGURATION}"
+      DATABASE_HOST: "${DATABASE_HOST}"
+      DATABASE_PORT: "${DATABASE_PORT}"
+      APP_MODULE: "${APP_MODULE}"
+      APP_CONFIG: "${APP_CONFIG}"
+      DJANGO_ADMINS: ""
+      DJANGO_ALLOWED_HOSTS: "${APPLICATION_DOMAIN}"
+      DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
+      DJANGO_REDIS_PORT: "6379"
+      MEDIA_HOST_DOMAIN: "${MEDIA_HOST_DOMAIN}"
 
-#
-# ImageStreams
-#
-#   nodejs -> $NAME-webpack-build + python -> $NAME
-#
-# webpack-build: image based on nodejs which runs webpack
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-    name: "${NAME}-webpack-build"
-#
-# $NAME: image based on python with source from webpack-build
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-    # Final container which will run the Django project
-    name: "${NAME}"
-#
-# BuildConfigs
-#
+  #
+  # ImageStreams
+  #
+  #   nodejs -> $NAME-webpack-build + python -> $NAME
+  #
+  # webpack-build: image based on nodejs which runs webpack
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: "${NAME}-webpack-build"
+  #
+  # $NAME: image based on python with source from webpack-build
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      # Final container which will run the Django project
+      name: "${NAME}"
+  #
+  # BuildConfigs
+  #
 
-# Build $NAME-webpack-build, to build the webpack resources
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-    name: "${NAME}-webpack-build"
-    annotations:
-      description: Defines how to build the webpack builder
-  spec:
-    source:
-      type: Git
-      git:
-        uri: ${SOURCE_REPOSITORY_URL}
-        ref: ${SOURCE_REPOSITORY_REF}
-      contextDir: ${CONTEXT_DIR}
-    strategy:
-      type: Source
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: nodejs:${NODE_VERSION}
-        incremental: true
-    output:
-      to:
-        kind: ImageStreamTag
-        name: "${NAME}-webpack-build:latest"
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-    name: "${MEDIA_PROXY_SERVICE_NAME}"
-    annotations:
-      description: Defines how to build the media bucket proxy
-  spec:
-    source:
-      type: Git
-      git:
-        uri: ${SOURCE_REPOSITORY_URL}
-        ref: ${SOURCE_REPOSITORY_REF}
-      contextDir: ${CONTEXT_DIR}
-    strategy:
-      type: Source
-      dockerStrategy:
-        dockerfilePath: "deploy/bucket-proxy.Dockerfile"
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: centos/nginx-18-centos7
-        incremental: true
-    output:
-      to:
-        kind: ImageStreamTag
-        name: "${MEDIA_PROXY_SERVICE_NAME}:latest"
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-    name: "${NAME}"
-    annotations:
-      description: Defines how to build the Django application
-      template.alpha.openshift.io/wait-for-ready: "true"
-  spec:
-    source:
-      type: Git
-      git:
-        uri: "${SOURCE_REPOSITORY_URL}"
-        ref: "${SOURCE_REPOSITORY_REF}"
-      contextDir: "${CONTEXT_DIR}"
-      images:
-        - from:
+  # Build $NAME-webpack-build, to build the webpack resources
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: "${NAME}-webpack-build"
+      annotations:
+        description: Defines how to build the webpack builder
+    spec:
+      source:
+        type: Git
+        git:
+          uri: ${SOURCE_REPOSITORY_URL}
+          ref: ${SOURCE_REPOSITORY_REF}
+        contextDir: ${CONTEXT_DIR}
+      strategy:
+        type: Source
+        sourceStrategy:
+          from:
             kind: ImageStreamTag
-            name: "${NAME}-webpack-build:latest"
-          paths:
-            - sourcePath: /opt/app-root/src/frontend/dist
-              destinationDir: frontend
-    strategy:
-      type: Source
-      dockerStrategy:
-        dockerfilePath: "deploy/Dockerfile"
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: "python:${PYTHON_VERSION}"
-    output:
-      to:
-        kind: ImageStreamTag
-        name: "${NAME}:latest"
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-    - type: ImageChange
-      imageChange:
-        from:
+            namespace: "${NAMESPACE}"
+            name: nodejs:${NODE_VERSION}
+          incremental: true
+      output:
+        to:
           kind: ImageStreamTag
           name: "${NAME}-webpack-build:latest"
-#
-# DeploymentConfig
-#
-# Django application
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    name: "${NAME}"
-    annotations:
-      description: Defines how to deploy the application server
-      template.alpha.openshift.io/wait-for-ready: "true"
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - django-webpack
-        from:
-          kind: ImageStreamTag
-          name: "${NAME}:latest"
-    replicas: 3
-    selector:
-      name: "${NAME}"
-      matchLabels:
-        name: "${NAME}"
-    template:
-      metadata:
-        name: "${NAME}"
-        labels:
-          name: "${NAME}"
-      spec:
-        affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                  matchExpressions:
-                    - key: name
-                      operator: In
-                      values:
-                        - "${NAME}"
-                topologyKey: "kubernetes.io/hostname"
-        containers:
-        - name: django-webpack
-          image: " "
-          ports:
-          - containerPort: 8080
-          readinessProbe:
-            timeoutSeconds: 3
-            initialDelaySeconds: 3
-            httpGet:
-              path: "/_health/"
-              port: 8080
-              httpHeaders:
-                - name: Host
-                  value: "${APPLICATION_DOMAIN}"
-          livenessProbe:
-            timeoutSeconds: 3
-            initialDelaySeconds: 30
-            httpGet:
-              path: "/_health/"
-              port: 8080
-              httpHeaders:
-                - name: Host
-                  value: "${APPLICATION_DOMAIN}"
-          # Minimal env vars to get the project running - once started, settings will
-          # look in the mounted DJANGO_CONFIG_DIR
-          env:
-          - name: DJANGO_CONFIGURATION
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: DJANGO_CONFIGURATION
-          - name: DJANGO_CONFIG_DIR
-            value: "/run/configs/common"
-          - name: DJANGO_SECRET_DIR
-            value: "/run/secrets"
-          resources:
-            limits:
-              memory: "${MEMORY_LIMIT}"
-            requests:
-              memory: "${MEMORY_LIMIT}"
-          volumeMounts:
-          - name: config-common
-            mountPath: "/run/configs/common"
-            readOnly: true
-          - name: secret-django
-            mountPath: "/run/secrets/django"
-            readOnly: true
-          - name: secret-azure-ad
-            mountPath: "/run/secrets/azure-ad"
-            readOnly: true
-          - name: secret-psql
-            mountPath: "/run/secrets/postgresql"
-            readOnly: true
-          - name: secret-s3
-            mountPath: "/run/secrets/s3"
-            readOnly: true
-          - name: secret-notify
-            mountPath: "/run/secrets/notify"
-            readOnly: true
-          - name: config-notify
-            mountPath: "/run/configs/notify"
-            readOnly: true
-        volumes:
-        - name: config-common
-          configMap:
-            name: "${NAME}"
-        - name: secret-django
-          secret:
-            secretName: django
-        - name: secret-azure-ad
-          secret:
-            secretName: azure-ad
-        - name: secret-psql
-          secret:
-            secretName: postgresql
-        - name: secret-s3
-          secret:
-            secretName: s3
-        - name: secret-notify
-          secret:
-            secretName: notify
-        - name: config-notify
-          configMap:
-            name: notify
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
 
-- apiVersion: policy/v1beta1
-  kind: PodDisruptionBudget
-  metadata:
-    name: "${NAME}-pdb"
-  spec:
-    minAvailable: 2
-    selector:
-      matchLabels:
-        app: "${NAME}"
-
-# Celery worker application
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    name: "${NAME}-celery-worker"
-    annotations:
-      description: Defines how to deploy the celery worker
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - celery-worker
-        from:
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
+      annotations:
+        description: Defines how to build the media bucket proxy
+    spec:
+      source:
+        type: Git
+        git:
+          uri: ${SOURCE_REPOSITORY_URL}
+          ref: ${SOURCE_REPOSITORY_REF}
+        contextDir: ${CONTEXT_DIR}
+      strategy:
+        type: Source
+        dockerStrategy:
+          dockerfilePath: "deploy/bucket-proxy.Dockerfile"
+          from:
+            kind: ImageStreamTag
+            namespace: "${NAMESPACE}"
+            name: centos/nginx-18-centos7
+          incremental: true
+      output:
+        to:
           kind: ImageStreamTag
-          name: "${NAME}:latest"
-    replicas: 2
-    selector:
-      name: "${NAME}-celery-worker"
-    template:
-      metadata:
-        name: "${NAME}-celery-worker"
-        labels:
-          name: "${NAME}-celery-worker"
-      spec:
-        containers:
-        - name: celery-worker
-          image: " "
-          args:
-            - "celery"
-            - "worker"
-            - "-A"
-            - "nsc"
-            - "--concurrency"
-            - "2"
-          # Minimal env vars to get the project running - once started, settings will
-          # look in the mounted DJANGO_CONFIG_DIR
-          env:
-          - name: DJANGO_CONFIGURATION
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: DJANGO_CONFIGURATION
-          - name: APP_MODULE
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: APP_MODULE
-          - name: APP_CONFIG
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: APP_CONFIG
-          - name: DJANGO_CONFIG_DIR
-            value: "/run/configs"
-          - name: DJANGO_SECRET_DIR
-            value: "/run/secrets"
-          resources:
-            limits:
-              memory: "${MEMORY_LIMIT}"
-            requests:
-              memory: "${MEMORY_LIMIT}"
-          volumeMounts:
-          - name: config-common
-            mountPath: "/run/configs/common"
-            readOnly: true
-          - name: secret-django
-            mountPath: "/run/secrets/django"
-            readOnly: true
-          - name: secret-azure-ad
-            mountPath: "/run/secrets/azure-ad"
-            readOnly: true
-          - name: secret-psql
-            mountPath: "/run/secrets/postgresql"
-            readOnly: true
-          - name: secret-s3
-            mountPath: "/run/secrets/s3"
-            readOnly: true
-          - name: secret-notify
-            mountPath: "/run/secrets/notify"
-            readOnly: true
-          - name: config-notify
-            mountPath: "/run/configs/notify"
-            readOnly: true
-        volumes:
-        - name: config-common
-          configMap:
-            name: "${NAME}"
-        - name: secret-django
-          secret:
-            secretName: django
-        - name: secret-azure-ad
-          secret:
-            secretName: azure-ad
-        - name: secret-psql
-          secret:
-            secretName: postgresql
-        - name: secret-s3
-          secret:
-            secretName: s3
-        - name: secret-notify
-          secret:
-            secretName: notify
-        - name: config-notify
-          configMap:
-            name: notify
-
-# Celery beat application
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    name: "${NAME}-celery-beat"
-    annotations:
-      description: Defines how to deploy the celery beat scheduler
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - celery-beat
-        from:
-          kind: ImageStreamTag
-          name: "${NAME}:latest"
-    replicas: 1
-    selector:
-      name: "${NAME}-celery-beat"
-    template:
-      metadata:
-        name: "${NAME}-celery-beat"
-        labels:
-          name: "${NAME}-celery-beat"
-      spec:
-        containers:
-        - name: celery-beat
-          image: " "
-          args:
-            - "celery"
-            - "beat"
-            - "-A"
-            - "nsc"
-          # Minimal env vars to get the project running - once started, settings will
-          # look in the mounted DJANGO_CONFIG_DIR
-          env:
-          - name: DJANGO_CONFIGURATION
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: DJANGO_CONFIGURATION
-          - name: APP_MODULE
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: APP_MODULE
-          - name: APP_CONFIG
-            valueFrom:
-              configMapKeyRef:
-                name: "${NAME}"
-                key: APP_CONFIG
-          - name: DJANGO_CONFIG_DIR
-            value: "/run/configs/common"
-          - name: DJANGO_SECRET_DIR
-            value: "/run/secrets"
-          resources:
-            limits:
-              memory: "${MEMORY_LIMIT}"
-            requests:
-              memory: "${MEMORY_LIMIT}"
-          volumeMounts:
-          - name: config-common
-            mountPath: "/run/configs/common"
-            readOnly: true
-          - name: secret-django
-            mountPath: "/run/secrets/django"
-            readOnly: true
-          - name: secret-azure-ad
-            mountPath: "/run/secrets/azure-ad"
-            readOnly: true
-          - name: secret-psql
-            mountPath: "/run/secrets/postgresql"
-            readOnly: true
-          - name: secret-s3
-            mountPath: "/run/secrets/s3"
-            readOnly: true
-          - name: secret-notify
-            mountPath: "/run/secrets/notify"
-            readOnly: true
-          - name: config-notify
-            mountPath: "/run/configs/notify"
-            readOnly: true
-        volumes:
-        - name: config-common
-          configMap:
-            name: "${NAME}"
-        - name: secret-django
-          secret:
-            secretName: django
-        - name: secret-azure-ad
-          secret:
-            secretName: azure-ad
-        - name: secret-psql
-          secret:
-            secretName: postgresql
-        - name: secret-s3
-          secret:
-            secretName: s3
-        - name: secret-notify
-          secret:
-            secretName: notify
-        - name: config-notify
-          configMap:
-            name: notify
-
-#
-# Redis
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    name: "${REDIS_SERVICE_NAME}"
-    annotations:
-      description: Defines how to deploy redis
-      template.alpha.openshift.io/wait-for-ready: "true"
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - redis
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: redis:${REDIS_VERSION}
-    replicas: 1
-    selector:
-      name: "${REDIS_SERVICE_NAME}"
-    template:
-      metadata:
-        labels:
-          name: "${REDIS_SERVICE_NAME}"
-      spec:
-        containers:
-        - name: redis
-          image: " "
-          ports:
-          - containerPort: 6379
-            protocol: TCP
-          resources:
-            limits:
-              memory: "${MEMORY_LIMIT}"
-            request:
-              memory: "${MEMORY_LIMIT}"
-          readinessProbe:
-            exec:
-              command:
-              - "/bin/sh"
-              - "-i"
-              - "-c"
-              - test "$(redis-cli -h 127.0.0.1 ping)" == "PONG"
-            initialDelaySeconds: 5
-            timeoutSeconds: 1
-          livenessProbe:
-            initialDelaySeconds: 30
-            tcpSocket:
-              port: 6379
-            timeoutSeconds: 1
-
-#
-# Redis
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    name: "${MEDIA_PROXY_SERVICE_NAME}"
-    annotations:
-      description: Defines how to deploy the media bucket proxy
-      template.alpha.openshift.io/wait-for-ready: "true"
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - "${MEDIA_PROXY_SERVICE_NAME}"
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
           name: "${MEDIA_PROXY_SERVICE_NAME}:latest"
-    replicas: 3
-    selector:
-      name: "${MEDIA_PROXY_SERVICE_NAME}"
-    template:
-      metadata:
-        labels:
-          name: "${MEDIA_PROXY_SERVICE_NAME}"
-      spec:
-        affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                  matchExpressions:
-                    - key: name
-                      operator: In
-                      values:
-                        - "${MEDIA_PROXY_SERVICE_NAME}"
-                topologyKey: "kubernetes.io/hostname"
-        containers:
-        - name: "${MEDIA_PROXY_SERVICE_NAME}"
-          image: " "
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-          resources:
-            limits:
-              memory: "${MEMORY_LIMIT}"
-            request:
-              memory: "${MEMORY_LIMIT}"
-          readinessProbe:
-            initialDelaySeconds: 5
-            tcpSocket:
-              port: 8080
-            timeoutSeconds: 1
-          livenessProbe:
-            initialDelaySeconds: 30
-            tcpSocket:
-              port: 8080
-            timeoutSeconds: 1
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
 
-- apiVersion: policy/v1beta1
-  kind: PodDisruptionBudget
-  metadata:
-    name: "${MEDIA_PROXY_SERVICE_NAME}-pdb"
-  spec:
-    minAvailable: 2
-    selector:
-      matchLabels:
-        app: "${MEDIA_PROXY_SERVICE_NAME}"
-#
-# Services
-#
-# Django application
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: "${NAME}"
-    annotations:
-      description: Exposes and load balances the application pods
-  spec:
-    ports:
-    - name: http
-      protocol: TCP
-      port: 8080
-      targetPort: 8080
-    selector:
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
       name: "${NAME}"
-#
-# Media Bucket Proxy
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: "${MEDIA_PROXY_SERVICE_NAME}"
-    annotations:
-      description: Exposes and load balances the bucket proxy pods
-  spec:
-    ports:
-    - name: http
-      protocol: TCP
-      port: 8080
-      targetPort: 8080
-    selector:
-      name: "${MEDIA_PROXY_SERVICE_NAME}"
-#
-# Redis
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: "${REDIS_SERVICE_NAME}"
-  spec:
-    ports:
-    - name: 6379-redis
-      protocol: TCP
-      port: 6379
-      targetPort: 6379
-    selector:
+      annotations:
+        description: Defines how to build the Django application
+        template.alpha.openshift.io/wait-for-ready: "true"
+    spec:
+      source:
+        type: Git
+        git:
+          uri: "${SOURCE_REPOSITORY_URL}"
+          ref: "${SOURCE_REPOSITORY_REF}"
+        contextDir: "${CONTEXT_DIR}"
+        images:
+          - from:
+              kind: ImageStreamTag
+              name: "${NAME}-webpack-build:latest"
+            paths:
+              - sourcePath: /opt/app-root/src/frontend/dist
+                destinationDir: frontend
+      strategy:
+        type: Source
+        dockerStrategy:
+          dockerfilePath: "deploy/Dockerfile"
+          from:
+            kind: ImageStreamTag
+            namespace: "${NAMESPACE}"
+            name: "python:${PYTHON_VERSION}"
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "${NAME}:latest"
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+      - type: ImageChange
+        imageChange:
+          from:
+            kind: ImageStreamTag
+            name: "${NAME}-webpack-build:latest"
+  #
+  # DeploymentConfig
+  #
+  # Django application
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: Defines how to deploy the application server
+        template.alpha.openshift.io/wait-for-ready: "true"
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - django-webpack
+          from:
+            kind: ImageStreamTag
+            name: "${NAME}:latest"
+      replicas: 3
+      selector:
+        name: "${NAME}"
+        matchLabels:
+          name: "${NAME}"
+      template:
+        metadata:
+          name: "${NAME}"
+          labels:
+            name: "${NAME}"
+        spec:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: name
+                        operator: In
+                        values:
+                          - "${NAME}"
+                  topologyKey: "kubernetes.io/hostname"
+          containers:
+          - name: django-webpack
+            image: " "
+            ports:
+            - containerPort: 8080
+            readinessProbe:
+              timeoutSeconds: 3
+              initialDelaySeconds: 3
+              httpGet:
+                path: "/_health/"
+                port: 8080
+                httpHeaders:
+                  - name: Host
+                    value: "${APPLICATION_DOMAIN}"
+            livenessProbe:
+              timeoutSeconds: 3
+              initialDelaySeconds: 30
+              httpGet:
+                path: "/_health/"
+                port: 8080
+                httpHeaders:
+                  - name: Host
+                    value: "${APPLICATION_DOMAIN}"
+            # Minimal env vars to get the project running - once started, settings will
+            # look in the mounted DJANGO_CONFIG_DIR
+            env:
+            - name: DJANGO_CONFIGURATION
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: DJANGO_CONFIGURATION
+            - name: DJANGO_CONFIG_DIR
+              value: "/run/configs/common"
+            - name: DJANGO_SECRET_DIR
+              value: "/run/secrets"
+            resources:
+              limits:
+                memory: "${MEMORY_LIMIT}"
+              requests:
+                memory: "${MEMORY_LIMIT}"
+            volumeMounts:
+            - name: config-common
+              mountPath: "/run/configs/common"
+              readOnly: true
+            - name: secret-django
+              mountPath: "/run/secrets/django"
+              readOnly: true
+            - name: secret-azure-ad
+              mountPath: "/run/secrets/azure-ad"
+              readOnly: true
+            - name: secret-psql
+              mountPath: "/run/secrets/postgresql"
+              readOnly: true
+            - name: secret-s3
+              mountPath: "/run/secrets/s3"
+              readOnly: true
+            - name: secret-notify
+              mountPath: "/run/secrets/notify"
+              readOnly: true
+            - name: config-notify
+              mountPath: "/run/configs/notify"
+              readOnly: true
+          volumes:
+          - name: config-common
+            configMap:
+              name: "${NAME}"
+          - name: secret-django
+            secret:
+              secretName: django
+          - name: secret-azure-ad
+            secret:
+              secretName: azure-ad
+          - name: secret-psql
+            secret:
+              secretName: postgresql
+          - name: secret-s3
+            secret:
+              secretName: s3
+          - name: secret-notify
+            secret:
+              secretName: notify
+          - name: config-notify
+            configMap:
+              name: notify
+
+  - apiVersion: policy/v1beta1
+    kind: PodDisruptionBudget
+    metadata:
+      name: "${NAME}-pdb"
+    spec:
+      minAvailable: 2
+      selector:
+        matchLabels:
+          app: "${NAME}"
+
+  # Celery worker application
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${NAME}-celery-worker"
+      annotations:
+        description: Defines how to deploy the celery worker
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - celery-worker
+          from:
+            kind: ImageStreamTag
+            name: "${NAME}:latest"
+      replicas: 2
+      selector:
+        name: "${NAME}-celery-worker"
+      template:
+        metadata:
+          name: "${NAME}-celery-worker"
+          labels:
+            name: "${NAME}-celery-worker"
+        spec:
+          containers:
+          - name: celery-worker
+            image: " "
+            args:
+              - "celery"
+              - "worker"
+              - "-A"
+              - "nsc"
+              - "--concurrency"
+              - "2"
+            # Minimal env vars to get the project running - once started, settings will
+            # look in the mounted DJANGO_CONFIG_DIR
+            env:
+            - name: DJANGO_CONFIGURATION
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: DJANGO_CONFIGURATION
+            - name: APP_MODULE
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: APP_MODULE
+            - name: APP_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: APP_CONFIG
+            - name: DJANGO_CONFIG_DIR
+              value: "/run/configs"
+            - name: DJANGO_SECRET_DIR
+              value: "/run/secrets"
+            resources:
+              limits:
+                memory: "${MEMORY_LIMIT}"
+              requests:
+                memory: "${MEMORY_LIMIT}"
+            volumeMounts:
+            - name: config-common
+              mountPath: "/run/configs/common"
+              readOnly: true
+            - name: secret-django
+              mountPath: "/run/secrets/django"
+              readOnly: true
+            - name: secret-azure-ad
+              mountPath: "/run/secrets/azure-ad"
+              readOnly: true
+            - name: secret-psql
+              mountPath: "/run/secrets/postgresql"
+              readOnly: true
+            - name: secret-s3
+              mountPath: "/run/secrets/s3"
+              readOnly: true
+            - name: secret-notify
+              mountPath: "/run/secrets/notify"
+              readOnly: true
+            - name: config-notify
+              mountPath: "/run/configs/notify"
+              readOnly: true
+          volumes:
+          - name: config-common
+            configMap:
+              name: "${NAME}"
+          - name: secret-django
+            secret:
+              secretName: django
+          - name: secret-azure-ad
+            secret:
+              secretName: azure-ad
+          - name: secret-psql
+            secret:
+              secretName: postgresql
+          - name: secret-s3
+            secret:
+              secretName: s3
+          - name: secret-notify
+            secret:
+              secretName: notify
+          - name: config-notify
+            configMap:
+              name: notify
+
+  # Celery beat application
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${NAME}-celery-beat"
+      annotations:
+        description: Defines how to deploy the celery beat scheduler
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - celery-beat
+          from:
+            kind: ImageStreamTag
+            name: "${NAME}:latest"
+      replicas: 1
+      selector:
+        name: "${NAME}-celery-beat"
+      template:
+        metadata:
+          name: "${NAME}-celery-beat"
+          labels:
+            name: "${NAME}-celery-beat"
+        spec:
+          containers:
+          - name: celery-beat
+            image: " "
+            args:
+              - "celery"
+              - "beat"
+              - "-A"
+              - "nsc"
+            # Minimal env vars to get the project running - once started, settings will
+            # look in the mounted DJANGO_CONFIG_DIR
+            env:
+            - name: DJANGO_CONFIGURATION
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: DJANGO_CONFIGURATION
+            - name: APP_MODULE
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: APP_MODULE
+            - name: APP_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: "${NAME}"
+                  key: APP_CONFIG
+            - name: DJANGO_CONFIG_DIR
+              value: "/run/configs/common"
+            - name: DJANGO_SECRET_DIR
+              value: "/run/secrets"
+            resources:
+              limits:
+                memory: "${MEMORY_LIMIT}"
+              requests:
+                memory: "${MEMORY_LIMIT}"
+            volumeMounts:
+            - name: config-common
+              mountPath: "/run/configs/common"
+              readOnly: true
+            - name: secret-django
+              mountPath: "/run/secrets/django"
+              readOnly: true
+            - name: secret-azure-ad
+              mountPath: "/run/secrets/azure-ad"
+              readOnly: true
+            - name: secret-psql
+              mountPath: "/run/secrets/postgresql"
+              readOnly: true
+            - name: secret-s3
+              mountPath: "/run/secrets/s3"
+              readOnly: true
+            - name: secret-notify
+              mountPath: "/run/secrets/notify"
+              readOnly: true
+            - name: config-notify
+              mountPath: "/run/configs/notify"
+              readOnly: true
+          volumes:
+          - name: config-common
+            configMap:
+              name: "${NAME}"
+          - name: secret-django
+            secret:
+              secretName: django
+          - name: secret-azure-ad
+            secret:
+              secretName: azure-ad
+          - name: secret-psql
+            secret:
+              secretName: postgresql
+          - name: secret-s3
+            secret:
+              secretName: s3
+          - name: secret-notify
+            secret:
+              secretName: notify
+          - name: config-notify
+            configMap:
+              name: notify
+
+  #
+  # Redis
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
       name: "${REDIS_SERVICE_NAME}"
-#
-# Route
-#
-- kind: Route
-  apiVersion: v1
-  metadata:
-    name: "${NAME}"
-  spec:
-    # TODO: Uncomment this when domain is known
-    #host: "${APPLICATION_DOMAIN}"
-    to:
-      kind: Service
-      name: "${NAME}"
-    tls:
-      termination: edge
-      insecureEdgeTerminationPolicy: Redirect
+      annotations:
+        description: Defines how to deploy redis
+        template.alpha.openshift.io/wait-for-ready: "true"
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - redis
+          from:
+            kind: ImageStreamTag
+            namespace: "${NAMESPACE}"
+            name: redis:${REDIS_VERSION}
+      replicas: 1
+      selector:
+        name: "${REDIS_SERVICE_NAME}"
+      template:
+        metadata:
+          labels:
+            name: "${REDIS_SERVICE_NAME}"
+        spec:
+          containers:
+          - name: redis
+            image: " "
+            ports:
+            - containerPort: 6379
+              protocol: TCP
+            resources:
+              limits:
+                memory: "${MEMORY_LIMIT}"
+              request:
+                memory: "${MEMORY_LIMIT}"
+            readinessProbe:
+              exec:
+                command:
+                - "/bin/sh"
+                - "-i"
+                - "-c"
+                - test "$(redis-cli -h 127.0.0.1 ping)" == "PONG"
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
+            livenessProbe:
+              initialDelaySeconds: 30
+              tcpSocket:
+                port: 6379
+              timeoutSeconds: 1
 
-- kind: Route
-  apiVersion: v1
-  metadata:
-    name: "${MEDIA_PROXY_SERVICE_NAME}"
-  spec:
-    # TODO: Uncomment this when domain is known
-    #host: "${MEDIA_HOST_DOMAIN}"
-    to:
-      kind: Service
+  #
+  # Redis
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
       name: "${MEDIA_PROXY_SERVICE_NAME}"
-    tls:
-      termination: edge
-      insecureEdgeTerminationPolicy: Redirect
+      annotations:
+        description: Defines how to deploy the media bucket proxy
+        template.alpha.openshift.io/wait-for-ready: "true"
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - "${MEDIA_PROXY_SERVICE_NAME}"
+          from:
+            kind: ImageStreamTag
+            namespace: "${NAMESPACE}"
+            name: "${MEDIA_PROXY_SERVICE_NAME}:latest"
+      replicas: 3
+      selector:
+        name: "${MEDIA_PROXY_SERVICE_NAME}"
+      template:
+        metadata:
+          labels:
+            name: "${MEDIA_PROXY_SERVICE_NAME}"
+        spec:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: name
+                        operator: In
+                        values:
+                          - "${MEDIA_PROXY_SERVICE_NAME}"
+                  topologyKey: "kubernetes.io/hostname"
+          containers:
+          - name: "${MEDIA_PROXY_SERVICE_NAME}"
+            image: " "
+            ports:
+            - containerPort: 8080
+              protocol: TCP
+            resources:
+              limits:
+                memory: "${MEMORY_LIMIT}"
+              request:
+                memory: "${MEMORY_LIMIT}"
+            readinessProbe:
+              initialDelaySeconds: 5
+              tcpSocket:
+                port: 8080
+              timeoutSeconds: 1
+            livenessProbe:
+              initialDelaySeconds: 30
+              tcpSocket:
+                port: 8080
+              timeoutSeconds: 1
+            volumeMounts:
+              - name: secret-s3
+                mountPath: "/run/secrets/s3"
+                readOnly: true
+          volumes:
+            - name: secret-s3
+              secret:
+                secretName: s3
+
+  - apiVersion: policy/v1beta1
+    kind: PodDisruptionBudget
+    metadata:
+      name: "${MEDIA_PROXY_SERVICE_NAME}-pdb"
+    spec:
+      minAvailable: 2
+      selector:
+        matchLabels:
+          app: "${MEDIA_PROXY_SERVICE_NAME}"
+  #
+  # Services
+  #
+  # Django application
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: Exposes and load balances the application pods
+    spec:
+      ports:
+      - name: http
+        protocol: TCP
+        port: 8080
+        targetPort: 8080
+      selector:
+        name: "${NAME}"
+  #
+  # Media Bucket Proxy
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
+      annotations:
+        description: Exposes and load balances the bucket proxy pods
+    spec:
+      ports:
+      - name: http
+        protocol: TCP
+        port: 8080
+        targetPort: 8080
+      selector:
+        name: "${MEDIA_PROXY_SERVICE_NAME}"
+  #
+  # Redis
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${REDIS_SERVICE_NAME}"
+    spec:
+      ports:
+      - name: 6379-redis
+        protocol: TCP
+        port: 6379
+        targetPort: 6379
+      selector:
+        name: "${REDIS_SERVICE_NAME}"
+  #
+  # Route
+  #
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+    spec:
+      # TODO: Uncomment this when domain is known
+      #host: "${APPLICATION_DOMAIN}"
+      to:
+        kind: Service
+        name: "${NAME}"
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
+    spec:
+      # TODO: Uncomment this when domain is known
+      #host: "${MEDIA_HOST_DOMAIN}"
+      to:
+        kind: Service
+        name: "${MEDIA_PROXY_SERVICE_NAME}"
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
 #
 # Parameters
 #
 parameters:
-- name: NAME
-  description: The name assigned to all objects defined in this template
-  displayName: Name
-  required: true
-  value: django-webpack
-- name: NAMESPACE
-  displayName: Namespace
-  required: true
-  description: The OpenShift Namespace where the ImageStream resides.
-  value: openshift
-#
-# Versions
-- name: PYTHON_VERSION
-  displayName: Version of Python Image
-  description: Version of Python image to be used (3.6 or latest).
-  value: "3.6"
-  required: true
-- name: REDIS_VERSION
-  displayName: Version of Redis Image
-  description: Version of Redis image to be used
-  value: "latest"
-  required: true
-- name: NODE_VERSION
-  displayName: Version of Node Image
-  description: Version of Node image to be used (12 or latest).
-  value: "10"
-  required: true
-#
-# Resource management
-- name: MEMORY_LIMIT
-  displayName: Memory Limit
-  required: true
-  description: Maximum amount of memory the Django container can use.
-  value: 512Mi
-- name: MEMORY_REDIS_LIMIT
-  displayName: Memory Limit (Redis)
-  required: true
-  description: Maximum amount of memory the Redis container can use.
-  value: 512Mi
-#
-# Git and repository
-- name: SOURCE_REPOSITORY_URL
-  displayName: Git Repository URL
-  required: true
-  description: The URL of the repository with your application source code.
-  value: "https://github.com/PublicHealthEngland/nsc-recommendations"
-- name: SOURCE_REPOSITORY_REF
-  displayName: Git Reference
-  description: Set this to a branch name, tag or other ref of your repository if you
-    are not using the default branch.
-- name: CONTEXT_DIR
-  displayName: Context Directory
-  description: Set this to the relative path to your project if it is not in the root
-    of your repository.
-- name: APPLICATION_DOMAIN
-  displayName: Application Hostname
-  description: The exposed hostname that will route to the Django service, if left
-    blank a value will be defaulted.
-  value: 'uk-nsc.gov.uk'
-#
-# Postgresql
-- name: DATABASE_HOST
-  displayName: Database Host
-  required: true
-  value: postgresql
-- name: DATABASE_PORT
-  displayName: Database Port
-  required: true
-  value: "5432"
-#
-# Redis
-- name: REDIS_SERVICE_NAME
-  displayName: Redis Service Name
-  required: true
-  value: redis
-#
-# Media Bucket Proxy
-- name: MEDIA_PROXY_SERVICE_NAME
-  displayName: The name of the media bucket server name
-  required: true
-  value: media-bucket-proxy
-- name: MEDIA_HOST_DOMAIN
-  displayName: The public host of the media bucket proxy
-  reuired: true
-  value: media-bucket-proxy-uknscr-staging.apps.ocp-por.unix.phe.gov.uk
-#
-# Django app
-- name: APP_MODULE
-  displayName: Application Module
-  description: Module for Gunicorn WSGI application object
-  value: "nsc.wsgi"
-- name: APP_CONFIG
-  displayName: Application Configuration File Path
-  description: Relative path to Gunicorn configuration file (optional).
-  value: "gunicorn.conf.py"
-- name: DJANGO_CONFIGURATION
-  displayName: Django Configuration
-  description: The name of the Django settings configuration to use (Stage or Prod)
-  required: true
-- name: PIP_INDEX_URL
-  displayName: Custom PyPi Index URL
-  description: The custom PyPi index URL (optional)
-  value: ''
-#
-# notify
-- name: CONSULTATION_COMMENT_ADDRESS
-  displayName: Consultation comment email address
-  description: The email address where comments during the consultation period are sent
-  value: 'screening.evidence@nhs.net'
+  - name: NAME
+    description: The name assigned to all objects defined in this template
+    displayName: Name
+    required: true
+    value: django-webpack
+  - name: NAMESPACE
+    displayName: Namespace
+    required: true
+    description: The OpenShift Namespace where the ImageStream resides.
+    value: openshift
+  #
+  # Versions
+  - name: PYTHON_VERSION
+    displayName: Version of Python Image
+    description: Version of Python image to be used (3.6 or latest).
+    value: "3.6"
+    required: true
+  - name: REDIS_VERSION
+    displayName: Version of Redis Image
+    description: Version of Redis image to be used
+    value: "latest"
+    required: true
+  - name: NODE_VERSION
+    displayName: Version of Node Image
+    description: Version of Node image to be used (12 or latest).
+    value: "10"
+    required: true
+  #
+  # Resource management
+  - name: MEMORY_LIMIT
+    displayName: Memory Limit
+    required: true
+    description: Maximum amount of memory the Django container can use.
+    value: 512Mi
+  - name: MEMORY_REDIS_LIMIT
+    displayName: Memory Limit (Redis)
+    required: true
+    description: Maximum amount of memory the Redis container can use.
+    value: 512Mi
+  #
+  # Git and repository
+  - name: SOURCE_REPOSITORY_URL
+    displayName: Git Repository URL
+    required: true
+    description: The URL of the repository with your application source code.
+    value: "https://github.com/PublicHealthEngland/nsc-recommendations"
+  - name: SOURCE_REPOSITORY_REF
+    displayName: Git Reference
+    description: Set this to a branch name, tag or other ref of your repository if you
+      are not using the default branch.
+  - name: CONTEXT_DIR
+    displayName: Context Directory
+    description: Set this to the relative path to your project if it is not in the root
+      of your repository.
+  - name: APPLICATION_DOMAIN
+    displayName: Application Hostname
+    description: The exposed hostname that will route to the Django service, if left
+      blank a value will be defaulted.
+    value: 'uk-nsc.gov.uk'
+  #
+  # Postgresql
+  - name: DATABASE_HOST
+    displayName: Database Host
+    required: true
+    value: postgresql
+  - name: DATABASE_PORT
+    displayName: Database Port
+    required: true
+    value: "5432"
+  #
+  # Redis
+  - name: REDIS_SERVICE_NAME
+    displayName: Redis Service Name
+    required: true
+    value: redis
+  #
+  # Media Bucket Proxy
+  - name: MEDIA_PROXY_SERVICE_NAME
+    displayName: The name of the media bucket server name
+    required: true
+    value: media-bucket-proxy
+  - name: MEDIA_HOST_DOMAIN
+    displayName: The public host of the media bucket proxy
+    reuired: true
+    value: media-bucket-proxy-uknscr-staging.apps.ocp-por.unix.phe.gov.uk
+  #
+  # Django app
+  - name: APP_MODULE
+    displayName: Application Module
+    description: Module for Gunicorn WSGI application object
+    value: "nsc.wsgi"
+  - name: APP_CONFIG
+    displayName: Application Configuration File Path
+    description: Relative path to Gunicorn configuration file (optional).
+    value: "gunicorn.conf.py"
+  - name: DJANGO_CONFIGURATION
+    displayName: Django Configuration
+    description: The name of the Django settings configuration to use (Stage or Prod)
+    required: true
+  - name: PIP_INDEX_URL
+    displayName: Custom PyPi Index URL
+    description: The custom PyPi index URL (optional)
+    value: ''
+  #
+  # notify
+  - name: CONSULTATION_COMMENT_ADDRESS
+    displayName: Consultation comment email address
+    description: The email address where comments during the consultation period are sent
+    value: 'screening.evidence@nhs.net'
