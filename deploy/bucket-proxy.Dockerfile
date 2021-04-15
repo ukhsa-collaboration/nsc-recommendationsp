@@ -1,6 +1,6 @@
-FROM centos/nginx-18-centos7
+FROM centos/nginx-116-centos7
 
-ENV NGINX_CONF_TARGET=/etc/opt/rh/rh-nginx18/nginx/nginx.conf
+ENV NGINX_CONF_TARGET=/etc/opt/rh/rh-nginx116/nginx/nginx.conf
 
 USER root
 

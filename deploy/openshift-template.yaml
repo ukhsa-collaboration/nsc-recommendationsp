@@ -59,6 +59,13 @@ objects:
       # Final container which will run the Django project
       name: "${NAME}"
   #
+  # $NAME: image based on nginx for proxying the media bucket
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: "${MEDIA_PROXY_SERVICE_NAME}"
+
+  #
   # BuildConfigs
   #
 
