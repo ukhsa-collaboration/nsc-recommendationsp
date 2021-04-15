@@ -560,6 +560,7 @@ class Deployed(Build):
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
 
     # Settings for the S3 object store
+    AWS_QUERYSTRING_AUTH = False
     AWS_BUCKET_DOMAIN = get_secret("s3", "endpoint")
     AWS_ACCESS_KEY_ID = get_secret("s3", "access-key")
     AWS_SECRET_ACCESS_KEY = get_secret("s3", "secret-key")
