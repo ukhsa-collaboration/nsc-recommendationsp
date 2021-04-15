@@ -2,6 +2,8 @@ FROM centos/nginx-116-centos7
 
 USER root
 
+RUN echo "" > /opt/app-root/src/not-found.html
+
 COPY deploy/bucket-proxy.nginx.config ./nginx-cfg/
 COPY deploy/bucket-proxy.entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
