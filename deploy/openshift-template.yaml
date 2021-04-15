@@ -551,7 +551,6 @@ objects:
           - redis
           from:
             kind: ImageStreamTag
-            namespace: "${NAMESPACE}"
             name: redis:${REDIS_VERSION}
       replicas: 1
       selector:
@@ -588,7 +587,7 @@ objects:
               timeoutSeconds: 1
 
   #
-  # Redis
+  # Media Bucket Proxy
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:

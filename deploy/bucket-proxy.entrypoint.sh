@@ -5,7 +5,7 @@ set -e
 if [[ -z ${BUCKET_NAME+x} ]]; then
   echo "Loading BUCKET_NAME from secret"
 
-  export BUCKET_NAME_SECRET_PATH=/var/secrets/s3/bucket-name
+  export BUCKET_NAME_SECRET_PATH=/run/secrets/s3/bucket-name
   if [ ! -f ${BUCKET_NAME_SECRET_PATH} ]; then
     echo "${BUCKET_NAME_SECRET_PATH} does not exist"
     exit
@@ -17,7 +17,7 @@ fi
 if [[ -z ${BUCKET_ENDPOINT+x} ]]; then
   echo "Loading BUCKET_ENDPOINT from secret"
 
-  export ENDPOINT_SECRET_PATH=/var/secrets/s3/endpoint
+  export ENDPOINT_SECRET_PATH=/run/secrets/s3/endpoint
   if [ ! -f ${ENDPOINT_SECRET_PATH} ]; then
     echo "${ENDPOINT_SECRET_PATH} does not exist"
     exit
