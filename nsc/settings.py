@@ -376,7 +376,7 @@ class Common(Configuration):
     #
     AUTH_USE_ACTIVE_DIRECTORY = bool(int(environ.get("AUTH_USE_ACTIVE_DIRECTORY", 0)))
     ACTIVE_DIRECTORY_CLIENT_ID = get_secret(
-        "azure-ad", "client-id", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
+        "azure-ad", "application-id", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
     )
     ACTIVE_DIRECTORY_CLIENT_SECRET = get_secret(
         "azure-ad", "secret", required=bool(AUTH_USE_ACTIVE_DIRECTORY)
