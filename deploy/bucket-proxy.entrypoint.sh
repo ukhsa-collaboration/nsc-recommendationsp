@@ -2,10 +2,6 @@
 
 set -e
 
-export NGINX_ETC_ROOT=`realpath ${NGINX_ETC_ROOT}`
-export NGINX_VAR_ROOT=`realpath ${NGINX_VAR_ROOT}`
-export NGINX_CONF_TARGET=`realpath ${NGINX_CONF_TARGET}`
-
 if [[ -z ${BUCKET_NAME+x} ]]; then
   echo "Loading BUCKET_NAME from secret"
 
@@ -33,6 +29,6 @@ fi
 export BUCKET_HOST="${BUCKET_NAME}.${BUCKET_ENDPOINT}"
 
 echo "Proxying: ${BUCKET_HOST}"
-envsubst '$BUCKET_HOST:$NGINX_ETC_ROOT:$NGINX_VAR_ROOT' < ./nginx-cfg/bucket-proxy.nginx.config > $NGINX_CONF_TARGET
+envsubst '$BUCKET_HOST' < ./nginx-cfg/bucket-proxy.nginx.config > /etc/nginx/nginx.conf
 
 nginx -g 'daemon off;'
