@@ -35,7 +35,7 @@
 
   </script>
 
-  <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+  <a href="#main-heading" class="govuk-skip-link">Skip to main content</a>
 
   <header class="govuk-header " role="banner" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
@@ -62,20 +62,21 @@
 
   {% block main  %}
   <div class="govuk-width-container ">
+    {% block back %}{% endblock %}
+
+    {% block messages %}
+      {% if messages %}
+      <ul class="nsc-alerts">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endblock %}
+
     <main class="govuk-main-wrapper " id="main-content" role="main">
-
-      {% block messages %}
-        <ul class="nsc-alerts">
-          {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endblock %}
-
-      {% block back %}{% endblock %}
-
       {% block heading %}
-        <h1 class="govuk-heading-l">
+        <h1 id="main-heading" class="govuk-heading-l">
           {% block page_title %}{% endblock %}
         </h1>
       {% endblock %}
