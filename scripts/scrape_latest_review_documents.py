@@ -109,6 +109,8 @@ def get_document_type(label):
     elif "cost effectiveness" in label_lower:
         return Document.TYPE.cost
 
+    return Document.TYPE.other
+
 
 def add_doc(review, document_type, document_url):
     document = Document.objects.create(document_type=document_type, review=review)

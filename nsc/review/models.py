@@ -201,6 +201,7 @@ class Review(TimeStampedModel):
             *self.get_cost_effective_models(),
             *self.get_evidence_maps(),
             *self.get_systematic_reviews(),
+            *self.get_other_review_documents(),
         ]
 
     def get_other_review_documents(self):
