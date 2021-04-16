@@ -57,6 +57,17 @@
         </form>
       </div>
     </div>
+
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body">
+        <div class="pagination__summary">
+          {% with start=page_obj.start_index end=page_obj.end_index count=paginator.count %}
+            {% blocktrans %}Showing {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+
     <div class="govuk-grid-column-two-thirds">
       <table class="govuk-table">
         <thead class="govuk-table__head">

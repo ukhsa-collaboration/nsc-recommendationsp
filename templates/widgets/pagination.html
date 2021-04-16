@@ -1,5 +1,4 @@
 {% load i18n %}
-{% if paginator.num_pages > 1 %}
 {% with item_widget_template=item_widget_template|default:"widgets/pagination-link.html" display_range_lower=page_obj.number|add:-1 display_range_upper=page_obj.number|add:1 %}
 <nav role="navigation" aria-label="Pagination" class="govuk-body">
   <div class="pagination__summary">
@@ -7,6 +6,7 @@
       {% blocktrans %}Showing {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}
     {% endwith %}
   </div>
+{% if paginator.num_pages > 1 %}
   <ul class="pagination">
     {% if page_obj.has_previous %}
       <li class="pagination__item">
@@ -58,6 +58,6 @@
       </li>
     {% endif %}
   </ul>
+{% endif %}
 </nav>
 {% endwith %}
-{% endif %}
