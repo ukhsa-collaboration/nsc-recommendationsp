@@ -1,4 +1,7 @@
+from functools import reduce
+
 from django import forms
+from django.core.validators import FileExtensionValidator
 from django.forms import HiddenInput, modelformset_factory
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
@@ -21,6 +24,12 @@ def document_formset_form_factory(
             label=_("Upload a file"),
             error_messages={"required": required_error_message},
             required=required,
+            validators=[
+                FileExtensionValidator(
+                    allowed_extensions=["pdf"],
+                    message=_("The selected file must be a pdf."),
+                )
+            ],
         )
 
         class Meta:
@@ -71,6 +80,17 @@ class ReviewDocumentForm(forms.ModelForm):
         model = Review
         fields = ()
 
+    @property
+    def errors_summary(self):
+        return reduce(
+            lambda reduced, form: {
+                **reduced,
+                **{f"{form.prefix}-{k}": v for k, v in form.errors.items()},
+            },
+            self.formset,
+            {},
+        )
+
     @cached_property
     def formset(self):
         return modelformset_factory(
@@ -112,6 +132,12 @@ class SubmissionForm(forms.ModelForm):
     upload = forms.FileField(
         label=_("Upload a file"),
         error_messages={"required": _("Select the response form for upload")},
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf"],
+                message=_("The selected file must be a pdf."),
+            )
+        ],
     )
 
     class Meta:
@@ -129,17 +155,60 @@ class SubmissionForm(forms.ModelForm):
 
 class ReviewDocumentsForm(forms.ModelForm):
 
-    cover_sheet = forms.FileField(label=_("Cover sheet"), required=False,)
-
-    evidence_review = forms.FileField(label=_("Evidence review"), required=False,)
-
-    evidence_map = forms.FileField(label=_("Evidence map"), required=False,)
-
-    cost_effective_model = forms.FileField(
-        label=_("Cost-effective model"), required=False,
+    cover_sheet = forms.FileField(
+        label=_("Cover sheet"),
+        required=False,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf"],
+                message=_("The selected file must be a pdf."),
+            )
+        ],
     )
 
-    systematic_review = forms.FileField(label=_("Systematic review"), required=False,)
+    evidence_review = forms.FileField(
+        label=_("Evidence review"),
+        required=False,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf"],
+                message=_("The selected file must be a pdf."),
+            )
+        ],
+    )
+
+    evidence_map = forms.FileField(
+        label=_("Evidence map"),
+        required=False,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf"],
+                message=_("The selected file must be a pdf."),
+            )
+        ],
+    )
+
+    cost_effective_model = forms.FileField(
+        label=_("Cost-effective model"),
+        required=False,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf"],
+                message=_("The selected file must be a pdf."),
+            )
+        ],
+    )
+
+    systematic_review = forms.FileField(
+        label=_("Systematic review"),
+        required=False,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf"],
+                message=_("The selected file must be a pdf."),
+            )
+        ],
+    )
 
     class Meta:
         model = Review
@@ -192,6 +261,17 @@ class ReviewDocumentsForm(forms.ModelForm):
             files=self.files or None,
             prefix="document",
             queryset=Document.objects.none(),
+        )
+
+    @property
+    def errors_summary(self):
+        return reduce(
+            lambda reduced, form: {
+                **reduced,
+                **{f"{form.prefix}-{k}": v for k, v in form.errors.items()},
+            },
+            self.others_formset,
+            self.errors,
         )
 
     def is_valid(self):

@@ -21,41 +21,37 @@
   {{ formset.management_form }}
 
   {% with f=formset.empty_form %}
-  <fieldset class="govuk-fieldset" id="contact_emptyform_wrapper" style="display: none" data-nsc-formset-template="{{ f.prefix }}">
-    {% for hidden in f.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
+    <div class="govuk-form-group" data-nsc-formset-template="{{ f.prefix }}" style="display: none">
+      <fieldset class="govuk-fieldset" id="contact_emptyform_wrapper">
+        {% for hidden in f.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
 
-    {% if f.errors %}
-      {% include "widgets/error_summary.html" %}
-    {% endif %}
-
-    {% if capture_name %}
-        {% include "widgets/text_input.html" with field=f.name %}
-    {% endif %}
-    {% include "widgets/file_upload.html" with field=f.upload %}
-  </fieldset>
+        {% if capture_name %}
+            {% include "widgets/text_input.html" with field=f.name %}
+        {% endif %}
+        {% include "widgets/file_upload.html" with field=f.upload %}
+      </fieldset>
+    </div>
   {% endwith %}
 
   {% for f in formset %}
-    <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ f.prefix }}">
-      {% for hidden in f.hidden_fields %}
-        {{ hidden }}
-      {% endfor %}
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ f.prefix }}">
+        {% for hidden in f.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
 
-      {% if f.errors %}
-        {% include "widgets/error_summary.html" %}
-      {% endif %}
-
-      {% if capture_name %}
-        {% include "widgets/text_input.html" with field=f.name prefix=f.prefix %}
-      {% endif %}
-      {% include "widgets/file_upload.html" with field=f.upload %}
-    </fieldset>
+        {% if capture_name %}
+          {% include "widgets/text_input.html" with field=f.name prefix=f.prefix %}
+        {% endif %}
+        {% include "widgets/file_upload.html" with field=f.upload %}
+      </fieldset>
+    </div>
   {% endfor %}
 
   <div>
-    <a class="govuk-link" id="add-file" type="button" href="#" data-nsc-formset-add="">
+    <a class="govuk-link" id="add-file" type="button" href="#" data-nsc-formset-add="{{ formset.prefix }}">
       {% trans 'add another file' %}
     </a>
   </div>

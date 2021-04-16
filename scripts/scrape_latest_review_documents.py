@@ -64,7 +64,7 @@ def get_documents(page):
     if docs_label_node is None:
         return
 
-    listing_node = docs_label_node.find_next('td')
+    listing_node = docs_label_node.find_next("td")
     document_links = listing_node.find_all("a")
 
     for link in document_links:
@@ -96,7 +96,11 @@ def add_file(url, document):
 def get_document_type(label):
     label_lower = label.lower()
 
-    if "evidence summary" in label_lower or "evidence review" in label_lower or "uk nsc pilot triage" in label_lower:
+    if (
+        "evidence summary" in label_lower
+        or "evidence review" in label_lower
+        or "uk nsc pilot triage" in label_lower
+    ):
         return Document.TYPE.evidence_review
     elif "evidence map" in label_lower:
         return Document.TYPE.evidence_map

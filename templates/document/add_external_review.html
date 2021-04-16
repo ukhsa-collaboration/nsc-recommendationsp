@@ -18,7 +18,11 @@
   <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
-    {% include "forms/multi-file-upload.html" with formset=form.formset existing_documents=review.get_external_review %}
+    {% if form.errors_summary %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
+
+    {% include "forms/multi-file-upload.html" with formset=form.formset existing_documents=review.get_external_reviews %}
 
     <button type="submit" class="govuk-button" name="save" value="save">
       {% trans 'Save and continue' %}

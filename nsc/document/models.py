@@ -1,5 +1,6 @@
 import os
 
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
@@ -96,7 +97,10 @@ class Document(TimeStampedModel):
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
     upload = models.FileField(
-        verbose_name=_("upload"), upload_to=document_path, max_length=256
+        verbose_name=_("upload"),
+        upload_to=document_path,
+        max_length=256,
+        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
     )
     review = models.ForeignKey(
         "review.Review",

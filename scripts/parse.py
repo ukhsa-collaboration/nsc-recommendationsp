@@ -4,11 +4,7 @@ import html2markdown
 def strip_attributes(attrs):
     # if we hit an attribute html2markdown doesn't like no parsing is done so we remove them here as
     # they only alpply in the legacy context
-    return {
-        k: v
-        for k, v in attrs.items()
-        if k in ["href", "src", "alt"]
-    }
+    return {k: v for k, v in attrs.items() if k in ["href", "src", "alt"]}
 
 
 def node_is_parsable(node):
@@ -20,9 +16,7 @@ def node_is_parsable(node):
     if isinstance(node, str):
         return True
 
-    return (
-        node.name not in unparsed_tags and node.text.strip() != ""
-    )
+    return node.name not in unparsed_tags and node.text.strip() != ""
 
 
 def parse_html(nodes):
