@@ -145,62 +145,62 @@ class Review(TimeStampedModel):
             str(self.TYPE[getattr(self.TYPE, rt)]) for rt in self.review_type
         )
 
-    def get_external_review(self):
+    def get_external_reviews(self):
         return Document.objects.for_review(self).external_reviews()
 
     @cached_property
     def external_review(self):
-        return self.get_external_review().first()
+        return self.get_external_reviews().first()
 
-    def get_submission_form(self):
-        return Document.objects.for_review(self).submission_forms().first()
+    def get_submission_forms(self):
+        return Document.objects.for_review(self).submission_forms()
 
     @cached_property
     def submission_form(self):
-        return self.get_submission_form()
+        return self.get_submission_forms().first()
 
-    def get_cover_sheet(self):
-        return Document.objects.for_review(self).cover_sheets().first()
+    def get_cover_sheets(self):
+        return Document.objects.for_review(self).cover_sheets()
 
     @cached_property
     def cover_sheet(self):
-        return self.get_cover_sheet()
+        return self.get_cover_sheets().first()
 
-    def get_evidence_review(self):
-        return Document.objects.for_review(self).evidence_reviews().first()
+    def get_evidence_reviews(self):
+        return Document.objects.for_review(self).evidence_reviews()
 
     @cached_property
     def evidence_review(self):
-        return self.get_evidence_review()
+        return self.get_evidence_reviews().first()
 
-    def get_cost_effective_model(self):
-        return Document.objects.for_review(self).cost_effective_models().first()
+    def get_cost_effective_models(self):
+        return Document.objects.for_review(self).cost_effective_models()
 
     @cached_property
     def cost_effective_model(self):
-        return self.get_cost_effective_model()
+        return self.get_cost_effective_models().first()
 
-    def get_evidence_map(self):
-        return Document.objects.for_review(self).evidence_maps().first()
+    def get_evidence_maps(self):
+        return Document.objects.for_review(self).evidence_maps()
 
     @cached_property
     def evidence_map(self):
-        return self.get_evidence_map()
+        return self.get_evidence_maps().first()
 
-    def get_systematic_review(self):
-        return Document.objects.for_review(self).systematic_reviews().first()
+    def get_systematic_reviews(self):
+        return Document.objects.for_review(self).systematic_reviews()
 
     @cached_property
     def systematic_review(self):
-        return self.get_systematic_review()
+        return self.get_systematic_reviews().first()
 
     @cached_property
     def get_all_type_documents(self):
         return [
-            self.evidence_review,
-            self.cost_effective_model,
-            self.evidence_map,
-            self.systematic_review,
+            *self.get_evidence_reviews(),
+            *self.get_cost_effective_models(),
+            *self.get_evidence_maps(),
+            *self.get_systematic_reviews(),
         ]
 
     def get_other_review_documents(self):

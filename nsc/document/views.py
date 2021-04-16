@@ -45,7 +45,7 @@ class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
         # Get any existing response form.
         pk = self.request.POST["review"]
         review = Review.objects.get(pk=pk)
-        return review.get_submission_form()
+        return review.submission_form
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

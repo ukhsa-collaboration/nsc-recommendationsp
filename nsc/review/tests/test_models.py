@@ -91,7 +91,7 @@ def test_external_review_document(review_published):
     Test that the external review document can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.external_review)
-    assert review_published.get_external_review().first().pk == expected.pk
+    assert review_published.get_external_reviews().first().pk == expected.pk
 
 
 def test_submission_form(review_published):
@@ -99,7 +99,7 @@ def test_submission_form(review_published):
     Test that the submission form can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.submission_form)
-    assert review_published.get_submission_form().pk == expected.pk
+    assert review_published.submission_form.pk == expected.pk
 
 
 def test_evidence_review_document(review_published):
@@ -107,7 +107,7 @@ def test_evidence_review_document(review_published):
     Test that the evidence review can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.evidence_review)
-    assert review_published.get_evidence_review().pk == expected.pk
+    assert review_published.evidence_review.pk == expected.pk
 
 
 def test_cover_sheet_document(review_published):
@@ -115,7 +115,7 @@ def test_cover_sheet_document(review_published):
     Test that the final coversheet document (submitted comments) can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.cover_sheet)
-    assert review_published.get_cover_sheet().pk == expected.pk
+    assert review_published.cover_sheet.pk == expected.pk
 
 
 @pytest.mark.parametrize(

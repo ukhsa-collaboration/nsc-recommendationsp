@@ -65,7 +65,7 @@ def test_document_created(erm_user, minimal_pdf, django_app):
         "application/pdf",
     )
     response = form.submit().follow()
-    document = review.get_external_review().first()
+    document = review.get_external_reviews().first()
     assert response.status == "200 OK"
     assert response.request.path == reverse(
         "review:detail", kwargs={"slug": review.slug}
