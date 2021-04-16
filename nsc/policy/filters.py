@@ -67,7 +67,7 @@ class YesNoFilter(Filter):
 
 class SearchFilter(FilterSet):
 
-    name = CharFilter(field_name="name", method="search_name")
+    name = CharFilter(field_name="name", method="search_name", label=_("Condition name"))
     review_status = CharFilter(method="in_consultation")
     recommendation = YesNoFilter(field_name="recommendation")
     archived = BooleanFilter(method="include_archived", widget=forms.CheckboxInput)
@@ -78,6 +78,7 @@ class SearchFilter(FilterSet):
         choices=Policy.AGE_GROUPS,
         empty_label=None,
         widget=forms.RadioSelect,
+        label=_("Who the condition effects"),
     )
 
     def search_name(self, queryset, name, value):

@@ -2,9 +2,10 @@
 
 <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
 
-  <fieldset class="govuk-fieldset"
-            role="group"
-            aria-describedby="{% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %} ">
+  <fieldset
+      class="govuk-fieldset"
+      {% if field.help_text or field.errors %}aria-describedby="{% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %}"{% endif %}
+  >
 
     {% if show_legend %}
         {% include "widgets/field_legend.html" %}
