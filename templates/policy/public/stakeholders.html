@@ -25,9 +25,10 @@
 </ul>
 
 <p class="govuk-body">
+  {% url "subscription:stakeholder-start" as contact_url %}
   {% blocktrans %}
-    If you think your organisation should be added, please <a href="">contact us</a>.
+    If you think your organisation should be added, please <a href="{{ contact_url }}">contact us</a>.
     More information for organisation can be found in appendix C of
-    the <a href="">UK NSC evidence review process</a>.
+    the <a href="https://www.gov.uk/government/publications/uk-nsc-evidence-review-process">UK NSC evidence review process</a>.
   {% endblocktrans %}
 </p>

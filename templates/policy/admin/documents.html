@@ -18,13 +18,13 @@
       {% for document in review.get_all_type_documents %}
           {% if document %}
             <li>
-              <a class="govuk-link" target="_blank" href="{{ document.get_download_url}}">{{ document.name }}</a>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url}}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
             </li>
           {% endif %}
       {% endfor %}
       {% if review.cover_sheet %}
             <li>
-              <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url}}">{{ review.cover_sheet.name }}</a>
+              <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url}}">{{ review.cover_sheet.name }} ({% trans "Opens in a new tab" %})</a>
             </li>
       {% endif %}
     </ul>
@@ -33,7 +33,7 @@
         <ul class="govuk-list govuk-list--bullet">
         {% for document in review.other_review_documents %}
           <li>
-            <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
+            <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
           </li>
         {% endfor %}
         </ul>

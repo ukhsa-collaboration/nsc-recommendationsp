@@ -22,14 +22,14 @@
   <p class="govuk-body">
     {% blocktrans with end=current_review.consultation_end_display response_form_url=current_review.submission_form.get_download_url %}
     You can either submit a consultation response using the form below or by downloading the
-    <a href="{{ response_form_url }}" target="_blank">response form (Open Document Format, ODF)</a> and emailing it to
+    <a href="{{ response_form_url }}" target="_blank">response form (Open Document Format, ODF. Opens in a new tab)</a> and emailing it to
     <a href="mailto:screening.evidence@nhs.net">screening.evidence@nhs.net</a> by {{ end }}
     {% endblocktrans %}
   </p>
   <p class="govuk-body">
     {% blocktrans with url=current_review.external_review.get_download_url name=current_review.external_review.get_document_type_display %}
     Please read the <a href="{{ url }}">{{ name}}</a> and
-    <a target="_blank"  href="https://www.gov.uk/guidance/nhs-population-screening-explained">explanation of screening</a> before making your submission.
+    <a target="_blank"  href="https://www.gov.uk/guidance/nhs-population-screening-explained">explanation of screening (Opens in a new tab)</a> before making your submission.
     {% endblocktrans %}
   </p>
   <form method="post">
