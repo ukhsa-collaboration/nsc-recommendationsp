@@ -3,7 +3,7 @@
     {% if is_heading %}
       <h1 class="govuk-fieldset__heading">
     {% endif %}
-    <label for="{{ field.id_for_label }}">
+    <label {% if not field.field.choices %}for="{{ field.id_for_label }}"{% endif %}>
       {{ field.label }}
     </label>
     {% if is_heading %}
