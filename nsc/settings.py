@@ -624,7 +624,6 @@ class Stage(Deployed):
 
 class Prod(Deployed):
     EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
-    RAVEN_CONFIG = {"dsn": ""}
 
 
 class Demo(Build):
