@@ -67,7 +67,9 @@ class YesNoFilter(Filter):
 
 class SearchFilter(FilterSet):
 
-    name = CharFilter(field_name="name", method="search_name", label=_("Condition name"))
+    name = CharFilter(
+        field_name="name", method="search_name", label=_("Condition name")
+    )
     review_status = CharFilter(method="in_consultation")
     recommendation = YesNoFilter(field_name="recommendation")
     archived = BooleanFilter(method="include_archived", widget=forms.CheckboxInput)
