@@ -1,0 +1,34 @@
+{% load i18n %}
+
+<h2 class="govuk-heading-m">
+  {% trans 'Organisations interested in' %} {{ policy.name }}
+</h2>
+
+<p class="govuk-body">
+  {% trans 'These organisations have expressed interest in this recommendation and may submit responses to evidence reviews.' %}
+</p>
+
+<h3 class="govuk-heading-s">
+  {% trans 'List of organisations' %}
+</h3>
+
+<ul class="govuk-list">
+  {% for stakeholder in policy.stakeholders.public %}
+    <li>
+      <a class="govuk-link" href="{{ stakeholder.url }}">{{ stakeholder.name }}</a>
+    </li>
+  {% empty %}
+    <li>
+      {% trans 'There are no stakeholders at this time' %}
+    </li>
+  {% endfor %}
+</ul>
+
+<p class="govuk-body">
+  {% url "subscription:stakeholder-start" as contact_url %}
+  {% blocktrans %}
+    If you think your organisation should be added, please <a href="{{ contact_url }}">contact us</a>.
+    More information for organisation can be found in appendix C of
+    the <a href="https://www.gov.uk/government/publications/uk-nsc-evidence-review-process">UK NSC evidence review process</a>.
+  {% endblocktrans %}
+</p>

@@ -14,7 +14,7 @@
   {% with widget=field.field.widget %}
     <input
       type="text"
-      name="{{ field.name }}"
+      name="{{ field.html_name }}"
       class="govuk-input{% if field.errors %} govuk-input--error{% endif %}{% if width %} govuk-input--width-{{ width }}{% endif %}"
       id="{{ field.id_for_label }}"
       {% if field.value != None %}

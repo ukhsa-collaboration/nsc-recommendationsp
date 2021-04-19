@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.review.tests.fixtures"]
 
 
 @pytest.fixture

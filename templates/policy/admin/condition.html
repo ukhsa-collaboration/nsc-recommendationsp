@@ -1,8 +1,10 @@
 {% load i18n %}
 
-<h2 class="govuk-heading-m">
-  {% trans 'More about' %} {{ policy.name }}
-</h2>
+{% if not policy.archived %}
+    <h2 class="govuk-heading-m">
+      {% trans 'More about' %} {{ policy.name }}
+    </h2>
+{% endif %}
 
 {% if policy.condition_html %}
   <p class="govuk-body">

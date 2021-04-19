@@ -4,7 +4,7 @@
   <div class="govuk-grid-column-full">
     <a id="back-link-id" href="{{ back_url }}" class="govuk-back-link">
       {% if back_title %}
-        {{ back_title }}
+        {{ back_title|default:_("Back") }}
       {% else %}
         {% trans 'Back' %}
       {% endif %}

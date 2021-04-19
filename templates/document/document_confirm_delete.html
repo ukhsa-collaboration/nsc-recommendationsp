@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% url 'review:detail' object.review.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Delete document" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
+      <p>
+        {% blocktrans with object.name as name %}
+        Are you sure you want to delete {{ name }}?
+        {% endblocktrans %}
+      </p>
+      <button type="submit" class="govuk-button govuk-button--warning" name="submit" value="submit">
+        {% trans 'Yes, delete the document' %}
+      </button>
+    </form>
+  </div>
+
+{% endblock %}

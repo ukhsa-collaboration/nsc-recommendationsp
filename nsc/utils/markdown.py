@@ -9,6 +9,8 @@ _conversions = {
     "h4": {"classes": ["govuk-heading-s"]},
     "p": {"classes": ["govuk-body"]},
     "a": {"classes": ["govuk-link"]},
+    "ul": {"classes": ["govuk-list", "govuk-list--bullet"]},
+    "ol": {"classes": ["govuk-list", "govuk-list--number"]},
 }
 
 

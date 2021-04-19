@@ -15,18 +15,41 @@
     </div>
 
     <ul class="govuk-list govuk-list--bullet">
-      {% if review.has_evidence_review %}
-        <li>
-          <a class="govuk-link" target="_blank" href="{{ review.get_evidence_review.upload.url }}">{{ review.get_evidence_review.name }}</a>
-        </li>
-      {% endif %}
-      {% if review.has_cover_sheet %}
-        <li>
-          <a class="govuk-link" target="_blank" href="{{ review.get_cover_sheet.upload.url }}">{{ review.get_cover_sheet.name }}</a>
-        </li>
+      {% for document in review.get_all_type_documents %}
+          {% if document %}
+            <li>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url}}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
+            </li>
+          {% endif %}
+      {% endfor %}
+      {% if review.cover_sheet %}
+            <li>
+              <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url}}">{{ review.cover_sheet.name }} ({% trans "Opens in a new tab" %})</a>
+            </li>
       {% endif %}
     </ul>
+      {% if review.other_review_documents %}
+          <p class="govuk-body">Other supporting documents</p>
+        <ul class="govuk-list govuk-list--bullet">
+        {% for document in review.other_review_documents %}
+          <li>
+            <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+
+    {% if form %}
+        <div class="govuk-body">
+            <a class="govuk-link"
+               href="{% url 'review:add-review-documents' review.slug %}?next={% url 'policy:edit' policy.slug %}">
+                Update review documents
+            </a>
+        </div>
+    {% endif %}
   {% else %}
-    {% trans 'There are no downloads at this time' %}
+    <p class="govuk-body">
+      {% trans 'There are no review downloads at this time' %}
+    </p>
   {% endif %}
 {% endwith %}

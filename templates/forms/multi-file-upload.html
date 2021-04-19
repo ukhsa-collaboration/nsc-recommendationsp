@@ -1,0 +1,58 @@
+{% load i18n %}
+
+{% if existing_documents %}
+<dl class="govuk-summary-list">
+  {% for file in existing_documents %}
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <a class="govuk-link" href="{% url 'document:download' pk=file.id %}">{{ file.name }}</a>
+    </dt>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{% url 'document:delete' pk=file.id %}?next={{ request.build_absolute_uri|urlencode }}">
+        Delete<span class="govuk-visually-hidden"> {{ file.name }}</span>
+      </a>
+    </dd>
+  </div>
+  {% endfor %}
+</dl>
+{% endif %}
+
+<div id="contact_formset_wrapper" class="formset__root govuk-form-group" data-nsc-formset="{{ formset.prefix }}">
+  {{ formset.management_form }}
+
+  {% with f=formset.empty_form %}
+    <div class="govuk-form-group" data-nsc-formset-template="{{ f.prefix }}" style="display: none">
+      <fieldset class="govuk-fieldset" id="contact_emptyform_wrapper">
+        {% for hidden in f.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
+
+        {% if capture_name %}
+            {% include "widgets/text_input.html" with field=f.name %}
+        {% endif %}
+        {% include "widgets/file_upload.html" with field=f.upload %}
+      </fieldset>
+    </div>
+  {% endwith %}
+
+  {% for f in formset %}
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ f.prefix }}">
+        {% for hidden in f.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
+
+        {% if capture_name %}
+          {% include "widgets/text_input.html" with field=f.name prefix=f.prefix %}
+        {% endif %}
+        {% include "widgets/file_upload.html" with field=f.upload %}
+      </fieldset>
+    </div>
+  {% endfor %}
+
+  <div>
+    <a class="govuk-link" id="add-file" type="button" href="#" data-nsc-formset-add="{{ formset.prefix }}">
+      {% trans 'add another file' %}
+    </a>
+  </div>
+</div>

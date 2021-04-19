@@ -1,6 +1,21 @@
 <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
-  {% include "widgets/field_label.html" %}
-  {% include "widgets/field_help.html" %}
-  {% include "widgets/field_errors.html" %}
-  {{ field }}
+  {% if document.id %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <a class="govuk-link" href="{% url 'document:download' pk=document.id %}">{{ document.name }}</a>
+        </dt>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="{% url 'document:delete' pk=document.id %}?next={{ request.build_absolute_uri|urlencode }}">
+            Delete<span class="govuk-visually-hidden"> {{ document.name }}</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% else %}
+    {% if not hide_label %}{% include "widgets/field_label.html" with label_class="govuk-heading-m" %}{% endif %}
+    {% include "widgets/field_help.html" %}
+    {% include "widgets/field_errors.html" %}
+    {{ field }}
+  {% endif %}
 </div>

@@ -1,83 +1,76 @@
-import os
-
 from django.urls import reverse
-from django.utils.translation import ugettext
 
 import pytest
 from model_bakery import baker
 
-from nsc.document.models import Document
 from nsc.review.models import Review
 
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.document.tests.fixtures"]
 
 
-def test_view(django_app):
+def test_view(erm_user, django_app):
     """
     Test that the page can be displayed
     """
     review = baker.make(Review)
     response = django_app.get(
-        reverse("review:add-external-review", kwargs={"slug": review.slug})
+        reverse("review:add-external-review", kwargs={"slug": review.slug}),
+        user=erm_user,
     )
     assert response.status == "200 OK"
 
 
-def test_initial_values(django_app):
+def test_view__no_user(test_access_no_user):
+    review = baker.make(Review)
+    test_access_no_user(
+        url=reverse("review:add-external-review", kwargs={"slug": review.slug}),
+    )
+
+
+def test_view__incorrect_permission(test_access_forbidden):
+    review = baker.make(Review)
+    test_access_forbidden(
+        url=reverse("review:add-external-review", kwargs={"slug": review.slug}),
+    )
+
+
+def test_initial_values(erm_user, django_app):
     """
     Test the form fields are initialised to upload the external review.
     """
     review = baker.make(Review, name="Review", slug="review")
     form = django_app.get(
-        reverse("review:add-external-review", kwargs={"slug": review.slug})
+        reverse("review:add-external-review", kwargs={"slug": review.slug}),
+        user=erm_user,
     ).form
-    assert form["name"].value == ugettext("External review")
-    assert form["document_type"].value == Document.TYPE.external_review
-    assert form["review"].value == str(review.pk)
-    assert form["upload"].value == ""
+    assert form["document-0-upload"].value == ""
     review.delete()
 
 
-def test_document_created(minimal_pdf, django_app):
+def test_document_created(erm_user, minimal_pdf, django_app):
     """
     Test the external review document is uploaded and the document is created.
     """
-    review = baker.make(Review, name="Review", slug="review")
+    review = baker.make(Review, name="Review", slug="review", user=erm_user)
     form = django_app.get(
-        reverse("review:add-external-review", kwargs={"slug": review.slug})
+        reverse("review:add-external-review", kwargs={"slug": review.slug}),
+        user=erm_user,
     ).form
-    form["upload"] = ("document.pdf", minimal_pdf.encode(), "application/pdf")
+    form["document-TOTAL_FORMS"] = 1
+    form["document-0-upload"] = (
+        "document.pdf",
+        minimal_pdf.encode(),
+        "application/pdf",
+    )
     response = form.submit().follow()
-    document = review.get_external_review()
+    document = review.get_external_reviews().first()
     assert response.status == "200 OK"
     assert response.request.path == reverse(
         "review:detail", kwargs={"slug": review.slug}
     )
     assert document is not None
     assert document.file_exists()
-    document.delete()
-    review.delete()
-
-
-def test_existing_document_is_replaced(external_review, minimal_pdf, django_app):
-    """
-    Test any existing external review document is replaced by the new upload.
-    """
-    review = external_review.review
-    existing = external_review.upload.name
-
-    form = django_app.get(
-        reverse("review:add-external-review", kwargs={"slug": review.slug})
-    ).form
-    form["upload"] = ("new.pdf", minimal_pdf.encode(), "application/pdf")
-    form.submit().follow()
-
-    document = review.get_external_review()
-    assert os.path.basename(document.upload.name) == "new.pdf"
-    assert document.file_exists()
-    assert not document.upload.storage.exists(existing)
     document.delete()
     review.delete()

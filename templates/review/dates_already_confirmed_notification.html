@@ -1,0 +1,16 @@
+{% if review.dates_confirmed %}
+  <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+       aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+      <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+        Important
+      </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+      <p class="govuk-notification-banner__heading">
+        The dates for the review dates are already confirmed.
+        <a class="govuk-notification-banner__link" href="{% url "review:detail" slug=review.slug %}">View review details</a>.
+      </p>
+    </div>
+  </div>
+{% endif %}

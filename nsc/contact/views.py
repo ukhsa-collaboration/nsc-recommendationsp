@@ -1,52 +1,47 @@
 from django.urls import reverse
 from django.views import generic
 
-from nsc.organisation.models import Organisation
+from nsc.permissions import AdminRequiredMixin
+from nsc.stakeholder.models import Stakeholder
 
 from .forms import ContactForm
 from .models import Contact
 
 
-class ContactAdd(generic.CreateView):
+class ContactAdd(AdminRequiredMixin, generic.CreateView):
     model = Contact
     form_class = ContactForm
 
     def get_success_url(self):
-        return reverse(
-            "organisation:detail", kwargs={"pk": self.object.organisation.pk}
-        )
+        return reverse("stakeholder:detail", kwargs={"pk": self.object.stakeholder.pk})
 
     def get_initial(self):
         initial = super().get_initial()
 
         if self.request.method == "GET":
-            initial["organisation"] = Organisation.objects.get(pk=self.kwargs["org_pk"])
+            initial["stakeholder"] = Stakeholder.objects.get(pk=self.kwargs["org_pk"])
 
         return initial
 
     def get_context_data(self, **kwargs):
-        organisation = Organisation.objects.get(pk=self.kwargs["org_pk"])
-        return super().get_context_data(organisation=organisation, **kwargs)
+        stakeholder = Stakeholder.objects.get(pk=self.kwargs["org_pk"])
+        return super().get_context_data(stakeholder=stakeholder, **kwargs)
 
 
-class ContactEdit(generic.UpdateView):
+class ContactEdit(AdminRequiredMixin, generic.UpdateView):
     model = Contact
     form_class = ContactForm
 
     def get_context_data(self, **kwargs):
-        organisation = self.object.organisation
-        return super().get_context_data(organisation=organisation, **kwargs)
+        stakeholder = self.object.stakeholder
+        return super().get_context_data(stakeholder=stakeholder, **kwargs)
 
     def get_success_url(self):
-        return reverse(
-            "organisation:detail", kwargs={"pk": self.object.organisation.pk}
-        )
+        return reverse("stakeholder:detail", kwargs={"pk": self.object.stakeholder.pk})
 
 
-class ContactDelete(generic.DeleteView):
+class ContactDelete(AdminRequiredMixin, generic.DeleteView):
     model = Contact
 
     def get_success_url(self):
-        return reverse(
-            "organisation:detail", kwargs={"pk": self.object.organisation.pk}
-        )
+        return reverse("stakeholder:detail", kwargs={"pk": self.object.stakeholder.pk})

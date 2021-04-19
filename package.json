@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "govuk-frontend": "^3.5.0"
+    "govuk-frontend": "^3.5.0",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",

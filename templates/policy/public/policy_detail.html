@@ -5,46 +5,60 @@
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
-{% block title %}
-  {% block page_title %}
-    {{ policy.name }}
-  {% endblock %}
+{% block heading %}
+  <div class="govuk-grid-row sub-heading">
+    <div class="govuk-grid-column-two-thirds">
+      <h3 class="govuk-heading-m">
+      {% if policy.ages|length > 1 %}
+        {% with front=policy.ages|slice:":-1" back=policy.ages|slice:"-1:" %}
+          {% blocktrans with front_list=front|join:", " back=back.0 %}
+            {{ front_list }} and {{ back }} screening programme
+          {% endblocktrans %}
+        {% endwith %}
+      {% else %}
+        {% blocktrans with policy_age=policy.ages.0 %}
+          {{ policy_age }} screening programme
+        {% endblocktrans %}
+      {% endif %}
+      </h3>
+    </div>
+    <div class="govuk-grid-column-one-third">
+      <a class="govuk-link" href="{% url "subscription:public-start" %}?policies={{ policy.id }}">
+        {% trans "Subscribe to alerts on this topic" %}
+      </a>
+    </div>
+  </div>
+  <h1 class="govuk-heading-l">
+    {% block page_title %}
+      {{ policy.name }}
+    {% endblock %}
+  </h1>
 {% endblock %}
 
 {% block content %}
 
-  {% if current_review %}
-    <div class="govuk-warning-text govuk-body nsc-open-for-comment">
-      <div class="govuk-!-font-weight-bold">
-        {% trans 'We are currently accepting public comments on this condition.' %}
-      </div>
-      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-      <div class="govuk-!-font-weight-bold">
-        <a href="{% url 'condition:consultation' policy.slug %}">
-          {% blocktrans with name=policy.name.lower %}
-          Submit comments on {{ name }}
-          {% endblocktrans %}
-        </a>
-      </div>
-      <div>
-        {% blocktrans with closing_date=current_review.consultation_end_display %}
-          Closing date: {{ closing_date }}.
-        {% endblocktrans %}
-      </div>
-      {% if current_review.discussion_date %}
-        <div>
-          {% blocktrans with review_date=current_review.discussion_date_display %}
-            Scheduled UK NSC meeting date: {{ review_date }}.
-          {% endblocktrans %}
+  {% if policy.archived %}
+    <div class="govuk-body ce">
+        <div class="nsc-message-error ">
+          This recommendation has been archived and is no longer regularly reviewed by the UK NSC.
         </div>
-      {% endif %}
     </div>
-  {% endif %}
 
-  {% include "policy/public/condition.html" %}
-  {% include "policy/public/summary.html" %}
-  {% include "policy/public/documents.html" %}
-  {% include "policy/public/review_cycle.html" %}
-  {% include "policy/public/organisations.html" %}
+    {% include "policy/public/condition.html" %}
+    {% include "policy/archive/reason.html" %}
+    {% include "policy/archive/documents.html" %}
+  {% else %}
+
+    {% if policy.current_review %}
+      {% include "policy/public/consultation_status.html" %}
+    {% endif %}
+
+    {% include "policy/public/condition.html" %}
+    {% include "policy/public/summary.html" %}
+    {% include "policy/public/documents.html" %}
+    {% include "policy/public/screening.html" %}
+    {% include "policy/public/review_cycle.html" %}
+    {% include "policy/public/stakeholders.html" %}
+  {% endif %}
 {% endblock %}
 

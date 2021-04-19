@@ -1,0 +1,30 @@
+{% load i18n %}
+
+<div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+
+  {% if show_legend %}
+    {% include "widgets/field_legend.html" %}
+  {% elif not hide_label %}
+    {% include "widgets/field_label.html" %}
+  {% endif %}
+
+  {% include "widgets/field_help.html" %}
+  {% include "widgets/field_errors.html" %}
+
+  {% with widget=field.field.widget %}
+  <select
+      class="govuk-select{% if field.errors %} govuk-input--error{% endif %}"
+      style="width: 100%"
+      id="{{ field.id_for_label }}"
+      name="{{ field.name }}"
+      {% if field.help_text or field.errors %}
+        aria-describedby="{% if field.help_text %}{{ field.id_for_label }}-hint {% endif %}{% if field.errors %}{{ field.id_for_label }}-error{% endif %}"
+      {% endif %}
+  >
+  {% for db_value, verbose in field.field.choices %}
+    <option value="{{ db_value }}"{% if field.value == db_value %} selected{% endif %}>{{ verbose }}</option>
+  {% endfor %}
+  </select>
+  {% endwith %}
+
+</div>

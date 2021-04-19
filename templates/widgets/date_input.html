@@ -10,11 +10,18 @@
     {% include "widgets/field_help.html" %}
 
     {% include "widgets/field_errors.html" %}
+    {% if day %}
     {% include "widgets/field_errors.html" with field=day %}
+    {% endif %}
+    {% if month %}
     {% include "widgets/field_errors.html" with field=month %}
+    {% endif %}
+    {% if year %}
     {% include "widgets/field_errors.html" with field=year %}
+    {% endif %}
 
     <div class="govuk-date-input" id="{{ field.id_for_label}}">
+      {% if day %}
       <div class="govuk-date-input__item">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-date-input__label" for="{{ day.id_for_label }}">
@@ -41,6 +48,8 @@
 
         </div>
       </div>
+      {% endif %}
+      {% if month %}
       <div class="govuk-date-input__item">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-date-input__label" for="{{ month.id_for_label }}">
@@ -67,6 +76,8 @@
 
         </div>
       </div>
+      {% endif %}
+      {% if year %}
       <div class="govuk-date-input__item">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-date-input__label" for="{{ year.id_for_label }}">
@@ -93,6 +104,7 @@
 
         </div>
       </div>
+      {% endif %}
     </div>
   </fieldset>
 </div>

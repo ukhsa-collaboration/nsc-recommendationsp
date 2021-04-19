@@ -1,0 +1,19 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Contact the PHE Screening helpdesk" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
+      {% trans "Your message has been sent" %}
+    </h1>
+    <div class="govuk-panel__body">
+      {% trans "We will respond to your query as soon as we can." %}
+    </div>
+  </div>
+{% endblock %}

@@ -16,15 +16,21 @@ urlpatterns = [
     path(r"<slug:slug>/delete/", views.ReviewDelete.as_view(), name="delete"),
     path(r"<slug:slug>/dates/", views.ReviewDates.as_view(), name="dates"),
     path(
-        r"<slug:slug>/organisations/",
-        views.ReviewOrganisations.as_view(),
-        name="organisations",
+        r"<slug:slug>/dates/confirmation/",
+        views.ReviewDateConfirmation.as_view(),
+        name="open",
+    ),
+    path(
+        r"<slug:slug>/stakeholders/",
+        views.ReviewStakeholders.as_view(),
+        name="stakeholders",
     ),
     path(
         r"<slug:slug>/recommendation/",
         views.ReviewRecommendation.as_view(),
         name="recommendation",
     ),
+    path(r"<slug:slug>/publish/", views.ReviewPublish.as_view(), name="publish",),
     path(r"<slug:slug>/summary/", views.ReviewSummary.as_view(), name="summary"),
     path(r"<slug:slug>/history/", views.ReviewHistory.as_view(), name="history"),
     path(

@@ -3,7 +3,7 @@
 
 {% block back %}
   {% url "dashboard" as back_url %}
-  {% trans 'Back to your products in progress' as back_title %}
+  {% trans 'Back to all reviews' as back_title %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
@@ -14,17 +14,101 @@
 {% block heading %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        {{ review.name }}
-      </h1>
-    </div>
-    <div class="govuk-grid-column-one-third">
-        <strong class="govuk-tag">{{ review.status_display }}</strong>
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">
+          {{ review.name }}
+        </h1>
+      </div>
+      <div class="govuk-grid-column-one-third review-tag">
+          <strong class="govuk-tag">{{ review.status_display }}</strong>
+      </div>
     </div>
   </div>
 {% endblock %}
 
 {% block content %}
+
+  {% if review.is_open and review.status_display == review.STATUS.in_consultation %}
+  <div class="review-status-banner">
+    <p class="govuk-body"><b>Status update:</b></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        {% with num_stakeholders=review.stakeholders.count %}
+          {% blocktrans count count=num_stakeholders %}
+            {{ num_stakeholders }} stakeholder and PHE Comms have been notified.
+          {% plural %}
+            {{ num_stakeholders }} stakeholders and PHE Comms have been notified.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      <li>
+        {% blocktrans with review_name=review.name %}
+          The {{ review_name }} is in open consultation.
+        {% endblocktrans %}
+      </li>
+      {% for condition in review.policies.all %}
+      <li>
+        {% with condition_name=condition.name condition_url=condition.get_public_url %}
+          {% blocktrans %}
+            View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% elif not review.is_open and review.status_display == review.STATUS.in_consultation %}
+  <div class="review-status-banner">
+    <p class="govuk-body"><b>Status update:</b></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        {% blocktrans with open_date=review.review_start|date:"d m Y" %}
+          The review will open on {{ open_date }}.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% with num_stakeholders=review.stakeholders.count %}
+          {% blocktrans count count=num_stakeholders %}
+            At this time we will notify {{ num_stakeholders }} stakeholder.
+          {% plural %}
+            At this time we will notify {{ num_stakeholders }} stakeholders.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% for condition in review.policies.all %}
+      <li>
+        {% with condition_name=condition.name condition_url=condition.get_public_url %}
+          {% blocktrans %}
+            View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% elif review.status_display == review.STATUS.completed %}
+  <div class="review-status-banner">
+    <p class="govuk-body"><b>Status update:</b></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        {% with review_name=review.name %}
+          {% blocktrans %}
+            The {{ review_name }} is complete.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% for condition in review.policies.all %}
+      <li>
+        {% with condition_name=condition.name condition_url=condition.get_public_url %}
+          {% blocktrans %}
+            View the published changes on the <a class="govuk-link" href="{{ condition_url }}">{{ condition_name }} condition page</a>.
+          {% endblocktrans %}
+        {% endwith %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
   <ul class="app-task-list govuk-body">
     <li>
@@ -35,22 +119,22 @@
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
             <a href="{% url 'review:add-external-review' review.slug %}" aria-describedby="external_review_added">
-              {% trans 'Upload consultation documents' %}
+              {% trans 'Upload external review document' %}
             </a>
           </span>
-          {% if review.has_evidence_review %}
-            <strong class="govuk-tag app-task-list__task-completed" id="external_review_added">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_external_review %}
+            <strong class="govuk-tag app-task-list__task-completed" id="external_review_added">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
-            <a href="{% url 'review:organisations' object.slug %}" aria-describedby="stakeholders-notified">
+            <a href="{% url 'review:stakeholders' object.slug %}" aria-describedby="stakeholders-notified">
               {% trans 'Confirm stakeholders to be notified' %}
             </a>
-          {% if review.has_notified_stakeholders %}
-            <strong class="govuk-tag app-task-list__task-completed" id="stakeholders_notified">{% trans 'COMPLETED' %}</strong>
-          {% endif %}
           </span>
+          {% if review.has_notified_stakeholders %}
+            <strong class="govuk-tag app-task-list__task-completed" id="stakeholders_notified">✓</strong>
+          {% endif %}
         </li>
         <li class="app-task-list__item">
           <span class="app-task-list__task-name">
@@ -59,7 +143,7 @@
             </a>
           </span>
           {% if review.has_submission_form %}
-            <strong class="govuk-tag app-task-list__task-completed" id="upload-submission-form">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="upload-submission-form">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -69,7 +153,7 @@
             </a>
           </span>
           {% if review.has_consultation_dates_set and review.has_nsc_meeting_date_set %}
-            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="consultation_dates_set">✓</strong>
           {% endif %}
         </li>
       </ul>
@@ -85,8 +169,8 @@
               {% trans "Upload supporting documents" %}
             </a>
           </span>
-          {% if review.has_evidence_review and review.has_cover_sheet %}
-            <strong class="govuk-tag app-task-list__task-completed" id="review_documents_added">{% trans 'COMPLETED' %}</strong>
+          {% if review.has_supporting_documents %}
+            <strong class="govuk-tag app-task-list__task-completed" id="review_documents_added">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -96,17 +180,7 @@
             </a>
           </span>
           {% if review.has_summary %}
-            <strong class="govuk-tag app-task-list__task-completed" id="summary_added">{% trans 'COMPLETED' %}</strong>
-          {% endif %}
-        </li>
-        <li class="app-task-list__item">
-          <span class="app-task-list__task-name">
-            <a href="{% url 'review:history' review.slug %}" aria-describedby="product_history_added">
-              {% trans "Upload product history" %}
-            </a>
-          </span>
-          {% if review.has_history %}
-            <strong class="govuk-tag app-task-list__task-completed" id="product_history_added">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="summary_added">✓</strong>
           {% endif %}
         </li>
         <li class="app-task-list__item">
@@ -116,7 +190,7 @@
             </a>
           </span>
           {% if review.has_recommendation %}
-            <strong class="govuk-tag app-task-list__task-completed" id="recommendation_submitted">{% trans 'COMPLETED' %}</strong>
+            <strong class="govuk-tag app-task-list__task-completed" id="recommendation_submitted">✓</strong>
           {% endif %}
         </li>
       </ul>
@@ -125,7 +199,7 @@
 
   <div class="link-menu">
     <a href="{% url 'review:delete' review.slug %}" class="govuk-button govuk-button--warning">
-      {% trans "Delete review" %}
+      {% trans "Cancel review" %}
     </a>
   </div>
 

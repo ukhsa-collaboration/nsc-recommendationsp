@@ -11,8 +11,13 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(contact, django_app):
-    return django_app.get(reverse("contact:delete", kwargs={"pk": contact.pk}))
+def url(contact):
+    return reverse("contact:delete", kwargs={"pk": contact.pk})
+
+
+@pytest.fixture
+def response(url, django_app, erm_user):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture
@@ -28,22 +33,30 @@ def test_delete_view(contact, response):
     assert response.context["object"] == contact
 
 
+def test_delete_view__no_user(url, test_access_no_user):
+    test_access_no_user(url=url)
+
+
+def test_delete_view__incorrect_permission(url, test_access_forbidden):
+    test_access_forbidden(url=url)
+
+
 def test_back_link(contact, dom):
     """
-    Test the back link returns to the organisation detail page
+    Test the back link returns to the stakeholder detail page
     """
     link = dom.find(id="back-link-id")
-    organisation = contact.organisation
-    assert link["href"] == organisation.get_detail_url()
-    assert organisation.name in link.text
+    stakeholder = contact.stakeholder
+    assert link["href"] == stakeholder.get_detail_url()
+    assert stakeholder.name in link.text
 
 
 def test_success_url(contact, response):
     """
-    Test deleting a contact returns to the organisation detail page.
+    Test deleting a contact returns to the stakeholder detail page.
     """
     actual = response.form.submit().follow()
-    assert actual.request.path == contact.organisation.get_detail_url()
+    assert actual.request.path == contact.stakeholder.get_detail_url()
 
 
 def test_contact_deleted(contact, response):

@@ -4,7 +4,7 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
 
-from nsc.document.models import Document, review_document_path
+from nsc.document.models import Document, document_path
 from nsc.utils.datetime import from_today, get_today
 
 from ..models import Review
@@ -12,7 +12,6 @@ from ..models import Review
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
-pytest_plugins = ["nsc.review.tests.fixtures", "nsc.document.tests.fixtures"]
 
 
 def test_factory_create_policy():
@@ -92,7 +91,7 @@ def test_external_review_document(review_published):
     Test that the external review document can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.external_review)
-    assert review_published.get_external_review().pk == expected.pk
+    assert review_published.get_external_reviews().first().pk == expected.pk
 
 
 def test_submission_form(review_published):
@@ -100,7 +99,7 @@ def test_submission_form(review_published):
     Test that the submission form can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.submission_form)
-    assert review_published.get_submission_form().pk == expected.pk
+    assert review_published.submission_form.pk == expected.pk
 
 
 def test_evidence_review_document(review_published):
@@ -108,7 +107,7 @@ def test_evidence_review_document(review_published):
     Test that the evidence review can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.evidence_review)
-    assert review_published.get_evidence_review().pk == expected.pk
+    assert review_published.evidence_review.pk == expected.pk
 
 
 def test_cover_sheet_document(review_published):
@@ -116,56 +115,81 @@ def test_cover_sheet_document(review_published):
     Test that the final coversheet document (submitted comments) can be obtained from a review.
     """
     expected = Document.objects.get(document_type=Document.TYPE.cover_sheet)
-    assert review_published.get_cover_sheet().pk == expected.pk
+    assert review_published.cover_sheet.pk == expected.pk
 
 
 @pytest.mark.parametrize(
-    "start,end,count",
-    [
-        (get_today(), None, 1),  # valid: review started
-        (from_today(-30), from_today(-1), 0),  # valid: review completed
-        (None, None, 0),  # error: review created with start date not set
-        (from_today(+1), None, 0),  # error: review created with start date in future
-        (get_today(), from_today(+7), 1),  # error: review started but end already set
-        (None, from_today(-1), 0),  # error: review completed but start date not set
-        (from_today(+1), from_today(+30), 0),  # error: review completed in future
-    ],
+    "published,count",
+    [(False, 1), (True, 0)],  # valid: review started  # valid: review completed
 )
-def test_in_progress(start, end, count):
+def test_in_progress(published, count):
     """
     Test the queryset method in_progress only returns Review objects which are
     currently in review.
-
-    The review_start field gets set when a review is created so we have to force
-    it to be None.
     """
-    instance = baker.make(Review, review_start=start, review_end=end)
-    if start is None:
-        instance.review_start = None
-        instance.save()
+    baker.make(Review, published=published)
     actual = Review.objects.in_progress().count()
     assert count == actual
 
 
 @pytest.mark.parametrize(
-    "start,end,count",
+    "start,end,published,count",
     [
-        (None, None, 0),  # valid: review in pre-consultation
-        (from_today(+1), from_today(+30), 0),  # valid: consultation dates set
-        (get_today(), from_today(+7), 1),  # valid: consultation period opens today
-        (from_today(-30), get_today(), 1),  # valid: consultation period closes today
-        (from_today(-30), from_today(-1), 0),  # valid: review in post-consultation
-        (from_today(+1), None, 0),  # error: pre-consultation but only start date set
-        (get_today(), None, 0),  # error: consultation opens but only start date set
-        (None, from_today(-1), 0),  # error: post-consultation but only end date set
+        (None, None, False, 0),  # valid: review in pre-consultation
+        (from_today(+1), from_today(+30), False, 0),  # valid: consultation dates set
+        (
+            get_today(),
+            from_today(+7),
+            False,
+            1,
+        ),  # valid: consultation period opens today
+        (
+            from_today(-30),
+            get_today(),
+            False,
+            1,
+        ),  # valid: consultation period closes today
+        (
+            from_today(-30),
+            from_today(-1),
+            False,
+            0,
+        ),  # valid: review in post-consultation
+        (
+            from_today(+1),
+            None,
+            False,
+            0,
+        ),  # error: pre-consultation but only start date set
+        (
+            get_today(),
+            None,
+            False,
+            0,
+        ),  # error: consultation opens but only start date set
+        (
+            None,
+            from_today(-1),
+            False,
+            0,
+        ),  # error: post-consultation but only end date set
+        (None, None, True, 0),  # error: already published
+        (from_today(+1), from_today(+30), True, 0),  # error: already published
+        (get_today(), from_today(+7), True, 0),  # error: already published
+        (from_today(-30), get_today(), True, 0),  # error: already published
+        (from_today(-30), from_today(-1), True, 0),  # error: already published
     ],
 )
-def test_open_for_comments(start, end, count):
+def test_open_for_comments(start, end, published, count):
     """
     Test the queryset method open_for_comments only returns Review objects which are
     currently accepting comments from the public.
+
+    Must also not yet be published.
     """
-    baker.make(Review, consultation_start=start, consultation_end=end)
+    baker.make(
+        Review, consultation_start=start, consultation_end=end, published=published
+    )
     actual = Review.objects.open_for_comments().count()
     assert count == actual
 
@@ -188,13 +212,16 @@ def test_closed_for_comments(start, end, count):
     Test the queryset method closed_for_comments only returns Review objects which are
     not accepting comments from the public.
     """
-    baker.make(Review, consultation_start=start, consultation_end=end)
+    baker.make(Review, consultation_start=start, consultation_end=end, published=False)
     actual = Review.objects.closed_for_comments().count()
     assert count == actual
 
 
+@pytest.mark.skip(reason="needs reworking re DocumentPolicy")
 def test_deleting_review_deletes_folder(review_document):
     """
+    TODO - given model changes re Review or DocumentPolicy this will need to change, will pick up in next PR. JO.
+
     Test that deleting a Review cascades and associated documents are deleted too.
     This includes the parent folder if it exists.
     """
@@ -202,5 +229,5 @@ def test_deleting_review_deletes_folder(review_document):
     review.delete()
     assert not review_document.exists()
     assert not review_document.file_exists()
-    folder = review_document_path(review)
+    folder = document_path(review)
     assert not review_document.upload.storage.exists(folder)

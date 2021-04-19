@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body_class %}subscription-management{% endblock %}
+
+{% block back %}
+  {% url "subscription:landing" as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Subscribe to UK NCS updates" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">
+        {% blocktrans %}
+          Choose which condition(s) you are interested in from the list below. You can move between pages
+          using the links at the bottom of the list.
+        {% endblocktrans %}
+      </p>
+      <p class="govuk-body">
+        {% blocktrans %}
+          Then click the button to continue.
+        {% endblocktrans %}
+      </p>
+      <p class="govuk-body">
+        {% blocktrans %}
+          You will then be sent email updates when the UK NSC starts or ends the public consultation on the
+          condition.
+        {% endblocktrans %}
+      </p>
+      <p class="govuk-body">
+        {% blocktrans %}
+          You will receive an email confirming which condition(s) you have subscribed to. This will contain
+          a link to manage or cancel your subscription.
+        {% endblocktrans %}
+      </p>
+    </div>
+  </div>
+
+  {% if form.errors %}
+    {% include "widgets/error_summary.html" %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="display: none">{{ form.hidden_policies }}</div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <div class="filter-box">
+          <h2 class="govuk-heading-m">{% trans "Filter conditions by" %}:</h2>
+
+          <div class="govuk-form-group">
+            {% include "widgets/text_input.html" with field=form.search_filter.form.name show_legend=True %}
+          </div>
+
+          <div class="govuk-form-group">
+            {% include "widgets/radio_buttons.html" with field=form.search_filter.form.affects show_legend=True %}
+          </div>
+
+          <button type="submit" name="search" class="govuk-button search-b-button govuk-!-margin-right-8">
+            Search
+          </button>
+
+          <button type="submit" name="clear-search" class="as-link" style="float: right">
+              Clear search
+          </button>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-body">
+          <div class="pagination__summary">
+            {% with start=form.page.start_index end=form.page.end_index count=form.paginator.count %}
+              {% blocktrans %}Showing {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        <table class="govuk-table policy-table" id="id___all__">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header">{% trans "Condition" %}</th>
+              <th class="govuk-table__header">{% trans "Who it affects" %}</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for policy in form.policies.field.queryset %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                <div class="govuk-checkboxes">
+                  <div class="govuk-checkboxes__item">
+                    {% with str_id=policy.id|stringformat:"i" %}
+                    <input
+                        type="checkbox"
+                        name="policies"
+                        class="govuk-checkboxes__input"
+                        id="id_policies_{{ str_id }}"
+                        value="{{ str_id }}"
+                        {% if str_id in form.policies.data %}checked="checked"{% endif %}
+                    >
+                    <label class="govuk-label govuk-checkboxes__label" for="id_policies_{{ str_id }}">{{ policy.name }}</label>
+                    {% endwith %}
+                  </div>
+                </div>
+              </td>
+              <td class="govuk-table__cell">{{ policy.get_ages_display }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% include "widgets/form-pagination.html" with page_obj=form.page paginator=form.paginator %}
+
+        <div class="govuk-body">
+          <button type="submit" class="govuk-button" name="save" value="save">
+            {% trans 'Continue' %}
+          </button>
+          {% if subscription.id %}
+          <button type="submit" class="as-link" name="delete" value="delete" style="float: right">
+            {% trans 'Unsubscribe from everything' %}
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}

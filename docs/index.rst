@@ -19,3 +19,5 @@ UK NSC Project Documentation
    development
    deployment
    settings
+   notifications
+   scheduled-tasks

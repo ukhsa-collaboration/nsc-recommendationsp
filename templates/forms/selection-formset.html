@@ -1,0 +1,35 @@
+{% load i18n %}
+<div id="policy_formset_wrapper" class="formset__root" data-nsc-formset="{{ formset.prefix }}">
+
+  {% if label %}
+    <label class="govuk-label">{{ label }}</label>
+  {% endif %}
+
+  {{ formset.management_form }}
+
+  <fieldset class="govuk-fieldset" id="contact_emptyform_wrapper" style="display: none"
+            data-nsc-formset-template="{{ formset.empty_form.prefix }}">
+    {% for field in formset.empty_form %}
+      <div class="govuk-form-group">
+        {{ field }}
+      </div>
+    {% endfor %}
+  </fieldset>
+
+  {% for formset_form in formset %}
+    <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
+      {{ formset_form.non_field_errors }}
+
+      {% for field in formset_form %}
+        <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+          {% include "widgets/field_errors.html" %}
+          {{ field }}
+        </div>
+      {% endfor %}
+    </fieldset>
+  {% endfor %}
+
+  <div class="govuk-form-group">
+    <a id="add" class="govuk-link" type="button" href="#" data-nsc-formset-add="">{{ link_text }}</a>
+  </div>
+</div>

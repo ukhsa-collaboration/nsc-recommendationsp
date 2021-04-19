@@ -8,12 +8,15 @@ import datetime
 import json
 import re
 
+from django.contrib.auth import get_user_model
+
 import requests
 from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
 
 from nsc.policy.models import Policy
-from nsc.review.models import Review
+from nsc.review.models import Review, ReviewRecommendation
+from scripts.parse import parse_html, content_nodes
 
 
 def run():
@@ -38,19 +41,24 @@ def run():
         try:
             review = Review.objects.get(name=name)
         except Review.DoesNotExist:
-            review = Review(name=name)
+            review = Review(name=name, is_legacy=True)
 
-        review.review_type = Review.TYPE.other
+        review.review_type = [Review.TYPE.other]
+
         review.recommendation = entry["recommendation"]
         review.review_start = review_start
         review.review_end = review_end
+        review.user = get_user_model().objects.get_or_create(username="legacy")[0]
+
+        if review.review_end:
+            review.published = True
+
         review.summary = get_summary(page)
 
         review.clean()
         review.save()
 
         policy = Policy.objects.get(slug=entry["slug"])
-        policy.last_review = last_review_date
         policy.next_review = last_review_date + relativedelta(years=3)
         policy.summary = review.summary
 
@@ -58,6 +66,12 @@ def run():
         policy.save()
 
         policy.reviews.add(review)
+
+        ReviewRecommendation.objects.get_or_create(
+            review=review,
+            policy=policy,
+            defaults={"recommendation": entry["recommendation"]},
+        )
 
     print("Finished")
 
@@ -90,20 +104,11 @@ def get_last_review_date(node):
 
 
 def get_summary(node):
-
-    content = []
-
     regex = re.compile(r"^Why is screening (not )?recommended by UK NSC\?")
     node = node.find("h3", string=regex)
 
     if node:
         node = node.next_sibling
-        while node.name != "h3":
-            link = node.find("a")
-            if link is None:
-                text = node.text.strip()
-                if text:
-                    content.append(text)
-            node = node.find_next_sibling()
+        return parse_html(content_nodes(node))
 
-    return "\n".join(content)
+    return ""

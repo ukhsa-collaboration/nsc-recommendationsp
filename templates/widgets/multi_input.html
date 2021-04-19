@@ -2,27 +2,31 @@
 
 <div class="govuk-form-group{% if field.errors %} govuk-form-group--error{% endif %}">
 
-  <fieldset class="govuk-fieldset"
-            role="group"
-            aria-describedby="{% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %} ">
+  <fieldset
+      class="govuk-fieldset"
+      {% if field.help_text or field.errors %}aria-describedby="{% if field.help_text %}{{ field.name }}-hint {% endif %}{% if field.errors %}{{ field.name }}-error {% endif %}"{% endif %}
+  >
 
-    {% include "widgets/field_legend.html" %}
+    {% if show_legend %}
+        {% include "widgets/field_legend.html" %}
+    {% endif %}
     {% include "widgets/field_help.html" %}
     {% include "widgets/field_errors.html" %}
 
-    <div class="govuk-{{ style }}--small{% if inline %}--inline{% endif %}">
+    <div class="govuk-{{ style }}--small{% if inline %} govuk-{{ style }}--inline{% endif %}">
       {% for element in field %}
         <div class="govuk-{{ style }}__item">
 
           <input
             type="{{ element.data.type }}"
-            name="{{ field.name }}"
+            name="{{ field.html_name }}"
             class="govuk-{{ style }}__input"
             id="{{ element.id_for_label }}"
             value="{{ element.data.value|stringformat:'s' }}"
             {% if element.data.selected == True %}
               checked="checked"
             {% endif %}
+            {% include "widgets/field_attrs.html" with widget=element.data %}
           >
 
           <label class="govuk-label govuk-{{ style }}__label" for="{{ element.id_for_label }}">

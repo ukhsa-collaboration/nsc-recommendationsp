@@ -1,0 +1,42 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% trans "Back" as back_title %}
+  {% url 'review:detail' object.slug as back_url %}
+  {% include 'widgets/back_link.html' %}
+  {% include "review/dates_already_confirmed_notification.html" %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% if scheduled %}
+      {% blocktrans %}
+        Confirm you want to schedule the {{ review }} consultation?
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans %}
+        Confirm you want to open the {{ review }} consultation now?
+      {% endblocktrans %}
+    {% endif %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-body">
+    <form method="post">
+      {% csrf_token %}
+
+      {% include "widgets/radio_buttons.html" with field=form.dates_confirmed inline=True %}
+
+      <button type="submit" class="govuk-button" name="submit" value="submit" {% if review.dates_confirmed %}disabled{% endif %}>
+        {% if scheduled %}
+          {% trans 'Schedule consultation' %}
+        {% else %}
+          {% trans 'Continue and open consultation' %}
+        {% endif %}
+      </button>
+    </form>
+  </div>
+
+{% endblock %}

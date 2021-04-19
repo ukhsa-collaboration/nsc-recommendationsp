@@ -96,8 +96,6 @@ export class Formset {
     this.numFormsMin = parseInt(document.getElementById(`id_${prefix}-MIN_NUM_FORMS`).value, 10);
     this.numFormsMax = parseInt(document.getElementById(`id_${prefix}-MAX_NUM_FORMS`).value, 10);
 
-    this.nextId = this.numForms + 1;
-
     // Find existing forms
     let formEls = rootEl.querySelectorAll(`[data-${this.dataForm}]`);
     this.forms = []
@@ -116,7 +114,8 @@ export class Formset {
     if (!this.addEl) {
       this.addEl = this.getAddEl();
     } else {
-      this.addEl.onclick = () => {
+      this.addEl.onclick = (e) => {
+        e.preventDefault();
         this.addForm();
       }
     }
@@ -178,6 +177,10 @@ export class Formset {
 
   set numForms(value) {
     this.totalFormsEl.value = value;
+  }
+
+  get nextId() {
+    return this.numForms;
   }
 
   createForm(id) {

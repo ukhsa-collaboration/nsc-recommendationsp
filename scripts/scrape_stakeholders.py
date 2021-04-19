@@ -9,8 +9,8 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from nsc.organisation.models import Organisation
 from nsc.policy.models import Policy
+from nsc.stakeholder.models import Stakeholder
 
 
 def run():
@@ -21,7 +21,7 @@ def run():
         page = get_page(entry["url"])
 
         for stakeholder in get_stakeholders(page):
-            contact, created = Organisation.objects.get_or_create(
+            contact, created = Stakeholder.objects.get_or_create(
                 name=stakeholder["name"]
             )
 

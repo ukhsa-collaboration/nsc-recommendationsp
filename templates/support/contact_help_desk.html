@@ -1,0 +1,52 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Contact the UK National Screening Committee" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    {% blocktrans %}
+      <a class="govuk-link" href="https://www.gov.uk/government/groups/uk-national-screening-committee-uk-nsc">The UK National Screening Committee</a>
+      (UK NSC) makes recommendations on all aspects of population screening  in the UK. See the
+      <a class="govuk-link" href="https://www.gov.uk/government/publications/uk-nsc-evidence-review-process">UK NSC evidence review process</a>
+      and
+      <a class="govuk-link" href="https://www.gov.uk/government/publications/uk-nsc-evidence-review-process/appendix-c-stakeholder-information">UK NSC stakeholder information</a>
+      for details of how to submit proposals for screening and how to respond to consultations.
+    {% endblocktrans %}
+  </p>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      Complete and submit this form for any other issues relating to the UK NSC and its recommendations.
+    {% endblocktrans %}
+  </p>
+
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      Please do not send or provide any sensitive, confidential or patient identifiable information to the helpdesk.
+    </strong>
+  </div>
+
+  {% if form.errors %}
+    {% include "widgets/error_summary.html" %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% include "widgets/text_input.html" with field=form.name %}
+    {% include "widgets/text_input.html" with field=form.organisation %}
+    {% include "widgets/text_input.html" with field=form.role %}
+    {% include "widgets/select_input.html" with field=form.country %}
+    {% include "widgets/text_input.html" with field=form.subject %}
+    {% include "widgets/text_area.html" with field=form.message %}
+    {% include "widgets/text_input.html" with field=form.email %}
+
+    <button type="submit" class="govuk-button">{% trans "Submit" %}</button>
+  </form>
+{% endblock %}

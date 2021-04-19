@@ -1,19 +1,50 @@
 {% load i18n %}
 
-<h2 class="govuk-heading-s">
-  {% blocktrans with year=policy.last_review.year%}
-  Supporting documents from the {{ year }} review
-  {% endblocktrans %}
-</h2>
+{% for review in policy.reviews_for_public_documents %}
+    <h2 class="govuk-heading-s">
+      {% blocktrans with year=review.review_end.year %}
+      Supporting documents from the {{ year }} review
+      {% endblocktrans %}
+    </h2>
 
-<ul class="govuk-list">
-  {% for document in policy.documents.all %}
-    <li>
-      <a class="govuk-link" href="{{ document.url }}">{{ document.name }}</a>
-    </li>
-  {% empty %}
-    <li>
-      {% trans 'There are no supporting documents at this time' %}
-    </li>
-  {% endfor %}
-</ul>
+    {% if review != policy.latest_review %}
+        <p class="govuk-body">
+            {% blocktrans with year=review.review_end.year recommendation=review.recommendation|yesno:",did not " %}
+            In {{ year }}, the UK NSC {{ recommendation }} recommend screening for this condition.
+            {% endblocktrans %}
+        </p>
+    {% endif %}
+    <div class="govuk-body">
+      {% for document in review.get_all_type_documents %}
+        {% if document %}
+            <p>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
+              <br/>
+              {% blocktrans with name=document.name|lower %}
+                 This is the previous {{ name }} conducted to investigate whether the condition should be screened or not.
+              {% endblocktrans %}
+            </p>
+        {% endif %}
+      {% endfor %}
+      {% if review.cover_sheet %}
+        <p>
+          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url }}">{{ review.cover_sheet.name }} ({% trans "Opens in a new tab" %})</a>
+          <br/>
+          {% blocktrans %}
+          These are the outcomes of the review process including the public consultation comments.
+          {% endblocktrans %}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if review.other_review_documents %}
+      <p class="govuk-body">Other supporting documents</p>
+      <ul class="govuk-list govuk-list--bullet">
+      {% for document in review.other_review_documents %}
+         <li>
+          <a class="govuk-link" target="_blank" href="{{ document.upload.url }}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
+         </li>
+       {% endfor %}
+      </ul>
+    {% endif %}
+{% endfor %}

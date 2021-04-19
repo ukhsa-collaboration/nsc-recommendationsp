@@ -1,0 +1,52 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' with back_url="/" %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Subscribe to receive updates on UK NSC consultations" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body govuk-!-margin-top-4">
+    <a class="govuk-button" href="{% url "subscription:public-start" %}">
+      {% trans "Subscribe as a member of the public" %}
+    </a>
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      This option is for members of the public with a personal interest in a screening topic.
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      We will email you when the UK NSC starts a public consultation on the topic(s) you subscribe to.
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body govuk-!-margin-top-9">
+    <a class="govuk-button" href="{% url "subscription:stakeholder-start" %}">
+      {% trans "Subscribe as a health professional or organisation" %}
+    </a>
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      This option is for individuals or organisations with a professional interest or involvement in a
+      screening topic(s) subscribed to.
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      We will email you when the UK NSC starts a public consultation on the topic(s) you subscribe to.
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      You can have your name or organisation listed as a stakeholder on the page od the topic(s) you
+      subscribe to.
+    {% endblocktrans %}
+  </p>
+{% endblock %}

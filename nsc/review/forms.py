@@ -2,18 +2,27 @@ from distutils.util import strtobool
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.forms import modelformset_factory
+from django.utils.functional import cached_property
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
+from django.utils.translation import ngettext_lazy
 from django.utils.translation import ugettext_lazy as _
 
 from dateutil.relativedelta import relativedelta
 from model_utils import Choices
 
-from nsc.organisation.models import Organisation
-from nsc.policy.models import Policy
+from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
 
-from .models import Review
+from ..document.models import Document
+from ..policy.formsets import PolicySelectionFormset
+from ..policy.models import Policy
+from ..stakeholder.formsets import StakeholderSelectionFormset
+from ..utils.markdown import convert
+from .models import Review, ReviewRecommendation, SummaryDraft
 
 
 class SearchForm(forms.Form):
@@ -53,21 +62,12 @@ class ReviewForm(forms.ModelForm):
         ),
     )
 
-    review_type = forms.TypedChoiceField(
+    review_type = forms.MultipleChoiceField(
         label=_("What type of product is this?"),
-        # Todo upgrade this widget to allow multiple selections
-        # help_text=_("Check all that apply"),
+        help_text=_("Select all that apply"),
         choices=Review.TYPE,
-        widget=forms.RadioSelect,
-        error_messages={"required": _("Select which type of review this is")},
-    )
-
-    policies = forms.ModelMultipleChoiceField(
-        label=_("Conditions"),
-        queryset=Policy.objects.active(),
         widget=forms.CheckboxSelectMultiple,
-        help_text=_("Select all the conditions that will be included in this review"),
-        required=False,
+        error_messages={"required": _("Select which type of review this is")},
     )
 
     class Meta:
@@ -83,19 +83,33 @@ class ReviewForm(forms.ModelForm):
 
         return name
 
-    def clean_policies(self):
-        policies = self.cleaned_data["policies"]
-        if not policies:
-            self.add_error(
-                "policies", _("Select all the conditions that this review will cover")
-            )
-        if Policy.objects.filter(pk__in=policies).count() != len(policies):
-            self.add_error(None, _("There was an error creating the review."))
-        return policies
+    @cached_property
+    def policy_formset(self):
+        return PolicySelectionFormset(
+            self.data or None,
+            prefix="policies",
+            initial=(
+                [
+                    {"policy": p}
+                    for p in self.instance.policies.values_list("id", flat=True)
+                ]
+                if self.instance.id
+                else [{"policy": policy} for policy in self.initial.get("policies", [])]
+            ),
+        )
+
+    def is_valid(self):
+        policies_is_valid = self.policy_formset.is_valid()
+        return super(ReviewForm, self).is_valid() and policies_is_valid
 
     def save(self, *args, **kwargs):
         instance = super(ReviewForm, self).save(*args, **kwargs)
-        instance.policies.set(self.cleaned_data["policies"])
+
+        policy_ids = [entry["policy"].id for entry in self.policy_formset.cleaned_data]
+        instance.policies.set(policy_ids)
+        instance.stakeholders.set(
+            Stakeholder.objects.filter(policies__pk__in=policy_ids).distinct()
+        )
         return instance
 
 
@@ -104,13 +118,7 @@ class ReviewDatesForm(forms.ModelForm):
     consultation_open = forms.TypedChoiceField(
         label=_("Consultation open date"),
         help_text=_("When do you want to open this consultation?"),
-        choices=Choices(
-            (True, _("Now - open this consultation and email {} stakeholders")),
-            (
-                False,
-                _("Schedule this consultation to automatically open on a later date"),
-            ),
-        ),
+        choices=Choices((True, "now"), (False, "later"),),
         widget=forms.RadioSelect,
         required=False,
     )
@@ -150,7 +158,6 @@ class ReviewDatesForm(forms.ModelForm):
         required=False,
     )
 
-    nsc_meeting_date_day = forms.IntegerField(label=_("Day"), required=False)
     nsc_meeting_date_month = forms.IntegerField(label=_("Month"), required=False)
     nsc_meeting_date_year = forms.IntegerField(label=_("Year"), required=False)
 
@@ -158,30 +165,51 @@ class ReviewDatesForm(forms.ModelForm):
         model = Review
         fields = ["consultation_start", "consultation_end", "nsc_meeting_date"]
 
+    def __init__(self, *args, initial=None, **kwargs):
+        three_months_time = self.today + relativedelta(months=+3)
+
+        initial = {
+            "consultation_start_day": self.today.day,
+            "consultation_start_month": self.today.month,
+            "consultation_start_year": self.today.year,
+            "consultation_end_day": three_months_time.day,
+            "consultation_end_month": three_months_time.month,
+            "consultation_end_year": three_months_time.year,
+            **(initial or {}),
+        }
+
+        super().__init__(*args, initial=initial, **kwargs)
+
+        self.fields["consultation_open"].choices = (
+            (
+                True,
+                _("Now - open this consultation and email {} stakeholders").format(
+                    self.instance.stakeholders.count()
+                ),
+            ),
+            (
+                False,
+                _("Schedule this consultation to automatically open on a later date"),
+            ),
+        )
+
+        # if the dates have already been confirmed disable the fields
+        for field in self.fields.values():
+            field.widget.attrs["disabled"] = self.instance.dates_confirmed
+
+    @cached_property
+    def today(self):
+        return get_today()
+
     def clean_consultation_open(self):
         value = self.cleaned_data["consultation_open"]
         return strtobool(value) if value else None
 
     def clean(self):
+        if self.instance.dates_confirmed:
+            self.add_error(None, _("The dates have already been confirmed."))
+
         data = self.cleaned_data
-
-        consultation_open = data.get("consultation_open", None)
-
-        if consultation_open:
-            date = get_today()
-            data["consultation_start_day"] = date.day
-            data["consultation_start_month"] = date.month
-            data["consultation_start_year"] = date.year
-
-            day = data.get("consultation_end_day", None)
-            month = data.get("consultation_end_month", None)
-            year = data.get("consultation_end_year", None)
-
-            if not (day or month or year):
-                date = get_today() + relativedelta(months=+3)
-                data["consultation_end_day"] = date.day
-                data["consultation_end_month"] = date.month
-                data["consultation_end_year"] = date.year
 
         day = data["consultation_start_day"]
         month = data["consultation_start_month"]
@@ -206,7 +234,7 @@ class ReviewDatesForm(forms.ModelForm):
 
         if day is not None and month is not None and year is not None:
             try:
-                data["consultation_start"] = get_today().replace(
+                data["consultation_start"] = self.today.replace(
                     year=year, month=month, day=day
                 )
             except ValueError:
@@ -243,7 +271,7 @@ class ReviewDatesForm(forms.ModelForm):
 
         if day is not None and month is not None and year is not None:
             try:
-                data["consultation_end"] = get_today().replace(
+                data["consultation_end"] = self.today.replace(
                     year=year, month=month, day=day
                 )
             except ValueError:
@@ -257,16 +285,10 @@ class ReviewDatesForm(forms.ModelForm):
         if day is None and month is None and year is None:
             data["consultation_end"] = None
 
-        day = data.get("nsc_meeting_date_day", None)
         month = data.get("nsc_meeting_date_month", None)
         year = data.get("nsc_meeting_date_year", None)
 
-        if day is not None or month is not None or year is not None:
-            if day is None:
-                self.add_error(
-                    "nsc_meeting_date_day",
-                    _("Enter the day the NSC Meeting takes place"),
-                )
+        if month is not None or year is not None:
             if month is None:
                 self.add_error(
                     "nsc_meeting_date_month",
@@ -278,17 +300,17 @@ class ReviewDatesForm(forms.ModelForm):
                     _("Enter the year the NSC Meeting takes place"),
                 )
 
-        if day is not None and month is not None and year is not None:
+        if month is not None and year is not None:
             try:
-                data["nsc_meeting_date"] = get_today().replace(
-                    year=year, month=month, day=day
+                data["nsc_meeting_date"] = self.today.replace(
+                    year=year, month=month, day=1
                 )
             except ValueError:
                 self.add_error(
                     "nsc_meeting_date", _("Enter a correct date for the NSC Meeting")
                 )
 
-        if day is None and month is None and year is None:
+        if month is None and year is None:
             data["nsc_meeting_date"] = None
 
         if "consultation_start" in data and "consultation_end" in data:
@@ -317,7 +339,9 @@ class ReviewDatesForm(forms.ModelForm):
                 )
 
         if data.get("consultation_end", False) and data.get("nsc_meeting_date", False):
-            if data["nsc_meeting_date"] < data["consultation_end"]:
+            if data["nsc_meeting_date"].replace(day=1) < data[
+                "consultation_end"
+            ].replace(day=1):
                 self.add_error(
                     "nsc_meeting_date",
                     _(
@@ -328,41 +352,174 @@ class ReviewDatesForm(forms.ModelForm):
         return data
 
 
-class ReviewOrganisationsForm(forms.Form):
-
-    organisations = forms.ModelMultipleChoiceField(
-        label=_("Stakeholders"),
-        queryset=Organisation.objects.none(),
-        widget=forms.CheckboxSelectMultiple,
-        help_text=_(
-            "Select the stakeholders who will be notified when the consultation opens"
-        ),
-    )
-
-    def __init__(self, *args, **kwargs):
-        review = kwargs.pop("instance")
-        super().__init__(*args, **kwargs)
-
-        self.fields["organisations"].queryset = review.stakeholders()
-
-    def clean(self):
-        self.add_error(None, "TEST")
-
-
-class ReviewSummaryForm(forms.ModelForm):
-
-    summary = forms.CharField(
-        label=_("Upload plain English summary"),
-        help_text=_("Use markdown to format the text"),
-        widget=forms.Textarea,
-        error_messages={
-            "required": "Enter the summary of the recommendation made for this review."
-        },
+class ReviewDateConfirmationForm(forms.ModelForm):
+    dates_confirmed = forms.TypedChoiceField(
+        choices=((True, _("Yes")), (False, _("No")),),
+        widget=forms.RadioSelect,
+        initial=None,
     )
 
     class Meta:
         model = Review
-        fields = ["summary"]
+        fields = ("dates_confirmed",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["dates_confirmed"].label = _(
+            "Confirm you want to open the {review} consultation now?"
+        ).format(review=escape(self.instance))
+
+        if self.instance.review_start >= get_today():
+            self.fields["dates_confirmed"].help_text = _(
+                "This will update the public condition page to show the consultation is open and notify "
+                "{stakeholders} by email"
+            ).format(stakeholders=self.instance.stakeholders.count())
+        else:
+            self.fields["dates_confirmed"].help_text = _(
+                "This will schedule the public condition page to show the consultation is open and notify "
+                "{stakeholders} by email on {date}"
+            ).format(
+                stakeholders=self.instance.stakeholders.count(),
+                date=self.instance.consultation_start.strftime("%d %m %Y"),
+            )
+
+        # if the dates have already been confirmed disable the fields
+        for field in self.fields.values():
+            field.widget.attrs["disabled"] = self.instance.dates_confirmed
+
+    def clean(self):
+        if self.instance.dates_confirmed:
+            self.add_error(None, _("The dates have already been confirmed."))
+
+        if not self.instance.consultation_start:
+            self.add_error(
+                None, _("The review consultation start date has not been set.")
+            )
+        if not self.instance.consultation_end:
+            self.add_error(
+                None, _("The review consultation end date has not been set.")
+            )
+        if not self.instance.nsc_meeting_date:
+            self.add_error(None, _("The review UK NSC meeting date has not been set."))
+
+        return super().clean()
+
+
+class ReviewStakeholdersForm(forms.ModelForm):
+
+    stakeholders = forms.ModelMultipleChoiceField(
+        label=_("Stakeholders"),
+        queryset=Stakeholder.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        help_text=_("Deselect any stakeholders that are not to be notified"),
+    )
+
+    class Meta:
+        model = Review
+        fields = ()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["stakeholders"].queryset = (
+            (self.instance.stakeholders.distinct() | self.instance.policy_stakeholders)
+            .distinct()
+            .order_by("name")
+        )
+
+    def is_valid(self):
+        formset_valid = self.extra_stakeholders_formset.is_valid()
+        return super().is_valid() and formset_valid
+
+    @cached_property
+    def extra_stakeholders_formset(self):
+        formset = StakeholderSelectionFormset(
+            self.data or None,
+            prefix="stakeholders",
+            initial=(
+                [{"stakeholder": s} for s in self.instance.stakeholders.none()]
+                if self.instance.id
+                else None
+            ),
+        )
+        formset.min_num = 0
+        return formset
+
+    def save(self, commit=True):
+        self.instance.stakeholders.set(
+            set(self.cleaned_data["stakeholders"])
+            | set(
+                f.cleaned_data["stakeholder"] for f in self.extra_stakeholders_formset
+            )
+        )
+
+        self.instance.stakeholders_confirmed = True
+        self.instance.save()
+        return self.instance
+
+
+class SummaryDraftFormsetForm(forms.ModelForm):
+    review = forms.ModelChoiceField(Review.objects.all(), widget=forms.HiddenInput)
+    policy = forms.ModelChoiceField(Policy.objects.all(), widget=forms.HiddenInput)
+    updated = forms.NullBooleanField(widget=forms.HiddenInput, required=False)
+
+    class Meta:
+        model = SummaryDraft
+        fields = ("review", "policy", "text", "updated")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["text"].label = escape(self.instance.policy.name)
+        self.fields["text"].help_text = _(
+            "Use markdown to complete the text field below."
+        )
+
+    def has_changed(self):
+        # force the form to update the "updated" status even if the text is unchanged
+        return True
+
+    def clean_updated(self):
+        return True
+
+
+class ReviewSummaryForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = []
+
+    @cached_property
+    def formset(self):
+        summaries = {s.policy: s for s in self.instance.summary_drafts.all()}
+        policies = self.instance.policies.all()
+        for p in policies:
+            if p not in summaries:
+                SummaryDraft.objects.create(
+                    policy=p, review=self.instance, text=p.summary
+                )
+
+        return modelformset_factory(
+            SummaryDraft,
+            form=SummaryDraftFormsetForm,
+            min_num=len(policies),
+            max_num=len(policies),
+            can_delete=False,
+            can_order=False,
+            extra=False,
+        )(
+            queryset=self.instance.summary_drafts.all().order_by("policy__name"),
+            prefix="summary",
+            data=self.data or None,
+        )
+
+    def is_valid(self):
+        formset_valid = self.formset.is_valid()
+        return super().is_valid() and formset_valid
+
+    def save(self, commit=True):
+        self.formset.save(commit=commit)
+        return super().save(commit=commit)
 
 
 class ReviewHistoryForm(forms.ModelForm):
@@ -379,14 +536,138 @@ class ReviewHistoryForm(forms.ModelForm):
         fields = ["background"]
 
 
-class ReviewRecommendationForm(forms.ModelForm):
-
+class RecommendationFormsetForm(forms.ModelForm):
+    review = forms.ModelChoiceField(Review.objects.all(), widget=forms.HiddenInput)
+    policy = forms.ModelChoiceField(Policy.objects.all(), widget=forms.HiddenInput)
     recommendation = forms.TypedChoiceField(
-        label=_("What is the recommended decision for screening?"),
-        choices=Choices((True, _("Recommened")), (False, _("Not recommended"))),
+        choices=Choices((True, _("Yes")), (False, _("No"))),
         widget=forms.RadioSelect,
+        required=True,
+    )
+
+    class Meta:
+        model = ReviewRecommendation
+        fields = (
+            "review",
+            "policy",
+            "recommendation",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["recommendation"].label = escape(self.instance.policy.name)
+
+
+class ReviewRecommendationForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = []
+
+    @cached_property
+    def formset(self):
+        summaries = {s.policy: s for s in self.instance.review_recommendations.all()}
+        policies = self.instance.policies.all()
+        for p in policies:
+            if p not in summaries:
+                ReviewRecommendation.objects.create(
+                    policy=p, review=self.instance, recommendation=None
+                )
+
+        return modelformset_factory(
+            ReviewRecommendation,
+            form=RecommendationFormsetForm,
+            min_num=len(policies),
+            max_num=len(policies),
+            can_delete=False,
+            can_order=False,
+            extra=False,
+        )(
+            queryset=self.instance.review_recommendations.all().order_by(
+                "policy__name"
+            ),
+            prefix="recommendation",
+            data=self.data or None,
+        )
+
+    def is_valid(self):
+        formset_valid = self.formset.is_valid()
+        return super().is_valid() and formset_valid
+
+    def save(self, commit=True):
+        self.formset.save(commit=commit)
+        return super().save(commit=commit)
+
+
+class ReviewPublishForm(forms.ModelForm):
+
+    published = forms.BooleanField(
+        widget=forms.RadioSelect(choices=Choices((True, _("Yes")), (False, _("No")))),
     )
 
     class Meta:
         model = Review
-        fields = ["recommendation"]
+        fields = ["published"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        conditions = list(self.instance.policies.values_list("name", flat=True))
+        joined_conditions = conditions[0]
+        if len(conditions) > 1:
+            joined_conditions = _("{list} and {final}").format(
+                list=", ".join(conditions[:-1]), final=conditions[-1]
+            )
+
+        self.fields["published"].help_text = ngettext_lazy(
+            "This will publish the recommendation decision, plain text summary and supporting "
+            "documents to the public {conditions} page",
+            "This will publish the recommendation decision, plain text summary and supporting "
+            "documents to the public {conditions} pages",
+            len(conditions),
+        ).format(conditions=escape(joined_conditions))
+
+    def save(self, commit=True):
+        if not self.cleaned_data["published"]:
+            return self.instance
+
+        summaries = self.instance.summary_drafts.values_list("policy_id", "text")
+        recommendations = self.instance.review_recommendations.values_list(
+            "policy_id", "recommendation"
+        )
+
+        with transaction.atomic():
+            # attach the supporting documents to the policies
+            supporting_document_types = [
+                Document.TYPE.cover_sheet,
+                Document.TYPE.evidence_review,
+                Document.TYPE.evidence_map,
+                Document.TYPE.cost,
+                Document.TYPE.systematic,
+                Document.TYPE.other,
+            ]
+            supporting_documents = self.instance.documents.filter(
+                document_type__in=supporting_document_types
+            )
+            for doc in supporting_documents:
+                doc.policies.set(self.instance.policies.all())
+
+            # update the plain english summary of each policy
+            for policy_id, text in summaries:
+                Policy.objects.filter(id=policy_id).update(
+                    summary=text, summary_html=convert(text)
+                )
+
+            # update the recommendation of each policy
+            for policy_id, recommendation in recommendations:
+                Policy.objects.filter(id=policy_id).update(
+                    recommendation=recommendation
+                )
+
+            _today = get_today()
+            self.instance.review_end = _today
+            self.instance.policies.update(
+                next_review=_today.replace(year=_today.year + 3)
+            )
+
+            return super().save(commit=commit)

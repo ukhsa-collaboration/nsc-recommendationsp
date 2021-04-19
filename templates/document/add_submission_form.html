@@ -2,16 +2,14 @@
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with review.name as name %}
-    Back to {{ name }}
-  {% endblocktrans %}
+  {% trans "Back" as back_title %}
   {% url 'review:detail' review.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
 {% block title %}
   {% block page_title %}
-    Upload the response form
+    Upload response document
   {% endblock %}
 {% endblock %}
 
@@ -28,10 +26,10 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/file_upload.html" with field=form.upload %}
+    {% include "widgets/file_upload.html" with field=form.upload document=review.submission_form %}
 
     <button type="submit" class="govuk-button" name="save" value="save">
-      {% trans 'Save and continue' %}
+      {% trans 'Continue' %}
     </button>
 
   </form>

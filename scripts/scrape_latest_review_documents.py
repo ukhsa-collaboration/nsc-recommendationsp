@@ -6,11 +6,14 @@ available, for each condition on the NSC legacy web site.
 import json
 import os
 import re
+import sys
 import tempfile
+from collections import Counter
+
+from django.core.files import File
 
 import requests
 from bs4 import BeautifulSoup
-from django.core.files import File
 
 from nsc.document.models import Document
 from nsc.policy.models import Policy
@@ -30,20 +33,17 @@ def run():
             continue
 
         page = get_page(entry["url"])
-        document_url = get_external_review_url(page)
 
-        if not document_url:
+        docs = list(get_documents(page))
+        if docs:
+            print(" ", entry["name"])
+            review.documents.all().delete()
+        else:
             print("  [skipping]", entry["name"])
             continue
 
-        print(" ", entry["name"])
-
-        document = Document.objects.for_review(review).external_reviews().first()
-
-        if not document:
-            document = add_external_review(review)
-
-        add_file(document_url, document)
+        for doc_type, url in docs:
+            add_doc(review, doc_type, url)
 
     print("Finished")
 
@@ -59,10 +59,19 @@ def get_page(url):
     return BeautifulSoup(response.text, "lxml")
 
 
-def get_external_review_url(node):
-    regex = re.compile(r"^Last external review.*")
-    node = node.find("a", string=regex)
-    return SITE + node["href"] if node else None
+def get_documents(page):
+    docs_label_node = page.find("td", string=re.compile("^Key downloads.*"))
+    if docs_label_node is None:
+        return
+
+    listing_node = docs_label_node.find_next("td")
+    document_links = listing_node.find_all("a")
+
+    for link in document_links:
+        doc_type = get_document_type(link.text)
+
+        if doc_type is not None:
+            yield doc_type, SITE + link["href"]
 
 
 def get_name(filename):
@@ -84,9 +93,27 @@ def add_file(url, document):
         document.save()
 
 
-def add_external_review(review):
-    document = Document()
-    document.document_type = Document.TYPE.external_review
-    document.review = review
-    document.save()
+def get_document_type(label):
+    label_lower = label.lower()
+
+    if (
+        "evidence summary" in label_lower
+        or "evidence review" in label_lower
+        or "uk nsc pilot triage" in label_lower
+    ):
+        return Document.TYPE.evidence_review
+    elif "evidence map" in label_lower:
+        return Document.TYPE.evidence_map
+    elif "coversheet" in label_lower:
+        return Document.TYPE.cover_sheet
+    elif "cost effectiveness" in label_lower:
+        return Document.TYPE.cost
+
+    return Document.TYPE.other
+
+
+def add_doc(review, document_type, document_url):
+    document = Document.objects.create(document_type=document_type, review=review)
+    add_file(document_url, document)
+
     return document

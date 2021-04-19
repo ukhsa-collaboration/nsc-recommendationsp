@@ -1,0 +1,15 @@
+{% load i18n %}
+
+{% if policy.recommendation %}
+    <h2 class="govuk-heading-m">
+      {% trans 'Screening around the UK' %}
+    </h2>
+
+    <p class="govuk-body">
+      {% trans 'The UK NSC recommends screening for this condition, however this may vary slightly depending on where you are in the UK.' %}
+    </p>
+
+    <div class="govuk-body">
+        <a href="#" target="_blank">{% trans "Find out more about screening programmes across the UK" %} ({% trans "Opens in a new tab" %}).</a>
+    </div>
+{% endif %}

@@ -1,0 +1,25 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' with back_url="/" %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Thank you" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    {% blocktrans %}
+      Your request to receive UK National Screening Committee (UK NSC) updated has been submitted.
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      A member of the UK NSC Secretariat will contact you within 3 working days.
+    {% endblocktrans %}
+  </p>
+{% endblock %}

@@ -2,10 +2,10 @@
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with object.organisation.name as name %}
+  {% blocktrans asvar back_title with object.stakeholder.name as name %}
     Back to {{ name }}
   {% endblocktrans %}
-  {% include 'widgets/back_link.html' with back_url=object.organisation.get_detail_url %}
+  {% include 'widgets/back_link.html' with back_url=object.stakeholder.get_detail_url %}
 {% endblock %}
 
 {% block title %}

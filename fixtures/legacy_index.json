@@ -20,6 +20,16 @@
         "recommendation": false
     },
     {
+        "name": "ALD",
+        "slug": "ald",
+        "url": "https://legacyscreening.phe.org.uk/ald",
+        "ages": [
+            "newborn"
+        ],
+        "is_active": true,
+        "recommendation": false
+    },
+    {
         "name": "Amino acid metabolism disorders",
         "slug": "amino-acid-metabolism-disorders",
         "url": "https://legacyscreening.phe.org.uk/aminoacidmetabolism",
@@ -561,16 +571,6 @@
         "recommendation": true
     },
     {
-        "name": "Hepatitis B and C among ethnic minorities",
-        "slug": "hepatitis-b-and-c-among-ethnic-minorities",
-        "url": "https://legacyscreening.phe.org.uk/hepatitis-ethnic",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
         "name": "Hepatitis C (pregnancy)",
         "slug": "hepatitis-c-pregnancy",
         "url": "https://legacyscreening.phe.org.uk/hepatitisc-pregnancy",
@@ -701,8 +701,8 @@
         "recommendation": true
     },
     {
-        "name": "MPS1",
-        "slug": "mps1",
+        "name": "MPS I",
+        "slug": "mps-i",
         "url": "https://legacyscreening.phe.org.uk/mps1",
         "ages": [
             "newborn"
@@ -791,9 +791,9 @@
         "recommendation": false
     },
     {
-        "name": "Partner violence",
+        "name": "Partner Violence",
         "slug": "partner-violence",
-        "url": "https://legacyscreening.phe.org.uk/partner-violence",
+        "url": "https://legacyscreening.phe.org.uk/partnerviolence",
         "ages": [
             "adult"
         ],
@@ -801,9 +801,9 @@
         "recommendation": false
     },
     {
-        "name": "Partner violence in pregnancy",
-        "slug": "partner-violence-in-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/partner-violence-pregnancy",
+        "name": "Partner violence (pregnancy)",
+        "slug": "partner-violence-pregnancy",
+        "url": "https://legacyscreening.phe.org.uk/partnerviolence-pregnancy",
         "ages": [
             "antenatal"
         ],
@@ -861,9 +861,9 @@
         "recommendation": false
     },
     {
-        "name": "Preterm labour",
-        "slug": "preterm-labour",
-        "url": "https://legacyscreening.phe.org.uk/pretermlabour",
+        "name": "Preterm birth",
+        "slug": "preterm-birth",
+        "url": "https://legacyscreening.phe.org.uk/pretermbirth",
         "ages": [
             "antenatal"
         ],

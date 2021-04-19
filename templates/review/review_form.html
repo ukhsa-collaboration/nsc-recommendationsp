@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block back %}
-  {% trans "Back to policy" as back_title %}
+  {% trans "Back" as back_title %}
   {% url 'review:list' as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
@@ -15,30 +15,34 @@
 
 {% block content %}
 
-  <form method="post">
-    {% csrf_token %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        {% csrf_token %}
 
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
+        {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
 
-    {% if form.errors %}
-      {% include "widgets/error_summary.html" %}
-    {% endif %}
+        {% if form.errors %}
+          {% include "widgets/error_summary.html" %}
+        {% endif %}
 
-    {% include "widgets/checkboxes.html" with field=form.policies size='m' %}
-    {% include "widgets/text_input.html" with field=form.name show_legend=True %}
-    {% include "widgets/checkboxes.html" with field=form.review_type size='m' %}
+        {% include "forms/selection-formset.html" with formset=form.policy_formset label=_("Entry condition under review") link_text=_("add another condition") %}
+        {% include "widgets/text_input.html" with field=form.name show_legend=True %}
+        {% include "widgets/checkboxes.html" with field=form.review_type size='m' show_legend=True %}
 
-    <p class="govuk-body">
-      By submitting this, the public will be able to see that this condition is in review.
-    </p>
+        <p class="govuk-body">
+          {% trans "By submitting this, the public will be able to see that this condition is in review." %}
+        </p>
 
-    <button type="submit" class="govuk-button" name="save" value="save">
-      {% trans 'Save and continue' %}
-    </button>
+        <button type="submit" class="govuk-button" name="save" value="save">
+          {% trans 'Save and continue' %}
+        </button>
 
-  </form>
+      </form>
+    </div>
+  </div>
 
 {% endblock %}
 

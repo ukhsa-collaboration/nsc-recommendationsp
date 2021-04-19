@@ -1,5 +1,6 @@
 import os
 
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
@@ -13,6 +14,9 @@ from nsc.utils.datetime import get_today
 
 
 class DocumentQuerySet(models.QuerySet):
+    def for_policy(self, policy):
+        return self.filter(documentpolicy__policy_id=policy.pk)
+
     def for_review(self, review):
         return self.filter(review_id=review.pk)
 
@@ -22,14 +26,29 @@ class DocumentQuerySet(models.QuerySet):
     def evidence_reviews(self):
         return self.filter(document_type=Document.TYPE.evidence_review)
 
+    def evidence_maps(self):
+        return self.filter(document_type=Document.TYPE.evidence_map)
+
+    def systematic_reviews(self):
+        return self.filter(document_type=Document.TYPE.systematic)
+
+    def cost_effective_models(self):
+        return self.filter(document_type=Document.TYPE.cost)
+
     def external_reviews(self):
         return self.filter(document_type=Document.TYPE.external_review)
 
     def submission_forms(self):
         return self.filter(document_type=Document.TYPE.submission_form)
 
+    def others(self):
+        return self.filter(document_type=Document.TYPE.other)
 
-def review_document_path(instance, filename=None):
+    def archive(self):
+        return self.filter(document_type=Document.TYPE.archive)
+
+
+def document_path(instance, filename=None):
     from nsc.review.models import Review
 
     if isinstance(instance, Document):
@@ -38,12 +57,25 @@ def review_document_path(instance, filename=None):
         review = instance
     else:
         raise ValueError("Instance must be either a Review or Document")
-    year = review.review_start.year if review.review_start else get_today().year
-    path = os.path.join(str(year), review.slug)
+
+    year = get_today().year
+    path = os.path.join(str(year))
+    if review and review.review_start:
+        year = review.review_start.year
+        path = os.path.join(str(year), review.slug)
+
     if filename:
         return os.path.join(path, filename)
     else:
         return path
+
+
+class DocumentPolicy(TimeStampedModel):
+    SOURCE = Choices(("review", _("Review")), ("archive", _("Archive")),)
+
+    document = models.ForeignKey("Document", on_delete=models.CASCADE)
+    policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE)
+    source = models.CharField(max_length=7, choices=SOURCE, default=SOURCE.review)
 
 
 class Document(TimeStampedModel):
@@ -52,19 +84,37 @@ class Document(TimeStampedModel):
         ("cover_sheet", _("Coversheet")),
         ("submission_form", _("Submission form")),
         ("evidence_review", _("Evidence review")),
+        ("evidence_map", _("Evidence map")),
+        ("cost", _("Cost-effective model")),
+        ("systematic", _("Systematic review")),
         ("external_review", _("External review")),
+        ("archive", _("Archive")),
+        ("other", _("Other")),
     )
 
     name = models.CharField(verbose_name=_("name"), max_length=256)
     document_type = models.CharField(
         verbose_name=_("type of document"), choices=TYPE, max_length=256
     )
-    upload = models.FileField(verbose_name=_("upload"), upload_to=review_document_path)
+    upload = models.FileField(
+        verbose_name=_("upload"),
+        upload_to=document_path,
+        max_length=256,
+        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
+    )
     review = models.ForeignKey(
         "review.Review",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name=_("review"),
         related_name="documents",
+        null=True,
+    )
+
+    policies = models.ManyToManyField(
+        "policy.Policy",
+        through="DocumentPolicy",
+        related_name="policy_documents",
+        null=True,
     )
 
     history = HistoricalRecords()
@@ -87,7 +137,8 @@ class Document(TimeStampedModel):
         return self.upload.storage.exists(self.upload.name)
 
     def delete_file(self):
-        self.upload.storage.delete(self.upload.name)
+        if self.upload.name:
+            self.upload.storage.delete(self.upload.name)
 
 
 @receiver(models.signals.post_delete, sender=Document)

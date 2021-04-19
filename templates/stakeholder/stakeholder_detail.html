@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% trans 'Back to stakeholders' as back_title %}
+  {% url 'stakeholder:list' as back_url %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block page_title %}
+  {% block title %}
+    {% trans "Stakeholder details" %}
+  {% endblock %}
+{% endblock %}
+
+{% block heading %}
+  <div class="title-with-button">
+    <div class="govuk-grid-column-row">
+      <div class="govuk-grid-column-three-quarters">{{ block.super }}</div>
+      <div class="govuk-grid-column-one-quarters button-container">
+        <a class="govuk-button" href="{{ stakeholder.get_edit_url }}">{% trans "Edit stakeholder" %}</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+<h3 class="govuk-heading-m">{% trans "Stakeholder name" %}</h3>
+<p class="govuk-body">{{ stakeholder.name }}</p>
+
+<h3 class="govuk-heading-m">{% trans "Type of stakeholder" %}</h3>
+<p class="govuk-body">{{ stakeholder.get_type_display }}</p>
+
+<h3 class="govuk-heading-m">{% trans "Country" %}</h3>
+<p class="govuk-body">{{ stakeholder.get_countries_display }}</p>
+
+{% if stakeholder.twitter %}
+<h3 class="govuk-heading-m">{% trans "Website" %}</h3>
+<p class="govuk-body"><a href="{{ stakeholder.website }}">{{ stockholder.website }}</p>
+{% endif %}
+
+{% if stakeholder.twitter %}
+<h3 class="govuk-heading-m">{% trans "Twitter" %}</h3>
+<p class="govuk-body"><a href="{{ stakeholder.twitter }}">{{ stockholder.twitter }}</p>
+{% endif %}
+
+<h3 class="govuk-heading-m">{% trans "Conditions interested in" %}</h3>
+{% for policy in stakeholder.policies.all %}
+  <p class="govuk-body">{{ policy.name }}</p>
+{% endfor %}
+
+{% if stakeholder.comments %}
+<h3 class="govuk-heading-m">{% trans "Comments" %}</h3>
+<p class="govuk-body"><a href="{{ stakeholder.comments }}">{{ stockholder.comments }}</a></p>
+{% endif %}
+
+<h3 class="govuk-heading-m">
+  {% if stakeholder.is_public %}
+  {% trans "Publish this organisation online." %}
+  {% else %}
+    {% trans "Do not show this organisation as a stakeholder publicly." %}
+  {% endif %}
+</h3>
+
+{% for contact in object.contacts.all %}
+  <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+
+  {% if contact.name %}
+  <h3 class="govuk-heading-m">{% trans "Name of contact (optional)" %}</h3>
+  <p class="govuk-body">{{ contact.name }}</p>
+  {% endif %}
+
+  {% if contact.role %}
+  <h3 class="govuk-heading-m">{% trans "Contact's role (optional)" %}</h3>
+  <p class="govuk-body">{{ contact.role }}</p>
+  {% endif %}
+
+  {% if contact.email %}
+  <h3 class="govuk-heading-m">{% trans "Contact's email (optional)" %}</h3>
+  <p class="govuk-body"><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+  {% endif %}
+
+  {% if contact.phone %}
+  <h3 class="govuk-heading-m">{% trans "Contact's mobile phone number (optional)" %}</h3>
+  <p class="govuk-body"><a href="tel:{{ contact.phone }}">{{ contact.phone }}</a></p>
+  {% endif %}
+{% endfor %}
+
+{% endblock %}
+

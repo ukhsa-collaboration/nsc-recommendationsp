@@ -1,0 +1,29 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
+      You've subscribed successfully
+    </h1>
+  </div>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      You'll get an email when the UK NSC starts or ends a public consultation on the following condition(s):
+    {% endblocktrans %}
+  </p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    {% for p in subscription.policies.all %}
+      <li>{{ p.name }}</li>
+    {% endfor %}
+  </ul>
+
+  <p class="govuk-body">
+    {% url "subscription:public-manage" pk=view.kwargs.pk token=view.kwargs.token as manage_url %}
+    {% blocktrans %}
+      You can <a href="{{ manage_url }}">manage and update your subscriptions</a> whenever you want to.
+    {% endblocktrans %}
+  </p>
+{% endblock %}

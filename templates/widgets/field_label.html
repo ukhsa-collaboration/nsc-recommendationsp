@@ -1,5 +1,5 @@
 {% if field.label %}
-  <label class="govuk-label" for="{{ field.id_for_label }}">
+  <label class="{{ label_class|default:"govuk-label" }}" for="{{ field.id_for_label }}">
     {{ field.label }}
   </label>
 {% endif %}

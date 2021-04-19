@@ -1,16 +1,15 @@
-{% extends "base.html" %}
+{% extends "narrow.html" %}
 {% load i18n %}
 
 {% block back %}
-  {% blocktrans asvar back_title with object.name as name %}
-    Back to {{ name }}
-  {% endblocktrans %}
   {% url 'review:detail' object.slug as back_url %}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
 {% block title %}
-  {% trans "What is the recommended decision?" %}
+  {% block page_title %}
+    {% trans "What is the recommended decision for screening?" %}
+  {% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -26,11 +25,29 @@
       {% include "widgets/error_summary.html" %}
     {% endif %}
 
-    {% include "widgets/radio_buttons.html" with field=form.recommendation show_legend=True size='m' %}
+    {{ form.formset.management_form }}
+
+    {% for formset_form in form.formset %}
+      <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
+        {{ formset_form.non_field_errors }}
+
+        {% for field in formset_form %}
+          {% if field.is_hidden %}
+            {{ field }}
+          {% else %}
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+              {% include "widgets/radio_buttons.html" with show_legend=True size='m' inline=True %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </fieldset>
+    {% endfor %}
+
 
     <p class="govuk-body">
-      {% blocktrans %}
-      The next review for this condition will be due to start in the financial year...
+      {% now "Y" as current_year %}
+      {% blocktrans with start_year=current_year|add:3 end_year=current_year|add:4 %}
+      The next review for this condition will be due to start in the financial year {{ start_year }} to {{ end_year }}
       {% endblocktrans %}
     </p>
 

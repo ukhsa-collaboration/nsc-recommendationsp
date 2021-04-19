@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' with back_url=view.get_success_url back_title="Back" %}
+{% endblock %}
+
+{% block title %}
+  {% block page_title %}
+    {% trans "Add a stakeholder" %}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {% include "widgets/text_input.html" with field=form.name %}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {% include "widgets/select_input.html" with field=form.type %}
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+     <div class="govuk-grid-column-one-half">
+          {% include "widgets/checkboxes.html" with field=form.countries %}
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {% include "widgets/text_input.html" with field=form.url %}
+      </div>
+      <div class="govuk-grid-column-one-half">
+        {% include "widgets/text_input.html" with field=form.twitter %}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {% include "forms/selection-formset.html" with formset=form.policy_formset label=_("Condition Interested In:") link_text=_("add another condition") %}
+      </div>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+
+    {% with formset=form.contact_formset %}
+      <div id="contact_formset_wrapper" class="formset__root govuk-form-group" data-nsc-formset="{{ formset.prefix }}">
+
+        {{ formset.management_form }}
+
+        <fieldset class="govuk-fieldset" id="contact_emptyform_wrapper" style="display: none" data-nsc-formset-template="{{ formset.empty_form.prefix }}">
+          <div class="govuk-grid-row">
+            {% for field in formset.empty_form %}
+              {% if field.is_hidden %}
+                {{ field }}
+              {% else %}
+                <div class="govuk-grid-column-one-half govuk-form-group">
+                  {% include "widgets/field_label.html" %}
+                  {% if field.errors %}
+                    <span id="{{ field.name }}-error" class="govuk-error-message">
+                      <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ field.errors.0 }}
+                    </span>
+                  {% endif %}
+                  {% if field.help_text %}
+                    <span id="{{ field.name }}-hint" class="govuk-hint">
+                      {{ field.help_text }}
+                    </span>
+                  {% endif %}
+                  {{ field }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </fieldset>
+
+        {% for formset_form in formset %}
+          <fieldset class="govuk-fieldset" data-nsc-formset-form="{{ formset_form.prefix }}">
+            {{ formset_form.non_field_errors }}
+            <div class="govuk-grid-row">
+            {% for field in formset_form %}
+              {% if field.is_hidden %}
+                {{ field }}
+              {% else %}
+                <div class="govuk-grid-column-one-half govuk-form-group ">
+                  {% include "widgets/field_label.html" %}
+                  {% if field.errors %}
+                    <span id="{{ field.name }}-error" class="govuk-error-message">
+                      <span class="govuk-visually-hidden">{% trans 'Error' %}:</span> {{ field.errors.0 }}
+                    </span>
+                  {% endif %}
+                  {% if field.help_text %}
+                    <span id="{{ field.name }}-hint" class="govuk-hint">
+                      {{ field.help_text }}
+                    </span>
+                  {% endif %}
+                  {{ field }}
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>
+          </fieldset>
+        {% endfor %}
+
+        <div class="govuk-form-group">
+            <a class="govuk-link" id="add-contact" type="button" href="#" data-nsc-formset-add="">
+              {% trans 'add another contact' %}
+            </a>
+        </div>
+
+      </div>
+
+      {% include "widgets/text_input.html" with field=form.comments %}
+    {% endwith %}
+
+    <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+
+    {% include "widgets/radio_buttons.html" with field=form.is_public size='m' %}
+
+    <div class="govuk-body">
+      <button type="submit" class="govuk-button" name="save" value="save">
+        {% trans 'Save and continue' %}
+      </button>
+    </div>
+
+  </form>
+{% endblock %}
