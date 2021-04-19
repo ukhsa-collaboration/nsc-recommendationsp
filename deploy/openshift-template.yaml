@@ -119,7 +119,7 @@ objects:
           from:
             kind: ImageStreamTag
             namespace: "${NAMESPACE}"
-            name: centos/nginx-18-centos7
+            name: 'nginx:latest'
           incremental: true
       output:
         to:
@@ -197,8 +197,6 @@ objects:
       replicas: 3
       selector:
         name: "${NAME}"
-        matchLabels:
-          name: "${NAME}"
       template:
         metadata:
           name: "${NAME}"
@@ -569,7 +567,7 @@ objects:
             resources:
               limits:
                 memory: "${MEMORY_LIMIT}"
-              request:
+              requests:
                 memory: "${MEMORY_LIMIT}"
             readinessProbe:
               exec:
@@ -607,7 +605,6 @@ objects:
           - "${MEDIA_PROXY_SERVICE_NAME}"
           from:
             kind: ImageStreamTag
-            namespace: "${NAMESPACE}"
             name: "${MEDIA_PROXY_SERVICE_NAME}:latest"
       replicas: 3
       selector:
@@ -636,7 +633,7 @@ objects:
             resources:
               limits:
                 memory: "${MEMORY_LIMIT}"
-              request:
+              requests:
                 memory: "${MEMORY_LIMIT}"
             readinessProbe:
               initialDelaySeconds: 5
