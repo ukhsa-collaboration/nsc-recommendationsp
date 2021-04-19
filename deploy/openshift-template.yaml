@@ -244,6 +244,16 @@ objects:
                 configMapKeyRef:
                   name: "${NAME}"
                   key: DJANGO_CONFIGURATION
+            - name: APP_MODULE
+              valueFrom:
+                configMapKeyRef:
+                  name: django-webpack
+                  key: APP_MODULE
+            - name: APP_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: django-webpack
+                  key: APP_CONFIG
             - name: DJANGO_CONFIG_DIR
               value: "/run/configs/common"
             - name: DJANGO_SECRET_DIR
@@ -549,6 +559,7 @@ objects:
           - redis
           from:
             kind: ImageStreamTag
+            namespace: ${NAMESPACE}
             name: redis:${REDIS_VERSION}
       replicas: 1
       selector:
