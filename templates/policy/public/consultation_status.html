@@ -4,12 +4,11 @@
 <div class="govuk-warning-text govuk-body nsc-open-for-comment">
     {% if policy.current_review.preparing %}
         <div class="govuk-!-font-weight-bold">
-            {% blocktrans %}
-                We are currently preparing to open a consultation on this condition.
-            {% endblocktrans %}
+            {% trans "We are currently preparing to open a consultation on this condition." %}
         </div>
         <div>
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <span class="govuk-warning-text__assistive">{% trans "Warning" %}</span>
             {% blocktrans %}
                 <a href="{{ subscription_url }}">Register for updates</a> and we will notify you when we are accepting comments.
             {% endblocktrans %}
@@ -20,6 +19,7 @@
         </div>
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <div class="govuk-!-font-weight-bold">
+            <span class="govuk-warning-text__assistive">{% trans "Warning" %}</span>
             <a href="{% url 'condition:consultation' policy.slug %}">
                 {% blocktrans with name=policy.name.lower %}
                     Submit comments on {{ name }}

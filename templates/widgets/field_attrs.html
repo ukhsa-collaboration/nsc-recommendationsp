@@ -1,5 +1,5 @@
 {% for name, value in widget.attrs.items %}
-  {% if value is not False %}
+  {% if value is not False and not name == "required" %}
     {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}
   {% endif %}
 {% endfor %}
