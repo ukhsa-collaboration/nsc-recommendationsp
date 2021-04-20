@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -10,6 +12,11 @@ from nsc.review.views import ReviewDashboardView
 
 
 admin.autodiscover()
+
+
+def headers(request):
+    return HttpResponse(json.dumps(dict(request.headers), indent=2))
+
 
 urlpatterns = [
     path(r"", TemplateView.as_view(template_name="demo.html")),
@@ -24,6 +31,7 @@ urlpatterns = [
     path("help-desk/", include("nsc.support.urls", namespace="support")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
+    path("_hdr", headers),
 ]
 
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
