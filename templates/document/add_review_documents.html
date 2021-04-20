@@ -7,7 +7,9 @@
 
 {% block title %}
   {% block page_title %}
-    Update recommendation for {{ review.name }}
+    {% blocktrans with name=review.name %}
+      Update recommendation for {{ name }}
+    {% endblocktrans %}
   {% endblock %}
 {% endblock %}
 

@@ -30,7 +30,7 @@
   </div>
   <h1 class="govuk-heading-l">
     {% block page_title %}
-      {{ policy.name }}
+      {% block title %}{{ policy.name }}{% endblock %}
     {% endblock %}
   </h1>
 {% endblock %}
