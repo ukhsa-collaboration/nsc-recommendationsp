@@ -565,6 +565,9 @@ class Deployed(Build):
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
+    # Sets up treating connections from the load balancer as secure
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
