@@ -575,6 +575,10 @@ class Deployed(Build):
     def MEDIA_URL(self):
         return f"https://{self.MEDIA_HOST_DOMAIN}/"
 
+    @property
+    def AWS_S3_CUSTOM_DOMAIN(self):
+        return self.MEDIA_HOST_DOMAIN
+
     # ToDo: it's not clear whether any files uploaded to the server should be
     #       cached since it's likely that an admin would want the ability to
     #       make changes at any time and have users see them immediately.
