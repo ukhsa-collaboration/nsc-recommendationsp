@@ -55,6 +55,7 @@ click==7.1.1
 coverage==5.0.4
     # via pytest-cov
 cryptography==3.4.6
+    # via
     #   django-auth-adfs
     #   paramiko
 decorator==4.4.2
@@ -196,7 +197,7 @@ psycopg2-binary==2.8.4
     # via -r requirements.in
 ptyprocess==0.6.0
     # via pexpect
-py==1.8.1
+py==1.10.0
     # via pytest
 pycodestyle==2.5.0
     # via flake8
