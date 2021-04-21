@@ -12,11 +12,11 @@
 <div class="govuk-body">
   {% if policy.recommendation %}
     <div class="nsc-message-success">
-      {% trans 'Screening for this condition is recommended.' %}
+      <strong>{% trans 'Screening for this condition is recommended.' %}</strong>
     </div>
   {% else %}
     <div class="nsc-message-error">
-      {% trans 'Screening is not currently recommended for this condition.' %}
+      <strong>{% trans 'Screening is not currently recommended for this condition.' %}</strong>
     </div>
   {% endif %}
 </div>

@@ -174,6 +174,7 @@ class Common(Configuration):
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
+        "nsc.middleware.redirect_url_fragment",
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -472,6 +473,30 @@ class Dev(Webpack, Common):
     INTERNAL_IPS = ["127.0.0.1"]
     EMAIL_ROOT_DOMAIN = "http://localhost:8000"
 
+    # Settings for the GDS Notify service for sending emails.
+    PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
+    PHE_COMMUNICATIONS_NAME = "PHE Comms"
+    PHE_HELP_DESK_EMAIL = "phehelpdesk@example.com"
+    CONSULTATION_COMMENT_ADDRESS = "phecomments@example.com"
+    NOTIFY_SERVICE_ENABLED = False
+    NOTIFY_SERVICE_API_KEY = None
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
+    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
+        "subscriber-consultation-open-template"
+    )
+    NOTIFY_TEMPLATE_DECISION_PUBLISHED = "decision-published-template"
+    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = (
+        "subscriber-decision-published-template"
+    )
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = "public-comment-template"
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "stakeholder-comment-template"
+    NOTIFY_TEMPLATE_SUBSCRIBED = "subscribed-template"
+    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = "updated-subscription-template"
+    NOTIFY_TEMPLATE_UNSUBSCRIBE = "unsubscribed-template"
+    NOTIFY_TEMPLATE_HELP_DESK = "help-desk-template"
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = "help-desk-confirmation-template"
+
     @property
     def INSTALLED_APPS(self):
         INSTALLED_APPS = super().INSTALLED_APPS
@@ -545,6 +570,9 @@ class Deployed(Build):
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
+    # Sets up treating connections from the load balancer as secure
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
     # Redefine values which are not optional in a deployed environment
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
@@ -553,8 +581,6 @@ class Deployed(Build):
     DATABASE_USER = get_secret("postgresql", "database-user")
     DATABASE_PASSWORD = get_secret("postgresql", "database-password")
     DATABASE_NAME = get_secret("postgresql", "database-name")
-    NOTIFY_SERVICE_ENABLED = True
-    NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key")
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)

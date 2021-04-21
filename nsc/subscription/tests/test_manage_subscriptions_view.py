@@ -81,9 +81,13 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
             ),
         },
     ).exists()
-    assert response.location == reverse(
-        "subscription:public-complete",
-        kwargs={"token": get_object_signature(sub), "pk": sub.id},
+    assert (
+        response.location
+        == reverse(
+            "subscription:public-complete",
+            kwargs={"token": get_object_signature(sub), "pk": sub.id},
+        )
+        + "#"
     )
 
 
@@ -110,4 +114,4 @@ def test_subscription_is_deleted(django_app, make_subscription):
             ),
         },
     ).exists()
-    assert response.location == reverse("subscription:public-deleted")
+    assert response.location == reverse("subscription:public-deleted") + "#"

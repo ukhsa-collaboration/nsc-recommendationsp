@@ -54,7 +54,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">
-        <div class="filter-box">
+        <div id="filter-box" class="filter-box">
           <h2 class="govuk-heading-m">{% trans "Filter conditions by" %}:</h2>
 
           <div class="govuk-form-group">
@@ -69,7 +69,7 @@
             Search
           </button>
 
-          <button type="submit" name="clear-search" class="as-link" style="float: right">
+          <button role="link" type="submit" name="clear-search" class="as-link" style="float: right">
               Clear search
           </button>
         </div>
@@ -135,4 +135,13 @@
     </div>
   </form>
 
+{% endblock %}
+
+
+{% block extra_script %}
+  {% if "page" in form.data %}
+  <script>
+      document.addEventListener("DOMContentLoaded", function() { window.location.hash = "#filter-box" })
+  </script>
+  {% endif %}
 {% endblock %}

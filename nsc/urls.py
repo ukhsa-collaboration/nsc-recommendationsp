@@ -11,6 +11,7 @@ from nsc.review.views import ReviewDashboardView
 
 admin.autodiscover()
 
+
 urlpatterns = [
     path(r"", TemplateView.as_view(template_name="demo.html")),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),

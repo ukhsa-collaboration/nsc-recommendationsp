@@ -45,4 +45,4 @@ def test_fields_are_complete_subscription_is_created(django_app):
     assert sub.first_name == "Foo"
     assert sub.last_name == "Bar"
     assert sub.organisation == "Big Co."
-    assert response.location == reverse("subscription:stakeholder-complete")
+    assert response.location == reverse("subscription:stakeholder-complete") + "#"
