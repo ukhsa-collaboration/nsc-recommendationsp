@@ -174,6 +174,7 @@ class Common(Configuration):
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
+        "nsc.middleware.redirect_url_fragment",
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -481,9 +482,13 @@ class Dev(Webpack, Common):
     NOTIFY_SERVICE_API_KEY = None
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
-    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = "subscriber-consultation-open-template"
+    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
+        "subscriber-consultation-open-template"
+    )
     NOTIFY_TEMPLATE_DECISION_PUBLISHED = "decision-published-template"
-    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = "subscriber-decision-published-template"
+    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = (
+        "subscriber-decision-published-template"
+    )
     NOTIFY_TEMPLATE_PUBLIC_COMMENT = "public-comment-template"
     NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "stakeholder-comment-template"
     NOTIFY_TEMPLATE_SUBSCRIBED = "subscribed-template"

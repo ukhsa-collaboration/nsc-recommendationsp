@@ -89,9 +89,13 @@ def test_emails_match_subscription_is_created(
             ),
         },
     ).exists()
-    assert response.location == reverse(
-        "subscription:public-complete",
-        kwargs={"token": get_object_signature(sub), "pk": sub.id},
+    assert (
+        response.location
+        == reverse(
+            "subscription:public-complete",
+            kwargs={"token": get_object_signature(sub), "pk": sub.id},
+        )
+        + "#"
     )
 
 
@@ -120,7 +124,11 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     assert set(sub.policies.values_list("id", flat=True)) == {
         s.id for s in chain(selected_policies, new_policies)
     }
-    assert response.location == reverse(
-        "subscription:public-complete",
-        kwargs={"token": get_object_signature(sub), "pk": sub.id},
+    assert (
+        response.location
+        == reverse(
+            "subscription:public-complete",
+            kwargs={"token": get_object_signature(sub), "pk": sub.id},
+        )
+        + "#"
     )

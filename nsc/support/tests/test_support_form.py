@@ -93,4 +93,4 @@ def test_data_is_valid_email_is_created(form, valid_data):
         template_id=settings.NOTIFY_TEMPLATE_HELP_DESK,
         context=valid_data,
     )
-    assert res.location == reverse("support:complete")
+    assert res.location == reverse("support:complete") + "#"
