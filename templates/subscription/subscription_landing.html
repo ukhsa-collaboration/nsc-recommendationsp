@@ -5,10 +5,9 @@
   {% include 'widgets/back_link.html' with back_url="/" %}
 {% endblock %}
 
-{% block title %}
-  {% block page_title %}
-    {% trans "Subscribe to receive updates on UK NSC consultations" %}
-  {% endblock %}
+{% block title %}{% trans "Subscribe" %}{% endblock %}
+{% block page_title %}
+  {% trans "Subscribe to receive updates on UK NSC consultations" %}
 {% endblock %}
 
 {% block content %}

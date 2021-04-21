@@ -90,7 +90,7 @@
       {% include "widgets/date_input.html" with field=form.consultation_end day=form.consultation_end_day month=form.consultation_end_month year=form.consultation_end_year %}
       {% include "widgets/date_input.html" with field=form.nsc_meeting_date month=form.nsc_meeting_date_month year=form.nsc_meeting_date_year %}
 
-      <button type="submit" class="govuk-button" name="save" value="save"{% if review.dates_confirmed %}disabled{% endif %}>
+      <button type="submit" class="govuk-button" name="save" value="save"{% if review.dates_confirmed %} disabled{% endif %}>
         {% trans 'Save and continue' %}
       </button>
 
