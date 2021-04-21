@@ -44,7 +44,7 @@ class SearchForm(forms.Form):
 
 class PublicCommentForm(forms.Form):
     COMMENT_FIELDS = {
-        "comment_affected": "Please tell us if this condition has affected you, your family or your fiends?",
+        "comment_affected": "Please tell us if this condition has affected you, your family or your friends?",
         "comment_evidence": "Do you have any comments on the evidence considered by the UK NSC in the review? "
         "For instance, was any important evidence missed?",
         "comment_discussion": "Do you have any comments on the discussion, conclusion or recommendation in the review?",
