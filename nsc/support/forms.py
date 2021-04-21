@@ -7,10 +7,10 @@ class ContactForm(forms.Form):
         max_length=255, error_messages={"required": _("Enter your name")}
     )
     organisation = forms.CharField(
-        max_length=255, required=False, label=_("Organisation (if any)")
+        max_length=255, required=False, label=_("Organisation")
     )
     role = forms.CharField(
-        max_length=255, required=False, label=_("Your role (if appropriate)"),
+        max_length=255, required=False, label=_("Your role"),
     )
     country = forms.ChoiceField(
         choices=(
