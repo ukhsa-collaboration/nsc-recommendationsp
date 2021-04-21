@@ -39,7 +39,9 @@
   <form method="post">
     {% csrf_token %}
 
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
 
     <div style="display: none">{{ form.policies }}</div>
 

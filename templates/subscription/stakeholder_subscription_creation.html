@@ -28,6 +28,10 @@
   <form method="post">
     {% csrf_token %}
 
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
+
     <div class="govuk-grid-row">
       <div class="title-field">
         {% include "widgets/text_input.html" with field=form.title %}

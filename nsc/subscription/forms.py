@@ -104,8 +104,14 @@ class SubscriptionStart(SubscriptionPolicySearchFormMixin, forms.Form):
 
 
 class CreateSubscriptionForm(forms.ModelForm):
-    email_confirmation = forms.EmailField(label=_("Please confirm your email address"))
-    email = forms.EmailField(label=_("What's your email address?"))
+    email_confirmation = forms.EmailField(
+        label=_("Please confirm your email address"),
+        error_messages={"required": _("Confirm your email address")},
+    )
+    email = forms.EmailField(
+        label=_("What's your email address?"),
+        error_messages={"required": _("Enter your email address")},
+    )
     policies = forms.ModelMultipleChoiceField(
         Policy.objects, widget=forms.CheckboxSelectMultiple(attrs={"hidden": True})
     )
@@ -138,8 +144,14 @@ class CreateSubscriptionForm(forms.ModelForm):
 
 
 class CreateStakeholderSubscriptionForm(forms.ModelForm):
-    email = forms.EmailField(label=_("Enter your email address"))
-    email_confirmation = forms.EmailField(label=_("Re-enter your email address"))
+    email = forms.EmailField(
+        label=_("Enter your email address"),
+        error_messages={"required": _("Enter your email address")},
+    )
+    email_confirmation = forms.EmailField(
+        label=_("Re-enter your email address"),
+        error_messages={"required": _("Confirm your email address")},
+    )
 
     class Meta:
         model = StakeholderSubscription
