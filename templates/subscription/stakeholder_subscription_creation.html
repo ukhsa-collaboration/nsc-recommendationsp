@@ -2,13 +2,12 @@
 {% load i18n %}
 
 {% block back %}
-  {% url "subscription:landing" as back_url%}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
 {% block title %}
   {% block page_title %}
-    {% trans "Enter your email" %}
+    {% trans "Enter your details" %}
   {% endblock %}
 {% endblock %}
 
