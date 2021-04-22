@@ -16,7 +16,7 @@ from dateutil.relativedelta import relativedelta
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review, ReviewRecommendation
-from scripts.parse import parse_html, content_nodes
+from scripts.parse import content_nodes, parse_html
 
 
 def run():

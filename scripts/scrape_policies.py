@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from nsc.policy.models import Policy
-from scripts.parse import parse_html, content_nodes
+from scripts.parse import content_nodes, parse_html
 
 
 def run():

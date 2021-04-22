@@ -1,11 +1,10 @@
 from django.db.models import Count
 
-import celery
-
+from ..celery import app
 from .models import Review
 
 
-@celery.task
+@app.task
 def send_open_review_notifications():
     open_reviews = Review.objects.consultation_open()
     open_reviews_without_notifications = open_reviews.annotate(
@@ -16,7 +15,7 @@ def send_open_review_notifications():
         review.send_open_consultation_notifications()
 
 
-@celery.task
+@app.task
 def send_published_notifications():
     published_reviews = Review.objects.published().exclude_legacy()
     published_reviews_without_notifications = published_reviews.annotate(
