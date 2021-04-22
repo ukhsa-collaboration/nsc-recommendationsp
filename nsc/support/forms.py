@@ -9,9 +9,7 @@ class ContactForm(forms.Form):
     organisation = forms.CharField(
         max_length=255, required=False, label=_("Organisation")
     )
-    role = forms.CharField(
-        max_length=255, required=False, label=_("Your role"),
-    )
+    role = forms.CharField(max_length=255, required=False, label=_("Your role"),)
     country = forms.ChoiceField(
         choices=(
             ("", ""),

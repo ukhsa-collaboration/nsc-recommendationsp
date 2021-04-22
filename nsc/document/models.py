@@ -100,7 +100,7 @@ class Document(TimeStampedModel):
         verbose_name=_("upload"),
         upload_to=document_path,
         max_length=256,
-        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
+        validators=[FileExtensionValidator(allowed_extensions=["pdf", "odt"])],
     )
     review = models.ForeignKey(
         "review.Review",

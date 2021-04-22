@@ -26,8 +26,8 @@ def document_formset_form_factory(
             required=required,
             validators=[
                 FileExtensionValidator(
-                    allowed_extensions=["pdf"],
-                    message=_("The selected file must be a pdf."),
+                    allowed_extensions=["pdf", "odt"],
+                    message=_("The selected file must be a pdf or odt file."),
                 )
             ],
         )
@@ -45,7 +45,7 @@ def document_formset_form_factory(
 
             self.fields["upload"].widget.attrs.update({"class": "govuk-file-upload"})
             self.fields["upload"].error_messages["required"] = _(
-                "Select a pdf to upload"
+                "Select a document to upload"
             )
 
             if policy:
@@ -137,8 +137,8 @@ class SubmissionForm(forms.ModelForm):
         error_messages={"required": _("Select the response form for upload")},
         validators=[
             FileExtensionValidator(
-                allowed_extensions=["pdf"],
-                message=_("The selected file must be a pdf."),
+                allowed_extensions=["pdf", "odt"],
+                message=_("The selected file must be a pdf or odt file."),
             )
         ],
     )
@@ -164,8 +164,8 @@ class ReviewDocumentsForm(forms.ModelForm):
         error_messages={"required": _("Select a coversheet to upload")},
         validators=[
             FileExtensionValidator(
-                allowed_extensions=["pdf"],
-                message=_("The selected file must be a pdf."),
+                allowed_extensions=["pdf", "odt"],
+                message=_("The selected file must be a pdf or odt file."),
             )
         ],
     )
@@ -176,8 +176,8 @@ class ReviewDocumentsForm(forms.ModelForm):
         error_messages={"required": _("Select an evidence review to upload")},
         validators=[
             FileExtensionValidator(
-                allowed_extensions=["pdf"],
-                message=_("The selected file must be a pdf."),
+                allowed_extensions=["pdf", "odt"],
+                message=_("The selected file must be a pdf or odt file."),
             )
         ],
     )
@@ -188,8 +188,8 @@ class ReviewDocumentsForm(forms.ModelForm):
         error_messages={"required": _("Select an evidence map to upload")},
         validators=[
             FileExtensionValidator(
-                allowed_extensions=["pdf"],
-                message=_("The selected file must be a pdf."),
+                allowed_extensions=["pdf", "odt"],
+                message=_("The selected file must be a pdf or odt file."),
             )
         ],
     )
@@ -200,8 +200,8 @@ class ReviewDocumentsForm(forms.ModelForm):
         error_messages={"required": _("Select a cost-effective model to upload")},
         validators=[
             FileExtensionValidator(
-                allowed_extensions=["pdf"],
-                message=_("The selected file must be a pdf."),
+                allowed_extensions=["pdf", "odt"],
+                message=_("The selected file must be a pdf or odt file."),
             )
         ],
     )
@@ -212,8 +212,8 @@ class ReviewDocumentsForm(forms.ModelForm):
         error_messages={"required": _("Select a systematic review to upload")},
         validators=[
             FileExtensionValidator(
-                allowed_extensions=["pdf"],
-                message=_("The selected file must be a pdf."),
+                allowed_extensions=["pdf", "odt"],
+                message=_("The selected file must be a pdf or odt file."),
             )
         ],
     )
