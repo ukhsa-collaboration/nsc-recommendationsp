@@ -551,6 +551,12 @@ class Deployed(Build):
     # Prevent client-side JS from accessing the session cookie.
     SESSION_COOKIE_HTTPONLY = True
 
+    # Sets the maximum age of a session (4 hours in seconds)
+    SESSION_COOKIE_AGE = 4 * 60 * 60
+
+    # Sets the session to expire on browser closing
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
     # Expire the session on browser closer
     SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
