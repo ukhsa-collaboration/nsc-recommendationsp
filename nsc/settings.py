@@ -262,7 +262,7 @@ class Common(Configuration):
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "root": {"level": "WARNING", "handlers": ["sentry"]},
+        "root": {"level": "WARNING", "handlers": ["sentry", "console"]},
         "formatters": {
             "verbose": {
                 "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
