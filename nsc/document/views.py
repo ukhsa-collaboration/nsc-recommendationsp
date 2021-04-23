@@ -20,6 +20,14 @@ class AddExternalReviewView(AdminRequiredMixin, generic.UpdateView):
     lookup_field = "slug"
     context_object_name = "review"
 
+    def get_success_url(self):
+        return clean_url(
+            self.request.POST.get("next"),
+            reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
+            [self.request.get_host()],
+            self.request.is_secure(),
+        )
+
 
 class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
     template_name = "document/add_submission_form.html"
@@ -62,7 +70,12 @@ class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
             return self.form_invalid(form)
 
     def get_success_url(self):
-        return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
+        return clean_url(
+            self.request.POST.get("next"),
+            reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
+            [self.request.get_host()],
+            self.request.is_secure(),
+        )
 
 
 class AddReviewDocumentsView(AdminRequiredMixin, generic.UpdateView):
@@ -74,7 +87,7 @@ class AddReviewDocumentsView(AdminRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         return clean_url(
-            self.request.GET.get("next"),
+            self.request.POST.get("next"),
             reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
             [self.request.get_host()],
             self.request.is_secure(),
@@ -105,8 +118,8 @@ class DeleteView(AdminRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return clean_url(
-            self.request.GET.get("next"),
+            self.request.POST.get("next"),
             reverse("dashboard"),
             [self.request.get_host()],
-            self.request.is_secure,
+            self.request.is_secure(),
         )
