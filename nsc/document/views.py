@@ -1,5 +1,6 @@
 import mimetypes
 
+from django.core.cache import cache
 from django.http import FileResponse, Http404
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -123,3 +124,8 @@ class DeleteView(AdminRequiredMixin, generic.DeleteView):
             [self.request.get_host()],
             self.request.is_secure(),
         )
+
+    def post(self, *args, **kwargs):
+        res = super().post(*args, **kwargs)
+        cache.clear()
+        return res
