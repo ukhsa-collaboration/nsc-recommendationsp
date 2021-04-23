@@ -94,7 +94,7 @@ class DownloadView(generic.DetailView):
         mime_type, encoding = mimetypes.guess_type(document.upload.url)
 
         return FileResponse(
-            storage.open(document.upload.path, "rb"),
+            document.upload.open("rb"),
             as_attachment=True,
             content_type=mime_type,
         )
