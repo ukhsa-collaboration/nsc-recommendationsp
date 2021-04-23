@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db.models import Count
 
 from ..celery import app
@@ -14,6 +15,10 @@ def send_open_review_notifications():
     for review in open_reviews_without_notifications:
         review.send_open_consultation_notifications()
 
+    # if we have sent any notifications clear the cache
+    if len(open_reviews_without_notifications) > 0:
+        cache.clear()
+
 
 @app.task
 def send_published_notifications():
@@ -24,3 +29,7 @@ def send_published_notifications():
 
     for review in published_reviews_without_notifications:
         review.send_decision_notifications()
+
+    # if we have sent any notifications clear the cache
+    if len(published_reviews_without_notifications) > 0:
+        cache.clear()
