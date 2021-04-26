@@ -561,9 +561,6 @@ class Deployed(Build):
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
 
-    # Prevent session cookie to be used when referred to from another domain
-    SESSION_COOKIE_SAMESITE = "Strict"
-
     # Secure CSRF cookie
     CSRF_COOKIE_SECURE = True
 
