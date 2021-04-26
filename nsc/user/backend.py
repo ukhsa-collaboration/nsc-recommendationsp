@@ -2,8 +2,8 @@ from django_auth_adfs.backend import AdfsAuthCodeBackend
 
 
 class UniqueSessionAdfsBackend(AdfsAuthCodeBackend):
-    def authenticate(self, *args, request=None, **kwargs):
-        user = super().authenticate(*args, request=request, **kwargs)
+    def authenticate(self, request=None, authorization_code=None, **kwargs):
+        user = super().authenticate(request=request, authorization_code=authorization_code, **kwargs)
 
         if (
             request
