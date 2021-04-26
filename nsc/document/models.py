@@ -71,7 +71,10 @@ def document_path(instance, filename=None):
 
 
 class DocumentPolicy(TimeStampedModel):
-    SOURCE = Choices(("review", _("Review")), ("archive", _("Archive")),)
+    SOURCE = Choices(
+        ("review", _("Review")),
+        ("archive", _("Archive")),
+    )
 
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE)

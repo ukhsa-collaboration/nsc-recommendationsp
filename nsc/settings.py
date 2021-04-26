@@ -151,6 +151,7 @@ class Common(Configuration):
         "simple_history",
         "storages",
         "django_filters",
+        "nsc.user",
         "nsc.condition",
         "nsc.contact",
         "nsc.document",
@@ -175,6 +176,7 @@ class Common(Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
+        "nsc.user.middleware.record_user_session",
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -393,7 +395,7 @@ class Common(Configuration):
 
         if self.AUTH_USE_ACTIVE_DIRECTORY:
             return AUTHENTICATION_BACKENDS + (
-                "django_auth_adfs.backend.AdfsAuthCodeBackend",
+                "nsc.user.backend.UniqueSessionAdfsBackend",
             )
 
         return AUTHENTICATION_BACKENDS
@@ -422,6 +424,8 @@ class Common(Configuration):
             "TENANT_ID": self.ACTIVE_DIRECTORY_TENANT_ID,
             "RELYING_PARTY_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
         }
+
+    AUTH_USER_MODEL = "user.User"
 
 
 class Webpack:
@@ -556,6 +560,9 @@ class Deployed(Build):
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
+
+    # Prevent session cookie to be used when referred to from another domain
+    SESSION_COOKIE_SAMESITE = "Strict"
 
     # Secure CSRF cookie
     CSRF_COOKIE_SECURE = True

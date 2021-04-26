@@ -12,16 +12,22 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="reviewstakeholdernotification", name="review",
+            model_name="reviewstakeholdernotification",
+            name="review",
         ),
         migrations.RemoveField(
-            model_name="reviewstakeholdernotification", name="stakeholder",
+            model_name="reviewstakeholdernotification",
+            name="stakeholder",
         ),
         migrations.AddField(
             model_name="review",
             name="open_consultation_notifications",
             field=models.ManyToManyField(related_name="reviews", to="notify.Email"),
         ),
-        migrations.DeleteModel(name="ReviewPheCommsNotification",),
-        migrations.DeleteModel(name="ReviewStakeholderNotification",),
+        migrations.DeleteModel(
+            name="ReviewPheCommsNotification",
+        ),
+        migrations.DeleteModel(
+            name="ReviewStakeholderNotification",
+        ),
     ]

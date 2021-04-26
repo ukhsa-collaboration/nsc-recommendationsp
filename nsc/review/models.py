@@ -83,7 +83,8 @@ class Review(TimeStampedModel):
     is_legacy = models.BooleanField(default=False)
 
     review_type = ArrayField(
-        models.CharField(max_length=10, choices=TYPE), verbose_name=_("type of review"),
+        models.CharField(max_length=10, choices=TYPE),
+        verbose_name=_("type of review"),
     )
 
     dates_confirmed = models.BooleanField(default=False)
@@ -122,7 +123,10 @@ class Review(TimeStampedModel):
 
     published = models.NullBooleanField()
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.DO_NOTHING,
+    )
 
     history = HistoricalRecords()
     objects = ReviewQuerySet.as_manager()

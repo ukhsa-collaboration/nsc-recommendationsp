@@ -162,7 +162,9 @@ class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
     recommendation = forms.TypedChoiceField(
         required=False,
         choices=Choices(
-            (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\\A")),
+            (True, _("Recommended")),
+            (False, _("Not recommended")),
+            (None, _("N\\A")),
         ),
         widget=forms.RadioSelect,
     )
@@ -272,7 +274,8 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
 
 class PolicySelectionForm(forms.Form):
     policy = forms.ModelChoiceField(
-        Policy.objects.none(), error_messages={"required": _("Enter a condition")},
+        Policy.objects.none(),
+        error_messages={"required": _("Enter a condition")},
     )
 
     def __init__(self, *args, **kwargs):

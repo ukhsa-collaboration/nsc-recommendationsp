@@ -119,7 +119,10 @@ class ReviewDatesForm(forms.ModelForm):
     consultation_open = forms.TypedChoiceField(
         label=_("Consultation open date"),
         help_text=_("When do you want to open this consultation?"),
-        choices=Choices((True, "now"), (False, "later"),),
+        choices=Choices(
+            (True, "now"),
+            (False, "later"),
+        ),
         widget=forms.RadioSelect,
         required=False,
     )
@@ -355,7 +358,10 @@ class ReviewDatesForm(forms.ModelForm):
 
 class ReviewDateConfirmationForm(forms.ModelForm):
     dates_confirmed = forms.TypedChoiceField(
-        choices=((True, _("Yes")), (False, _("No")),),
+        choices=(
+            (True, _("Yes")),
+            (False, _("No")),
+        ),
         widget=forms.RadioSelect,
         initial=None,
         error_messages={

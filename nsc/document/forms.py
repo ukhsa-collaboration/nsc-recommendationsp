@@ -101,7 +101,8 @@ class ReviewDocumentForm(forms.ModelForm):
             min_num=1,
             extra=0,
             form=document_formset_form_factory(
-                self.document_type, self.required_error_message,
+                self.document_type,
+                self.required_error_message,
             ),
             fields=["upload"],
         )(

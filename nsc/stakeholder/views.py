@@ -171,7 +171,9 @@ class StakeholderAdd(AdminRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(
-            back_title=_("Back"), back_url=reverse_lazy("stakeholder:list"), **kwargs,
+            back_title=_("Back"),
+            back_url=reverse_lazy("stakeholder:list"),
+            **kwargs,
         )
 
 

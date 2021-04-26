@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameModel(
-            old_name="ReviewNotification", new_name="ReviewStakeholderNotification",
+            old_name="ReviewNotification",
+            new_name="ReviewStakeholderNotification",
         ),
     ]
