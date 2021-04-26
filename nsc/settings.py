@@ -1,4 +1,4 @@
-from os import environ, walk
+from os import environ
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -14,12 +14,6 @@ PROJECT_NAME = "nsc"
 CONFIGURATION = environ["DJANGO_CONFIGURATION"]
 CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
 SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
-
-# If specified, add config dir to environment
-if CONFIG_DIR:
-    for dirpath, dirnames, filenames in walk(CONFIG_DIR):
-        for dirname in dirnames:
-            envdir.Env(Path(dirpath, dirname))
 
 
 class NotSetClass:
@@ -105,6 +99,11 @@ def csv_to_list(value):
     if value is None:
         return []
     return value.split(",")
+
+
+# If specified, add config dir to environment
+for dir in csv_to_list(CONFIG_DIR):
+    envdir.Env(dir)
 
 
 class Common(Configuration):
