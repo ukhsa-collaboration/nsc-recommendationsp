@@ -410,7 +410,12 @@ class Common(Configuration):
     @property
     def AUTH_ADFS(self):
         if not self.AUTH_USE_ACTIVE_DIRECTORY:
-            return None
+            return {
+                "TENANT_ID": "fake-tenant",
+                "CLIENT_ID": "fake-client",
+                "RELYING_PARTY_ID": "fake-relying-party",
+                "AUDIENCE": "fake-audience",
+            }
 
         return {
             "AUDIENCE": self.ACTIVE_DIRECTORY_CLIENT_ID,

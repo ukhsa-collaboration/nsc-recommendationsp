@@ -30,6 +30,7 @@ pytest_plugins = [
     "nsc.policy.tests.fixtures",
     "nsc.review.tests.fixtures",
     "nsc.stakeholder.tests.fixtures",
+    "nsc.user.tests.fixtures",
     "nsc.utils.tests.fixtures",
     "nsc.subscription.tests.fixtures",
 ]
