@@ -16,6 +16,10 @@ CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
 SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
 
 
+if CONFIG_DIR:
+    envdir.Env(CONFIG_DIR)
+
+
 class NotSetClass:
     def __bool__(self):
         return False
@@ -61,7 +65,7 @@ def get_secret(*name, default=NotSet, required=True, cast=str):
 
     Arguments:
 
-        name (str[]): Path to the environment variable
+        name (str[]): Path to the secret variable
         default (any): The value to use if not set
         required (bool): Should an error be raised if the value is missing
         cast (Callable): function to call on extracted string value
@@ -99,11 +103,6 @@ def csv_to_list(value):
     if value is None:
         return []
     return value.split(",")
-
-
-# If specified, add config dir to environment
-for dir in csv_to_list(CONFIG_DIR):
-    envdir.Env(dir)
 
 
 class Common(Configuration):

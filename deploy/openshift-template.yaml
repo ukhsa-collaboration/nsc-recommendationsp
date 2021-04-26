@@ -255,7 +255,7 @@ objects:
                   name: django-webpack
                   key: APP_CONFIG
             - name: DJANGO_CONFIG_DIR
-              value: "/run/configs/common,/run/configs/notify"
+              value: "/run/configs/common"
             - name: DJANGO_SECRET_DIR
               value: "/run/secrets"
             resources:
@@ -376,7 +376,7 @@ objects:
                   name: "${NAME}"
                   key: APP_CONFIG
             - name: DJANGO_CONFIG_DIR
-              value: "/run/configs/common,/run/configs/notify"
+              value: "/run/configs/common"
             - name: DJANGO_SECRET_DIR
               value: "/run/secrets"
             resources:
@@ -485,7 +485,7 @@ objects:
                   name: "${NAME}"
                   key: APP_CONFIG
             - name: DJANGO_CONFIG_DIR
-              value: "/run/configs/common,/run/configs/notify"
+              value: "/run/configs/common"
             - name: DJANGO_SECRET_DIR
               value: "/run/secrets"
             resources:
