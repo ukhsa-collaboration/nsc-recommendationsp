@@ -8,6 +8,7 @@ class UniqueSessionAdfsBackend(AdfsAuthCodeBackend):
         if (
             request
             and user.is_authenticated
+            and user.last_session_id
             and request.session.session_key != user.last_session_id
         ):
             return None
