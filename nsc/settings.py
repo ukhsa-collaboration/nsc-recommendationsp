@@ -554,12 +554,6 @@ class Deployed(Build):
     # Sets the maximum age of a session (4 hours in seconds)
     SESSION_COOKIE_AGE = 4 * 60 * 60
 
-    # Sets the session to expire on browser closing
-    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-    # Expire the session on browser closer
-    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
 
