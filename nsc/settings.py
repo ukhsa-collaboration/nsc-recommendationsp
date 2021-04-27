@@ -631,14 +631,21 @@ class Deployed(Build):
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
                     "PARSER_CLASS": "redis.connection.HiredisParser",
-                    # See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
-                    # 'IGNORE_EXCEPTIONS': True,
                 },
-            }
+            },
+            "session": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/2",
+                "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PARSER_CLASS": "redis.connection.HiredisParser",
+                },
+            },
         }
 
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "default"
+    SESSION_CACHE_ALIAS = "session"
 
     # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
     # ever turned on when run with a WSGI server
