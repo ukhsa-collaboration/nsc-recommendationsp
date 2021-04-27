@@ -28,4 +28,4 @@ def send_email(address, template, context=None, reference=None):
             reference=reference,
         )
     except APIError as e:
-        return e.response.json()[0]
+        return e.response.json()
