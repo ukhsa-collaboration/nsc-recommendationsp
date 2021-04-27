@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.urls import reverse
 
 import pytest
@@ -125,3 +126,21 @@ def test_deleting_review_deletes_document(review_document):
     review_document.review.delete()
     assert not review_document.exists()
     assert not review_document.file_exists()
+
+
+def test_document_is_saved___cache_is_cleared(make_document):
+    cache.set("foo", "bar")
+
+    make_document()
+
+    assert cache.get("foo") is None
+
+
+def test_document_is_deleted___cache_is_cleared(make_document):
+    document = make_document()
+
+    cache.set("foo", "bar")
+
+    document.delete()
+
+    assert cache.get("foo") is None

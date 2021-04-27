@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.core.cache import cache
 from django.test import override_settings
 
 import freezegun
@@ -103,3 +104,8 @@ def email_settings():
         NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION="NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION",
     ):
         yield
+
+
+@pytest.fixture(autouse=True)
+def clear_cache():
+    cache.clear()

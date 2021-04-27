@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
@@ -284,3 +286,21 @@ def test_prefetch_reviews_in_consultation(start, end, count):
     policy.reviews.add(review)
     actual = Policy.objects.prefetch_reviews_in_consultation().first()
     assert len(actual.reviews_in_consultation) == count
+
+
+def test_policy_is_saved___cache_is_cleared(make_policy):
+    cache.set("foo", "bar")
+
+    make_policy()
+
+    assert cache.get("foo") is None
+
+
+def test_policy_is_deleted___cache_is_cleared(make_policy):
+    policy = make_policy()
+
+    cache.set("foo", "bar")
+
+    policy.delete()
+
+    assert cache.get("foo") is None
