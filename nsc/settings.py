@@ -338,7 +338,7 @@ class Common(Configuration):
     PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL", default=None)
     CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS", default=None)
     NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
-    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
+    NOTIFY_SERVICE_API_KEY = get_secret("notify", "api-key", default=None)
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env(
         "NOTIFY_TEMPLATE_CONSULTATION_OPEN", default=None
     )
