@@ -87,7 +87,7 @@ class Email(TimeStampedModel):
             self.address, self.template_id, context=self.context, reference=str(self.id)
         )
 
-        if "error" not in resp:
+        if resp and "error" not in resp:
             self.status = self.STATUS.sending
             self.notify_id = resp["id"]
         else:
