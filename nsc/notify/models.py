@@ -95,6 +95,9 @@ class Email(TimeStampedModel):
                 f"Failed to send email {self.id}, response: {json.dumps(resp)}"
             )
 
+            if resp["error"] == "BadRequestError":
+                self.status = self.STATUS.permanent_failure
+
         self.save()
 
 
