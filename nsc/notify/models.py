@@ -83,11 +83,12 @@ class Email(TimeStampedModel):
     def send(self):
         self.attempts += 1
 
+        logger.info(f"sending email: {self.id}")
         resp = send_email(
             self.address, self.template_id, context=self.context, reference=str(self.id)
         )
 
-        if resp and "error" not in resp:
+        if resp and "errors" not in resp:
             self.status = self.STATUS.sending
             self.notify_id = resp["id"]
         else:
