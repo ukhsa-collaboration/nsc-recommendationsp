@@ -312,26 +312,6 @@ class Common(Configuration):
     REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
 
-    # Settings for celery
-    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
-    CELERY_ACCEPT_CONTENT = ["json"]
-    CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
-
-    CELERY_BEAT_SCHEDULE = {
-        "send-pending-emails": {
-            "task": "nsc.notify.tasks.send_pending_emails",
-            "schedule": crontab(minute="*"),
-        },
-        "send-open-review-notifications": {
-            "task": "nsc.review.tasks.send_open_review_notifications",
-            "schedule": crontab(minute="*"),
-        },
-        "send-published-notifications": {
-            "task": "nsc.review.tasks.send_published_notifications",
-            "schedule": crontab(minute="*"),
-        },
-    }
-
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
     PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default=None)
@@ -369,6 +349,31 @@ class Common(Configuration):
     NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = get_env(
         "NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION", default=None
     )
+    NOTIFY_STALE_MINUTES = 5
+
+    # Settings for celery
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+    CELERY_ACCEPT_CONTENT = ["json"]
+    CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
+
+    CELERY_BEAT_SCHEDULE = {
+        "send-pending-emails": {
+            "task": "nsc.notify.tasks.send_pending_emails",
+            "schedule": crontab(minute="*"),
+        },
+        "update-stale-email-statuses": {
+            "task": "nsc.notify.tasks.update_stale_email_statuses",
+            "schedule": crontab(minute=f"*/{NOTIFY_STALE_MINUTES}"),
+        },
+        "send-open-review-notifications": {
+            "task": "nsc.review.tasks.send_open_review_notifications",
+            "schedule": crontab(minute="*"),
+        },
+        "send-published-notifications": {
+            "task": "nsc.review.tasks.send_published_notifications",
+            "schedule": crontab(minute="*"),
+        },
+    }
 
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.

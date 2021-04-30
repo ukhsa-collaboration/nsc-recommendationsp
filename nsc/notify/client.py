@@ -29,3 +29,14 @@ def send_email(address, template, context=None, reference=None):
         )
     except APIError as e:
         return e.response.json()
+
+
+def get_email_status(notify_id):
+    if client is None:
+        logger.info(f"[Notify - Get Status] {notify_id}")
+        return
+
+    try:
+        return client.get_notification_by_id(notify_id)
+    except APIError as e:
+        return e.response.json()

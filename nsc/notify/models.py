@@ -1,15 +1,18 @@
 import json
 import logging
+from datetime import timedelta
 
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.crypto import get_random_string
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 
-from .client import send_email
+from .client import get_email_status, send_email
 
 
 logger = logging.getLogger(__name__)
@@ -20,7 +23,7 @@ class EmailQuerySet(models.QuerySet):
         return self.filter(status=Email.STATUS.pending)
 
     def sending(self):
-        return self.filter(status=Email.STATUS.sending)
+        return self.filter(status__in=[Email.STATUS.sending, Email.STATUS.created])
 
     def delivered(self):
         return self.filter(status=Email.STATUS.delivered)
@@ -48,6 +51,17 @@ class EmailQuerySet(models.QuerySet):
             status__in=[Email.STATUS.delivered, Email.STATUS.permanent_failure]
         )
 
+    def stale(self):
+        """
+        Fetches all email objects that have not changed in 5 minutes
+        """
+        return self.filter(
+            modified__lte=now() - timedelta(minutes=settings.NOTIFY_STALE_MINUTES)
+        )
+
+    def with_notify_id(self):
+        return self.exclude(notify_id="")
+
 
 class Email(TimeStampedModel):
     """
@@ -60,6 +74,7 @@ class Email(TimeStampedModel):
 
     STATUS = Choices(
         ("pending", _("Pending")),
+        ("created", _("Created")),
         ("sending", _("Sending")),
         ("delivered", _("Delivered")),
         ("permanent-failure", "permanent_failure", _("Permanent Failure")),
@@ -67,7 +82,7 @@ class Email(TimeStampedModel):
         ("technical-failure", "technical_failure", _("Technical Failure")),
     )
 
-    notify_id = models.CharField(max_length=50)
+    notify_id = models.CharField(max_length=50, default="", blank=True, editable=False)
     address = models.EmailField()
     template_id = models.CharField(max_length=50)
     context = JSONField(default=dict)
@@ -100,6 +115,17 @@ class Email(TimeStampedModel):
                 self.status = self.STATUS.permanent_failure
 
         self.save()
+
+    def update_status(self):
+        resp = get_email_status(self.notify_id)
+
+        if resp and "status" in resp:
+            self.status = resp["status"]
+            self.save()
+        else:
+            logger.error(
+                f"Failed to get email status {self.id}, response: {json.dumps(resp)}"
+            )
 
 
 def generate_token():
