@@ -1,7 +1,13 @@
+import os
 from os import environ
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 import envdir
 from celery.schedules import crontab
@@ -143,7 +149,6 @@ class Common(Configuration):
         "django_auth_adfs",
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
-        "raven.contrib.django.raven_compat",
         "django_extensions",
         "clear_cache",
         "simple_history",
@@ -262,7 +267,7 @@ class Common(Configuration):
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "root": {"level": "WARNING", "handlers": ["sentry", "console"]},
+        "root": {"level": "WARNING", "handlers": ["console"]},
         "formatters": {
             "verbose": {
                 "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
@@ -273,10 +278,6 @@ class Common(Configuration):
             },
         },
         "handlers": {
-            "sentry": {
-                "level": "ERROR",
-                "class": "raven.contrib.django.raven_compat.handlers.SentryHandler",
-            },
             "console": {
                 "level": "DEBUG",
                 "class": "logging.StreamHandler",
@@ -294,7 +295,6 @@ class Common(Configuration):
                 "handlers": ["console"],
                 "propagate": False,
             },
-            "raven": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
             "sentry.errors": {
                 "level": "DEBUG",
                 "handlers": ["console"],
@@ -670,6 +670,7 @@ class Deployed(Build):
     DEFAULT_FROM_EMAIL = ""
     SERVER_EMAIL = ""
 
+    # host settings
     MAIN_DOMAIN = get_env("MAIN_DOMAIN", required=True)
     EXTRA_ALLOWED_HOSTS = get_env("EXTRA_ALLOWED_HOSTS", default=[], cast=csv_to_list)
 
@@ -680,6 +681,24 @@ class Deployed(Build):
     @property
     def EMAIL_ROOT_DOMAIN(self):
         return f"https://{self.MAIN_DOMAIN}"
+
+    # sentry settings
+    SENTRY_DSN = get_secret("sentry", "dsn")
+
+    @classmethod
+    def pre_setup(cls):
+        SENTRY_DSN = os.environ.get("SENTRY_DSN", None)
+        if SENTRY_DSN:
+            sentry_sdk.init(
+                dsn=SENTRY_DSN,
+                integrations=[
+                    DjangoIntegration(),
+                    CeleryIntegration(),
+                    RedisIntegration(),
+                ],
+                environment=cls.__name__,
+                send_default_pii=False,
+            )
 
 
 class Stage(Deployed):

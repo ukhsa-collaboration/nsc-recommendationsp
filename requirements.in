@@ -11,7 +11,7 @@ envdir
 gunicorn
 hiredis
 psycopg2-binary
-raven
+sentry_sdk
 whitenoise
 
 # General Django apps
