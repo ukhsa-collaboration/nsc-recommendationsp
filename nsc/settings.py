@@ -485,7 +485,12 @@ class Dev(Webpack, Common):
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
-    EMAIL_ROOT_DOMAIN = "http://localhost:8000"
+
+    MAIN_DOMAIN = "localhost:8000"
+
+    @property
+    def EMAIL_ROOT_DOMAIN(self):
+        return f"http://{self.MAIN_DOMAIN}"
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
@@ -587,9 +592,6 @@ class Deployed(Build):
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-    # Redefine values which are not optional in a deployed environment
-    ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
-
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")
     DATABASE_USER = get_secret("postgresql", "database-user")
@@ -668,13 +670,24 @@ class Deployed(Build):
     DEFAULT_FROM_EMAIL = ""
     SERVER_EMAIL = ""
 
+    MAIN_DOMAIN = get_env("MAIN_DOMAIN", required=True)
+    EXTRA_ALLOWED_HOSTS = get_env("EXTRA_ALLOWED_HOSTS", default=[], cast=csv_to_list)
+
+    @property
+    def ALLOWED_HOSTS(self):
+        return [self.MAIN_DOMAIN, *self.EXTRA_ALLOWED_HOSTS]
+
+    @property
+    def EMAIL_ROOT_DOMAIN(self):
+        return f"https://{self.MAIN_DOMAIN}"
+
 
 class Stage(Deployed):
-    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
+    pass
 
 
 class Prod(Deployed):
-    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
+    pass
 
 
 class Demo(Build):
