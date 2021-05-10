@@ -19,7 +19,6 @@ import os
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
 from configurations.wsgi import get_wsgi_application  # noqa
-from raven.contrib.django.raven_compat.middleware.wsgi import Sentry  # noqa
 
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
@@ -29,4 +28,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nsc.settings")
 os.environ.setdefault("DJANGO_CONFIGURATION", "Dev")
 
 
-application = Sentry(get_wsgi_application())
+application = get_wsgi_application()
