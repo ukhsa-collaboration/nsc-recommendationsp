@@ -195,6 +195,7 @@ class Common(Configuration):
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
+                    "nsc.context_processors.tracking_ids",
                 ]
             },
         }
@@ -226,7 +227,7 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -350,6 +351,10 @@ class Common(Configuration):
         "NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION", default=None
     )
     NOTIFY_STALE_MINUTES = 5
+
+    # Tracking
+    GA_PROPERTY_ID = get_secret("tracking", "ga-property-id", required=False, default=None)
+    HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"

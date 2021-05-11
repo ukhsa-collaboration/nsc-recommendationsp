@@ -65,12 +65,15 @@ const moduleRuleScss = {
 */
 const config = {
   entry: {
-    'index': [`./${pathRoot}/src/index.js`, `./${pathRoot}/src/index.scss`],
+    // 'index': [`./${pathRoot}/src/index.js`, `./${pathRoot}/src/index.scss`],
+    'index': `./${pathRoot}/src/index.js`,
+    'style': `./${pathRoot}/src/index.scss`
   },
   output: {
     path: path.resolve(__dirname, pathDist),
     publicPath: `/${pathDist}/`,
-    filename: '[name].js'
+    filename: '[name].js',
+    library: "NSCR"
   },
 
   // Enable sourcemaps for debugging webpack's output.

@@ -39,3 +39,10 @@ def webpack_dev_url(request):
     logger.info("Webpack dev server found, HMR enabled\n")
 
     return {"WEBPACK_DEV_URL": settings.WEBPACK_DEV_URL.format(**data)}
+
+
+def tracking_ids(request):
+    return {
+        "GA_PROPERTY_ID": settings.GA_PROPERTY_ID,
+        "HOTJAR_ID": settings.HOTJAR_ID,
+    }
