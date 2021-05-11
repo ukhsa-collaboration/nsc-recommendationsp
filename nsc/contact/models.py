@@ -20,7 +20,7 @@ class Contact(TimeStampedModel):
     )
     role = models.CharField(
         verbose_name=_("Contact's role (optional)"),
-        max_length=50,
+        max_length=255,
         blank=True,
         default="",
     )

@@ -80,9 +80,8 @@ class Stakeholder(TimeStampedModel):
         "policy.Policy", verbose_name=_("policies"), related_name="stakeholders"
     )
 
-    comments = models.CharField(
+    comments = models.TextField(
         verbose_name=_("Additional comments (for internal use only)"),
-        max_length=255,
         blank=True,
         default="",
     )
