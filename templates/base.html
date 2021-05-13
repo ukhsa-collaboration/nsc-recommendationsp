@@ -152,7 +152,7 @@
     </div>
   </footer>
   <script>
-    document.addEventListener('readystatechange', NSCR.initApp)
+    document.addEventListener('readystatechange', function () {NSCR.initApp})
   </script>
   {% block extra_script %}{% endblock %}
 </body>
