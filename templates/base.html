@@ -62,7 +62,7 @@
 
   {% if WEBPACK_DEV_URL %}
     <script src="{{ WEBPACK_DEV_URL }}style.js"></script>
-    <script src="{{ WEBPACK_DEV_URL }}index.js" onload="document.addEventListener('DOMContentLoaded', NSCR.initApp)"></script>
+    <script src="{{ WEBPACK_DEV_URL }}index.js" onload="NSCR.initApp()"></script>
   {% else %}
   <script src="{% static "index.js" %}" async onload="document.addEventListener('DOMContentLoaded', NSCR.initApp)"></script>
   {% endif %}

@@ -7,11 +7,19 @@ import { filterExportButton } from './stakeholders';
 import { initCookieBanner } from './components/cookie-banner';
 
 const initApp = () => {
-  initAll();
-  formsets();
-  opendate();
-  filterExportButton();
-  initCookieBanner();
+  const _init = () => {
+    initAll();
+    formsets();
+    opendate();
+    filterExportButton();
+    initCookieBanner();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", _init)
+  } else {
+    _init()
+  }
 }
 
 export {
