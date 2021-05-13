@@ -62,9 +62,9 @@
 
   {% if WEBPACK_DEV_URL %}
     <script src="{{ WEBPACK_DEV_URL }}style.js"></script>
-    <script src="{{ WEBPACK_DEV_URL }}index.js"></script>
+    <script src="{{ WEBPACK_DEV_URL }}index.js" onload="document.addEventListener('DOMContentLoaded', NSCR.initApp)"></script>
   {% else %}
-  <script src="{% static "index.js" %}" async></script>
+  <script src="{% static "index.js" %}" async onload="document.addEventListener('DOMContentLoaded', NSCR.initApp)"></script>
   {% endif %}
 </head>
 
@@ -151,10 +151,6 @@
       </div>
     </div>
   </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", NSCR.initApp)
-  </script>
   {% block extra_script %}{% endblock %}
 </body>
 
