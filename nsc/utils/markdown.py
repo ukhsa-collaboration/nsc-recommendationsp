@@ -1,4 +1,6 @@
+import bleach
 import markdown
+from bleach_whitelist import markdown_attrs, markdown_tags
 from bs4 import BeautifulSoup
 
 
@@ -27,4 +29,7 @@ def convert(content):
                     existing_classes.append(css_class)
             node["class"] = existing_classes
 
-    return str(soup)
+    # sanitize the output markdown so that people can't inject dangerous content
+    valid_attrs = dict(markdown_attrs)
+    valid_attrs["*"].append("class")
+    return bleach.clean(str(soup), markdown_tags, markdown_attrs)

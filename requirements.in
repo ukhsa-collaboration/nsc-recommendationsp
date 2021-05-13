@@ -31,4 +31,6 @@ notifications-python-client
 python-dateutil
 requests
 html2markdown
+bleach
+bleach_whitelist
 django-auth-adfs
