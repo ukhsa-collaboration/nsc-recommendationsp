@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 import pytest
 from model_bakery import baker
 
@@ -39,3 +41,21 @@ def test_public_stakeholders_for_policy(make_stakeholder):
     expected = [obj.pk for obj in Stakeholder.objects.filter(policies=policies[0])]
     actual = [obj.pk for obj in Stakeholder.objects.public(policies[0])]
     assert expected == actual
+
+
+def test_stakeholder_is_saved___cache_is_cleared(make_stakeholder):
+    cache.set("foo", "bar")
+
+    make_stakeholder()
+
+    assert cache.get("foo") is None
+
+
+def test_stakeholder_is_deleted___cache_is_cleared(make_stakeholder):
+    stakeholder = make_stakeholder()
+
+    cache.set("foo", "bar")
+
+    stakeholder.delete()
+
+    assert cache.get("foo") is None

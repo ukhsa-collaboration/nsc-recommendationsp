@@ -10,6 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="historicalstakeholder", name="country",),
-        migrations.RemoveField(model_name="stakeholder", name="country",),
+        migrations.RemoveField(
+            model_name="historicalstakeholder",
+            name="country",
+        ),
+        migrations.RemoveField(
+            model_name="stakeholder",
+            name="country",
+        ),
     ]

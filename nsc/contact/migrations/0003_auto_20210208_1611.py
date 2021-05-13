@@ -10,5 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelManagers(name="contact", managers=[],),
+        migrations.AlterModelManagers(
+            name="contact",
+            managers=[],
+        ),
     ]

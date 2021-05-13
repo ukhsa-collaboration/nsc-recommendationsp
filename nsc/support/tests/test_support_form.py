@@ -25,7 +25,8 @@ def valid_data():
 
 @pytest.fixture
 def form(django_app):
-    return django_app.get(reverse("support:contact")).form
+    # use `forms[1]` since there is not the cookies form on the page
+    return django_app.get(reverse("support:contact")).forms[1]
 
 
 def submit_form(form, data):
@@ -39,7 +40,14 @@ def submit_form(form, data):
     return form.submit()
 
 
-@pytest.mark.parametrize("name", ("", "  ", None,))
+@pytest.mark.parametrize(
+    "name",
+    (
+        "",
+        "  ",
+        None,
+    ),
+)
 def test_name_is_invalid_error_is_raised(form, name, valid_data):
     res = submit_form(form, {**valid_data, "name": name})
 
@@ -55,7 +63,14 @@ def test_country_is_invalid_error_is_raised(form, country, valid_data):
     assert res.request.path == reverse("support:contact")
 
 
-@pytest.mark.parametrize("subject", ("", "  ", None,))
+@pytest.mark.parametrize(
+    "subject",
+    (
+        "",
+        "  ",
+        None,
+    ),
+)
 def test_subject_is_invalid_error_is_raised(form, subject, valid_data):
     res = submit_form(form, {**valid_data, "subject": subject})
 
@@ -63,7 +78,14 @@ def test_subject_is_invalid_error_is_raised(form, subject, valid_data):
     assert res.request.path == reverse("support:contact")
 
 
-@pytest.mark.parametrize("message", ("", "  ", None,))
+@pytest.mark.parametrize(
+    "message",
+    (
+        "",
+        "  ",
+        None,
+    ),
+)
 def test_message_is_invalid_error_is_raised(form, message, valid_data):
     res = submit_form(form, {**valid_data, "message": message})
 

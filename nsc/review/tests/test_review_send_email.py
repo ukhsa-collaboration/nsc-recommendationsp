@@ -71,12 +71,17 @@ def test_reviews_have_confirmed_dates_in_the_past_emails_are_created(make_review
     assert (
         Email.objects.count() == len(target_contacts) + 1
     )  # add 1 for the phe comms notification
-    assert Email.objects.filter(
-        address=target_contacts[0].email,
-        status=Email.STATUS.pending,
-        context=target.get_email_context(**{"recipient name": target_contacts[0].name}),
-        template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
-    ).count() == len(target_contacts)
+    assert (
+        Email.objects.filter(
+            address=target_contacts[0].email,
+            status=Email.STATUS.pending,
+            context=target.get_email_context(
+                **{"recipient name": target_contacts[0].name}
+            ),
+            template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+        ).count()
+        == len(target_contacts)
+    )
     assert Email.objects.filter(
         address=settings.PHE_COMMUNICATIONS_EMAIL,
         status=Email.STATUS.pending,
@@ -130,7 +135,9 @@ def test_open_review_conditions_have_subscribers_subs_receive_emails(
     ).exists()
 
 
-def test_no_reviews_have_been_published_no_emails_are_not_created(make_review,):
+def test_no_reviews_have_been_published_no_emails_are_not_created(
+    make_review,
+):
     make_review(published=False)
     make_review(published=False)
 
@@ -154,12 +161,17 @@ def test_reviews_published_emails_are_created(make_review):
     assert (
         Email.objects.count() == len(target_contacts) + 1
     )  # add 1 for the phe comms notification
-    assert Email.objects.filter(
-        address=target_contacts[0].email,
-        status=Email.STATUS.pending,
-        context=target.get_email_context(**{"recipient name": target_contacts[0].name}),
-        template_id=settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
-    ).count() == len(target_contacts)
+    assert (
+        Email.objects.filter(
+            address=target_contacts[0].email,
+            status=Email.STATUS.pending,
+            context=target.get_email_context(
+                **{"recipient name": target_contacts[0].name}
+            ),
+            template_id=settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
+        ).count()
+        == len(target_contacts)
+    )
     assert Email.objects.filter(
         address=settings.PHE_COMMUNICATIONS_EMAIL,
         status=Email.STATUS.pending,

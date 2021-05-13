@@ -10,6 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="historicalpolicy", name="last_review",),
-        migrations.RemoveField(model_name="policy", name="last_review",),
+        migrations.RemoveField(
+            model_name="historicalpolicy",
+            name="last_review",
+        ),
+        migrations.RemoveField(
+            model_name="policy",
+            name="last_review",
+        ),
     ]

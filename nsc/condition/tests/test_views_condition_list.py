@@ -87,7 +87,7 @@ def test_search_form_blank(django_app):
     """
     Test that the fields in the search form are initially blank.
     """
-    form = django_app.get(condition_list_url).form
+    form = django_app.get(condition_list_url).forms[1]
     assert form["name"].value == ""
     assert form["comments"].value is None
     assert form["affects"].value is None
@@ -140,7 +140,7 @@ def test_search_form_shows_name_term(django_app_form):
     """
     Test when the search results are shown the form shows the entered condition name.
     """
-    form = django_app_form(condition_list_url, name="name").form
+    form = django_app_form(condition_list_url, name="name").forms[1]
     assert form["name"].value == "name"
     assert form["affects"].value is None
     assert form["screen"].value is None
@@ -150,7 +150,7 @@ def test_search_form_shows_affects_term(django_app_form):
     """
     Test when the search results are shown the form shows the selected age.
     """
-    form = django_app_form(condition_list_url, affects="child").form
+    form = django_app_form(condition_list_url, affects="child").forms[1]
     assert form["name"].value == ""
     assert form["affects"].value == "child"
     assert form["screen"].value is None
@@ -160,7 +160,7 @@ def test_search_form_shows_screen_term(django_app_form):
     """
     Test when the search results are shown the form shows the selected recommendation.
     """
-    form = django_app_form(condition_list_url, screen="no").form
+    form = django_app_form(condition_list_url, screen="no").forms[1]
     assert form["name"].value == ""
     assert form["affects"].value is None
     assert form["screen"].value == "no"

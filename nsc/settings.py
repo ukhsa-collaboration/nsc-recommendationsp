@@ -1,11 +1,16 @@
-from os import environ, walk
+import os
+from os import environ
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
 import envdir
+import sentry_sdk
 from celery.schedules import crontab
 from configurations import Configuration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 
 # Common settings
@@ -15,11 +20,9 @@ CONFIGURATION = environ["DJANGO_CONFIGURATION"]
 CONFIG_DIR = environ.get("DJANGO_CONFIG_DIR")
 SECRET_DIR = environ.get("DJANGO_SECRET_DIR")
 
-# If specified, add config dir to environment
+
 if CONFIG_DIR:
-    for dirpath, dirnames, filenames in walk(CONFIG_DIR):
-        for dirname in dirnames:
-            envdir.Env(Path(dirpath, dirname))
+    envdir.Env(CONFIG_DIR)
 
 
 class NotSetClass:
@@ -67,7 +70,7 @@ def get_secret(*name, default=NotSet, required=True, cast=str):
 
     Arguments:
 
-        name (str[]): Path to the environment variable
+        name (str[]): Path to the secret variable
         default (any): The value to use if not set
         required (bool): Should an error be raised if the value is missing
         cast (Callable): function to call on extracted string value
@@ -145,12 +148,12 @@ class Common(Configuration):
         "django_auth_adfs",
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
-        "raven.contrib.django.raven_compat",
         "django_extensions",
         "clear_cache",
         "simple_history",
         "storages",
         "django_filters",
+        "nsc.user",
         "nsc.condition",
         "nsc.contact",
         "nsc.document",
@@ -175,6 +178,7 @@ class Common(Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
+        "nsc.user.middleware.record_user_session",
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -190,6 +194,8 @@ class Common(Configuration):
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
+                    "nsc.context_processors.tracking_ids",
+                    "nsc.context_processors.cookie_banner",
                 ]
             },
         }
@@ -261,8 +267,8 @@ class Common(Configuration):
 
     LOGGING = {
         "version": 1,
-        "disable_existing_loggers": True,
-        "root": {"level": "WARNING", "handlers": ["sentry"]},
+        "disable_existing_loggers": False,
+        "root": {"level": "WARNING", "handlers": ["console"]},
         "formatters": {
             "verbose": {
                 "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
@@ -273,10 +279,6 @@ class Common(Configuration):
             },
         },
         "handlers": {
-            "sentry": {
-                "level": "ERROR",
-                "class": "raven.contrib.django.raven_compat.handlers.SentryHandler",
-            },
             "console": {
                 "level": "DEBUG",
                 "class": "logging.StreamHandler",
@@ -294,7 +296,6 @@ class Common(Configuration):
                 "handlers": ["console"],
                 "propagate": False,
             },
-            "raven": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
             "sentry.errors": {
                 "level": "DEBUG",
                 "handlers": ["console"],
@@ -312,33 +313,15 @@ class Common(Configuration):
     REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
 
-    # Settings for celery
-    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
-    CELERY_ACCEPT_CONTENT = ["json"]
-    CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
-
-    CELERY_BEAT_SCHEDULE = {
-        "send-pending-emails": {
-            "task": "nsc.notify.tasks.send_pending_emails",
-            "schedule": crontab(minute="*"),
-        },
-        "send-open-review-notifications": {
-            "task": "nsc.review.tasks.send_open_review_notifications",
-            "schedule": crontab(minute="*"),
-        },
-        "send-published-notifications": {
-            "task": "nsc.review.tasks.send_published_notifications",
-            "schedule": crontab(minute="*"),
-        },
-    }
-
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
     PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default=None)
     PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL", default=None)
     CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS", default=None)
     NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
-    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
+    NOTIFY_SERVICE_API_KEY = get_secret(
+        "notify", "api-key", required=False, default=None
+    )
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env(
         "NOTIFY_TEMPLATE_CONSULTATION_OPEN", default=None
     )
@@ -367,6 +350,37 @@ class Common(Configuration):
     NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = get_env(
         "NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION", default=None
     )
+    NOTIFY_STALE_MINUTES = 5
+
+    # Tracking
+    GA_PROPERTY_ID = get_secret(
+        "tracking", "ga-property-id", required=False, default=None
+    )
+    HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
+
+    # Settings for celery
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+    CELERY_ACCEPT_CONTENT = ["json"]
+    CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
+
+    CELERY_BEAT_SCHEDULE = {
+        "send-pending-emails": {
+            "task": "nsc.notify.tasks.send_pending_emails",
+            "schedule": crontab(minute="*"),
+        },
+        "update-stale-email-statuses": {
+            "task": "nsc.notify.tasks.update_stale_email_statuses",
+            "schedule": crontab(minute=f"*/{NOTIFY_STALE_MINUTES}"),
+        },
+        "send-open-review-notifications": {
+            "task": "nsc.review.tasks.send_open_review_notifications",
+            "schedule": crontab(minute="*"),
+        },
+        "send-published-notifications": {
+            "task": "nsc.review.tasks.send_published_notifications",
+            "schedule": crontab(minute="*"),
+        },
+    }
 
     # This is the URL for the National Screening Committee where members of
     # the public can leave feedback about the web site.
@@ -393,7 +407,7 @@ class Common(Configuration):
 
         if self.AUTH_USE_ACTIVE_DIRECTORY:
             return AUTHENTICATION_BACKENDS + (
-                "django_auth_adfs.backend.AdfsAuthCodeBackend",
+                "nsc.user.backend.UniqueSessionAdfsBackend",
             )
 
         return AUTHENTICATION_BACKENDS
@@ -408,7 +422,12 @@ class Common(Configuration):
     @property
     def AUTH_ADFS(self):
         if not self.AUTH_USE_ACTIVE_DIRECTORY:
-            return None
+            return {
+                "TENANT_ID": "fake-tenant",
+                "CLIENT_ID": "fake-client",
+                "RELYING_PARTY_ID": "fake-relying-party",
+                "AUDIENCE": "fake-audience",
+            }
 
         return {
             "AUDIENCE": self.ACTIVE_DIRECTORY_CLIENT_ID,
@@ -422,6 +441,8 @@ class Common(Configuration):
             "TENANT_ID": self.ACTIVE_DIRECTORY_TENANT_ID,
             "RELYING_PARTY_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
         }
+
+    AUTH_USER_MODEL = "user.User"
 
 
 class Webpack:
@@ -471,7 +492,12 @@ class Dev(Webpack, Common):
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
-    EMAIL_ROOT_DOMAIN = "http://localhost:8000"
+
+    MAIN_DOMAIN = "localhost:8000"
+
+    @property
+    def EMAIL_ROOT_DOMAIN(self):
+        return f"http://{self.MAIN_DOMAIN}"
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
@@ -551,8 +577,8 @@ class Deployed(Build):
     # Prevent client-side JS from accessing the session cookie.
     SESSION_COOKIE_HTTPONLY = True
 
-    # Expire the session on browser closer
-    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+    # Sets the maximum age of a session (4 hours in seconds)
+    SESSION_COOKIE_AGE = 4 * 60 * 60
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
@@ -572,9 +598,6 @@ class Deployed(Build):
 
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-    # Redefine values which are not optional in a deployed environment
-    ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, required=True)
 
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")
@@ -624,14 +647,21 @@ class Deployed(Build):
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
                     "PARSER_CLASS": "redis.connection.HiredisParser",
-                    # See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
-                    # 'IGNORE_EXCEPTIONS': True,
                 },
-            }
+            },
+            "session": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/2",
+                "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PARSER_CLASS": "redis.connection.HiredisParser",
+                },
+            },
         }
 
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "default"
+    SESSION_CACHE_ALIAS = "session"
 
     # django-debug-toolbar will throw an ImproperlyConfigured exception if DEBUG is
     # ever turned on when run with a WSGI server
@@ -647,13 +677,43 @@ class Deployed(Build):
     DEFAULT_FROM_EMAIL = ""
     SERVER_EMAIL = ""
 
+    # host settings
+    MAIN_DOMAIN = get_env("MAIN_DOMAIN", required=True)
+    EXTRA_ALLOWED_HOSTS = get_env("EXTRA_ALLOWED_HOSTS", default=[], cast=csv_to_list)
+
+    @property
+    def ALLOWED_HOSTS(self):
+        return [self.MAIN_DOMAIN, *self.EXTRA_ALLOWED_HOSTS]
+
+    @property
+    def EMAIL_ROOT_DOMAIN(self):
+        return f"https://{self.MAIN_DOMAIN}"
+
+    # sentry settings
+    SENTRY_DSN = get_secret("sentry", "dsn")
+
+    @classmethod
+    def pre_setup(cls):
+        SENTRY_DSN = os.environ.get("SENTRY_DSN", None)
+        if SENTRY_DSN:
+            sentry_sdk.init(
+                dsn=SENTRY_DSN,
+                integrations=[
+                    DjangoIntegration(),
+                    CeleryIntegration(),
+                    RedisIntegration(),
+                ],
+                environment=cls.__name__,
+                send_default_pii=False,
+            )
+
 
 class Stage(Deployed):
-    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
+    pass
 
 
 class Prod(Deployed):
-    EMAIL_ROOT_DOMAIN = "https://uk-nsc.gov.uk"
+    pass
 
 
 class Demo(Build):

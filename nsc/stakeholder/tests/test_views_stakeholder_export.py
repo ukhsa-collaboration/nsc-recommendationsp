@@ -163,7 +163,7 @@ def test_export_conditions(url, erm_user, django_app):
     other_instance.policies.add(baker.make(Policy, name="condition 2"))
 
     response = django_app.get(url, user=erm_user)
-    form = response.form
+    form = response.forms[1]
     form["export_type"] = "conditions"
     result = form.submit()
 
@@ -249,7 +249,7 @@ def test_export_individual(url, erm_user, django_app):
     )
 
     response = django_app.get(url, user=erm_user)
-    form = response.form
+    form = response.forms[1]
     form["export_type"] = "individual"
     result = form.submit()
 
@@ -287,7 +287,7 @@ def test_export_conditions_query_count(
 
     response = django_app.get(url, user=erm_user)
     with django_assert_num_queries(7):  # 3 for export, 4 for session
-        form = response.form
+        form = response.forms[1]
         form["export_type"] = "conditions"
         form.submit()
 
@@ -305,6 +305,6 @@ def test_export_individual_query_count(
 
     response = django_app.get(url, user=erm_user)
     with django_assert_num_queries(7):  # 3 for export, 4 for session
-        form = response.form
+        form = response.forms[1]
         form["export_type"] = "individual"
         form.submit()

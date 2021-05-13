@@ -71,7 +71,10 @@ def document_path(instance, filename=None):
 
 
 class DocumentPolicy(TimeStampedModel):
-    SOURCE = Choices(("review", _("Review")), ("archive", _("Archive")),)
+    SOURCE = Choices(
+        ("review", _("Review")),
+        ("archive", _("Archive")),
+    )
 
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE)
@@ -100,7 +103,7 @@ class Document(TimeStampedModel):
         verbose_name=_("upload"),
         upload_to=document_path,
         max_length=256,
-        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
+        validators=[FileExtensionValidator(allowed_extensions=["pdf", "odt"])],
     )
     review = models.ForeignKey(
         "review.Review",

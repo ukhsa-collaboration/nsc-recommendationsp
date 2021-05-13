@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.urls import reverse
 
 import pytest
@@ -231,3 +232,41 @@ def test_deleting_review_deletes_folder(review_document):
     assert not review_document.file_exists()
     folder = document_path(review)
     assert not review_document.upload.storage.exists(folder)
+
+
+def test_review_is_saved___cache_is_cleared(make_review):
+    cache.set("foo", "bar")
+
+    make_review()
+
+    assert cache.get("foo") is None
+
+
+def test_review_is_deleted___cache_is_cleared(make_review):
+    review = make_review()
+
+    cache.set("foo", "bar")
+
+    review.delete()
+
+    assert cache.get("foo") is None
+
+
+def test_review_recommendation_is_saved___cache_is_cleared(make_review_recommendation):
+    cache.set("foo", "bar")
+
+    make_review_recommendation()
+
+    assert cache.get("foo") is None
+
+
+def test_review_recommendation_is_deleted___cache_is_cleared(
+    make_review_recommendation,
+):
+    review_recommendation = make_review_recommendation()
+
+    cache.set("foo", "bar")
+
+    review_recommendation.delete()
+
+    assert cache.get("foo") is None

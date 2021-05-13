@@ -68,7 +68,7 @@ def test_notify_service_returns_an_error_error_is_logged_and_email_is_not_update
 ):
     with logger_mock("nsc.notify.models") as mock_logger:
         notify_client_mock.send_email_notification.return_value = {
-            "error": "Some Error"
+            "errors": [{"error": "Some Error"}]
         }
 
         email = make_email(status=status)
@@ -87,5 +87,5 @@ def test_notify_service_returns_an_error_error_is_logged_and_email_is_not_update
         assert email.attempts == 1
         assert email.notify_id == orig_notify_id
         mock_logger.error.assert_called_once_with(
-            f"Failed to send email {email.id}, response: {json.dumps({'error': 'Some Error'})}"
+            f"Failed to send email {email.id}, response: {json.dumps({'errors': [{'error': 'Some Error'}]})}"
         )

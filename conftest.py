@@ -1,5 +1,7 @@
 import random
 
+from django.utils.timezone import now
+
 import pytest
 from model_bakery import baker
 
@@ -21,6 +23,8 @@ def generate_ages():
 
 
 baker.generators.add("nsc.utils.forms.ChoiceArrayField", "conftest.generate_ages")
+baker.generators.add("django_extensions.db.fields.CreationDateTimeField", now)
+baker.generators.add("django_extensions.db.fields.ModificationDateTimeField", now)
 
 
 pytest_plugins = [
@@ -30,6 +34,7 @@ pytest_plugins = [
     "nsc.policy.tests.fixtures",
     "nsc.review.tests.fixtures",
     "nsc.stakeholder.tests.fixtures",
+    "nsc.user.tests.fixtures",
     "nsc.utils.tests.fixtures",
     "nsc.subscription.tests.fixtures",
 ]
@@ -47,7 +52,7 @@ def django_app_form(db, django_app):
     """
 
     def get_and_post(url, user=None, **form_args):
-        form = django_app.get(url, user=user).form
+        form = django_app.get(url, user=user).forms[1]
         for field, value in form_args.items():
             form[field] = value
         return form.submit()

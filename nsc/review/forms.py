@@ -60,6 +60,7 @@ class ReviewForm(forms.ModelForm):
         help_text=_(
             "This will be produced automatically unless filled in specifically"
         ),
+        error_messages={"required": _("Enter a product name")},
     )
 
     review_type = forms.MultipleChoiceField(
@@ -118,7 +119,10 @@ class ReviewDatesForm(forms.ModelForm):
     consultation_open = forms.TypedChoiceField(
         label=_("Consultation open date"),
         help_text=_("When do you want to open this consultation?"),
-        choices=Choices((True, "now"), (False, "later"),),
+        choices=Choices(
+            (True, "now"),
+            (False, "later"),
+        ),
         widget=forms.RadioSelect,
         required=False,
     )
@@ -354,9 +358,15 @@ class ReviewDatesForm(forms.ModelForm):
 
 class ReviewDateConfirmationForm(forms.ModelForm):
     dates_confirmed = forms.TypedChoiceField(
-        choices=((True, _("Yes")), (False, _("No")),),
+        choices=(
+            (True, _("Yes")),
+            (False, _("No")),
+        ),
         widget=forms.RadioSelect,
         initial=None,
+        error_messages={
+            "required": _("Select 'yes' if you are happy to confirm the review dates")
+        },
     )
 
     class Meta:
@@ -413,6 +423,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
         queryset=Stakeholder.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         help_text=_("Deselect any stakeholders that are not to be notified"),
+        error_messages={"required": _("Select at least one stakeholder to notify")},
     )
 
     class Meta:
@@ -543,6 +554,11 @@ class RecommendationFormsetForm(forms.ModelForm):
         choices=Choices((True, _("Yes")), (False, _("No"))),
         widget=forms.RadioSelect,
         required=True,
+        error_messages={
+            "required": _(
+                "Select 'yes' if the UK NSC recommends screening for the condition"
+            )
+        },
     )
 
     class Meta:
@@ -603,6 +619,9 @@ class ReviewPublishForm(forms.ModelForm):
 
     published = forms.BooleanField(
         widget=forms.RadioSelect(choices=Choices((True, _("Yes")), (False, _("No")))),
+        error_messages={
+            "required": _("Select 'yes' if you are happy to publish the recommendation")
+        },
     )
 
     class Meta:

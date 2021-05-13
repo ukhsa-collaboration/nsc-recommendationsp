@@ -279,6 +279,9 @@ objects:
             - name: secret-s3
               mountPath: "/run/secrets/s3"
               readOnly: true
+            - name: secret-sentry
+              mountPath: "/run/secrets/sentry"
+              readOnly: true
             - name: secret-notify
               mountPath: "/run/secrets/notify"
               readOnly: true
@@ -301,6 +304,9 @@ objects:
           - name: secret-s3
             secret:
               secretName: s3
+          - name: secret-sentry
+            secret:
+              secretName: sentry
           - name: secret-notify
             secret:
               secretName: notify
@@ -376,7 +382,7 @@ objects:
                   name: "${NAME}"
                   key: APP_CONFIG
             - name: DJANGO_CONFIG_DIR
-              value: "/run/configs"
+              value: "/run/configs/common"
             - name: DJANGO_SECRET_DIR
               value: "/run/secrets"
             resources:
@@ -400,6 +406,9 @@ objects:
             - name: secret-s3
               mountPath: "/run/secrets/s3"
               readOnly: true
+            - name: secret-sentry
+              mountPath: "/run/secrets/sentry"
+              readOnly: true
             - name: secret-notify
               mountPath: "/run/secrets/notify"
               readOnly: true
@@ -422,6 +431,9 @@ objects:
           - name: secret-s3
             secret:
               secretName: s3
+          - name: secret-sentry
+            secret:
+              secretName: sentry
           - name: secret-notify
             secret:
               secretName: notify
@@ -509,6 +521,9 @@ objects:
             - name: secret-s3
               mountPath: "/run/secrets/s3"
               readOnly: true
+            - name: secret-sentry
+              mountPath: "/run/secrets/sentry"
+              readOnly: true
             - name: secret-notify
               mountPath: "/run/secrets/notify"
               readOnly: true
@@ -531,6 +546,9 @@ objects:
           - name: secret-s3
             secret:
               secretName: s3
+          - name: secret-sentry
+            secret:
+              secretName: sentry
           - name: secret-notify
             secret:
               secretName: notify

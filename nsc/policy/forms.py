@@ -69,11 +69,16 @@ class SearchForm(forms.Form):
 
 
 class PolicyAddForm(forms.ModelForm):
-    name = forms.CharField(label=_("Enter condition name"), widget=forms.Textarea,)
+    name = forms.CharField(
+        label=_("Enter condition name"),
+        widget=forms.Textarea,
+        error_messages={"required": _("Enter a condition name")},
+    )
     condition_type = forms.TypedChoiceField(
         label=_("What type of condition is this?"),
         choices=Policy.CONDITION_TYPES,
         widget=forms.RadioSelect,
+        error_messages={"required": _("Select a condition type")},
     )
     condition = forms.CharField(
         label=_("Condition description"),
@@ -82,12 +87,14 @@ class PolicyAddForm(forms.ModelForm):
             "in plain English. Use markdown to format the text."
         ),
         widget=forms.Textarea,
+        error_messages={"required": _("Enter a condition description")},
     )
     ages = forms.MultipleChoiceField(
         label=_("Who does this condition affect?"),
         help_text=_("Select all that apply"),
         choices=Policy.AGE_GROUPS,
         widget=forms.CheckboxSelectMultiple,
+        error_messages={"required": _("Select at least one age group that applies")},
     )
 
     keywords = forms.CharField(
@@ -155,7 +162,9 @@ class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
     recommendation = forms.TypedChoiceField(
         required=False,
         choices=Choices(
-            (True, _("Recommended")), (False, _("Not recommended")), (None, _("N\\A")),
+            (True, _("Recommended")),
+            (False, _("Not recommended")),
+            (None, _("N\\A")),
         ),
         widget=forms.RadioSelect,
     )
@@ -194,17 +203,20 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
         label=_("What type of condition is this?"),
         choices=Policy.CONDITION_TYPES,
         widget=forms.RadioSelect,
+        error_messages={"required": _("Select a condition type")},
     )
     ages = forms.MultipleChoiceField(
         label=_("Who does this condition affect?"),
         help_text=_("Select all that apply"),
         choices=Policy.AGE_GROUPS,
         widget=forms.CheckboxSelectMultiple,
+        error_messages={"required": _("Select at least one age group that applies")},
     )
     condition = forms.CharField(
         required=True,
         help_text=_("Use markdown to format the text"),
         widget=forms.Textarea,
+        error_messages={"required": _("Enter a condition description")},
     )
     keywords = forms.CharField(
         required=False,
@@ -261,7 +273,10 @@ class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
 
 
 class PolicySelectionForm(forms.Form):
-    policy = forms.ModelChoiceField(Policy.objects.none())
+    policy = forms.ModelChoiceField(
+        Policy.objects.none(),
+        error_messages={"required": _("Enter a condition")},
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -284,6 +299,7 @@ class ArchiveForm(forms.ModelForm):
             "<br/>"
             "Use markdown to format the text."
         ),
+        error_messages={"required": _("Enter an archiving reason")},
         widget=forms.Textarea,
         initial=archived_reason_initial,
     )

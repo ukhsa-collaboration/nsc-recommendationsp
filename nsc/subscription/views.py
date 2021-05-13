@@ -46,10 +46,14 @@ class PublicSubscriptionStart(generic.FormView):
             url = reverse("subscription:public-subscribe")
 
             selected_policies = chain(
-                form.cleaned_data["hidden_policies"], form.cleaned_data["policies"],
+                form.cleaned_data["hidden_policies"],
+                form.cleaned_data["policies"],
             )
             selected_policies_qs = "&".join(
-                map(lambda p: f"policies={p.id}", selected_policies,)
+                map(
+                    lambda p: f"policies={p.id}",
+                    selected_policies,
+                )
             )
 
             return HttpResponseRedirect(f"{url}?{selected_policies_qs}")

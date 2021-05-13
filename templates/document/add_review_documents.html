@@ -22,6 +22,10 @@
   <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
+    {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+    {% endif %}
+
     {% for hidden in form.hidden_fields %}
       {{ hidden }}
     {% endfor %}

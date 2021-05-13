@@ -2,13 +2,12 @@
 {% load i18n %}
 
 {% block back %}
-  {% url "subscription:landing" as back_url%}
   {% include 'widgets/back_link.html' %}
 {% endblock %}
 
 {% block title %}
   {% block page_title %}
-    {% trans "Subscribe" %}
+    {% trans "Enter your details" %}
   {% endblock %}
 {% endblock %}
 
@@ -28,6 +27,10 @@
 
   <form method="post">
     {% csrf_token %}
+
+    {% if form.errors %}
+      {% include "widgets/error_summary.html" %}
+    {% endif %}
 
     <div class="govuk-grid-row">
       <div class="title-field">

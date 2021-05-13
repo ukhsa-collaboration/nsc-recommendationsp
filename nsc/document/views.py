@@ -1,5 +1,6 @@
 import mimetypes
 
+from django.core.cache import cache
 from django.http import FileResponse, Http404
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -19,6 +20,14 @@ class AddExternalReviewView(AdminRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     context_object_name = "review"
+
+    def get_success_url(self):
+        return clean_url(
+            self.request.POST.get("next"),
+            reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
+            [self.request.get_host()],
+            self.request.is_secure(),
+        )
 
 
 class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
@@ -62,7 +71,12 @@ class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
             return self.form_invalid(form)
 
     def get_success_url(self):
-        return reverse("review:detail", kwargs={"slug": self.kwargs["slug"]})
+        return clean_url(
+            self.request.POST.get("next"),
+            reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
+            [self.request.get_host()],
+            self.request.is_secure(),
+        )
 
 
 class AddReviewDocumentsView(AdminRequiredMixin, generic.UpdateView):
@@ -74,7 +88,7 @@ class AddReviewDocumentsView(AdminRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         return clean_url(
-            self.request.GET.get("next"),
+            self.request.POST.get("next"),
             reverse("review:detail", kwargs={"slug": self.kwargs["slug"]}),
             [self.request.get_host()],
             self.request.is_secure(),
@@ -94,7 +108,7 @@ class DownloadView(generic.DetailView):
         mime_type, encoding = mimetypes.guess_type(document.upload.url)
 
         return FileResponse(
-            storage.open(document.upload.path, "rb"),
+            document.upload.open("rb"),
             as_attachment=True,
             content_type=mime_type,
         )
@@ -105,8 +119,13 @@ class DeleteView(AdminRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return clean_url(
-            self.request.GET.get("next"),
+            self.request.POST.get("next"),
             reverse("dashboard"),
             [self.request.get_host()],
-            self.request.is_secure,
+            self.request.is_secure(),
         )
+
+    def post(self, *args, **kwargs):
+        res = super().post(*args, **kwargs)
+        cache.clear()
+        return res

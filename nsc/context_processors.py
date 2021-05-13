@@ -39,3 +39,18 @@ def webpack_dev_url(request):
     logger.info("Webpack dev server found, HMR enabled\n")
 
     return {"WEBPACK_DEV_URL": settings.WEBPACK_DEV_URL.format(**data)}
+
+
+def tracking_ids(request):
+    return {
+        "GA_PROPERTY_ID": settings.GA_PROPERTY_ID,
+        "HOTJAR_ID": settings.HOTJAR_ID,
+    }
+
+
+def cookie_banner(request):
+    return {
+        "COOKIE_CHOICE_MADE": "useTrackingDisabled" in request.COOKIES,
+        "COOKIE_BANNER_HIDDEN": "cookieBannerHidden" in request.COOKIES,
+        "COOKIES_REJECTED": request.COOKIES.get("useTrackingDisabled", None) == "1",
+    }

@@ -13,7 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "govuk-frontend": "^3.5.0",
-    "moment": "^2.29.1"
+    "js-cookie": "^2.2.1",
+    "moment": "^2.29.1",
+    "y18n": "^5.0.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",

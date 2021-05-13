@@ -30,7 +30,11 @@ urlpatterns = [
         views.ReviewRecommendation.as_view(),
         name="recommendation",
     ),
-    path(r"<slug:slug>/publish/", views.ReviewPublish.as_view(), name="publish",),
+    path(
+        r"<slug:slug>/publish/",
+        views.ReviewPublish.as_view(),
+        name="publish",
+    ),
     path(r"<slug:slug>/summary/", views.ReviewSummary.as_view(), name="summary"),
     path(r"<slug:slug>/history/", views.ReviewHistory.as_view(), name="history"),
     path(

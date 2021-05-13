@@ -26,11 +26,11 @@
   {% endwith %}
 
   {% if word_limit %}
-    <span id="{{ field.id_for_label }}-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+    <div id="{{ field.id_for_label }}-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
       {% blocktrans %}
       You have {{ word_limit }} words remaining.
       {% endblocktrans %}
-    </span>
+    </div>
   {% endif %}
 
 </div>

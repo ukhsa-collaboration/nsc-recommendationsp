@@ -13,7 +13,7 @@ def test_emails_dont_match_error_is_raised(django_app):
 
     response = django_app.get(url)
 
-    form = response.form
+    form = response.forms[1]
     form["title"] = "mr"
     form["first_name"] = "Foo"
     form["last_name"] = "Bar"
@@ -29,7 +29,7 @@ def test_fields_are_complete_subscription_is_created(django_app):
 
     response = django_app.get(url)
 
-    form = response.form
+    form = response.forms[1]
     form["title"] = "mr"
     form["first_name"] = "Foo"
     form["last_name"] = "Bar"

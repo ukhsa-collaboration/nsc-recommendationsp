@@ -1,0 +1,127 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block title %}{% block page_title %}{% trans "Cookies" %}{% endblock %}{% endblock %}
+
+{% block content %}
+  <form id="cookie-form" action="#main-content">
+    <p class="govuk-body">
+    {% blocktrans %}
+      We use cookies to store information about how you use the UK National Screening Committee (UK NSC) website.
+      These are tiny files that your device saves whenever you visit a website.
+    {% endblocktrans %}
+    </p>
+
+    <h2 class="govuk-heading-m">{% trans "Cookie Settings" %}</h2>
+    <p class="govuk-body">
+    {% blocktrans %}We use 2 types of cookie. You can change the settings below at any time.{% endblocktrans %}
+    </p>
+
+    <h2 class="govuk-heading-m">{% trans "Cookies that measure website use" %}</h2>
+    <p class="govuk-body">
+    {% blocktrans %}
+      As a new service for the whole of the United Kingdom, we are keen to ensure that interested people across the
+      four nations are finding us, and that our website is satisfying the needs of our users.
+    {% endblocktrans %}
+    </p>
+    <p class="govuk-body">
+    {% blocktrans %}
+      Google Analytics help us measure this, while helping to identify ways in which we could improve your experience
+      when using our website. They set cookies that store anonymised information on:
+    {% endblocktrans %}
+    </p>
+
+    <ul>
+      <li>{% trans "how you arrived at our website" %}</li>
+      <li>{% trans "your ease of navigating across our pages" %}</li>
+      <li>{% trans "the country and region you are in" %}</li>
+      <li>{% trans "which pages you visit" %}</li>
+      <li>{% trans "how long you spend on each page" %}</li>
+      <li>{% trans "whether you are using a laptop, phone or tablet" %}</li>
+      <li>{% trans "the way in which you interact with a page" %}</li>
+      <li>{% trans "what you click on while you're visiting the site" %}</li>
+    </ul>
+
+    <p class="govuk-body">
+      {% blocktrans %}
+        We’d like to set additional cookies so we can remember your settings, understand how people use
+        the service and make improvements.
+      {% endblocktrans %}
+    </p>
+
+    <p class="govuk-body">
+      {% blocktrans %}
+        These are the Google Analytics cookies we’ll use:
+      {% endblocktrans %}
+    </p>
+
+    <div class="govuk-body govuk-!-margin-bottom-8">
+      <table>
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-two-third">Purpose</th>
+            <th scope="col" class="govuk-table__header">Expires</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">_ga,<br>_gid</td>
+            <td class="govuk-table__cell">
+              These help us count how many people visit by tracking if you’ve visited before.
+            </td>
+            <td class="govuk-table__cell" style="min-width: 100px;">_ga 2 years,<br>_gid 24 hours</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="govuk-radios govuk-!-margin-bottom-8">
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" type="radio" name="ga-disabled" value="0" id="enable-ga-radio">
+        <label class="govuk-radios__label" for="enable-ga-radio">{% trans "Use cookies that measure my website use" %}</label>
+      </div>
+
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" type="radio" name="ga-disabled" value="1" id="disable-ga-radio">
+        <label class="govuk-radios__label" for="disable-ga-radio">{% trans "Do not use cookies that measure my website use" %}</label>
+      </div>
+    </div>
+
+    <h2 class="govuk-heading-m">{% trans "Cookies that measure website use" %}</h2>
+    <p class="govuk-body">
+    {% blocktrans %}
+      These essential cookies do things like remember your cookie preferences, so we don't ask for them again.
+      They always need to be on.
+    {% endblocktrans %}
+    </p>
+
+    <button class="govuk-button" type="submit">{% trans "Save changes" %}</button>
+  </form>
+
+{% endblock %}
+
+{% block extra_script %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Set the initial state of the radio
+      if(NSCR.cookies.isUseTrackingEnabled()) {
+        document.getElementById("enable-ga-radio").checked = true
+      } else {
+        document.getElementById("disable-ga-radio").checked = true
+      }
+
+      // setup a handler to store the disable status
+      document.getElementById("cookie-form").addEventListener("submit",
+        function (e) {
+          var data = new FormData(e.target)
+          if (data.get("ga-disabled") === "1") {
+              NSCR.cookies.disableUseTracking()
+          } else {
+              NSCR.cookies.enableUseTracking()
+          }
+        },
+      )
+    })
+  </script>
+{% endblock %}

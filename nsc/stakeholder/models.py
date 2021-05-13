@@ -50,9 +50,14 @@ class Stakeholder(TimeStampedModel):
     )
     CHOICE_DB_VALUES = [db_value for db_value, verbose in COUNTRY_CHOICES]
 
-    name = models.CharField(verbose_name=_("stakeholder name"), max_length=256,)
+    name = models.CharField(
+        verbose_name=_("stakeholder name"),
+        max_length=256,
+    )
     type = models.CharField(
-        verbose_name=_("stakeholder type"), max_length=13, choices=TYPE_CHOICES,
+        verbose_name=_("stakeholder type"),
+        max_length=13,
+        choices=TYPE_CHOICES,
     )
     countries = ChoiceArrayField(
         models.CharField(
@@ -61,7 +66,11 @@ class Stakeholder(TimeStampedModel):
         null=True,
     )
     url = models.URLField(verbose_name=_("url"), max_length=256, blank=True)
-    twitter = models.URLField(verbose_name=_("twitter"), max_length=256, blank=True,)
+    twitter = models.URLField(
+        verbose_name=_("twitter"),
+        max_length=256,
+        blank=True,
+    )
     is_public = models.BooleanField(
         verbose_name=_("Should this organisation be published on the condition pages"),
         default=False,
@@ -71,9 +80,8 @@ class Stakeholder(TimeStampedModel):
         "policy.Policy", verbose_name=_("policies"), related_name="stakeholders"
     )
 
-    comments = models.CharField(
+    comments = models.TextField(
         verbose_name=_("Additional comments (for internal use only)"),
-        max_length=255,
         blank=True,
         default="",
     )

@@ -6,9 +6,7 @@ available, for each condition on the NSC legacy web site.
 import json
 import os
 import re
-import sys
 import tempfile
-from collections import Counter
 
 from django.core.files import File
 

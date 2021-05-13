@@ -1,0 +1,49 @@
+{% load i18n %}
+{% url "cookies" as cookies_url %}
+<div id="cookie-banner" class="govuk-cookie-banner" role="region" aria-label="{% trans "Cookies on UK National Screening Committee" %}"{% if COOKIE_BANNER_HIDDEN %} hidden{% endif %}>
+  <form id="cookie-banner-form">
+    <div id="cookie-banner-question" class="govuk-cookie-banner__message govuk-width-container"{% if COOKIE_CHOICE_MADE %} hidden{% endif %}>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h2 class="govuk-cookie-banner__heading govuk-heading-m">{% trans "Cookies on UK National Screening Committee" %}</h2>
+
+          <div class="govuk-cookie-banner__content">
+            <p>{% blocktrans %}We use some essential cookies to make this service work.{% endblocktrans %}</p>
+            <p>{% blocktrans %}We’d also like to use analytics cookies so we can understand how you use the service and make improvements.{% endblocktrans %}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-button-group">
+        <button value="accept" name="cookies" class="govuk-button" data-module="govuk-button">
+          {% trans "Accept analytics cookies" %}
+        </button>
+        <button value="reject" name="cookies" class="govuk-button" data-module="govuk-button">
+          {% trans "Reject analytics cookies" %}
+        </button>
+        <a class="govuk-link" href="{{ cookies_url }}">{% trans "View cookies" %}</a>
+      </div>
+    </div>
+
+    <div id="cookie-banner-answered" class="govuk-cookie-banner__message govuk-width-container"{% if not COOKIE_CHOICE_MADE %} hidden{% endif %}>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+          <div id="cookie-banner-accepted-message" class="govuk-cookie-banner__content"{% if COOKIES_REJECTED %} hidden{% endif %}>
+            <p>{% blocktrans %}You’ve accepted analytics cookies. You can <a class="govuk-link" href="{{ cookies_url }}">change your cookie settings</a> at any time.{% endblocktrans %}</p>
+          </div>
+
+          <div id="cookie-banner-rejected-message" class="govuk-cookie-banner__content"{% if not COOKIES_REJECTED %} hidden{% endif %}>
+            <p>{% blocktrans %}You’ve rejected analytics cookies. You can <a class="govuk-link" href="{{ cookies_url }}">change your cookie settings</a> at any time.{% endblocktrans %}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-button-group">
+        <button value="hide" name="cookies" class="govuk-button" data-module="govuk-button">
+          {% trans "Hide this message" %}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

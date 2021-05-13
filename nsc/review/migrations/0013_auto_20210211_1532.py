@@ -16,6 +16,8 @@ class Migration(migrations.Migration):
             field=models.NullBooleanField(),
         ),
         migrations.AddField(
-            model_name="review", name="published", field=models.NullBooleanField(),
+            model_name="review",
+            name="published",
+            field=models.NullBooleanField(),
         ),
     ]

@@ -14,15 +14,20 @@ class ContactQuerySet(models.QuerySet):
 class Contact(TimeStampedModel):
 
     name = models.CharField(
-        verbose_name=_("Name of contact (optional)"), max_length=256, blank=True,
+        verbose_name=_("Name of contact (optional)"),
+        max_length=256,
+        blank=True,
     )
     role = models.CharField(
         verbose_name=_("Contact's role (optional)"),
-        max_length=50,
+        max_length=255,
         blank=True,
         default="",
     )
-    email = models.EmailField(verbose_name=_("Contact's email (optional)"), blank=True,)
+    email = models.EmailField(
+        verbose_name=_("Contact's email (optional)"),
+        blank=True,
+    )
     phone = models.CharField(
         verbose_name=_("Contact's mobile phone number (optional)"),
         max_length=50,

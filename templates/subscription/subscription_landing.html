@@ -5,48 +5,49 @@
   {% include 'widgets/back_link.html' with back_url="/" %}
 {% endblock %}
 
-{% block title %}
-  {% block page_title %}
-    {% trans "Subscribe to receive updates on UK NSC consultations" %}
+{% block page_title %}
+  {% block title %}
+    {% trans "Choose your subscription type" %}
   {% endblock %}
 {% endblock %}
 
 {% block content %}
-  <p class="govuk-body govuk-!-margin-top-4">
-    <a class="govuk-button" href="{% url "subscription:public-start" %}">
+  <p class="govuk-body">
+    {% blocktrans %}
+      If you are a health professional or subscribing on behalf of an organisation:
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4">
+    <a class="govuk-button govuk-!-margin-bottom-0" href="{% url "subscription:stakeholder-start" %}">
+      {% trans "Subscribe as a professional or organisation" %}
+    </a>
+  </p>
+  <p class="govuk-body">
+    {% blocktrans %}
+      If you are a member of the public with a personal interest in a screening topic:
+    {% endblocktrans %}
+  </p>
+  <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4">
+    <a class="govuk-button govuk-!-margin-bottom-0" href="{% url "subscription:public-start" %}">
       {% trans "Subscribe as a member of the public" %}
     </a>
   </p>
   <p class="govuk-body">
     {% blocktrans %}
-      This option is for members of the public with a personal interest in a screening topic.
+      For health professionals or organisations:
     {% endblocktrans %}
   </p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>{% blocktrans %}we will email you when the UK NSC starts a public consultation on the topic(s) you subscribe to.{% endblocktrans %}</li>
+    <li>{% blocktrans %}you can have your name or organisation listed as a stakeholder on the page of the topic(s) you subscribe to.{% endblocktrans %}</li>
+  </ul>
   <p class="govuk-body">
     {% blocktrans %}
-      We will email you when the UK NSC starts a public consultation on the topic(s) you subscribe to.
+      For members of the public:
     {% endblocktrans %}
   </p>
-  <p class="govuk-body govuk-!-margin-top-9">
-    <a class="govuk-button" href="{% url "subscription:stakeholder-start" %}">
-      {% trans "Subscribe as a health professional or organisation" %}
-    </a>
-  </p>
-  <p class="govuk-body">
-    {% blocktrans %}
-      This option is for individuals or organisations with a professional interest or involvement in a
-      screening topic(s) subscribed to.
-    {% endblocktrans %}
-  </p>
-  <p class="govuk-body">
-    {% blocktrans %}
-      We will email you when the UK NSC starts a public consultation on the topic(s) you subscribe to.
-    {% endblocktrans %}
-  </p>
-  <p class="govuk-body">
-    {% blocktrans %}
-      You can have your name or organisation listed as a stakeholder on the page od the topic(s) you
-      subscribe to.
-    {% endblocktrans %}
-  </p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>{% blocktrans %}we will email you when the UK NSC starts a public consultation on the topic(s) you subscribe to.{% endblocktrans %}</li>
+  </ul>
+
 {% endblock %}
