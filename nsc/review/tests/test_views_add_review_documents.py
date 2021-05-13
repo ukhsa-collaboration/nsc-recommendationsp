@@ -44,7 +44,7 @@ def test_success_url(erm_user, make_review, django_app, minimal_pdf):
         reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
-    form = response.form
+    form = response.forms[1]
     form["cover_sheet"] = (
         "document.pdf",
         minimal_pdf.encode(),
@@ -64,7 +64,7 @@ def test_success_url__next(erm_user, make_review, django_app, minimal_pdf):
         + "?next=/",
         user=erm_user,
     )
-    form = response.form
+    form = response.forms[1]
     form["cover_sheet"] = (
         "document.pdf",
         minimal_pdf.encode(),
@@ -91,5 +91,5 @@ def review_has_types_set_only_correct_fields_are_shown(
         reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
-    assert "cover_sheet" in response.form
-    assert expected_field in response.form
+    assert "cover_sheet" in response.forms[1]
+    assert expected_field in response.forms[1]

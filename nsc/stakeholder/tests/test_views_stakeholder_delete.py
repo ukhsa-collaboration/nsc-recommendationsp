@@ -54,7 +54,7 @@ def test_success_url(response):
     """
     Test deleting an stakeholder returns to the stakeholder list page.
     """
-    actual = response.form.submit().follow()
+    actual = response.forms[1].submit().follow()
     assert actual.request.path == reverse("stakeholder:list")
 
 
@@ -62,5 +62,5 @@ def test_stakeholder_deleted(stakeholder, response):
     """
     Test that the stakeholder object is deleted from the database.
     """
-    response.form.submit().follow()
+    response.forms[1].submit().follow()
     assert not Stakeholder.objects.filter(pk=stakeholder.pk).exists()

@@ -24,7 +24,7 @@ def test_subscription_start_forwards_to_creation_form(
 
     response = django_app.get(url)
 
-    form = response.form
+    form = response.forms[1]
     form["policies"] = [s.pk for s in selected_policies]
     response = form.submit("save")
 
@@ -46,7 +46,7 @@ def test_emails_dont_match_subscription_isnt_created(
 
     response = django_app.get(f"{url}?{policies_url_args}")
 
-    form = response.form
+    form = response.forms[1]
     form["email"] = "foo@example.com"
     form["email_confirmation"] = "bar@example.com"
     form.submit()
@@ -65,7 +65,7 @@ def test_emails_match_subscription_is_created(
 
     response = django_app.get(f"{url}?{policies_url_args}")
 
-    form = response.form
+    form = response.forms[1]
     form["email"] = "foo@example.com"
     form["email_confirmation"] = "foo@example.com"
     response = form.submit()
@@ -113,7 +113,7 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
 
     response = django_app.get(f"{url}?{policies_url_args}")
 
-    form = response.form
+    form = response.forms[1]
     form["email"] = "foo@example.com"
     form["email_confirmation"] = "foo@example.com"
     response = form.submit()

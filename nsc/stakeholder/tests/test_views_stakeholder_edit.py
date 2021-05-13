@@ -57,7 +57,7 @@ def test_success_url__next(erm_user, stakeholder, make_policy, django_app):
     policy = make_policy()
     stakeholder_edit = reverse("stakeholder:edit", args=(stakeholder.pk,))
     response = django_app.get(f"{stakeholder_edit}?next=/", user=erm_user)
-    form = response.form
+    form = response.forms[1]
     form["policies-0-policy"] = policy.id
     actual = form.submit().follow()
     assert actual.request.path == "/"

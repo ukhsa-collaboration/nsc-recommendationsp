@@ -71,7 +71,7 @@ def test_success_url(policy, response):
     """
     Test saving a contact returns to the stakeholder list page.
     """
-    form = response.form
+    form = response.forms[1]
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
@@ -88,7 +88,7 @@ def test_success_url__next(erm_user, policy, django_app):
     Test saving a contact returns to the stakeholder list page.
     """
     response = django_app.get(f'{reverse("stakeholder:add")}?next=/', user=erm_user)
-    form = response.form
+    form = response.forms[1]
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
@@ -105,7 +105,7 @@ def test_stakeholder_created(policy, response):
     Test that the stakeholder object is created.
     """
     assert Stakeholder.objects.count() == 0
-    form = response.form
+    form = response.forms[1]
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
@@ -122,7 +122,7 @@ def test_contact_created(policy, response):
     Test that the stakeholder object is created.
     """
     assert Contact.objects.count() == 0
-    form = response.form
+    form = response.forms[1]
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL
@@ -139,7 +139,7 @@ def test_policy_is_linked(policy, response):
     Test that the stakeholder object is created.
     """
     assert Contact.objects.count() == 0
-    form = response.form
+    form = response.forms[1]
     form["name"] = "Name"
     form["is_public"] = True
     form["type"] = Stakeholder.TYPE_INDIVIDUAL

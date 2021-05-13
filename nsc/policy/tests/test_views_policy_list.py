@@ -60,7 +60,7 @@ def test_search_field_blank(erm_user, django_app):
     """
     Test that search field is initially blank.
     """
-    form = django_app.get(policy_list_url, user=erm_user).form
+    form = django_app.get(policy_list_url, user=erm_user).forms[1]
     assert form["name"].value == ""
 
 
@@ -113,7 +113,7 @@ def test_search_field_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the search field shows the entered condition name.
     """
-    form = django_app_form(policy_list_url, name="name", user=erm_user).form
+    form = django_app_form(policy_list_url, name="name", user=erm_user).forms[1]
     assert form["name"].value == "name"
 
 

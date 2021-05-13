@@ -61,7 +61,7 @@ def test_response_is_no_recommendations_are_not_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = False
     form.submit()
 
@@ -93,7 +93,7 @@ def test_response_is_no_summaries_are_not_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = False
     form.submit()
 
@@ -119,7 +119,7 @@ def test_response_is_no_documents_arent_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = False
     form.submit()
 
@@ -143,7 +143,7 @@ def test_response_is_yes_recommendations_are_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = True
     form.submit()
 
@@ -169,7 +169,7 @@ def test_response_is_yes_review_end_set(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = True
     form.submit()
 
@@ -199,7 +199,7 @@ def test_response_is_yes_summaries_are_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = True
     form.submit()
 
@@ -221,7 +221,7 @@ def test_response_is_no_next_review_is_not_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = False
     form.submit()
 
@@ -241,7 +241,7 @@ def test_response_is_yes_next_review_is_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = True
     form.submit()
 
@@ -265,7 +265,7 @@ def test_response_is_yes_supporting_documents_are_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = True
     form.submit()
 
@@ -290,7 +290,7 @@ def test_response_is_yes_non_supporting_documents_arent_updated(
         reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.form
+    form = response.forms[1]
     form["published"] = True
     form.submit()
 

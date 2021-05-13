@@ -44,7 +44,7 @@ def test_initial_values(erm_user, django_app):
     form = django_app.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
         user=erm_user,
-    ).form
+    ).forms[1]
     assert form["document-0-upload"].value == ""
     review.delete()
 
@@ -57,7 +57,7 @@ def test_document_created(erm_user, minimal_pdf, django_app):
     form = django_app.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
         user=erm_user,
-    ).form
+    ).forms[1]
     form["document-TOTAL_FORMS"] = 1
     form["document-0-upload"] = (
         "document.pdf",

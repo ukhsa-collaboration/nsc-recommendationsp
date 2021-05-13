@@ -52,7 +52,7 @@ def django_app_form(db, django_app):
     """
 
     def get_and_post(url, user=None, **form_args):
-        form = django_app.get(url, user=user).form
+        form = django_app.get(url, user=user).forms[1]
         for field, value in form_args.items():
             form[field] = value
         return form.submit()

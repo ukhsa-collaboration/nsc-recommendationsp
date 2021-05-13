@@ -80,7 +80,7 @@ def test_upload_view__create_document(erm_user, minimal_pdf, django_app):
 
     instance = baker.make(Policy, slug="abc")
     upload_url = reverse("policy:archive:upload", args=(instance.slug,))
-    form = django_app.get(upload_url, user=erm_user).form
+    form = django_app.get(upload_url, user=erm_user).forms[1]
     form["document-TOTAL_FORMS"] = 1
     form["document-0-name"] = "Some name"
     form["document-0-upload"] = (
@@ -120,11 +120,11 @@ def test_update_view__preview(erm_user, django_app):
     update_page = django_app.get(
         reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
-    update_form = update_page.form
+    update_form = update_page.forms[1]
     update_form["archived_reason"] = "# updated"
 
     preview_page = update_form.submit(name="preview")
-    preview_form = preview_page.form
+    preview_form = preview_page.forms[1]
     assert preview_form["archived_reason"].attrs["type"] == "hidden"
     assert preview_form["archived_reason"].value == "# updated"
     assert preview_page.context.get("preview") == "preview"
@@ -140,7 +140,7 @@ def test_update_view__published(erm_user, django_app):
     update_page = django_app.get(
         reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
-    update_form = update_page.form
+    update_form = update_page.forms[1]
     update_form["archived_reason"] = "# updated"
 
     preview_page = update_form.submit(name="preview")
@@ -148,7 +148,7 @@ def test_update_view__published(erm_user, django_app):
     instance.refresh_from_db()
     assert instance.archived_reason == "# heading"
 
-    preview_form = preview_page.form
+    preview_form = preview_page.forms[1]
     result = preview_form.submit(name="publish")
 
     assert result.status == "302 Found"

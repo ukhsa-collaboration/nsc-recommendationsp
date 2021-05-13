@@ -61,7 +61,7 @@ def test_search_form_blank(erm_user, django_app):
     """
     Test that the fields in the search form are initially blank.
     """
-    form = django_app.get(stakeholder_list_url, user=erm_user).form
+    form = django_app.get(stakeholder_list_url, user=erm_user).forms[1]
     assert form["name"].value == ""
     assert form["condition"].value == ""
 
@@ -104,7 +104,7 @@ def test_search_form_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
-    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).form
+    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).forms[1]
     assert form["name"].value == "name"
     assert form["condition"].value == ""
 
@@ -113,6 +113,8 @@ def test_search_form_shows_condition_term(erm_user, django_app_form):
     """
     Test when the search results are shown the form shows the selected condition.
     """
-    form = django_app_form(stakeholder_list_url, condition="other", user=erm_user).form
+    form = django_app_form(
+        stakeholder_list_url, condition="other", user=erm_user
+    ).forms[1]
     assert form["name"].value == ""
     assert form["condition"].value == "other"

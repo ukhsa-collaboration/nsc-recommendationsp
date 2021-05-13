@@ -9,7 +9,7 @@ const disableUseTracking = () => {
 }
 
 const enableUseTracking = () => {
-    return Cookie.remove(USE_TRACKING_DISABLED_COOKIE_NAME);
+    return Cookie.set(USE_TRACKING_DISABLED_COOKIE_NAME, "0");
 }
 
 const isUseTrackingEnabled = () => {
@@ -20,5 +20,6 @@ export default {
     USE_TRACKING_DISABLED_COOKIE_NAME,
     disableUseTracking,
     enableUseTracking,
-    isUseTrackingEnabled
+    isUseTrackingEnabled,
+    set: Cookie.set,
 }
