@@ -4,14 +4,13 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.celery import CeleryIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
-
 import envdir
+import sentry_sdk
 from celery.schedules import crontab
 from configurations import Configuration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 
 # Common settings
@@ -353,7 +352,9 @@ class Common(Configuration):
     NOTIFY_STALE_MINUTES = 5
 
     # Tracking
-    GA_PROPERTY_ID = get_secret("tracking", "ga-property-id", required=False, default=None)
+    GA_PROPERTY_ID = get_secret(
+        "tracking", "ga-property-id", required=False, default=None
+    )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
     # Settings for celery

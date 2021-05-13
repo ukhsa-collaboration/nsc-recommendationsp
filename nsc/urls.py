@@ -14,7 +14,9 @@ admin.autodiscover()
 
 urlpatterns = [
     path(r"", TemplateView.as_view(template_name="demo.html")),
-    path(r"cookies", TemplateView.as_view(template_name="cookies.html"), name="cookies"),
+    path(
+        r"cookies", TemplateView.as_view(template_name="cookies.html"), name="cookies"
+    ),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
     path(r"condition/", include("nsc.condition.urls", namespace="condition")),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),

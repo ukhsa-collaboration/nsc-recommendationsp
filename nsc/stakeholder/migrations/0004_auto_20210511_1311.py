@@ -6,18 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stakeholder', '0003_auto_20210217_0906'),
+        ("stakeholder", "0003_auto_20210217_0906"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalstakeholder',
-            name='comments',
-            field=models.TextField(blank=True, default='', verbose_name='Additional comments (for internal use only)'),
+            model_name="historicalstakeholder",
+            name="comments",
+            field=models.TextField(
+                blank=True,
+                default="",
+                verbose_name="Additional comments (for internal use only)",
+            ),
         ),
         migrations.AlterField(
-            model_name='stakeholder',
-            name='comments',
-            field=models.TextField(blank=True, default='', verbose_name='Additional comments (for internal use only)'),
+            model_name="stakeholder",
+            name="comments",
+            field=models.TextField(
+                blank=True,
+                default="",
+                verbose_name="Additional comments (for internal use only)",
+            ),
         ),
     ]

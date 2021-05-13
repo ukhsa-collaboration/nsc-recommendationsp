@@ -1,7 +1,8 @@
 import random
 
-import pytest
 from django.utils.timezone import now
+
+import pytest
 from model_bakery import baker
 
 

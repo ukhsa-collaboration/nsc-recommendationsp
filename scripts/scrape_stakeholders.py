@@ -47,7 +47,9 @@ def import_db_dump():
         raw = json.load(f)
 
     for entry in raw:
-        policies = [find_policy_id(name, policy_name_mapping) for name in entry["SH_Policies"]]
+        policies = [
+            find_policy_id(name, policy_name_mapping) for name in entry["SH_Policies"]
+        ]
 
         if entry["SH_Is_subscriber"] == "Y":
             create_subscriber(entry, policies)
@@ -65,7 +67,9 @@ def find_policy_id(name, mapping):
 
 def create_subscriber(raw_entry, policies):
     sub = Subscription.objects.get_or_create(email=raw_entry["SH_Contact_email"])[0]
-    sub.policies.set(set(sub.policies.values_list('id', flat=True)) | {p for p in policies if p})
+    sub.policies.set(
+        set(sub.policies.values_list("id", flat=True)) | {p for p in policies if p}
+    )
 
 
 def create_stakeholder(raw_entry, policies):
@@ -77,14 +81,19 @@ def create_stakeholder(raw_entry, policies):
         is_public=raw_entry["SH_Public"] == "Y",
         comments=raw_entry["SH_UK_NSC_notes"],
     )[0]
-    stakeholder.policies.set(set(stakeholder.policies.values_list('id', flat=True)) | {p for p in policies if p})
+    stakeholder.policies.set(
+        set(stakeholder.policies.values_list("id", flat=True))
+        | {p for p in policies if p}
+    )
 
-    if any([
-        raw_entry["SH_Contact_name"],
-        raw_entry["SH_Contact_position"],
-        raw_entry["SH_Contact_email"],
-        raw_entry["SH_Contact_phone"],
-    ]):
+    if any(
+        [
+            raw_entry["SH_Contact_name"],
+            raw_entry["SH_Contact_position"],
+            raw_entry["SH_Contact_email"],
+            raw_entry["SH_Contact_phone"],
+        ]
+    ):
         Contact.objects.create(
             stakeholder=stakeholder,
             name=raw_entry["SH_Contact_name"],
@@ -93,12 +102,14 @@ def create_stakeholder(raw_entry, policies):
             phone=raw_entry["SH_Contact_phone"],
         )
 
-    if any([
-        raw_entry["SH_Secondary_contact_name"],
-        raw_entry["SH_Secondary_contact_position"],
-        raw_entry["SH_Secondary_contact_email"],
-        raw_entry["SH_Secondary_contact_phone"],
-    ]):
+    if any(
+        [
+            raw_entry["SH_Secondary_contact_name"],
+            raw_entry["SH_Secondary_contact_position"],
+            raw_entry["SH_Secondary_contact_email"],
+            raw_entry["SH_Secondary_contact_phone"],
+        ]
+    ):
         Contact.objects.create(
             stakeholder=stakeholder,
             name=raw_entry["SH_Secondary_contact_name"],
