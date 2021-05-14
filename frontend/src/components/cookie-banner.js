@@ -8,6 +8,14 @@ const initCookieBanner = () => {
     const acceptedMessageElement = document.getElementById("cookie-banner-accepted-message")
     const rejectedMessageElement = document.getElementById("cookie-banner-rejected-message")
 
+    // set the initial hidden states
+    const bannerHidden = Cookies.get("cookieBannerHidden") === "1"
+    rootElement.hidden = bannerHidden
+    questionElement.hidden = Cookies.isTrackingOptionSet()
+    questionAnsweredElement.hidden = !Cookies.isTrackingOptionSet()
+    acceptedMessageElement.hidden = !Cookies.isUseTrackingEnabled()
+    rejectedMessageElement.hidden = Cookies.isUseTrackingEnabled()
+
     formElement.addEventListener("submit", (e) => {
         e.preventDefault()
 
@@ -15,7 +23,7 @@ const initCookieBanner = () => {
             questionElement.hidden = true
             questionAnsweredElement.hidden = false
             acceptedMessageElement.hidden = false
-            acceptedMessageElement.hidden = true
+            rejectedMessageElement.hidden = true
             Cookies.enableUseTracking()
         } else if (e.submitter.value === "reject") {
             questionElement.hidden = true
