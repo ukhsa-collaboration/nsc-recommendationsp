@@ -17,3 +17,6 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"
         db_table = "auth_user"
+
+    def get_full_name(self):
+        return super().get_full_name() or self.username
