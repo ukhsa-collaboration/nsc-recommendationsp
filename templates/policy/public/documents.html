@@ -18,7 +18,7 @@
       {% for document in review.get_all_type_documents %}
         {% if document %}
             <p>
-              <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
               <br/>
               {% blocktrans with name=document.name|lower %}
                  This is the previous {{ name }} conducted to investigate whether the condition should be screened or not.
@@ -28,7 +28,7 @@
       {% endfor %}
       {% if review.cover_sheet %}
         <p>
-          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url }}">{{ review.cover_sheet.name }} ({% trans "Opens in a new tab" %})</a>
+          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url }}">{{ review.cover_sheet.name }}</a>
           <br/>
           {% blocktrans %}
           These are the outcomes of the review process including the public consultation comments.
@@ -42,7 +42,7 @@
       <ul class="govuk-list govuk-list--bullet">
       {% for document in review.other_review_documents %}
          <li>
-          <a class="govuk-link" target="_blank" href="{{ document.upload.url }}">{{ document.name }} ({% trans "Opens in a new tab" %})</a>
+          <a class="govuk-link" target="_blank" href="{{ document.upload.url }}">{{ document.name }}</a>
          </li>
        {% endfor %}
       </ul>
