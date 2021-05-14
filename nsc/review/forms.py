@@ -424,6 +424,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         help_text=_("Deselect any stakeholders that are not to be notified"),
         error_messages={"required": _("Select at least one stakeholder to notify")},
+        required=False,
     )
 
     class Meta:
@@ -448,11 +449,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
         formset = StakeholderSelectionFormset(
             self.data or None,
             prefix="stakeholders",
-            initial=(
-                [{"stakeholder": s} for s in self.instance.stakeholders.none()]
-                if self.instance.id
-                else None
-            ),
+            initial=([] if self.instance.id else None),
         )
         formset.min_num = 0
         return formset
