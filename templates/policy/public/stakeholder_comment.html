@@ -29,7 +29,7 @@
   <p class="govuk-body">
     {% blocktrans with url=current_review.external_review.get_download_url name=current_review.external_review.get_document_type_display %}
     Please read the <a href="{{ url }}">{{ name}}</a> and
-    <a target="_blank"  href="https://www.gov.uk/guidance/nhs-population-screening-explained">explanation of screening (Opens in a new tab)</a> before making your submission.
+    <a target="_blank"  href="https://www.gov.uk/guidance/nhs-population-screening-explained">explanation of screening</a> before making your submission.
     {% endblocktrans %}
   </p>
   <form method="post">

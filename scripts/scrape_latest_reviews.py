@@ -45,7 +45,6 @@ def run():
 
         review.review_type = [Review.TYPE.other]
 
-        review.recommendation = entry["recommendation"]
         review.review_start = review_start
         review.review_end = review_end
         review.user = get_user_model().objects.get_or_create(username="legacy")[0]
