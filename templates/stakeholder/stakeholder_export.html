@@ -42,7 +42,7 @@
                         <textarea name="mailto" class="govuk-textarea" id="mailto">{{ mailto }}</textarea>
                     </div>
                 {% else %}
-                    <a class="govuk-button govuk-button--secondary" href="mailto:{{ mailto }}">
+                    <a id="export-mailto-link" class="govuk-button govuk-button--secondary" href="mailto:{{ mailto }}">
                         {% trans 'Email stakeholders' %}
                     </a>
                 {% endif %}

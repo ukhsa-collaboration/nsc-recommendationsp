@@ -133,7 +133,7 @@ def test_export_mailto__exceeds(url, erm_user, django_app):
 
     response = django_app.get(url, user=erm_user)
 
-    assert "mailto:" not in response.text
+    assert 'id="export-mailto-link"' not in response.text
     assert "Too many emails to provide a mailto link" in response.text
 
 
