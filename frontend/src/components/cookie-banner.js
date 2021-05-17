@@ -33,7 +33,7 @@ const initCookieBanner = () => {
             Cookies.disableUseTracking()
         } else if (e.submitter.value === "hide") {
             rootElement.hidden = true
-            Cookies.set("cookieBannerHidden", "1")
+            Cookies.set("cookieBannerHidden", "1", { expires: 365 })
         }
     })
 }

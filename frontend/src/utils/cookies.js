@@ -5,11 +5,11 @@ const USE_TRACKING_DISABLED_COOKIE_NAME = "useTrackingDisabled";
 const disableUseTracking = () => {
     Cookie.remove("_ga");
     Cookie.remove("_gid");
-    return Cookie.set(USE_TRACKING_DISABLED_COOKIE_NAME, "1");
+    return Cookie.set(USE_TRACKING_DISABLED_COOKIE_NAME, "1", { expires: 365 });
 }
 
 const enableUseTracking = () => {
-    return Cookie.set(USE_TRACKING_DISABLED_COOKIE_NAME, "0");
+    return Cookie.set(USE_TRACKING_DISABLED_COOKIE_NAME, "0", { expires: 365 });
 }
 
 const isTrackingOptionSet = () => {
