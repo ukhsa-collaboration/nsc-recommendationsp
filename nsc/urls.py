@@ -13,12 +13,10 @@ admin.autodiscover()
 
 
 urlpatterns = [
-    path(r"", TemplateView.as_view(template_name="demo.html")),
     path(
         r"cookies", TemplateView.as_view(template_name="cookies.html"), name="cookies"
     ),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
-    path(r"condition/", include("nsc.condition.urls", namespace="condition")),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
     path(r"document/", include("nsc.document.urls", namespace="document")),
     path(r"stakeholder/", include("nsc.stakeholder.urls", namespace="stakeholder")),
@@ -28,6 +26,7 @@ urlpatterns = [
     path("helpdesk/", include("nsc.support.urls", namespace="support")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
+    path(r"", include("nsc.condition.urls", namespace="condition")),
 ]
 
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
