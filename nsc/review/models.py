@@ -32,17 +32,13 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(is_legacy=False)
 
     def consultation_open(self):
-        return (
-            self.dates_confirmed()
-            .exclude_legacy()
-            .filter(consultation_start__lte=get_today())
-        )
+        return self.dates_confirmed().filter(consultation_start__lte=get_today())
 
     def published(self):
         return self.filter(published=True).order_by("-review_start")
 
     def in_progress(self):
-        return self.exclude_legacy().exclude(published=True)
+        return self.exclude(published=True)
 
     def open_for_comments(self):
         today = get_today()

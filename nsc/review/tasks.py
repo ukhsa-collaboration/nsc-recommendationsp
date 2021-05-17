@@ -7,7 +7,7 @@ from .models import Review
 
 @app.task
 def send_open_review_notifications():
-    open_reviews = Review.objects.consultation_open()
+    open_reviews = Review.objects.consultation_open().exclude_legacy()
     open_reviews_without_notifications = open_reviews.annotate(
         notifications_count=Count("open_consultation_notifications"),
     ).filter(notifications_count=0)
