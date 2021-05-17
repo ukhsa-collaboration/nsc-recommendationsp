@@ -53,10 +53,9 @@
     </button>
 
     <p class="govuk-body">
-      {# We need to inject the real privacy policy url here when we have it #}
-      {% blocktrans with privacy_policy_url="/privacy-policy" %}
+      {% blocktrans with privacy_policy_url="https://www.gov.uk/government/organisations/uk-national-screening-committee/about/personal-information-charter" %}
         We wont share your email address with anyone. Read our
-        <a class="govuk-link" href="{{ privacy_policy_url }}" target="_blank">privacy policy</a>.
+        <a class="govuk-link" href="{{ privacy_policy_url }}" target="_blank">privacy notice</a>.
       {% endblocktrans %}
     </p>
   </form>
