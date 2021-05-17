@@ -16,7 +16,7 @@
 
     <ul class="govuk-list govuk-list--bullet">
       {% for document in review.get_all_type_documents %}
-          {% if document %}
+          {% if document and document.document_type != Document.TYPE.other %}
             <li>
               <a class="govuk-link" target="_blank" href="{{ document.get_download_url}}">{{ document.name }}</a>
             </li>
@@ -38,18 +38,18 @@
         {% endfor %}
         </ul>
       {% endif %}
-
-    {% if form %}
-        <div class="govuk-body">
-            <a class="govuk-link"
-               href="{% url 'review:add-review-documents' review.slug %}?next={% url 'policy:edit' policy.slug %}">
-                Update review documents
-            </a>
-        </div>
-    {% endif %}
   {% else %}
     <p class="govuk-body">
       {% trans 'There are no review downloads at this time' %}
     </p>
+  {% endif %}
+
+  {% if form and review %}
+      <div class="govuk-body">
+          <a class="govuk-link"
+             href="{% url 'review:add-review-documents' review.slug %}?next={% url 'policy:edit' policy.slug %}">
+              Update review documents
+          </a>
+      </div>
   {% endif %}
 {% endwith %}
