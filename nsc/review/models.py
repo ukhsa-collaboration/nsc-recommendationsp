@@ -221,7 +221,7 @@ class Review(TimeStampedModel):
         return get_date_display(self.consultation_end)
 
     def nsc_meeting_date_display(self):
-        return get_date_display(self.nsc_meeting_date)
+        return self.nsc_meeting_date.strftime("%B %Y")
 
     def manager_display(self):
         return self.user.get_full_name() or self.user.username
