@@ -15,11 +15,14 @@ from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
 
 class ConditionList(ListView):
     template_name = "policy/public/policy_list.html"
-    queryset = Policy.objects.active().prefetch_reviews_in_consultation()
+    model = Policy
     paginate_by = 20
 
     def get_queryset(self):
-        return SearchFilter(self.request.GET, queryset=self.queryset).qs
+        return SearchFilter(
+            self.request.GET,
+            queryset=Policy.objects.active().prefetch_reviews_in_consultation(),
+        ).qs
 
     def get_context_data(self, **kwargs):
         form = SearchForm(initial=self.request.GET)
