@@ -336,7 +336,6 @@ class Review(TimeStampedModel):
         return super(Review, self).save(**kwargs)
 
     def get_email_context(self, **extra):
-        condition_names = list(p.name for p in self.policies.all())
 
         formatted_start_date = (
             self.consultation_start.strftime("%d %B %Y")
@@ -348,7 +347,10 @@ class Review(TimeStampedModel):
         )
         return {
             "review": self.name,
-            "policy list": "\n".join(f"* {c}" for c in condition_names),
+            "policy list": "\n".join(
+                f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
+                for p in self.policies.all()
+            ),
             "review manager full name": self.user.get_full_name(),
             "consultation url": urljoin(
                 settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
