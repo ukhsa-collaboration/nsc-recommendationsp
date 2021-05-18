@@ -353,8 +353,8 @@ class Common(Configuration):
     NOTIFY_STALE_MINUTES = 5
 
     # Tracking
-    GA_PROPERTY_ID = get_secret(
-        "tracking", "ga-property-id", required=False, default=None
+    GTM_PROPERTY_ID = get_secret(
+        "tracking", "gtm-property-id", required=False, default=None
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 

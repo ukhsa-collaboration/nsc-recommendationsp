@@ -43,7 +43,7 @@ def webpack_dev_url(request):
 
 def tracking_ids(request):
     return {
-        "GA_PROPERTY_ID": settings.GA_PROPERTY_ID,
+        "GTM_PROPERTY_ID": settings.GTM_PROPERTY_ID,
         "HOTJAR_ID": settings.HOTJAR_ID,
     }
 
