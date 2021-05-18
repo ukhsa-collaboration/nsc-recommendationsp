@@ -44,10 +44,13 @@ class PublishPreviewMixin:
 
 
 class PolicyList(AdminRequiredMixin, FilterView):
-    queryset = Policy.objects.active().prefetch_reviews_in_consultation()
+    model = Policy
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
     filterset_class = SearchFilter
+
+    def get_queryset(self):
+        return Policy.objects.active().prefetch_reviews_in_consultation()
 
     def get_context_data(self, **kwargs):
         # Setting the from on the filter does not quite work so we pass
