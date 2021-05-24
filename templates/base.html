@@ -105,7 +105,7 @@
 
   {% block main  %}
   <div class="govuk-width-container ">
-    {% block back %}{% endblock %}
+    {% block back %}{% include 'widgets/back_link.html' %}{% endblock %}
 
     {% block messages %}
       {% if messages %}

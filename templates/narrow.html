@@ -3,6 +3,8 @@
 
 {% block main  %}
   <div class="govuk-width-container">
+    {% block back %}{% include 'widgets/back_link.html' %}{% endblock %}
+
     <main class="govuk-main-wrapper " id="main-content" role="main">
 
       {% block messages %}
@@ -14,8 +16,6 @@
         </ul>
         {% endif %}
       {% endblock %}
-
-      {% block back %}{% endblock %}
 
       {% block heading %}
         <div class="govuk-grid-row">
