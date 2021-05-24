@@ -6,25 +6,26 @@
 {% block content %}
   <p class="govuk-body">
     {% blocktrans %}
-      Contact us if you have feedback, a question or a suggestion about the UK National Screening Committee by emailing
-      us at <a href="mailto:PHE.screeninghelpdesk@nhs.net?subject=Beta%20Feedback">PHE.screeninghelpdesk@nhs.net</a>
-      or by filling out the form below.
+      Contact us if you have feedback, a question or a suggestion about the UK National Screening Committee.
     {% endblocktrans %}
   </p>
 
   <h2 class="govuk-heading-m">{% trans "Feedback Form" %}</h2>
 
-  <iframe
-      width="640px"
-      height= "480px"
-      src="https://forms.office.com/Pages/ResponsePage.aspx?id=mRRO7jVKLkutR188-d6GZqH_3W9n17JPlzb2vAcD3MJUMThGMjlVSU9UNDdWSFVVTERMRE9SWVE5Ty4u&embed=true"
-      frameborder="0"
-      marginwidth="0"
-      marginheight="0"
-      style="border: none; max-width:100%; max-height:100vh"
-      allowfullscreen
-      webkitallowfullscreen
-      mozallowfullscreen
-      msallowfullscreen
-  ></iframe>
+  <p class="govuk-body">
+    {% blocktrans %}
+      Complete the
+      <a href="https://forms.office.com/r/HNPq9d8WM1" target="_blank">feedback form (opens in a new tab)</a> - you can
+      do this anonymously if you do not need a response.
+    {% endblocktrans %}
+  </p>
+
+  <h2 class="govuk-heading-m">{% trans "Email" %}</h2>
+
+  <p class="govuk-body">
+    {% blocktrans %}
+      Email us at:
+      <a href="mailto:PHE.screeninghelpdesk@nhs.net?subject=Beta%20Feedback">PHE.screeninghelpdesk@nhs.net</a>.
+    {% endblocktrans %}
+  </p>
 {% endblock %}
