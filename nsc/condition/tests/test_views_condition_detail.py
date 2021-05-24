@@ -47,9 +47,7 @@ def test_consultation_status_for_review_in_pre_consultation(
     policy = review_in_pre_consultation.policies.first()
     page = django_app.get(policy.get_public_url())
     assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in page
-    assert (
-        "We are currently preparing to open a consultation on this condition." in page
-    )
+    assert "This condition is currently under review." in page
 
 
 def test_consultation_status_for_review_in_consultation(

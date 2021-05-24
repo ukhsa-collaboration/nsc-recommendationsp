@@ -17,7 +17,9 @@ urlpatterns = [
         r"cookies", TemplateView.as_view(template_name="cookies.html"), name="cookies"
     ),
     path(
-        r"feedback", TemplateView.as_view(template_name="feedback.html"), name="feedback"
+        r"feedback",
+        TemplateView.as_view(template_name="feedback.html"),
+        name="feedback",
     ),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
