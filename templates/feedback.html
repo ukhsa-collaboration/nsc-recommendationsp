@@ -1,0 +1,30 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block title %}{% block page_title %}{% trans "Beta Feedback" %}{% endblock %}{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    {% blocktrans %}
+      Contact us if you have feedback, a question or a suggestion about the UK National Screening Committee by emailing
+      us at <a href="mailto:PHE.screeninghelpdesk@nhs.net?subject=Beta%20Feedback">PHE.screeninghelpdesk@nhs.net</a>
+      or by filling out the form below.
+    {% endblocktrans %}
+  </p>
+
+  <h2 class="govuk-heading-m">{% trans "Feedback Form" %}</h2>
+
+  <iframe
+      width="640px"
+      height= "480px"
+      src="https://forms.office.com/Pages/ResponsePage.aspx?id=mRRO7jVKLkutR188-d6GZqH_3W9n17JPlzb2vAcD3MJUMThGMjlVSU9UNDdWSFVVTERMRE9SWVE5Ty4u&embed=true"
+      frameborder="0"
+      marginwidth="0"
+      marginheight="0"
+      style="border: none; max-width:100%; max-height:100vh"
+      allowfullscreen
+      webkitallowfullscreen
+      mozallowfullscreen
+      msallowfullscreen
+  ></iframe>
+{% endblock %}
