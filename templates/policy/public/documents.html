@@ -16,7 +16,7 @@
     {% endif %}
     <div class="govuk-body">
       {% for document in review.get_all_type_documents %}
-        {% if document and document.document_type != Document.TYPE.other %}
+        {% if document and document.document_type != Document.TYPE._identifier_map.other %}
             <p>
               <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
               <br/>
