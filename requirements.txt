@@ -86,10 +86,6 @@ html2markdown==0.1.7
     # via -r requirements.in
 idna==2.10
     # via requests
-importlib-metadata==4.0.1
-    # via
-    #   kombu
-    #   markdown
 jmespath==0.10.0
     # via
     #   boto3
@@ -145,9 +141,7 @@ soupsieve==2.2.1
     # via beautifulsoup4
 sqlparse==0.4.1
     # via django
-typing-extensions==3.7.4.3
-    # via importlib-metadata
-urllib3==1.26.4
+urllib3==1.26.5
     # via
     #   botocore
     #   requests
@@ -162,8 +156,6 @@ webencodings==0.5.1
     # via bleach
 whitenoise==5.2.0
     # via -r requirements.in
-zipp==3.4.1
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
