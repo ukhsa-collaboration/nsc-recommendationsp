@@ -20,9 +20,24 @@
             <p>
               <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
               <br/>
-              {% blocktrans with name=document.name|lower %}
-                 This is the previous {{ name }} conducted to investigate whether the condition should be screened or not.
-              {% endblocktrans %}
+              {% if document.document_type == "evidence_review" %}
+                {% blocktrans %}
+                  This document provides the evidence on which the current UK NSC recommendation is based.
+                {% endblocktrans %}
+              {% elif document.document_type == "evidence_map" %}
+                {% blocktrans %}
+                  This document investigates whether a more detailed review can be conducted based on the available evidence.
+                {% endblocktrans %}
+              {% elif document.document_type == "cost" %}
+                {% blocktrans %}
+                  A mathematical method to predict the costs and health effects (or health outcomes) of one intervention
+                  compared to another, based on the best available evidence.
+                {% endblocktrans %}
+              {% else %}
+                {% blocktrans with name=document.name|lower %}
+                   This is the previous {{ name }} conducted to investigate whether the condition should be screened or not.
+                {% endblocktrans %}
+              {% endif %}
             </p>
         {% endif %}
       {% endfor %}
@@ -31,7 +46,7 @@
           <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url }}">{{ review.cover_sheet.name }}</a>
           <br/>
           {% blocktrans %}
-          These are the outcomes of the review process including the public consultation comments.
+          This document summarises the review process including the public consultation comments.
           {% endblocktrans %}
         </p>
       {% endif %}
