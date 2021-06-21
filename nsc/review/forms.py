@@ -61,6 +61,7 @@ class ReviewForm(forms.ModelForm):
             "This will be produced automatically unless filled in specifically"
         ),
         error_messages={"required": _("Enter a product name")},
+        required=False,
     )
 
     review_type = forms.MultipleChoiceField(
@@ -76,7 +77,25 @@ class ReviewForm(forms.ModelForm):
         fields = ["name", "review_type"]
 
     def clean_name(self):
-        name = self.cleaned_data["name"]
+        name = self.cleaned_data.get("name")
+        if not name and getattr(self.policy_formset, "cleaned_data", {}):
+            policies = [e.get("policy") for e in self.policy_formset.cleaned_data]
+            if not policies:
+                return ""
+
+            joined_policy_names_front = ", ".join(e.name for e in policies[:-1])
+            joined_policy_names_back = policies[-1].name
+            joined_policy_names_template = (
+                "{front} and {back}"
+                if joined_policy_names_front and joined_policy_names_back
+                else "{back}"
+            )
+            joined_policy_names = joined_policy_names_template.format(
+                front=joined_policy_names_front,
+                back=joined_policy_names_back,
+            )
+            name = _("%s %d review" % (joined_policy_names, get_today().year))
+
         slug = slugify(name)
 
         if Review.objects.filter(slug=slug).exists():

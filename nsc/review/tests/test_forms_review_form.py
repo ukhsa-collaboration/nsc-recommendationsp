@@ -3,11 +3,12 @@ from model_bakery import baker
 
 from nsc.policy.models import Policy
 
+# All tests require the database
+from ...utils.datetime import get_today
 from ..forms import ReviewForm
 from ..models import Review
 
 
-# All tests require the database
 pytestmark = pytest.mark.django_db
 
 
@@ -33,14 +34,29 @@ def test_form_configuration():
     assert "review_type" in ReviewForm.Meta.fields
 
 
-def test_name_cannot_be_blank():
+@pytest.mark.parametrize(
+    "policy_names, expected_review_name",
+    [
+        (["First"], "First {year} review"),
+        (["First", "Second"], "First and Second {year} review"),
+        (["First", "Second", "Third"], "First, Second and Third {year} review"),
+    ],
+)
+def test_blank_name_is_auto_populated(policy_names, expected_review_name, user):
     """
     Test that the admin must set the name of the review.
     """
-    data = form_for_review(name="")
-    form = ReviewForm(data=data)
-    assert not form.is_valid()
-    assert "name" in form.errors
+    policies = [baker.make(Policy, name=name) for name in policy_names]
+    policies_data = {
+        "policies-TOTAL_FORMS": len(policies),
+        **{f"policies-{idx}-policy": p.id for idx, p in enumerate(policies)},
+    }
+
+    data = form_for_review(name="", **policies_data)
+    form = ReviewForm(instance=Review(user=user), data=data)
+    assert form.is_valid()
+    review = form.save()
+    assert review.name == expected_review_name.format(year=get_today().year)
 
 
 def test_review_type_cannot_be_none():
