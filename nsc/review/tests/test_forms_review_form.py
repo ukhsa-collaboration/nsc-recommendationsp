@@ -3,7 +3,6 @@ from model_bakery import baker
 
 from nsc.policy.models import Policy
 
-# All tests require the database
 from ...utils.datetime import get_today
 from ..forms import ReviewForm
 from ..models import Review

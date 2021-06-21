@@ -3,7 +3,7 @@
 <h2 class="govuk-heading-m">
   {% trans 'UK NSC screening recommendation' %}
   <span class="govuk-caption-m">
-    {% blocktrans with date=policy.latest_review.review_end|date:"M Y" %}
+    {% blocktrans with date=policy.latest_review.summary_review_date_display %}
       Based on the last UK NSC review of this condition that occurred in {{ date }}.
     {% endblocktrans %}
   </span>
