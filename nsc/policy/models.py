@@ -246,10 +246,13 @@ class Policy(TimeStampedModel):
             )
         )
 
-    def send_open_consultation_notifications(self, review_notification_relation):
+    def send_open_consultation_notifications(
+        self, review_notification_relation, extra_context
+    ):
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
+            extra_context,
         )
 
     def send_decision_notifications(self, review_notification_relation, extra_context):

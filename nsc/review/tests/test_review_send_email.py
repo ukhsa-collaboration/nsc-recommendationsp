@@ -103,7 +103,7 @@ def test_open_review_conditions_have_subscribers_subs_receive_emails(
     expected = make_subscription(policies=[open_policy])
     make_subscription(policies=[closed_policy])
 
-    make_review(
+    target_review = make_review(
         consultation_start=get_today() - timedelta(days=1),
         dates_confirmed=True,
         add_stakeholders=True,
@@ -129,6 +129,8 @@ def test_open_review_conditions_have_subscribers_subs_receive_emails(
                 "subscribe url": urljoin(
                     settings.EMAIL_ROOT_DOMAIN, reverse("subscription:public-start")
                 ),
+                "review manager full name": target_review.user.get_full_name(),
+                "consultation end date": "",
             }
         ),
         template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,

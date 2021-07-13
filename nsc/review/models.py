@@ -410,7 +410,13 @@ class Review(TimeStampedModel):
         # send notifications to all subscribers to the conditions
         for policy in self.policies.all():
             policy.send_open_consultation_notifications(
-                self.open_consultation_notifications
+                self.open_consultation_notifications,
+                {
+                    "review manager full name": self.user.get_full_name(),
+                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
+                    if self.consultation_end
+                    else "",
+                },
             )
 
     def send_decision_notifications(self):
