@@ -216,10 +216,6 @@ class ReviewDatesForm(forms.ModelForm):
             ),
         )
 
-        # if the dates have already been confirmed disable the fields
-        for field in self.fields.values():
-            field.widget.attrs["disabled"] = self.instance.dates_confirmed
-
     @cached_property
     def today(self):
         return get_today()
@@ -229,9 +225,6 @@ class ReviewDatesForm(forms.ModelForm):
         return strtobool(value) if value else None
 
     def clean(self):
-        if self.instance.dates_confirmed:
-            self.add_error(None, _("The dates have already been confirmed."))
-
         data = self.cleaned_data
 
         day = data["consultation_start_day"]
@@ -413,14 +406,7 @@ class ReviewDateConfirmationForm(forms.ModelForm):
                 date=self.instance.consultation_start.strftime("%d %m %Y"),
             )
 
-        # if the dates have already been confirmed disable the fields
-        for field in self.fields.values():
-            field.widget.attrs["disabled"] = self.instance.dates_confirmed
-
     def clean(self):
-        if self.instance.dates_confirmed:
-            self.add_error(None, _("The dates have already been confirmed."))
-
         if not self.instance.consultation_start:
             self.add_error(
                 None, _("The review consultation start date has not been set.")
