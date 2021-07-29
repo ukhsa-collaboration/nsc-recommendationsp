@@ -232,7 +232,7 @@ def test_nsc_meeting_must_be_in_the_same_month_as_consultation_end_or_later():
         assert not ReviewDatesForm(instance=review, data=data).is_valid()
 
 
-def test_if_dates_are_already_confirmed_error_is_raised():
+def test_if_dates_are_already_confirmed_error_is_not_raised():
     with freeze_time():
         today = get_today()
         next_month = get_today() + relativedelta(months=+1)
@@ -247,5 +247,4 @@ def test_if_dates_are_already_confirmed_error_is_raised():
         data = form_for_review(review)
 
         form = ReviewDatesForm(instance=review, data=data)
-        assert not form.is_valid()
-        assert "The dates have already been confirmed." in form.non_field_errors()
+        assert form.is_valid()

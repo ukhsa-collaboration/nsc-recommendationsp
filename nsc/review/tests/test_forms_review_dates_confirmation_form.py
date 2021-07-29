@@ -70,7 +70,7 @@ def test_nsc_meeting_date_is_not_set_error_is_raised():
         )
 
 
-def test_dates_are_already_confirmed_error_is_raised():
+def test_dates_are_already_confirmed_error_is_not_raised():
     with freeze_time():
         today = get_today()
         review = baker.make(
@@ -84,8 +84,7 @@ def test_dates_are_already_confirmed_error_is_raised():
             instance=review, data={"dates_confirmed": True}
         )
 
-        assert not form.is_valid()
-        assert ["The dates have already been confirmed."] == form.non_field_errors()
+        assert form.is_valid()
 
 
 @pytest.mark.parametrize("value", (True, False))
