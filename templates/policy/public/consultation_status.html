@@ -20,10 +20,11 @@
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <div class="govuk-!-font-weight-bold">
             <span class="govuk-warning-text__assistive">{% trans "Warning" %}</span>
-            <a href="{% url 'condition:consultation' policy.slug %}">
-                {% blocktrans with name=policy.name.lower %}
-                    Submit comments on {{ name }}
-                {% endblocktrans %}
+            <a href="{% url 'condition:consultation' policy.slug %}" class="govuk-button govuk-!-margin-bottom-1 govuk-!-margin-top-2">
+                Submit comments
+            </a>
+            <a href="{{ policy.current_review.external_review.get_download_url }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1 govuk-!-margin-top-2">
+                View documents
             </a>
         </div>
         <div>
