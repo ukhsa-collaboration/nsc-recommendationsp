@@ -1,6 +1,8 @@
+import json
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from django import template
+from django.utils.safestring import mark_safe
 
 
 register = template.Library()
@@ -24,3 +26,8 @@ def update_qs(context, url=None, **params):
     updated_params = {**orig_params, **params}
 
     return f"{split.scheme}://{split.netloc}{split.path}?{urlencode(updated_params, doseq=True)}"
+
+
+@register.filter
+def as_json(value):
+    return mark_safe(json.dumps(value))

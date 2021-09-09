@@ -3,6 +3,7 @@ import io
 
 from django.urls import reverse
 
+import bs4
 import pytest
 from model_bakery import baker
 
@@ -51,7 +52,7 @@ def test_list_view_query_count(
     """
     baker.make(Stakeholder, _quantity=num_stakeholders)
     django_app.get("/", user=erm_user)  # login before test
-    with django_assert_num_queries(9):  # 5 for view, 4 for login.
+    with django_assert_num_queries(11):  # 7 for view, 4 for login.
         django_app.get(url, user=erm_user)
 
 
@@ -132,9 +133,31 @@ def test_export_mailto__exceeds(url, erm_user, django_app):
     )
 
     response = django_app.get(url, user=erm_user)
+    bs = bs4.BeautifulSoup(response.text)
 
-    assert 'id="export-mailto-link"' not in response.text
-    assert "Too many emails to provide a mailto link" in response.text
+    mail_link = bs.find("a", attrs={"id": "export-mailto-link"})
+    copy_field = bs.find("div", attrs={"id": "mailto-copy-field"})
+    assert mail_link.attrs["style"] == "display: none"
+    assert "style" not in copy_field.attrs
+
+
+def test_export_mailto__does_not_exceeds(url, erm_user, django_app):
+    """
+    Test the export of stakeholders shows a mailto link
+    """
+    instance = baker.make(Stakeholder, name="name")
+
+    baker.make(
+        Contact, email="abcdefghijklm@email.com", stakeholder=instance, _quantity=1
+    )
+
+    response = django_app.get(url, user=erm_user)
+    bs = bs4.BeautifulSoup(response.text)
+
+    mail_link = bs.find("a", attrs={"id": "export-mailto-link"})
+    copy_field = bs.find("div", attrs={"id": "mailto-copy-field"})
+    assert copy_field.attrs["style"] == "display: none"
+    assert "style" not in mail_link.attrs
 
 
 def test_export_conditions(url, erm_user, django_app):
@@ -304,7 +327,7 @@ def test_export_individual_query_count(
         stakeholder.policies.add(baker.make(Policy))
 
     response = django_app.get(url, user=erm_user)
-    with django_assert_num_queries(7):  # 3 for export, 4 for session
+    with django_assert_num_queries(8):  # 4 for export, 4 for session
         form = response.forms[1]
         form["export_type"] = "individual"
         form.submit()

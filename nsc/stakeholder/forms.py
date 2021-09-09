@@ -17,6 +17,9 @@ class ExportForm(forms.Form):
         ),
         widget=forms.RadioSelect,
     )
+    include_subs = forms.BooleanField(
+        label=_("Include subscribers"), initial=True, required=False
+    )
 
 
 class SearchForm(forms.Form):

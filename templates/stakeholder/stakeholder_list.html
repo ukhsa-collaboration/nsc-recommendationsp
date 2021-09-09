@@ -47,7 +47,7 @@
           </a>
 
           <button type="submit" id="export-button" name="export" value="export" class="govuk-button search-b-button govuk-!-margin-right-8">
-            {% trans 'Export all stakeholders' %}
+            {% if request.GET %}{% trans 'Export current search results' %}{% else %}{% trans 'Export all stakeholders' %}{% endif %}
           </button>
         </form>
       </div>

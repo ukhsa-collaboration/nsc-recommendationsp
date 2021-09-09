@@ -11,6 +11,8 @@ from django.views.generic import FormView
 from nsc.permissions import AdminRequiredMixin
 from nsc.utils.datetime import get_today
 
+from ..subscription.filters import SearchFilter as SubSearchFilter
+from ..subscription.models import Subscription
 from ..utils.urls import clean_url
 from .filters import SearchFilter
 from .forms import ExportForm, SearchForm, StakeholderForm
@@ -55,14 +57,32 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
                 mailto.append(email)
         return mailto
 
+    def get_subscribers(self):
+        if self.request.GET.get("name") or self.request.GET.get("country"):
+            return Subscription.objects.none()
+
+        return SubSearchFilter(
+            data=self.request.GET, queryset=Subscription.objects.all()
+        ).qs
+
     def get_context_data(self, **kwargs):
-        stakeholders = self.get_queryset()
-        mailto = self.get_mailto(stakeholders)
+        stakeholders = self.get_mailto(self.get_queryset())
+        subscribers = list(self.get_subscribers().values_list("email", flat=True))
+
+        form = self.get_form()
+        form.full_clean()
+        include_subs = not self.request.POST or form.cleaned_data["include_subs"]
+
+        mailto = ";".join([*stakeholders, *(subscribers if include_subs else [])])
 
         return super().get_context_data(
             total=Stakeholder.objects.count(),
+            total_subs=Subscription.objects.count(),
             object_list=self.get_queryset(),
-            mailto=";".join(mailto),
+            stakeholder_emails=stakeholders,
+            sub_emails=subscribers,
+            current_sub_count=len(subscribers) if include_subs else 0,
+            mailto=mailto,
             **kwargs,
         )
 
@@ -87,6 +107,17 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
                         contact.phone,
                     ]
                 )
+
+        for sub in self.get_subscribers():
+            writer.writerow(
+                [
+                    "",
+                    "",
+                    sub.email,
+                    "",
+                    "",
+                ]
+            )
 
     def export_as_conditions(self, writer):
         country_headers = [

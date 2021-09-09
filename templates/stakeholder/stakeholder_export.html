@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n utils %}
 
 {% block back %}
     {% url "stakeholder:list" as back_url %}
@@ -18,7 +18,8 @@
                 <p class="govuk-body">
                     This will export details of
                     <span class="govuk-!-font-weight-bold">{{ object_list.count }} out of {{ total }}</span>
-                    stakeholders in spreadsheet format.
+                    stakeholders, and <span class="govuk-!-font-weight-bold"><span id="current-sub-count">{{ current_sub_count }}</span> out of {{ total_subs }}</span>
+                    subscribers  in spreadsheet format.
                 </p>
                 {% csrf_token %}
                 {% for hidden in form.hidden_fields %}
@@ -30,23 +31,67 @@
                 {% endif %}
 
                 {% include "widgets/radio_buttons.html" with field=form.export_type show_legend=True %}
+                {% include "widgets/checkbox.html" with field=form.include_subs show_label=False %}
 
                 <button type="submit" class="govuk-button" name="export" value="export">
                     {% trans 'Export stakeholders' %}
                 </button>
 
                 {# It's not recommended to exceed 2000 chars in a mailto #}
-                {% if mailto|length > 2000 %}
+                <a id="export-mailto-link"
+                   class="govuk-button govuk-button--secondary"
+                   href="mailto:{{ mailto }}"
+                   {% if mailto|length > 2000 %}style="display: none"{% endif %}>
+                    {% trans 'Email stakeholders' %}
+                </a>
+
+                <div id="mailto-copy-field" {% if mailto|length < 2000 %}style="display: none"{% endif %}>
                     <p class="govuk-body">Too many emails to provide a mailto link, please copy from below to your email client.</p>
                     <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
                         <textarea name="mailto" class="govuk-textarea" id="mailto">{{ mailto }}</textarea>
                     </div>
-                {% else %}
-                    <a id="export-mailto-link" class="govuk-button govuk-button--secondary" href="mailto:{{ mailto }}">
-                        {% trans 'Email stakeholders' %}
-                    </a>
-                {% endif %}
+                </div>
             </div>
         </div>
     </form>
+{% endblock %}
+
+{% block extra_script %}
+  <script>
+    var stakeholders = {{ stakeholder_emails|as_json }};
+    var subscribers = {{ sub_emails|as_json }};
+    var includeSubId = "{{ form.include_subs.auto_id }}";
+
+    window.addEventListener('DOMContentLoaded', function() {
+        var includeSubElem = document.getElementById(includeSubId);
+        var mailtoLink = document.getElementById('export-mailto-link');
+        var mailtoFieldWrapper = document.getElementById('mailto-copy-field');
+        var mailtoField = document.getElementById('mailto');
+        var currentSubCount = document.getElementById('current-sub-count');
+
+        includeSubElem.addEventListener('change', function() {
+            var mailto = stakeholders.join(';');
+
+            if (includeSubElem.checked) {
+                mailto += subscribers.join(';');
+                currentSubCount.innerHTML = subscribers.length;
+            } else {
+                currentSubCount.innerHTML = 0;
+            }
+
+            // hide the link if the mailto is > 200 and show the field
+            if (mailto.length > 200) {
+                mailtoLink.style.display = 'none';
+                mailtoFieldWrapper.style.display = 'block';
+            } else {
+                mailtoLink.style.display = 'block';
+                mailtoFieldWrapper.style.display = 'none';
+            }
+
+            // set the mailto value in the link and field
+            mailtoLink.href = 'mailto:' + mailto;
+            mailtoField.value = mailto;
+        })
+    })
+  </script>
 {% endblock %}
