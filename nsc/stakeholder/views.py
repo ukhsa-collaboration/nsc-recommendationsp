@@ -62,7 +62,7 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
         return super().get_context_data(
             total=Stakeholder.objects.count(),
             object_list=self.get_queryset(),
-            mailto=",".join(mailto),
+            mailto=";".join(mailto),
             **kwargs,
         )
 

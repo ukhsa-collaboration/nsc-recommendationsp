@@ -118,7 +118,7 @@ def test_export_mailto(url, erm_user, django_app):
 
     response = django_app.get(url, user=erm_user)
 
-    assert "mailto:1@email.com,2@email.com" in response.text
+    assert "mailto:1@email.com;2@email.com" in response.text
 
 
 def test_export_mailto__exceeds(url, erm_user, django_app):
