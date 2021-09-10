@@ -12,9 +12,9 @@ beautifulsoup4==4.9.3
     #   html2markdown
 billiard==3.6.4.0
     # via celery
-bleach-whitelist==0.0.11
-    # via -r requirements.in
 bleach==3.3.0
+    # via -r requirements.in
+bleach-whitelist==0.0.11
     # via -r requirements.in
 boto3==1.17.61
     # via -r requirements.in
@@ -32,20 +32,30 @@ cffi==1.14.5
     # via cryptography
 chardet==4.0.0
     # via requests
-click-didyoumean==0.0.3
-    # via celery
-click-plugins==1.1.1
-    # via celery
-click-repl==0.1.6
-    # via celery
 click==7.1.2
     # via
     #   celery
     #   click-didyoumean
     #   click-plugins
     #   click-repl
+click-didyoumean==0.0.3
+    # via celery
+click-plugins==1.1.1
+    # via celery
+click-repl==0.1.6
+    # via celery
 cryptography==3.4.7
     # via django-auth-adfs
+django==2.2.20
+    # via
+    #   -r requirements.in
+    #   django-auth-adfs
+    #   django-clear-cache
+    #   django-extensions
+    #   django-filter
+    #   django-model-utils
+    #   django-redis
+    #   django-storages
 django-auth-adfs==1.6.1
     # via -r requirements.in
 django-clear-cache==0.3
@@ -64,16 +74,6 @@ django-simple-history==3.0.0
     # via -r requirements.in
 django-storages==1.11.1
     # via -r requirements.in
-django==2.2.20
-    # via
-    #   -r requirements.in
-    #   django-auth-adfs
-    #   django-clear-cache
-    #   django-extensions
-    #   django-filter
-    #   django-model-utils
-    #   django-redis
-    #   django-storages
 docopt==0.6.2
     # via notifications-python-client
 envdir==1.0.1
@@ -86,10 +86,6 @@ html2markdown==0.1.7
     # via -r requirements.in
 idna==2.10
     # via requests
-importlib-metadata==4.0.1
-    # via
-    #   kombu
-    #   markdown
 jmespath==0.10.0
     # via
     #   boto3
@@ -143,10 +139,8 @@ six==1.15.0
     #   python-dateutil
 soupsieve==2.2.1
     # via beautifulsoup4
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
-typing-extensions==3.7.4.3
-    # via importlib-metadata
 urllib3==1.26.4
     # via
     #   botocore
@@ -162,8 +156,6 @@ webencodings==0.5.1
     # via bleach
 whitenoise==5.2.0
     # via -r requirements.in
-zipp==3.4.1
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
