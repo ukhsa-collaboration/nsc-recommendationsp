@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from ..contact.formsets import ContactFormSet
 from ..policy.formsets import PolicySelectionFormset
 from .models import Stakeholder
+from ..policy.models import Policy
 
 
 class ExportForm(forms.Form):
@@ -31,6 +32,11 @@ class SearchForm(forms.Form):
         required=False,
         choices=(("", ""),) + Stakeholder.COUNTRY_CHOICES,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self["condition"].choices = list(Policy.objects.values_list("name", flat=True).distinct())
 
 
 class StakeholderForm(forms.ModelForm):

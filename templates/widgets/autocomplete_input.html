@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+
+  {% if show_legend %}
+    {% include "widgets/field_legend.html" %}
+  {% else %}
+    {% include "widgets/field_label.html" %}
+  {% endif %}
+
+  {% include "widgets/field_help.html" %}
+  {% include "widgets/field_errors.html" %}
+
+  {% with source_id=field.id_for_label|add:"_source" %}
+    <div
+        class="autocomplete-container"
+        data-field-id="{{ field.id_for_label }}"
+        data-field-name="{{ field.name }}"
+        data-source-id="{{ source_id }}"
+        data-default-value="{{ field.value|default_if_none:"" }}"
+    ></div>
+    {{ field.choices|json_script:source_id }}
+  {% endwith %}
+</div>

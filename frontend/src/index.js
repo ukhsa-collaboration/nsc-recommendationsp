@@ -5,6 +5,7 @@ import { formsets } from './utils/formset.js';
 import { opendate } from './reviews/opendate';
 import { filterExportButton } from './stakeholders';
 import { initCookieBanner } from './components/cookie-banner';
+import { initAutocomplete } from './autocomplete';
 
 const initApp = () => {
   if (document.readyState === "complete") {
@@ -13,6 +14,7 @@ const initApp = () => {
     opendate();
     filterExportButton();
     initCookieBanner();
+    initAutocomplete(document);
   }
 }
 

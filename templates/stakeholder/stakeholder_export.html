@@ -80,11 +80,11 @@
             }
 
             // hide the link if the mailto is > 200 and show the field
-            if (mailto.length > 200) {
+            if (mailto.length > 2000) {
                 mailtoLink.style.display = 'none';
-                mailtoFieldWrapper.style.display = 'block';
+                mailtoFieldWrapper.style.removeProperty('display');
             } else {
-                mailtoLink.style.display = 'block';
+                mailtoLink.style.removeProperty('display');
                 mailtoFieldWrapper.style.display = 'none';
             }
 

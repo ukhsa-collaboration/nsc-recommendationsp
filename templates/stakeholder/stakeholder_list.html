@@ -34,7 +34,7 @@
           </h2>
 
           {% include 'widgets/text_input.html' with field=form.name %}
-          {% include 'widgets/text_input.html' with field=form.condition %}
+          {% include 'widgets/autocomplete_input.html' with field=form.condition %}
           {% include 'widgets/select_input.html' with field=form.country %}
 
           <button type="submit" class="govuk-button search-b-button govuk-!-margin-right-8">
