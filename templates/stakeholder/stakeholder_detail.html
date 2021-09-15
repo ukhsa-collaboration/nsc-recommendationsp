@@ -19,6 +19,7 @@
       <div class="govuk-grid-column-three-quarters">{{ block.super }}</div>
       <div class="govuk-grid-column-one-quarters button-container">
         <a class="govuk-button" href="{{ stakeholder.get_edit_url }}">{% trans "Edit stakeholder" %}</a>
+        <a class="govuk-button govuk-button--warning" href="{{ stakeholder.get_delete_url }}">{% trans "Delete stakeholder" %}</a>
       </div>
     </div>
   </div>

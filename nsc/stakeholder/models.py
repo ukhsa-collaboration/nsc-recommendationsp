@@ -102,6 +102,9 @@ class Stakeholder(TimeStampedModel):
     def get_edit_url(self):
         return reverse("stakeholder:edit", kwargs={"pk": self.pk})
 
+    def get_delete_url(self):
+        return reverse("stakeholder:delete", kwargs={"pk": self.pk})
+
     def is_public_display(self):
         return _("Yes") if self.is_public else _("No")
 
