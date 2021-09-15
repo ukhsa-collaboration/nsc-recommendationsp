@@ -43,7 +43,7 @@ def test_list_view_query_count(
     """
     baker.make(Stakeholder, _quantity=num_stakeholders)
     django_app.get("/", user=erm_user)  # login before test
-    with django_assert_num_queries(8):  # 4 for view, 4 for login.
+    with django_assert_num_queries(9):  # 5 for view, 4 for login.
         django_app.get(stakeholder_list_url, user=erm_user)
 
 

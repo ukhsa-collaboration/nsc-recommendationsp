@@ -18,7 +18,9 @@
         data-field-name="{{ field.name }}"
         data-source-id="{{ source_id }}"
         data-default-value="{{ field.value|default_if_none:"" }}"
-    ></div>
+    >
+      {% include "widgets/text_input.html" with show_label=False %}
+    </div>
     {{ field.choices|json_script:source_id }}
   {% endwith %}
 </div>

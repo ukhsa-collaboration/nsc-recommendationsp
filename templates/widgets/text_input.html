@@ -4,7 +4,7 @@
 
   {% if show_legend %}
     {% include "widgets/field_legend.html" %}
-  {% else %}
+  {% elif show_label|default_if_none:True %}
     {% include "widgets/field_label.html" %}
   {% endif %}
 

@@ -4,6 +4,7 @@ export const initAutocomplete = (document) => {
     const containers = document.getElementsByClassName("autocomplete-container");
 
     for(const element of containers) {
+        element.innerHTML = "";
         accessibleAutocomplete({
             element,
             id: element.attributes["data-field-id"].value,
