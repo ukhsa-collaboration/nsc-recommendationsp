@@ -32,3 +32,5 @@ media/
 
 # Non-deployment path for collectstatic
 static_root/
+
+secrets

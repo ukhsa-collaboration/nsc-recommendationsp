@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 
 class User(AbstractUser):
     last_session_id = models.CharField(max_length=40, default="", blank=True)
+    sub_claim = models.CharField(max_length=255, default="", blank=True)
     username = models.CharField(
         _("username"),
         max_length=150,

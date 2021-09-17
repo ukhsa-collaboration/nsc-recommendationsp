@@ -433,7 +433,7 @@ class Common(Configuration):
             "AUDIENCE": self.ACTIVE_DIRECTORY_CLIENT_ID,
             "CLIENT_ID": self.ACTIVE_DIRECTORY_CLIENT_ID,
             "CLIENT_SECRET": self.ACTIVE_DIRECTORY_CLIENT_SECRET,
-            "CLAIM_MAPPING": {"email": "email"},
+            "CLAIM_MAPPING": {"email": "email", "sub_claim": "sub"},
             "USERNAME_CLAIM": "name",
             "GROUPS_CLAIM": "roles",
             "GROUP_TO_FLAG_MAPPING": {"is_staff": "admin", "is_superuser": "admin"},
