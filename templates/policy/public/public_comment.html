@@ -21,7 +21,8 @@
 {% block content %}
   <div class="govuk-body">
 
-  {% blocktrans with url=current_review.external_review.get_download_url name=current_review.external_review.get_document_type_display %}
+  {% url "review:review-document-download" current_review.slug "external_review" as url %}
+  {% blocktrans with name=current_review.external_review.get_document_type_display %}
       <p>
           Members of the public, including patients and family members who have experienced the condition,
           are welcome to submit comments. The UK NSC will review these, along with the scientific evidence and
