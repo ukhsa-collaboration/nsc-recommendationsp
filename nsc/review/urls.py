@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from nsc.document.views import (
     AddExternalReviewView,
@@ -51,6 +51,11 @@ urlpatterns = [
         r"<slug:slug>/add-review-documents/",
         AddReviewDocumentsView.as_view(),
         name="add-review-documents",
+    ),
+    re_path(
+        r"^(?P<slug>[a-zA-Z0-9-_]+)/download-documents/(?P<doc_type>cover_sheet|submission_form|evidence_review|evidence_map|cost|systematic|external_review|archive|other)/$",
+        views.ReviewDocumentDownload.as_view(),
+        name="review-document-download",
     ),
 ]
 

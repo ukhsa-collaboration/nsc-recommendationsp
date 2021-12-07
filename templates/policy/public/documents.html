@@ -43,7 +43,7 @@
       {% endfor %}
       {% if review.cover_sheet %}
         <p>
-          <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url }}">{{ review.cover_sheet.name }}</a>
+          <a class="govuk-link" target="_blank" href="{% url "review:review-document-download" review.slug "cover_sheet" %}">{{ review.cover_sheet.name }}</a>
           <br/>
           {% blocktrans %}
           This document summarises the review process including the public consultation comments.

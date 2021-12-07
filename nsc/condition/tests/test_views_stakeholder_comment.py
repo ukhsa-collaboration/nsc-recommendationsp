@@ -55,7 +55,13 @@ def test_submission_form_link(response):
     Test a link to submission form for comments is displayed.
     """
     review = response.context["condition"].current_review
-    assert review.submission_form.get_download_url() in response.text
+    assert (
+        reverse(
+            "review:review-document-download",
+            kwargs={"slug": review.slug, "doc_type": "submission_form"},
+        )
+        in response.text
+    )
 
 
 def test_submit(response):

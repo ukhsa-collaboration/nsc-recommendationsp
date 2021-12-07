@@ -22,11 +22,11 @@
             </li>
           {% endif %}
       {% endfor %}
-      {% if review.cover_sheet %}
+      {% for document in review.get_cover_sheets %}
             <li>
-              <a class="govuk-link" target="_blank" href="{{ review.cover_sheet.get_download_url}}">{{ review.cover_sheet.name }}</a>
+              <a class="govuk-link" target="_blank" href="{{ document.get_download_url}}">{{ document.name }}</a>
             </li>
-      {% endif %}
+      {% endfor %}
     </ul>
       {% if review.other_review_documents %}
           <p class="govuk-body">Other supporting documents</p>
