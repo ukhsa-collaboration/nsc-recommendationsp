@@ -1,3 +1,8 @@
+from os import path
+from tempfile import TemporaryDirectory
+from zipfile import ZipFile
+
+from django.http import FileResponse, Http404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
@@ -6,6 +11,7 @@ from nsc.permissions import AdminRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
+from ..document.models import Document
 from .forms import (
     ReviewDateConfirmationForm,
     ReviewDatesForm,
@@ -164,3 +170,27 @@ class ReviewDateConfirmation(AdminRequiredMixin, generic.UpdateView):
         return super().get_context_data(
             scheduled=self.object.consultation_start > get_today(), **kwargs
         )
+
+
+class ReviewDocumentDownload(generic.DetailView):
+    model = Review
+    lookup_field = "slug"
+
+    def get(self, *args, doc_type=None, **kwargs):
+        documents = Document.objects.for_review(self.get_object()).filter(
+            document_type=doc_type
+        )
+
+        if len(documents) == 0:
+            raise Http404()
+        elif len(documents) == 1:
+            return FileResponse(documents[0].upload, as_attachment=True)
+        else:
+            with TemporaryDirectory() as d:
+                zipfile_path = path.join(d, f"{doc_type}.zip")
+
+                with ZipFile(zipfile_path, mode="w") as z:
+                    for doc in documents:
+                        z.writestr(doc.name, doc.upload.read())
+
+                return FileResponse(open(zipfile_path, "rb"), as_attachment=True)
