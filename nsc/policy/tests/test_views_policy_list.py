@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 import pytest
 from bs4 import BeautifulSoup
@@ -125,5 +125,5 @@ def test_create_review_button(erm_user, django_app):
     response = django_app.get(policy_list_url, user=erm_user)
     nodes = BeautifulSoup(response.content, "html.parser")
     link = nodes.find("a", {"id": "create-review-link-id"})
-    assert link.text.strip() == ugettext("Create a new product")
+    assert link.text.strip() == gettext("Create a new product")
     assert link["href"] == reverse("review:add")

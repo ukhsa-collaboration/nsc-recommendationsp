@@ -4,7 +4,7 @@ from django import forms
 from django.core.validators import FileExtensionValidator
 from django.forms import HiddenInput, modelformset_factory
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..review.models import Review
 from .models import Document, DocumentPolicy

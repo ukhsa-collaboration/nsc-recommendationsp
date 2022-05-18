@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 import pytest
 from bs4 import BeautifulSoup
@@ -47,7 +47,7 @@ def test_back_link(stakeholder, dom):
     link = dom.find(id="back-link-id")
     assert link["href"] == reverse("stakeholder:detail", kwargs={"pk": stakeholder.pk})
 
-    assert link.text.strip() == ugettext("Back")
+    assert link.text.strip() == gettext("Back")
 
 
 def test_success_url__next(erm_user, stakeholder, make_policy, django_app):

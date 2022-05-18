@@ -10,21 +10,21 @@ pip-tools
 django-debug-toolbar
 
 # Testing
+black==21.4b2
 django-webtest
 doc8
-flake8
 model-bakery
-pytest
-pytest-black
+pytest==6.2.3
+pytest-black==0.3.12
 pytest-cov
 pytest-django
 pytest-isort
-pytest-flake8
+pytest-flake8==1.0.7
 freezegun
 
 # Documentation
-sphinx
-sphinx_rtd_theme
+sphinx==3.5.4
+#sphinx_rtd_theme
 
 # Deployment
 fabric

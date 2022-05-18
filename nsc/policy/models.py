@@ -7,7 +7,7 @@ from django.db.models import Prefetch, Q
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from dateutil.relativedelta import relativedelta
 from django_extensions.db.models import TimeStampedModel
