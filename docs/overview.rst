@@ -1,24 +1,15 @@
-========
-Overview
-========
-
-This document is a serious of notes and "inside information" on how and why the code is
-the way it is. It was written at the end or March 2020, when the project was put on
-pause due to the coronavirus outbreak. Once the project is up and running again this
-document will have outlived it's usefulness and should be deleted.
-
-
-Objective
-=========
+==================
+Developer Overview
+==================
 
 This site is NOT a content management system for handing all the documents related to
-the day-to-day functioning of the National Screening Committee (NSC).  It does perform
-something related to that but it is better to think of this as a publishing tool to help
-describe recommendations of the NSC and to engage members of the public and various
-interested parties when the policy for a given condition comes up for review.
+the day-to-day functioning of the National Screening Committee (NSC); it is a publishing
+tool to help describe recommendations of the NSC and to engage members of the public and
+various interested parties when the policy for a given condition comes up for review.
 
 Apps
 ====
+
 In typical django fashion the site is divided into apps:
 
 condition
@@ -65,15 +56,13 @@ That makes it easier to secure and shuffle the URLs around according to how the 
 will be integrated with the existing PHE/NSC sites.
 
 Documents are only associated with reviews, though they are downloadable by the public.
-Again, they were separated out to keep thing simple, particularly during the early
-stages of the project when the full scope was somewhat ill-defined and certainly poorly
-understood by the development team.
+Again, they were separated out to keep thing simple.
 
 
-Models & Queries
-================
+Models and Queries
+==================
 
-The code has been reasonably careful when fetching Policy and Organistion objects to
+The code has been reasonably careful when fetching Policy and Organisation objects to
 make sure that related reviews are prefetched. However in general the queries have not
 been optimised or examined to see if there are better ways of representing the models.
 
@@ -92,9 +81,6 @@ same time. The content of the review history. background, may vary also with the
 complication of time since for example, conditions may be grouped for a rapid review but
 considered separately for a full review - in which case the histories, at least the
 dates, will be different.
-
-IMPORTANT: At time of writing, 27th March 2020, that a Review can have multiple
-conditions is NOT represented in the current design.
 
 
 URLs
@@ -135,34 +121,19 @@ Shared
 Django Admin
 ============
 
-The Django admin is currently accessible, at ``/django-admin/``. Originally this was
-done to make editing the database a easier. It was not really considered suitable for
-integrating into the site. However since the work to integrate with PHE's single sign-on
-service has not progressed, Django Authentication provides a good short-term solution
-for securing the app.  The Django Admin can then be used, probably by the product owner,
-for adding user accounts.
+The Django admin is defined in the code but not connected to the URL structure. This was
+originally used during development, but is no longer required; it remains in the code
+for development debugging purposes.
 
 
-Templates & Accessibility
-=========================
+Templates and Accessibility
+===========================
 
 The HTML in the templates closely followed the GDS guidelines and should be fully
-accessible unless there are mistakes in the examples. Currently only approved components
-are used. On the task list used on the "home" page when managing a review is on the
-"experimental" list. Nothing was used from the community backlog but will have to change
-as a review may be for more than one condition. Choosing from a list of 200 entries is
-going to be problematic so some form of drop-down menu with autocomplete is going to be
-needed to keep things easy for the user. As a result some accessibility issues are
-likely to be introduced.
+accessible unless there are mistakes in the examples.
+
 
 Celery
 ======
 
-Currently there is some support for celery added to the site. There are no tasks defined
-at time or writing. The design does call for the ability for PHE staff to schedule
-opening the consultation period at some date in the future in which case celery would be
-needed. However managing the errors that might result becomes "problematic". Most
-consultation periods open with a few days notice so currently the development team are
-advocating that the opening of the consultation period and the sending of notifications
-is done manually. That gives PHE staff a lot more control over the process and makes it
-much easier for them to see and respond to any delivery errors.
+There are some regular tasks managed by Celery - see :doc:`scheduled-tasks`.
