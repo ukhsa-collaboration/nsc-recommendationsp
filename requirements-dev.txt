@@ -389,7 +389,7 @@ zipp==3.6.0
     # via
     #   importlib-metadata
     #   pep517
-
+pytest-black==0.3.12
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
