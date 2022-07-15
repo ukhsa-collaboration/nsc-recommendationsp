@@ -10,10 +10,12 @@ pip-tools
 django-debug-toolbar
 
 # Testing
+black==21.4b2
 django-webtest
 doc8
 model-bakery
 pytest==6.2.3
+pytest-black==0.3.12
 pytest-cov
 pytest-django
 pytest-isort
