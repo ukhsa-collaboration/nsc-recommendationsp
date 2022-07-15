@@ -24,7 +24,7 @@ freezegun
 
 # Documentation
 sphinx==3.5.4
-#sphinx_rtd_theme
+sphinx_rtd_theme
 
 # Deployment
 fabric
