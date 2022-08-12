@@ -36,7 +36,7 @@ class ContactForm(forms.Form):
     )
     email = forms.EmailField(
         error_messages={
-            "required": _("Entry your email address"),
+            "required": _("Enter your email address"),
             "invalid": _(
                 "Enter your email address in the correct format, like name@example.com."
             ),
