@@ -57,7 +57,7 @@
       <ul class="govuk-list govuk-list--bullet">
       {% for document in review.other_review_documents %}
          <li>
-          <a class="govuk-link" target="_blank" href="{{ document.upload.url }}">{{ document.name }}</a>
+          <a class="govuk-link" target="_blank" href="{{ document.get_download_url }}">{{ document.name }}</a>
          </li>
        {% endfor %}
       </ul>
