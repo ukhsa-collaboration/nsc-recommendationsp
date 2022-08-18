@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django.views.generic import FormView
 
-from nsc.permissions import AdminRequiredMixin
+from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.utils.datetime import get_today
 
 from ..subscription.filters import SearchFilter as SubSearchFilter
@@ -30,7 +30,7 @@ class StakeholderFilterMixin:
         return SearchFilter(self.request.GET, queryset=self.queryset).qs
 
 
-class StakeholderList(AdminRequiredMixin, StakeholderFilterMixin, generic.ListView):
+class StakeholderList(ReviewManagerRequiredMixin, StakeholderFilterMixin, generic.ListView):
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -45,7 +45,7 @@ class StakeholderList(AdminRequiredMixin, StakeholderFilterMixin, generic.ListVi
         return super().get(*args, **kwargs)
 
 
-class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
+class StakeholderExport(ReviewManagerRequiredMixin, StakeholderFilterMixin, FormView):
     form_class = ExportForm
     template_name = "stakeholder/stakeholder_export.html"
 
@@ -175,7 +175,7 @@ class StakeholderExport(AdminRequiredMixin, StakeholderFilterMixin, FormView):
         return response
 
 
-class StakeholderDetail(AdminRequiredMixin, generic.DetailView):
+class StakeholderDetail(ReviewManagerRequiredMixin, generic.DetailView):
     model = Stakeholder
 
     def get_context_data(self, **kwargs):
@@ -183,7 +183,7 @@ class StakeholderDetail(AdminRequiredMixin, generic.DetailView):
         return super().get_context_data(**kwargs)
 
 
-class StakeholderAdd(AdminRequiredMixin, generic.CreateView):
+class StakeholderAdd(ReviewManagerRequiredMixin, generic.CreateView):
     model = Stakeholder
     form_class = StakeholderForm
 
@@ -208,7 +208,7 @@ class StakeholderAdd(AdminRequiredMixin, generic.CreateView):
         )
 
 
-class StakeholderEdit(AdminRequiredMixin, generic.UpdateView):
+class StakeholderEdit(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Stakeholder
     form_class = StakeholderForm
 
@@ -227,6 +227,6 @@ class StakeholderEdit(AdminRequiredMixin, generic.UpdateView):
         return context
 
 
-class StakeholderDelete(AdminRequiredMixin, generic.DeleteView):
+class StakeholderDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Stakeholder
     success_url = reverse_lazy("stakeholder:list")

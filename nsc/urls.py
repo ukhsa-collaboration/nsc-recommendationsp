@@ -31,6 +31,7 @@ urlpatterns = [
     path("helpdesk/", include("nsc.support.urls", namespace="support")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
+    path(r"django-admin/", admin.site.urls),
     path(r"", include("nsc.condition.urls", namespace="condition")),
 ]
 
