@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from nsc.permissions import AdminRequiredMixin
+from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.review.models import Review
 
 from ..utils.urls import clean_url
@@ -14,7 +14,7 @@ from .forms import ExternalReviewForm, ReviewDocumentsForm, SubmissionForm
 from .models import Document
 
 
-class AddExternalReviewView(AdminRequiredMixin, generic.UpdateView):
+class AddExternalReviewView(ReviewManagerRequiredMixin, generic.UpdateView):
     template_name = "document/add_external_review.html"
     form_class = ExternalReviewForm
     model = Review
@@ -30,7 +30,7 @@ class AddExternalReviewView(AdminRequiredMixin, generic.UpdateView):
         )
 
 
-class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
+class AddSubmissionFormView(ReviewManagerRequiredMixin, generic.CreateView):
     template_name = "document/add_submission_form.html"
     form_class = SubmissionForm
 
@@ -79,7 +79,7 @@ class AddSubmissionFormView(AdminRequiredMixin, generic.CreateView):
         )
 
 
-class AddReviewDocumentsView(AdminRequiredMixin, generic.UpdateView):
+class AddReviewDocumentsView(ReviewManagerRequiredMixin, generic.UpdateView):
     template_name = "document/add_review_documents.html"
     form_class = ReviewDocumentsForm
     model = Review
@@ -114,7 +114,7 @@ class DownloadView(generic.DetailView):
         )
 
 
-class DeleteView(AdminRequiredMixin, generic.DeleteView):
+class DeleteView(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Document
 
     def get_success_url(self):
