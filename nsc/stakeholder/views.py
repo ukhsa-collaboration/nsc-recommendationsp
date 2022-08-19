@@ -30,7 +30,9 @@ class StakeholderFilterMixin:
         return SearchFilter(self.request.GET, queryset=self.queryset).qs
 
 
-class StakeholderList(ReviewManagerRequiredMixin, StakeholderFilterMixin, generic.ListView):
+class StakeholderList(
+    ReviewManagerRequiredMixin, StakeholderFilterMixin, generic.ListView
+):
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
