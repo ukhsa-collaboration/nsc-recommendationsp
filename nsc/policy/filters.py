@@ -80,7 +80,7 @@ class SearchFilter(FilterSet):
         choices=Policy.AGE_GROUPS,
         empty_label=None,
         widget=forms.RadioSelect,
-        label=_("Who the condition effects"),
+        label=_("Who the condition affects"),
     )
 
     def search_name(self, queryset, name, value):

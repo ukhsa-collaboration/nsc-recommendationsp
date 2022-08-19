@@ -60,7 +60,10 @@ def test_consultation_status_for_review_in_consultation(
     policy = review_in_consultation.policies.first()
     page = django_app.get(policy.get_public_url())
     assert reverse("condition:consultation", kwargs={"slug": policy.slug}) in page
-    assert "We are currently accepting public comments on this condition." in page
+    assert (
+        "The UK NSC is consulting on whether to change its "
+        "recommendation on this condition and is accepting public comments." in page
+    )
 
 
 def test_consultation_status_for_review_in_post_consultation(

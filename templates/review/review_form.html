@@ -28,7 +28,7 @@
           {% include "widgets/error_summary.html" %}
         {% endif %}
 
-        {% include "forms/selection-formset.html" with formset=form.policy_formset label=_("Entry condition under review") link_text=_("add another condition") %}
+        {% include "forms/selection-formset.html" with formset=form.policy_formset label=_("Enter condition under review") link_text=_("add another condition") %}
         {% include "widgets/text_input.html" with field=form.name show_legend=True %}
         {% include "widgets/checkboxes.html" with field=form.review_type size='m' show_legend=True %}
 

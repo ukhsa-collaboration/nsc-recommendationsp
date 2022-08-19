@@ -5,7 +5,7 @@ from django.views.generic import CreateView, DetailView, UpdateView
 
 from django_filters.views import FilterView
 
-from nsc.permissions import AdminRequiredMixin
+from nsc.permissions import ReviewManagerRequiredMixin
 
 from .filters import SearchFilter
 from .forms import (
@@ -43,7 +43,7 @@ class PublishPreviewMixin:
             )
 
 
-class PolicyList(AdminRequiredMixin, FilterView):
+class PolicyList(ReviewManagerRequiredMixin, FilterView):
     model = Policy
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
@@ -59,7 +59,7 @@ class PolicyList(AdminRequiredMixin, FilterView):
         return super().get_context_data(form=form)
 
 
-class PolicyDetail(AdminRequiredMixin, DetailView):
+class PolicyDetail(ReviewManagerRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
@@ -71,7 +71,7 @@ class PolicyDetail(AdminRequiredMixin, DetailView):
         )
 
 
-class PolicyAddMixin(AdminRequiredMixin):
+class PolicyAddMixin(ReviewManagerRequiredMixin):
     model = Policy
     section = None
     next_section = None
@@ -128,7 +128,7 @@ class PolicyAddRecommendation(SuccessMessageMixin, PolicyAddMixin, UpdateView):
         return reverse("review:add") + f"?policy={self.object.slug}"
 
 
-class PolicyEdit(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
+class PolicyEdit(ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView):
     model = Policy
     lookup_field = "slug"
     form_class = PolicyEditForm
@@ -137,21 +137,21 @@ class PolicyEdit(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
     success_message = "Published changes to conditions page."
 
 
-class ArchiveDetail(AdminRequiredMixin, DetailView):
+class ArchiveDetail(ReviewManagerRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/detail.html"
 
 
-class ArchiveDocumentDetail(AdminRequiredMixin, DetailView):
+class ArchiveDocumentDetail(ReviewManagerRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/document.html"
 
 
-class ArchiveDocumentUploadView(AdminRequiredMixin, UpdateView):
+class ArchiveDocumentUploadView(ReviewManagerRequiredMixin, UpdateView):
     form_class = PolicyDocumentForm
     model = Policy
     lookup_field = "slug"
@@ -162,7 +162,7 @@ class ArchiveDocumentUploadView(AdminRequiredMixin, UpdateView):
         return reverse("policy:archive:upload", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveUpdate(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
+class ArchiveUpdate(ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView):
     form_class = ArchiveForm
     model = Policy
     lookup_field = "slug"
@@ -173,7 +173,7 @@ class ArchiveUpdate(AdminRequiredMixin, PublishPreviewMixin, UpdateView):
         return reverse("policy:archive:complete", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveComplete(AdminRequiredMixin, PublishPreviewMixin, DetailView):
+class ArchiveComplete(ReviewManagerRequiredMixin, PublishPreviewMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"

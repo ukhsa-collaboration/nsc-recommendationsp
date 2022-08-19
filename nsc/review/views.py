@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from nsc.permissions import AdminRequiredMixin
+from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
@@ -25,7 +25,7 @@ from .forms import (
 from .models import Review
 
 
-class ReviewDashboardView(AdminRequiredMixin, generic.TemplateView):
+class ReviewDashboardView(ReviewManagerRequiredMixin, generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
@@ -37,7 +37,7 @@ class ReviewDashboardView(AdminRequiredMixin, generic.TemplateView):
         return super().get_context_data(reviews=reviews)
 
 
-class ReviewList(AdminRequiredMixin, generic.TemplateView):
+class ReviewList(ReviewManagerRequiredMixin, generic.TemplateView):
     template_name = "review/review_list.html"
 
     def get_context_data(self, **kwargs):
@@ -45,13 +45,13 @@ class ReviewList(AdminRequiredMixin, generic.TemplateView):
         return super().get_context_data(reviews=reviews)
 
 
-class ReviewDetail(AdminRequiredMixin, generic.DetailView):
+class ReviewDetail(ReviewManagerRequiredMixin, generic.DetailView):
     model = Review
     lookup_field = "slug"
     context_object_name = "review"
 
 
-class ReviewAdd(AdminRequiredMixin, generic.CreateView):
+class ReviewAdd(ReviewManagerRequiredMixin, generic.CreateView):
     model = Review
     form_class = ReviewForm
 
@@ -72,12 +72,12 @@ class ReviewAdd(AdminRequiredMixin, generic.CreateView):
         return initial
 
 
-class ReviewDelete(AdminRequiredMixin, generic.DeleteView):
+class ReviewDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Review
     success_url = reverse_lazy("dashboard")
 
 
-class ReviewDates(AdminRequiredMixin, generic.UpdateView):
+class ReviewDates(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewDatesForm
@@ -114,28 +114,28 @@ class ReviewDates(AdminRequiredMixin, generic.UpdateView):
         return reverse_lazy("review:open", kwargs={"slug": self.object.slug})
 
 
-class ReviewStakeholders(AdminRequiredMixin, generic.UpdateView):
+class ReviewStakeholders(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewStakeholdersForm
     template_name = "review/review_stakeholders.html"
 
 
-class ReviewSummary(AdminRequiredMixin, generic.UpdateView):
+class ReviewSummary(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewSummaryForm
     template_name = "review/review_summary.html"
 
 
-class ReviewHistory(AdminRequiredMixin, generic.UpdateView):
+class ReviewHistory(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewHistoryForm
     template_name = "review/review_history.html"
 
 
-class ReviewRecommendation(AdminRequiredMixin, generic.UpdateView):
+class ReviewRecommendation(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewRecommendationForm
@@ -145,7 +145,7 @@ class ReviewRecommendation(AdminRequiredMixin, generic.UpdateView):
         return reverse("review:publish", kwargs={"slug": self.object.slug})
 
 
-class ReviewPublish(AdminRequiredMixin, generic.UpdateView):
+class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewPublishForm
@@ -160,7 +160,7 @@ class ReviewPublish(AdminRequiredMixin, generic.UpdateView):
         )
 
 
-class ReviewDateConfirmation(AdminRequiredMixin, generic.UpdateView):
+class ReviewDateConfirmation(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewDateConfirmationForm
