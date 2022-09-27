@@ -443,6 +443,7 @@ class Common(Configuration):
         }
 
     AUTH_USER_MODEL = "user.User"
+    DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 
 class Webpack:

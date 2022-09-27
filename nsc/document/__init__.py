@@ -7,4 +7,3 @@ This allows policy app to focus only on the pages that are used to by the
 admins to edit the content and so keep the code structure simple.
 
 """
-default_app_config = "nsc.document.apps.DocumentConfig"

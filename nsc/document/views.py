@@ -3,7 +3,7 @@ import mimetypes
 from django.core.cache import cache
 from django.http import FileResponse, Http404
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from nsc.permissions import ReviewManagerRequiredMixin

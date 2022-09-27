@@ -3,7 +3,7 @@
 #
 
 # Core Django and deployment
-django>=2.2,<3.0
+django>=3.2,<4.0
 django-configurations
 django-clear-cache
 django-redis
@@ -21,12 +21,12 @@ django-model-utils
 
 # Project specific
 beautifulsoup4
-boto3
+boto3==1.17.61
 celery
 django-simple-history
 django-storages
 lxml
-markdown
+markdown==3.3.4
 notifications-python-client
 python-dateutil
 requests

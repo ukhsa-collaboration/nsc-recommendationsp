@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
@@ -117,7 +117,6 @@ class Document(TimeStampedModel):
         "policy.Policy",
         through="DocumentPolicy",
         related_name="policy_documents",
-        null=True,
     )
 
     history = HistoricalRecords()
