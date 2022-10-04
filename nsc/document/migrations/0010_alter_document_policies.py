@@ -6,14 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('policy', '0006_auto_20210218_1210'),
-        ('document', '0009_auto_20210426_1239'),
+        ("policy", "0006_auto_20210218_1210"),
+        ("document", "0009_auto_20210426_1239"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='document',
-            name='policies',
-            field=models.ManyToManyField(related_name='policy_documents', through='document.DocumentPolicy', to='policy.Policy'),
+            model_name="document",
+            name="policies",
+            field=models.ManyToManyField(
+                related_name="policy_documents",
+                through="document.DocumentPolicy",
+                to="policy.Policy",
+            ),
         ),
     ]
