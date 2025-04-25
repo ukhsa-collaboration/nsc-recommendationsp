@@ -3,7 +3,7 @@ import logging
 from datetime import timedelta
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.db import models
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now

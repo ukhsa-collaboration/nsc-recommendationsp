@@ -475,7 +475,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
 class SummaryDraftFormsetForm(forms.ModelForm):
     review = forms.ModelChoiceField(Review.objects.all(), widget=forms.HiddenInput)
     policy = forms.ModelChoiceField(Policy.objects.all(), widget=forms.HiddenInput)
-    updated = forms.NullBooleanField(widget=forms.HiddenInput, required=False)
+    updated = forms.BooleanField(widget=forms.HiddenInput, required=False, initial=None)
 
     class Meta:
         model = SummaryDraft

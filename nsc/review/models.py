@@ -117,7 +117,7 @@ class Review(TimeStampedModel):
         Email, related_name="publish_notification_reviews", blank=True
     )
 
-    published = models.NullBooleanField()
+    published = models.BooleanField(null=True, blank=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -461,7 +461,7 @@ class SummaryDraft(TimeStampedModel):
 
 
 class ReviewRecommendation(TimeStampedModel):
-    recommendation = models.NullBooleanField()
+    recommendation = models.BooleanField(null=True, blank=True)
     policy = models.ForeignKey(
         "policy.Policy", on_delete=models.CASCADE, related_name="review_recommendations"
     )

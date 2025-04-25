@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export const opendate = () => {
     const startDayName = 'consultation_start_day'
@@ -16,9 +16,9 @@ export const opendate = () => {
     const endYearElem = document.getElementsByName(endYearName)[0]
 
     const updateEndDate = () => {
-        const startDate = moment([startYearElem.value, startMonthElem.value - 1, startDayElem.value])
-        if (startDate.format() === "Invalid date") {
-            return
+        const startDate = dayjs(new Date(startYearElem.value, startMonthElem.value - 1, startDayElem.value));
+        if (!startDate.isValid()) {
+            return;
         }
 
         const targetEndDate = startDate.clone().add(3, 'months')

@@ -10,7 +10,7 @@ amqp==5.1.1
     # via kombu
 appdirs==1.4.4
     # via black
-asgiref==3.4.1
+asgiref==3.8.1
     # via django
 async-timeout==4.0.2
     # via redis
@@ -45,7 +45,7 @@ botocore==1.20.112
     #   s3transfer
 cached-property==1.5.2
     # via kombu
-celery==5.1.2
+celery==5.2.7
     # via -r requirements.in
 certifi==2021.10.8
     # via
@@ -58,7 +58,7 @@ cffi==1.15.0
     #   pynacl
 charset-normalizer==2.0.12
     # via requests
-click==7.1.2
+#click==7.1.2#
     # via
     #   black
     #   celery
@@ -78,7 +78,6 @@ cryptography==37.0.2
     # via
     #   django-auth-adfs
     #   paramiko
-dataclasses==0.8
     # via black
 decorator==5.1.1
     # via
@@ -87,7 +86,7 @@ decorator==5.1.1
     #   traitlets
 deprecated==1.2.13
     # via redis
-django==3.2.13
+django==5.1
     # via
     #   -r requirements.in
     #   django-auth-adfs
@@ -100,13 +99,13 @@ django==3.2.13
     #   django-redis
     #   django-storages
     #   model-bakery
-django-auth-adfs==1.9.5
+django-auth-adfs==1.15.0
     # via -r requirements.in
 django-clear-cache==0.3
     # via -r requirements.in
-django-configurations==2.3.2
+django-configurations==2.5.1
     # via -r requirements.in
-django-debug-toolbar==3.2.4
+django-debug-toolbar==4.2
     # via -r requirements-dev.in
 django-extensions==3.1.5
     # via -r requirements.in
@@ -142,7 +141,7 @@ freezegun==1.2.1
     # via -r requirements-dev.in
 gunicorn==20.1.0
     # via -r requirements.in
-hiredis==2.0.0
+hiredis==3.1.0
     # via -r requirements.in
 html2markdown==0.1.7
     # via -r requirements.in
@@ -170,7 +169,6 @@ invoke==1.7.1
     #   fabric
 ipdb==0.13.9
     # via -r requirements-dev.in
-ipython==7.16.3
     # via
     #   -r requirements-dev.in
     #   ipdb
@@ -186,17 +184,16 @@ jmespath==0.10.0
     # via
     #   boto3
     #   botocore
-kombu==5.1.0
     # via celery
-lxml==4.8.0
+lxml==4.9.3
     # via -r requirements.in
-markdown==3.3.4
+markdown==3.8
     # via -r requirements.in
 markupsafe==2.0.1
     # via jinja2
 mccabe==0.6.1
     # via flake8
-model-bakery==1.5.0
+model-bakery==1.20.4
     # via -r requirements-dev.in
 mypy-extensions==0.4.3
     # via black
@@ -226,7 +223,7 @@ pickleshare==0.7.5
     # via ipython
 pip-tools==6.4.0
     # via -r requirements-dev.in
-pluggy==0.13.1
+pluggy==1.5.0
     # via pytest
 prompt-toolkit==3.0.29
     # via
@@ -257,7 +254,7 @@ pynacl==1.5.0
     # via paramiko
 pyparsing==3.0.9
     # via packaging
-pytest==6.2.3
+pytest==8.3.5
     # via
     #   -r requirements-dev.in
     #   pytest-black
