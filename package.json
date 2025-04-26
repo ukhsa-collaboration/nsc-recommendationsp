@@ -14,12 +14,12 @@
   "dependencies": {
     "accessible-autocomplete": "^3.0.1",
     "cross-spawn": "^7.0.6",
-    "dayjs": "^1.11.13",
     "execa": "^9.5.2",
     "got": "^14.4.7",
     "govuk-frontend": "^5.9.0",
     "http-cache-semantics": "^4.1.1",
     "js-cookie": "^3.0.5",
+    "moment": "^2.30.1",
     "semver-regex": "^4.0.5",
     "y18n": "^5.0.8"
   },
