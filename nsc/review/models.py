@@ -413,9 +413,11 @@ class Review(TimeStampedModel):
                 self.open_consultation_notifications,
                 {
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
-                    if self.consultation_end
-                    else "",
+                    "consultation end date": (
+                        self.consultation_end.strftime("%d %B %Y")
+                        if self.consultation_end
+                        else ""
+                    ),
                 },
             )
 
@@ -432,9 +434,11 @@ class Review(TimeStampedModel):
                 self.decision_published_notifications,
                 {
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
-                    if self.consultation_end
-                    else "",
+                    "consultation end date": (
+                        self.consultation_end.strftime("%d %B %Y")
+                        if self.consultation_end
+                        else ""
+                    ),
                 },
             )
 

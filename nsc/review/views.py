@@ -154,9 +154,9 @@ class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(
             **kwargs,
-            decision=_("Recommended")
-            if self.object.recommendation
-            else _("Not Recommended"),
+            decision=(
+                _("Recommended") if self.object.recommendation else _("Not Recommended")
+            ),
         )
 
 

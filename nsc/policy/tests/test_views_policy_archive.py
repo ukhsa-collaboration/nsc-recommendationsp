@@ -111,7 +111,6 @@ def test_upload_view__incorrect_permission(test_access_forbidden):
 
 
 def test_update_view__preview(erm_user, django_app):
-
     """
     Test the preview page.
     """

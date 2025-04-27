@@ -116,24 +116,24 @@ class PublicCommentView(ConsultationMixin, FormView):
                     ],
                     "alternatives comment": form.cleaned_data["comment_alternatives"],
                     "other comment": form.cleaned_data["comment_other"],
-                    "affected comment present": "yes"
-                    if form.cleaned_data["comment_affected"]
-                    else "no",
-                    "evidence comment present": "yes"
-                    if form.cleaned_data["comment_evidence"]
-                    else "no",
-                    "discussion comment present": "yes"
-                    if form.cleaned_data["comment_discussion"]
-                    else "no",
-                    "recommendation comment present": "yes"
-                    if form.cleaned_data["comment_recommendation"]
-                    else "no",
-                    "alternatives comment present": "yes"
-                    if form.cleaned_data["comment_alternatives"]
-                    else "no",
-                    "other comment present": "yes"
-                    if form.cleaned_data["comment_other"]
-                    else "no",
+                    "affected comment present": (
+                        "yes" if form.cleaned_data["comment_affected"] else "no"
+                    ),
+                    "evidence comment present": (
+                        "yes" if form.cleaned_data["comment_evidence"] else "no"
+                    ),
+                    "discussion comment present": (
+                        "yes" if form.cleaned_data["comment_discussion"] else "no"
+                    ),
+                    "recommendation comment present": (
+                        "yes" if form.cleaned_data["comment_recommendation"] else "no"
+                    ),
+                    "alternatives comment present": (
+                        "yes" if form.cleaned_data["comment_alternatives"] else "no"
+                    ),
+                    "other comment present": (
+                        "yes" if form.cleaned_data["comment_other"] else "no"
+                    ),
                 },
             )
 

@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0021_auto_20210323_1518'),
+        ("review", "0021_auto_20210323_1518"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalreview',
-            name='published',
+            model_name="historicalreview",
+            name="published",
             field=models.BooleanField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='review',
-            name='published',
+            model_name="review",
+            name="published",
             field=models.BooleanField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='reviewrecommendation',
-            name='recommendation',
+            model_name="reviewrecommendation",
+            name="recommendation",
             field=models.BooleanField(blank=True, null=True),
         ),
     ]
