@@ -94,16 +94,16 @@ def test_search_form_blank(client):
     assert form["screen"].value is None
 
 
-def test_search_on_condition_name(client_form):
+def test_search_on_condition_name(django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
     baker.make(Policy, name="name")
-    response = client_form(condition_list_url, name="other")
+    response = django_app_form(condition_list_url, name="other")
     assert not response.context["object_list"]
 
 
-def test_search_on_open_for_comment(client_form):
+def test_search_on_open_for_comment(django_app_form):
     """
     Test the list of policies can be filtered by whether the policy is
     under review and currently open for the public to comment.
@@ -113,54 +113,54 @@ def test_search_on_open_for_comment(client_form):
     policy = baker.make(Policy, name="name")
     review = baker.make(Review, consultation_start=tomorrow, consultation_end=later)
     policy.reviews.add(review)
-    response = client_form(condition_list_url, comments="open")
+    response = django_app_form(condition_list_url, comments="open")
     assert not response.context["object_list"]
 
 
-def test_search_on_age_affected(client_form):
+def test_search_on_age_affected(django_app_form):
     """
     Test the list of policies can be filtered by the age of those affected.
     """
     baker.make(Policy, ages="{adult}")
-    response = client_form(condition_list_url, affects="child")
+    response = django_app_form(condition_list_url, affects="child")
     assert not response.context["object_list"]
 
 
-def test_search_on_recommendation(client_form):
+def test_search_on_recommendation(django_app_form):
     """
     Test the list of policies can be filtered by whether the condition is
     screened for or not.
     """
     baker.make(Policy, recommendation=False)
-    response = client_form(condition_list_url, screen="yes")
+    response = django_app_form(condition_list_url, screen="yes")
     assert not response.context["object_list"]
 
 
-def test_search_form_shows_name_term(client_form):
+def test_search_form_shows_name_term(django_app_form):
     """
     Test when the search results are shown the form shows the entered condition name.
     """
-    form = client_form(condition_list_url, name="name").forms[1]
+    form = django_app_form(condition_list_url, name="name").forms[1]
     assert form["name"].value == "name"
     assert form["affects"].value is None
     assert form["screen"].value is None
 
 
-def test_search_form_shows_affects_term(client_form):
+def test_search_form_shows_affects_term(django_app_form):
     """
     Test when the search results are shown the form shows the selected age.
     """
-    form = client_form(condition_list_url, affects="child").forms[1]
+    form = django_app_form(condition_list_url, affects="child").forms[1]
     assert form["name"].value == ""
     assert form["affects"].value == "child"
     assert form["screen"].value is None
 
 
-def test_search_form_shows_screen_term(client_form):
+def test_search_form_shows_screen_term(django_app_form):
     """
     Test when the search results are shown the form shows the selected recommendation.
     """
-    form = client_form(condition_list_url, screen="no").forms[1]
+    form = django_app_form(condition_list_url, screen="no").forms[1]
     assert form["name"].value == ""
     assert form["affects"].value is None
     assert form["screen"].value == "no"

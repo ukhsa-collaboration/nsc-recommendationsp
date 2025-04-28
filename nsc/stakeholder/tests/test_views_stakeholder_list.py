@@ -66,33 +66,33 @@ def test_search_form_blank(erm_user, client):
     assert form["condition"].value == ""
 
 
-def test_search_on_stakeholder_name(erm_user, client_form):
+def test_search_on_stakeholder_name(erm_user, django_app_form):
     """
     Test the list of stakeholders can be filtered by the stakeholder name.
     """
     baker.make(Policy, name="name")
-    response = client_form(stakeholder_list_url, name="other", user=erm_user)
+    response = django_app_form(stakeholder_list_url, name="other", user=erm_user)
     assert not response.context["object_list"]
 
 
-def test_search_on_condition_name(erm_user, client_form):
+def test_search_on_condition_name(erm_user, django_app_form):
     """
     Test the list of stakeholders can be filtered by the name of the condition
     they are interested in.
     """
     instance = baker.make(Stakeholder)
     instance.policies.add(baker.make(Policy))
-    response = client_form(stakeholder_list_url, condition="Other", user=erm_user)
+    response = django_app_form(stakeholder_list_url, condition="Other", user=erm_user)
     assert not response.context["object_list"]
 
 
-def test_search_on_stakeholder_country(erm_user, client_form):
+def test_search_on_stakeholder_country(erm_user, django_app_form):
     """
     Test the list of stakeholders can be filtered by the stakeholder country.
     """
     expected = baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_ENGLAND])
     baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_NORTHERN_IRELAND])
-    response = client_form(
+    response = django_app_form(
         stakeholder_list_url, country=Stakeholder.COUNTRY_ENGLAND, user=erm_user
     )
 
@@ -100,20 +100,20 @@ def test_search_on_stakeholder_country(erm_user, client_form):
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_form_shows_name_term(erm_user, client_form):
+def test_search_form_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
-    form = client_form(stakeholder_list_url, name="name", user=erm_user).forms[1]
+    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).forms[1]
     assert form["name"].value == "name"
     assert form["condition"].value == ""
 
 
-def test_search_form_shows_condition_term(erm_user, client_form):
+def test_search_form_shows_condition_term(erm_user, django_app_form):
     """
     Test when the search results are shown the form shows the selected condition.
     """
-    form = client_form(
+    form = django_app_form(
         stakeholder_list_url, condition="other", user=erm_user
     ).forms[1]
     assert form["name"].value == ""
