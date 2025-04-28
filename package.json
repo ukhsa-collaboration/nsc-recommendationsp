@@ -13,14 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "accessible-autocomplete": "^3.0.1",
-    "cross-spawn": "^7.0.6",
-    "execa": "^9.5.2",
-    "got": "^14.4.7",
     "govuk-frontend": "^5.9.0",
-    "http-cache-semantics": "^4.1.1",
     "js-cookie": "^3.0.5",
     "moment": "^2.30.1",
-    "semver-regex": "^4.0.5",
     "y18n": "^5.0.8"
   },
   "devDependencies": {
@@ -35,7 +30,6 @@
     "css-minimizer-webpack-plugin": "^7.0.2",
     "image-webpack-loader": "^8.0.1",
     "mini-css-extract-plugin": "^2.9.2",
-    "npm-force-resolutions": "^0.0.10",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.87.0",
     "sass-loader": "^16.0.5",
@@ -46,15 +40,5 @@
     "webpack": "^5.99.6",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"
-  },
-  "overrides": {
-    "rimraf": "^4.0.0",
-    "glob": "^9.0.0",
-    "uuid": "^8.3.2",
-    "inflight": "^1.0.7",
-    "move-concurrently": "1.0.2",
-    "another-dep": {
-      "cross-spawn": "^7.0.6"
-    }
   }
 }
