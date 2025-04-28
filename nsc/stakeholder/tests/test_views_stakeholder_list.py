@@ -71,7 +71,7 @@ def test_search_on_stakeholder_name(erm_user, client):
     Test the list of stakeholders can be filtered by the stakeholder name.
     """
     baker.make(Policy, name="name")
-    response = client(stakeholder_list_url, name="other", user=erm_user)
+    response = client.get(stakeholder_list_url, name="other", user=erm_user)
     assert not response.context["object_list"]
 
 
@@ -82,7 +82,7 @@ def test_search_on_condition_name(erm_user, client):
     """
     instance = baker.make(Stakeholder)
     instance.policies.add(baker.make(Policy))
-    response = client(stakeholder_list_url, condition="Other", user=erm_user)
+    response = client.get(stakeholder_list_url, condition="Other", user=erm_user)
     assert not response.context["object_list"]
 
 
@@ -92,7 +92,7 @@ def test_search_on_stakeholder_country(erm_user, client):
     """
     expected = baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_ENGLAND])
     baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_NORTHERN_IRELAND])
-    response = client(
+    response = client.get(
         stakeholder_list_url, country=Stakeholder.COUNTRY_ENGLAND, user=erm_user
     )
 
@@ -104,7 +104,7 @@ def test_search_form_shows_name_term(erm_user, client):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
-    form = client(stakeholder_list_url, name="name", user=erm_user).forms[1]
+    form = client.get(stakeholder_list_url, name="name", user=erm_user).forms[1]
     assert form["name"].value == "name"
     assert form["condition"].value == ""
 
