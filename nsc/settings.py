@@ -53,7 +53,7 @@ def get_env(name, default=NotSet, required=False, cast=str):
             return default
 
         if value is None and required:
-            raise ValueError(f"{name} not found in env")
+            raise ValueError(f"{name} not found in env")  # noqa
 
         return cast(value)
 
@@ -81,7 +81,7 @@ def get_secret(*name, default=NotSet, required=True, cast=str):
         if not SECRET_DIR:
             if required:
                 raise ValueError(
-                    f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
+                    f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"  # noqa
                 )
             else:
                 return default
@@ -359,7 +359,7 @@ class Common(Configuration):
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
     # Settings for celery
-    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
@@ -461,7 +461,7 @@ class Webpack:
         value = environ.get("WEBPACK_DEV_URL")
         if value:
             return value
-        return f"//{self.WEBPACK_DEV_HOST}:{self.WEBPACK_DEV_PORT}/static/"
+        return f"//{self.WEBPACK_DEV_HOST}:{self.WEBPACK_DEV_PORT}/static/"  # noqa
 
     @property
     def LOGGING(self):
@@ -498,7 +498,7 @@ class Dev(Webpack, Common):
 
     @property
     def EMAIL_ROOT_DOMAIN(self):
-        return f"http://{self.MAIN_DOMAIN}"
+        return f"http://{self.MAIN_DOMAIN}"  # noqa
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
@@ -619,11 +619,11 @@ class Deployed(Build):
 
     @property
     def AWS_S3_ENDPOINT_URL(self):
-        return f"http://{self.AWS_BUCKET_DOMAIN}"
+        return f"http://{self.AWS_BUCKET_DOMAIN}"  # noqa
 
     @property
     def MEDIA_URL(self):
-        return f"https://{self.MEDIA_HOST_DOMAIN}/"
+        return f"https://{self.MEDIA_HOST_DOMAIN}/"  # noqa
 
     @property
     def AWS_S3_CUSTOM_DOMAIN(self):
@@ -643,7 +643,7 @@ class Deployed(Build):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",  # noqa
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -652,7 +652,7 @@ class Deployed(Build):
             },
             "session": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/2",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/2",  # noqa
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -688,7 +688,7 @@ class Deployed(Build):
 
     @property
     def EMAIL_ROOT_DOMAIN(self):
-        return f"https://{self.MAIN_DOMAIN}"
+        return f"https://{self.MAIN_DOMAIN}"  # noqa
 
     # sentry settings
     SENTRY_DSN = get_secret("sentry", "dsn")
@@ -747,7 +747,7 @@ class Demo(Build):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",  # noqa
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",

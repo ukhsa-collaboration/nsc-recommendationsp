@@ -25,7 +25,7 @@ def update_qs(context, url=None, **params):
     orig_params = parse_qs(split.query)
     updated_params = {**orig_params, **params}
 
-    return f"{split.scheme}://{split.netloc}{split.path}?{urlencode(updated_params, doseq=True)}"
+    return f"{split.scheme}://{split.netloc}{split.path}?{urlencode(updated_params, doseq=True)}"  # noqa
 
 
 @register.filter

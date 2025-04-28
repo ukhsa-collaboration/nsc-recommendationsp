@@ -165,7 +165,7 @@ class StakeholderExport(ReviewManagerRequiredMixin, StakeholderFilterMixin, Form
         """
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = (
-            f'attachment; filename="stakeholders{get_today().isoformat()}.csv"' # noqa
+            f'attachment; filename="stakeholders{get_today().isoformat()}.csv"'  # noqa
         )
         writer = csv.writer(response)
 
