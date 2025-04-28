@@ -23,8 +23,8 @@ def url():
 
 
 @pytest.fixture
-def response(url, erm_user, django_app):
-    return django_app.get(url, user=erm_user)
+def response(url, erm_user, client):
+    return client.get(url, user=erm_user)
 
 
 def test_export_view(response):
@@ -45,41 +45,41 @@ def test_export_view__incorrect_permission(url, test_access_forbidden):
 
 @pytest.mark.parametrize("num_stakeholders", [1, 9])
 def test_list_view_query_count(
-    url, erm_user, num_stakeholders, django_app, django_assert_num_queries
+    url, erm_user, num_stakeholders, client, django_assert_num_queries
 ):
     """
     Test that fetching the export takes a fixed number of queries.
     """
     baker.make(Stakeholder, _quantity=num_stakeholders)
-    django_app.get("/", user=erm_user)  # login before test
+    client.get("/", user=erm_user)  # login before test
     with django_assert_num_queries(11):  # 7 for view, 4 for login.
-        django_app.get(url, user=erm_user)
+        client.get(url, user=erm_user)
 
 
-def test_export_on_no_filter(url, erm_user, django_app):
+def test_export_on_no_filter(url, erm_user, client):
     """
     Test the export of stakeholders can be filtered by the stakeholder name.
     """
     baker.make(Stakeholder, name="name")
     baker.make(Stakeholder, name="other")
-    response = django_app.get(url, user=erm_user)
+    response = client.get(url, user=erm_user)
     assert response.context["total"] == 2
     assert len(response.context["object_list"]) == 2
 
 
-def test_export_on_stakeholder_name(url, erm_user, django_app):
+def test_export_on_stakeholder_name(url, erm_user, client):
     """
     Test the export of stakeholders can be filtered by the stakeholder name.
     """
     baker.make(Stakeholder, name="name")
     expected = baker.make(Stakeholder, name="other")
-    response = django_app.get(url + "?name=other", user=erm_user)
+    response = client.get(url + "?name=other", user=erm_user)
     assert response.context["total"] == 2
     assert len(response.context["object_list"]) == 1
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_export_on_condition_name(url, erm_user, django_app):
+def test_export_on_condition_name(url, erm_user, client):
     """
     Test the export of stakeholders can be filtered by the name of the condition
     they are interested in.
@@ -88,19 +88,19 @@ def test_export_on_condition_name(url, erm_user, django_app):
     instance.policies.add(baker.make(Policy))
     expected = baker.make(Stakeholder)
     expected.policies.add(baker.make(Policy, name="other"))
-    response = django_app.get(url + "?condition=other", user=erm_user)
+    response = client.get(url + "?condition=other", user=erm_user)
     assert response.context["total"] == 2
     assert len(response.context["object_list"]) == 1
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_export_on_stakeholder_country(url, erm_user, django_app):
+def test_export_on_stakeholder_country(url, erm_user, client):
     """
     Test the export of stakeholders can be filtered by the stakeholder country.
     """
     expected = baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_ENGLAND])
     baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_NORTHERN_IRELAND])
-    response = django_app.get(
+    response = client.get(
         f"{url}?country={Stakeholder.COUNTRY_ENGLAND}", user=erm_user
     )
 
@@ -109,7 +109,7 @@ def test_export_on_stakeholder_country(url, erm_user, django_app):
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_export_mailto(url, erm_user, django_app):
+def test_export_mailto(url, erm_user, client):
     """
     Test the export of stakeholders shows a mailto link
     """
@@ -117,12 +117,12 @@ def test_export_mailto(url, erm_user, django_app):
     baker.make(Contact, email="1@email.com", stakeholder=instance)
     baker.make(Contact, email="2@email.com", stakeholder=instance)
 
-    response = django_app.get(url, user=erm_user)
+    response = client.get(url, user=erm_user)
 
-    assert "mailto:1@email.com;2@email.com" in response.text
+    assert "mailto:1@email.com;2@email.com" in response.content.decode()
 
 
-def test_export_mailto__exceeds(url, erm_user, django_app):
+def test_export_mailto__exceeds(url, erm_user, client):
     """
     Test the export of stakeholders shows a mailto link
     """
@@ -132,8 +132,8 @@ def test_export_mailto__exceeds(url, erm_user, django_app):
         Contact, email="abcdefghijklm@email.com", stakeholder=instance, _quantity=100
     )
 
-    response = django_app.get(url, user=erm_user)
-    bs = bs4.BeautifulSoup(response.text)
+    response = client.get(url, user=erm_user)
+    bs = bs4.BeautifulSoup(response.content.decode())
 
     mail_link = bs.find("a", attrs={"id": "export-mailto-link"})
     copy_field = bs.find("div", attrs={"id": "mailto-copy-field"})
@@ -141,7 +141,7 @@ def test_export_mailto__exceeds(url, erm_user, django_app):
     assert "style" not in copy_field.attrs
 
 
-def test_export_mailto__does_not_exceeds(url, erm_user, django_app):
+def test_export_mailto__does_not_exceeds(url, erm_user, client):
     """
     Test the export of stakeholders shows a mailto link
     """
@@ -151,8 +151,8 @@ def test_export_mailto__does_not_exceeds(url, erm_user, django_app):
         Contact, email="abcdefghijklm@email.com", stakeholder=instance, _quantity=1
     )
 
-    response = django_app.get(url, user=erm_user)
-    bs = bs4.BeautifulSoup(response.text)
+    response = client.get(url, user=erm_user)
+    bs = bs4.BeautifulSoup(response.content.decode())
 
     mail_link = bs.find("a", attrs={"id": "export-mailto-link"})
     copy_field = bs.find("div", attrs={"id": "mailto-copy-field"})
@@ -160,7 +160,7 @@ def test_export_mailto__does_not_exceeds(url, erm_user, django_app):
     assert "style" not in mail_link.attrs
 
 
-def test_export_conditions(url, erm_user, django_app):
+def test_export_conditions(url, erm_user, client):
     """
     Test the export of stakeholders returns csv for conditions.
     """
@@ -185,7 +185,7 @@ def test_export_conditions(url, erm_user, django_app):
     )
     other_instance.policies.add(baker.make(Policy, name="condition 2"))
 
-    response = django_app.get(url, user=erm_user)
+    response = client.get(url, user=erm_user)
     form = response.forms[1]
     form["export_type"] = "conditions"
     result = form.submit()
@@ -247,7 +247,7 @@ def test_export_conditions(url, erm_user, django_app):
     ]
 
 
-def test_export_individual(url, erm_user, django_app):
+def test_export_individual(url, erm_user, client):
     """
     Test the export of stakeholders returns csv for individual.
     """
@@ -271,7 +271,7 @@ def test_export_individual(url, erm_user, django_app):
         phone="123",
     )
 
-    response = django_app.get(url, user=erm_user)
+    response = client.get(url, user=erm_user)
     form = response.forms[1]
     form["export_type"] = "individual"
     result = form.submit()
@@ -299,7 +299,7 @@ def test_export_individual(url, erm_user, django_app):
 
 @pytest.mark.parametrize("num_stakeholders", [1, 9])
 def test_export_conditions_query_count(
-    url, erm_user, num_stakeholders, django_app, django_assert_num_queries
+    url, erm_user, num_stakeholders, client, django_assert_num_queries
 ):
     """
     Test that fetching the export takes a fixed number of queries.
@@ -308,7 +308,7 @@ def test_export_conditions_query_count(
     for stakeholder in stakeholders:
         stakeholder.policies.add(baker.make(Policy))
 
-    response = django_app.get(url, user=erm_user)
+    response = client.get(url, user=erm_user)
     with django_assert_num_queries(7):  # 3 for export, 4 for session
         form = response.forms[1]
         form["export_type"] = "conditions"
@@ -317,7 +317,7 @@ def test_export_conditions_query_count(
 
 @pytest.mark.parametrize("num_stakeholders", [1, 9])
 def test_export_individual_query_count(
-    url, erm_user, num_stakeholders, django_app, django_assert_num_queries
+    url, erm_user, num_stakeholders, client, django_assert_num_queries
 ):
     """
     Test that fetching the export takes a fixed number of queries.
@@ -326,7 +326,7 @@ def test_export_individual_query_count(
     for stakeholder in stakeholders:
         stakeholder.policies.add(baker.make(Policy))
 
-    response = django_app.get(url, user=erm_user)
+    response = client.get(url, user=erm_user)
     with django_assert_num_queries(8):  # 4 for export, 4 for session
         form = response.forms[1]
         form["export_type"] = "individual"

@@ -8,10 +8,10 @@ from ..models import StakeholderSubscription
 pytestmark = pytest.mark.django_db
 
 
-def test_emails_dont_match_error_is_raised(django_app):
+def test_emails_dont_match_error_is_raised(client):
     url = reverse("subscription:stakeholder-start")
 
-    response = django_app.get(url)
+    response = client.get(url)
 
     form = response.forms[1]
     form["title"] = "mr"
@@ -24,10 +24,10 @@ def test_emails_dont_match_error_is_raised(django_app):
     assert not StakeholderSubscription.objects.exists()
 
 
-def test_fields_are_complete_subscription_is_created(django_app):
+def test_fields_are_complete_subscription_is_created(client):
     url = reverse("subscription:stakeholder-start")
 
-    response = django_app.get(url)
+    response = client.get(url)
 
     form = response.forms[1]
     form["title"] = "mr"

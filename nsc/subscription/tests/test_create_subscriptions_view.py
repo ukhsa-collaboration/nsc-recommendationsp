@@ -15,14 +15,14 @@ pytestmark = pytest.mark.django_db
 
 
 def test_subscription_start_forwards_to_creation_form(
-    django_app, make_subscription, make_policy
+    client, make_subscription, make_policy
 ):
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
 
     url = reverse("subscription:public-start")
 
-    response = django_app.get(url)
+    response = client.get(url)
 
     form = response.forms[1]
     form["policies"] = [s.pk for s in selected_policies]
@@ -36,7 +36,7 @@ def test_subscription_start_forwards_to_creation_form(
 
 
 def test_emails_dont_match_subscription_isnt_created(
-    django_app, make_subscription, make_policy
+    client, make_subscription, make_policy
 ):
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
@@ -44,7 +44,7 @@ def test_emails_dont_match_subscription_isnt_created(
     url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", selected_policies))
 
-    response = django_app.get(f"{url}?{policies_url_args}")
+    response = client.get(f"{url}?{policies_url_args}")
 
     form = response.forms[1]
     form["email"] = "foo@example.com"
@@ -55,7 +55,7 @@ def test_emails_dont_match_subscription_isnt_created(
 
 
 def test_emails_match_subscription_is_created(
-    django_app, make_subscription, make_policy
+    client, make_subscription, make_policy
 ):
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
@@ -63,7 +63,7 @@ def test_emails_match_subscription_is_created(
     url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", selected_policies))
 
-    response = django_app.get(f"{url}?{policies_url_args}")
+    response = client.get(f"{url}?{policies_url_args}")
 
     form = response.forms[1]
     form["email"] = "foo@example.com"
@@ -100,7 +100,7 @@ def test_emails_match_subscription_is_created(
 
 
 def test_subscription_already_exists_for_email_new_policies_are_added(
-    django_app, make_subscription, make_policy
+    client, make_subscription, make_policy
 ):
     selected_policies = make_policy(_quantity=3)
     new_policies = make_policy(_quantity=3)
@@ -111,7 +111,7 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", new_policies))
 
-    response = django_app.get(f"{url}?{policies_url_args}")
+    response = client.get(f"{url}?{policies_url_args}")
 
     form = response.forms[1]
     form["email"] = "foo@example.com"

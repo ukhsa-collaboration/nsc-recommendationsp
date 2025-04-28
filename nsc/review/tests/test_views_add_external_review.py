@@ -10,12 +10,12 @@ from nsc.review.models import Review
 pytestmark = pytest.mark.django_db
 
 
-def test_view(erm_user, django_app):
+def test_view(erm_user, client):
     """
     Test that the page can be displayed
     """
     review = baker.make(Review)
-    response = django_app.get(
+    response = client.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
         user=erm_user,
     )
@@ -36,12 +36,12 @@ def test_view__incorrect_permission(test_access_forbidden):
     )
 
 
-def test_initial_values(erm_user, django_app):
+def test_initial_values(erm_user, client):
     """
     Test the form fields are initialised to upload the external review.
     """
     review = baker.make(Review, name="Review", slug="review")
-    form = django_app.get(
+    form = client.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
         user=erm_user,
     ).forms[1]
@@ -49,12 +49,12 @@ def test_initial_values(erm_user, django_app):
     review.delete()
 
 
-def test_document_created(erm_user, minimal_pdf, django_app):
+def test_document_created(erm_user, minimal_pdf, client):
     """
     Test the external review document is uploaded and the document is created.
     """
     review = baker.make(Review, name="Review", slug="review", user=erm_user)
-    form = django_app.get(
+    form = client.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
         user=erm_user,
     ).forms[1]

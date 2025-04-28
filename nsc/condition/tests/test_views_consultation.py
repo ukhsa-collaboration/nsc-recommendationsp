@@ -9,10 +9,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(review_in_consultation, django_app):
+def response(review_in_consultation, client):
     policy = review_in_consultation.policies.first()
     url = reverse("condition:consultation", kwargs={"slug": policy.slug})
-    return django_app.get(url)
+    return client.get(url)
 
 
 @pytest.fixture

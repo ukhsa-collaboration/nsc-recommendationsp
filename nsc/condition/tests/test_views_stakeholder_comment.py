@@ -13,10 +13,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(review_in_consultation, django_app):
+def response(review_in_consultation, client):
     policy = review_in_consultation.policies.first()
     url = reverse("condition:stakeholder-comment", kwargs={"slug": policy.slug})
-    return django_app.get(url)
+    return client.get(url)
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ def test_submission_form_link(response):
             "review:review-document-download",
             kwargs={"slug": review.slug, "doc_type": "submission_form"},
         )
-        in response.text
+        in response.content.decode()
     )
 
 

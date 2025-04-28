@@ -12,24 +12,24 @@ from nsc.utils.markdown import convert
 pytestmark = pytest.mark.django_db
 
 
-def test_detail__back_link(erm_user, django_app):
+def test_detail__back_link(erm_user, client):
     """
     Test the back link returns to the detail page.
     """
     instance = baker.make(Policy)
-    detail_page = django_app.get(
+    detail_page = client.get(
         reverse("policy:archive:detail", args=(instance.slug,)), user=erm_user
     )
     next_page = detail_page.click(linkid="back-link-id")
     assert next_page.request.path == instance.get_admin_url()
 
 
-def test_upload__back_link(erm_user, django_app):
+def test_upload__back_link(erm_user, client):
     """
     Test the back link returns to the detail page.
     """
     instance = baker.make(Policy)
-    upload_page = django_app.get(
+    upload_page = client.get(
         reverse("policy:archive:upload", args=(instance.slug,)), user=erm_user
     )
     next_page = upload_page.click(linkid="back-link-id")
@@ -38,12 +38,12 @@ def test_upload__back_link(erm_user, django_app):
     )
 
 
-def test_update__back_link(erm_user, django_app):
+def test_update__back_link(erm_user, client):
     """
     Test the back link returns to the detail page.
     """
     instance = baker.make(Policy)
-    update_page = django_app.get(
+    update_page = client.get(
         reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
     next_page = update_page.click(linkid="back-link-id")
@@ -52,12 +52,12 @@ def test_update__back_link(erm_user, django_app):
     )
 
 
-def test_detail_view(erm_user, django_app):
+def test_detail_view(erm_user, client):
     """
     Test that we can view an instance via the detail view.
     """
     instance = baker.make(Policy)
-    response = django_app.get(
+    response = client.get(
         reverse("policy:archive:detail", args=(instance.slug,)), user=erm_user
     )
     assert response.context["policy"] == instance
@@ -73,14 +73,14 @@ def test_detail_view__incorrect_permission(test_access_forbidden):
     test_access_forbidden(url=reverse("policy:archive:detail", args=(instance.slug,)))
 
 
-def test_upload_view__create_document(erm_user, minimal_pdf, django_app):
+def test_upload_view__create_document(erm_user, minimal_pdf, client):
     """
     Test that we can create a document via the upload view.
     """
 
     instance = baker.make(Policy, slug="abc")
     upload_url = reverse("policy:archive:upload", args=(instance.slug,))
-    form = django_app.get(upload_url, user=erm_user).forms[1]
+    form = client.get(upload_url, user=erm_user).forms[1]
     form["document-TOTAL_FORMS"] = 1
     form["document-0-name"] = "Some name"
     form["document-0-upload"] = (
@@ -110,13 +110,13 @@ def test_upload_view__incorrect_permission(test_access_forbidden):
     test_access_forbidden(url=reverse("policy:archive:upload", args=(instance.slug,)))
 
 
-def test_update_view__preview(erm_user, django_app):
+def test_update_view__preview(erm_user, client):
     """
     Test the preview page.
     """
     instance = baker.make(Policy, archived_reason="# heading")
 
-    update_page = django_app.get(
+    update_page = client.get(
         reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
     update_form = update_page.forms[1]
@@ -130,13 +130,13 @@ def test_update_view__preview(erm_user, django_app):
     assert preview_page.context.get("publish") is None
 
 
-def test_update_view__published(erm_user, django_app):
+def test_update_view__published(erm_user, client):
     """
     Test the preview page.
     """
     instance = baker.make(Policy, archived_reason="# heading", archived=False)
 
-    update_page = django_app.get(
+    update_page = client.get(
         reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
     update_form = update_page.forms[1]
@@ -169,9 +169,9 @@ def test_update_view__incorrect_permission(test_access_forbidden):
     test_access_forbidden(url=reverse("policy:archive:update", args=(instance.slug,)))
 
 
-def test_complete_view(erm_user, django_app):
+def test_complete_view(erm_user, client):
     instance = baker.make(Policy, archived=True)
-    response = django_app.get(
+    response = client.get(
         reverse("policy:archive:complete", args=(instance.slug,)), user=erm_user
     )
     assert response.context["policy"] == instance
