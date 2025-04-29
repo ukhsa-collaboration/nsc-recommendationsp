@@ -54,9 +54,7 @@ def test_emails_dont_match_subscription_isnt_created(
     assert not Subscription.objects.exists()
 
 
-def test_emails_match_subscription_is_created(
-    client, make_subscription, make_policy
-):
+def test_emails_match_subscription_is_created(client, make_subscription, make_policy):
     selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
 
@@ -113,10 +111,14 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
 
     response = client.get(f"{url}?{policies_url_args}")
 
-    form = response.forms[1]
-    form["email"] = "foo@example.com"
-    form["email_confirmation"] = "foo@example.com"
-    response = form.submit()
+    form = response.context['form']
+
+    data = {
+        'email': 'foo@example.com',
+        'email_confirmation': 'foo@example.com',
+        'policies': [p.id for p in selected_policies] + [p.id for p in new_policies]
+    }
+    response = client.post(url, data=data)
 
     sub = Subscription.objects.first()
     assert Subscription.objects.count() == 1
@@ -125,7 +127,7 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
         s.id for s in chain(selected_policies, new_policies)
     }
     assert (
-        response.location
+        response.url
         == reverse(
             "subscription:public-complete",
             kwargs={"token": get_object_signature(sub), "pk": sub.id},
