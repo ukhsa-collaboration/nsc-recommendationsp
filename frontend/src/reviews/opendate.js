@@ -17,8 +17,8 @@ export const opendate = () => {
 
     const updateEndDate = () => {
         const startDate = moment([startYearElem.value, startMonthElem.value - 1, startDayElem.value])
-        if (startDate.format() === "Invalid date") {
-            return
+        if (!startDate.isValid()) {
+            return;
         }
 
         const targetEndDate = startDate.clone().add(3, 'months')

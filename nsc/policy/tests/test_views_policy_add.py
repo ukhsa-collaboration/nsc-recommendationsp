@@ -19,8 +19,8 @@ def policy():
     return baker.make(Policy, is_active=False)
 
 
-def test_add_start_view(erm_user, django_app):
-    response = django_app.get(reverse("policy:add:start"), user=erm_user)
+def test_add_start_view(erm_user, client):
+    response = client.get(reverse("policy:add:start"), user=erm_user)
     assert response.status == "200 OK"
 
 
@@ -32,8 +32,8 @@ def test_add_start_view__incorrect_permission(test_access_forbidden):
     test_access_forbidden(url=reverse("policy:add:start"))
 
 
-def test_add_start_view__created(erm_user, django_app):
-    start = django_app.get(reverse("policy:add:start"), user=erm_user)
+def test_add_start_view__created(erm_user, client):
+    start = client.get(reverse("policy:add:start"), user=erm_user)
     start_form = start.forms[1]
 
     start_form["name"] = "name"
@@ -57,8 +57,8 @@ def test_add_start_view__created(erm_user, django_app):
     assert not policy.is_active
 
 
-def test_add_summary_view(policy, erm_user, django_app):
-    response = django_app.get(
+def test_add_summary_view(policy, erm_user, client):
+    response = client.get(
         reverse("policy:add:summary", args=(policy.slug,)), user=erm_user
     )
     assert response.status == "200 OK"
@@ -72,8 +72,8 @@ def test_add_summary_view__incorrect_permission(policy, test_access_forbidden):
     test_access_forbidden(url=reverse("policy:add:summary", args=(policy.slug,)))
 
 
-def test_add_summary_view__updated(policy, erm_user, django_app):
-    summary = django_app.get(
+def test_add_summary_view__updated(policy, erm_user, client):
+    summary = client.get(
         reverse("policy:add:summary", args=(policy.slug,)), user=erm_user
     )
     summary_form = summary.forms[1]
@@ -95,8 +95,8 @@ def test_add_summary_view__updated(policy, erm_user, django_app):
     assert not policy.is_active
 
 
-def test_add_recommendation_view(policy, erm_user, django_app):
-    response = django_app.get(
+def test_add_recommendation_view(policy, erm_user, client):
+    response = client.get(
         reverse("policy:add:recommendation", args=(policy.slug,)), user=erm_user
     )
     assert response.status == "200 OK"
@@ -110,8 +110,8 @@ def test_add_recommendation_view__incorrect_permission(policy, test_access_forbi
     test_access_forbidden(url=reverse("policy:add:recommendation", args=(policy.slug,)))
 
 
-def test_add_recommendation_view__updated(policy, erm_user, django_app):
-    summary = django_app.get(
+def test_add_recommendation_view__updated(policy, erm_user, client):
+    summary = client.get(
         reverse("policy:add:recommendation", args=(policy.slug,)), user=erm_user
     )
     summary_form = summary.forms[1]

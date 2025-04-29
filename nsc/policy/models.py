@@ -108,8 +108,8 @@ class Policy(TimeStampedModel):
     condition_type = models.CharField(choices=CONDITION_TYPES, max_length=8, null=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
-    recommendation = models.NullBooleanField(
-        verbose_name=_("recommendation"), default=None
+    recommendation = models.BooleanField(
+        verbose_name=_("recommendation"), null=True, blank=True, default=None
     )
 
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)

@@ -15,7 +15,7 @@ pytestmark = pytest.mark.django_db
 
 @pytest.mark.parametrize("requested_type", Document.TYPE._db_values)
 def test_no_files_for_type___response_is_not_found(
-    requested_type, make_document, make_review, django_app
+    requested_type, make_document, make_review, client
 ):
     review = make_review()
 
@@ -25,7 +25,7 @@ def test_no_files_for_type___response_is_not_found(
 
         make_document(review=review, document_type=doc_type)
 
-    response = django_app.get(
+    response = client.get(
         reverse(
             "review:review-document-download",
             kwargs={
@@ -41,13 +41,13 @@ def test_no_files_for_type___response_is_not_found(
 
 @pytest.mark.parametrize("requested_type", Document.TYPE._db_values)
 def test_single_files_for_type___response_is_single_file(
-    requested_type, make_document, make_review, django_app
+    requested_type, make_document, make_review, client
 ):
     review = make_review()
 
     doc = make_document(review=review, document_type=requested_type)
 
-    response = django_app.get(
+    response = client.get(
         reverse(
             "review:review-document-download",
             kwargs={
@@ -67,14 +67,14 @@ def test_single_files_for_type___response_is_single_file(
 
 @pytest.mark.parametrize("requested_type", Document.TYPE._db_values)
 def test_multiple_files_for_type___response_is_zip_file(
-    requested_type, make_document, make_review, django_app
+    requested_type, make_document, make_review, client
 ):
     review = make_review()
 
     doc1 = make_document(review=review, document_type=requested_type)
     doc2 = make_document(review=review, document_type=requested_type)
 
-    response = django_app.get(
+    response = client.get(
         reverse(
             "review:review-document-download",
             kwargs={

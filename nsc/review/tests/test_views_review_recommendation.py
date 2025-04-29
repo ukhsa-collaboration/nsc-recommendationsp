@@ -9,12 +9,12 @@ from nsc.review.models import ReviewRecommendation
 pytestmark = pytest.mark.django_db
 
 
-def test_view(erm_user, make_review, django_app):
+def test_view(erm_user, make_review, client):
     """
     Test that the page can be displayed.
     """
     review = make_review()
-    response = django_app.get(
+    response = client.get(
         reverse("review:recommendation", kwargs={"slug": review.slug}), user=erm_user
     )
     assert response.status == "200 OK"
@@ -42,13 +42,13 @@ def test_view__not_user(make_review, test_access_not_user_can_access):
 
 
 def test_not_all_recommendations_are_updated_errors_are_raised(
-    erm_user, make_review, make_policy, django_app
+    erm_user, make_review, make_policy, client
 ):
     first_policy = make_policy(name="first", summary="")
     second_policy = make_policy(name="second", summary="")
     review = make_review(policies=[first_policy, second_policy])
 
-    response = django_app.get(
+    response = client.get(
         reverse("review:recommendation", kwargs={"slug": review.slug}), user=erm_user
     )
 
@@ -71,13 +71,13 @@ def test_not_all_recommendations_are_updated_errors_are_raised(
 
 
 def test_all_recommendations_are_set_values_are_updated(
-    erm_user, make_review, make_policy, django_app
+    erm_user, make_review, make_policy, client
 ):
     first_policy = make_policy(name="first")
     second_policy = make_policy(name="second")
     review = make_review(policies=[first_policy, second_policy])
 
-    response = django_app.get(
+    response = client.get(
         reverse("review:recommendation", kwargs={"slug": review.slug}), user=erm_user
     )
 

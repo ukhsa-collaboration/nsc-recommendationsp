@@ -15,8 +15,8 @@ def url(review_document):
 
 
 @pytest.fixture
-def response(url, django_app_factory, erm_user):
-    return django_app_factory(csrf_checks=False).post(url, user=erm_user)
+def response(url, client_factory, erm_user):
+    return client_factory(csrf_checks=False).post(url, user=erm_user)
 
 
 def test_delete(response):

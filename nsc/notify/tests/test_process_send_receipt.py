@@ -9,15 +9,15 @@ from nsc.notify.models import Email, ReceiptUserToken
 pytestmark = pytest.mark.django_db
 
 
-def test_request_is_get_response_is_not_allowed(django_app):
+def test_request_is_get_response_is_not_allowed(client):
     assert (
-        django_app.get(reverse("notify:receipt"), expect_errors=True).status_code == 405
+        client.get(reverse("notify:receipt"), expect_errors=True).status_code == 405
     )
 
 
-def test_no_auth_set_response_is_forbidden(django_app):
+def test_no_auth_set_response_is_forbidden(client):
     assert (
-        django_app.post(reverse("notify:receipt"), expect_errors=True).status_code
+        client.post(reverse("notify:receipt"), expect_errors=True).status_code
         == 403
     )
 
@@ -25,9 +25,9 @@ def test_no_auth_set_response_is_forbidden(django_app):
 @pytest.mark.parametrize(
     "token", ["bearer123", "token 123", "bearer", "bearer 123 456"]
 )
-def test_auth_header_is_badly_formed_set_response_is_forbidden(token, django_app):
+def test_auth_header_is_badly_formed_set_response_is_forbidden(token, client):
     assert (
-        django_app.post(
+        client.post(
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": token},
@@ -36,11 +36,11 @@ def test_auth_header_is_badly_formed_set_response_is_forbidden(token, django_app
     )
 
 
-def test_token_does_not_match_a_token_response_is_forbidden(django_app):
+def test_token_does_not_match_a_token_response_is_forbidden(client):
     token = ReceiptUserToken.objects.first()
 
     assert (
-        django_app.post(
+        client.post(
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": f"bearer {token.token}-extra"},
@@ -58,12 +58,12 @@ def test_token_does_not_match_a_token_response_is_forbidden(django_app):
         Email.STATUS.technical_failure,
     ],
 )
-def test_email_object_doesnt_exist_is_not_found(new_status, django_app, make_email):
+def test_email_object_doesnt_exist_is_not_found(new_status, client, make_email):
     token = ReceiptUserToken.objects.first()
     email = make_email(status=Email.STATUS.sending)
 
     assert (
-        django_app.post(
+        client.post(
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": f"bearer {token.token}"},
@@ -82,12 +82,12 @@ def test_email_object_doesnt_exist_is_not_found(new_status, django_app, make_ema
         Email.STATUS.technical_failure,
     ],
 )
-def test_status_is_not_valid_response_is_bad_data(new_status, django_app, make_email):
+def test_status_is_not_valid_response_is_bad_data(new_status, client, make_email):
     token = ReceiptUserToken.objects.first()
     email = make_email(status=Email.STATUS.sending)
 
     assert (
-        django_app.post(
+        client.post(
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": f"bearer {token.token}"},
@@ -106,11 +106,11 @@ def test_status_is_not_valid_response_is_bad_data(new_status, django_app, make_e
         Email.STATUS.technical_failure,
     ],
 )
-def test_status_is_valid_email_is_updated(new_status, django_app, make_email):
+def test_status_is_valid_email_is_updated(new_status, client, make_email):
     token = ReceiptUserToken.objects.first()
     email = make_email(status=Email.STATUS.sending)
 
-    django_app.post(
+    client.post(
         reverse("notify:receipt"),
         expect_errors=True,
         headers={"Authorization": f"bearer {token.token}"},

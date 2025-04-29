@@ -7,12 +7,12 @@ import pytest
 pytestmark = pytest.mark.django_db
 
 
-def test_view(erm_user, make_review, django_app):
+def test_view(erm_user, make_review, client):
     """
     Test that the page can be displayed.
     """
     review = make_review()
-    response = django_app.get(
+    response = client.get(
         reverse("review:stakeholders", kwargs={"slug": review.slug}), user=erm_user
     )
     assert response.status == "200 OK"
