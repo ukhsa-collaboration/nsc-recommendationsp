@@ -1,4 +1,4 @@
-FROM node:12.14.1-slim
+FROM node:20.19.0-slim
 
 # Default to watching
 # Override with:

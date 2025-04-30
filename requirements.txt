@@ -72,7 +72,7 @@ django-simple-history==3.0.0
     # via -r requirements.in
 django-storages==1.12.3
     # via -r requirements.in
-django==3.2.13
+django==5.0.3
     # via
     #   -r requirements.in
     #   django-auth-adfs
