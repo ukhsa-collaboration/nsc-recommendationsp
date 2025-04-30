@@ -77,6 +77,11 @@ const config = {
 
   devtool: 'source-map',
   devServer: {
+    devMiddleware: {
+      writeToDisk: (filePath) => {
+        return filePath.startsWith(pathDistGov);
+      },
+    },
     contentBase: path.resolve(__dirname, pathDist),
     contentBasePublicPath: '/static/',
     publicPath: '/static/',
@@ -85,9 +90,6 @@ const config = {
     port: devServerPort,
     headers: {
       'Access-Control-Allow-Origin': '*'
-    },
-    writeToDisk: (filePath) => {
-      return filePath.startsWith(pathDistGov);
     },
   },
 

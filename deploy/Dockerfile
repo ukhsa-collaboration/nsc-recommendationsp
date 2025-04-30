@@ -7,7 +7,7 @@
 #       This is handled in openshift
 #
 
-FROM centos/python-36-centos7
+FROM python:3.12-slim
 
 USER root
 
