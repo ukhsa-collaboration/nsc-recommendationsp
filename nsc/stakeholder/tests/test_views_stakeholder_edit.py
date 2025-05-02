@@ -44,10 +44,8 @@ def test_back_link(stakeholder, dom):
     """
     Test the back link returns to the list of stakeholders.
     """
-    print("DOM", dom)
     link = dom.find(id="back-link-id")
 
-    # assert link is not None
     assert link["href"] == reverse("stakeholder:detail", kwargs={"pk": stakeholder.pk})
 
     assert link.text.strip() == gettext("Back")
