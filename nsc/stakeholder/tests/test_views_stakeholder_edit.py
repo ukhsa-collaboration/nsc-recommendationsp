@@ -15,8 +15,8 @@ def url(stakeholder):
 
 
 @pytest.fixture
-def response(url, erm_user, client):
-    return client.get(url, user=erm_user)
+def response(url, erm_user, django_app):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture
@@ -44,19 +44,22 @@ def test_back_link(stakeholder, dom):
     """
     Test the back link returns to the list of stakeholders.
     """
+    print("DOM", dom)
     link = dom.find(id="back-link-id")
+
+    # assert link is not None
     assert link["href"] == reverse("stakeholder:detail", kwargs={"pk": stakeholder.pk})
 
     assert link.text.strip() == gettext("Back")
 
 
-def test_success_url__next(erm_user, stakeholder, make_policy, client):
+def test_success_url__next(erm_user, stakeholder, make_policy, django_app):
     """
     Test saving a contact returns to the stakeholder list page.
     """
     policy = make_policy()
     stakeholder_edit = reverse("stakeholder:edit", args=(stakeholder.pk,))
-    response = client.get(f"{stakeholder_edit}?next=/", user=erm_user)
+    response = django_app.get(f"{stakeholder_edit}?next=/", user=erm_user)
     form = response.forms[1]
     form["policies-0-policy"] = policy.id
     actual = form.submit().follow()
