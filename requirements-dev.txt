@@ -40,8 +40,8 @@ bcrypt==3.2.2
     #   paramiko
 beautifulsoup4==4.11.1
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
     #   html2markdown
     #   webtest
 billiard==3.6.4.0
@@ -54,16 +54,16 @@ black==24.2.0
     #   pytest-black
 bleach==4.1.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 bleach-whitelist==0.0.11
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 boto3==1.17.61
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 botocore==1.20.112
     # via
     #   -r requirements-dev.in
@@ -73,8 +73,8 @@ cached-property==1.5.2
     # via -r requirements-dev.in
 celery==5.2.7
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 certifi==2021.10.8
     # via
     #   -r requirements-dev.in
@@ -132,8 +132,8 @@ deprecated==1.2.13
     #   redis
 django==5.0.3
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
     #   django-auth-adfs
     #   django-clear-cache
     #   django-configurations
@@ -146,42 +146,42 @@ django==5.0.3
     #   model-bakery
 django-auth-adfs==1.15.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-clear-cache==0.3
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-configurations==2.5.1
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-debug-toolbar==4.2.0
     # via -r requirements-dev.in
 django-extensions==3.1.5
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-filter==25.1
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-model-utils==5.0.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-redis==5.2.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-simple-history==3.0.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-storages==1.12.3
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 django-webtest==1.9.13
     # via -r requirements-dev.in
 doc8==0.11.2
@@ -199,8 +199,8 @@ docutils==0.16
     #   sphinx-rtd-theme
 envdir==1.0.1
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 fabric==2.7.0
     # via -r requirements-dev.in
 flake8==6.0.0
@@ -211,16 +211,16 @@ freezegun==1.2.1
     # via -r requirements-dev.in
 gunicorn==20.1.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 hiredis==3.1.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 html2markdown==0.1.7
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 idna==3.3
     # via
     #   -r requirements-dev.in
@@ -270,12 +270,12 @@ kombu==5.3.7
     # via celery
 lxml==4.9.3
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 markdown==3.8
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 markupsafe==2.0.1
     # via
     #   -r requirements-dev.in
@@ -294,8 +294,8 @@ mypy-extensions==0.4.3
     #   black
 notifications-python-client==6.3.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 packaging==22.0
     # via
     #   -r requirements-dev.in
@@ -351,8 +351,8 @@ prompt-toolkit==3.0.29
     #   ipython
 psycopg2-binary==2.9.9
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 ptyprocess==0.7.0
     # via
     #   -r requirements-dev.in
@@ -408,8 +408,8 @@ pytest-isort==3.0.0
     # via -r requirements-dev.in
 python-dateutil==2.8.2
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
     #   botocore
     #   freezegun
 pytz==2022.1
@@ -425,8 +425,8 @@ regex==2022.7.9
     # via -r requirements-dev.in
 requests==2.27.1
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
     #   django-auth-adfs
     #   notifications-python-client
     #   sphinx
@@ -440,8 +440,8 @@ s3transfer==0.4.2
     #   boto3
 sentry-sdk==1.5.12
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 six==1.16.0
     # via
     #   -r requirements-dev.in
@@ -556,8 +556,8 @@ wheel==0.37.1
     #   pip-tools
 whitenoise==5.3.0
     # via
-    #   -r /Users/juhi.upreti/Desktop/NSC/nsc-recommendationsp/requirements.in
     #   -r requirements-dev.in
+    #   -r requirements.in
 wrapt==1.14.1
     # via
     #   -r requirements-dev.in
