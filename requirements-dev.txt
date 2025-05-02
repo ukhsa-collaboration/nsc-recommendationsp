@@ -162,7 +162,7 @@ django-extensions==3.1.5
     # via
     #   -r requirements-dev.in
     #   -r requirements.in
-django-filter==23.2
+django-filter==25.1
     # via
     #   -r requirements-dev.in
     #   -r requirements.in
