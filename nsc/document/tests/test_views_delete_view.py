@@ -1,3 +1,4 @@
+from django.test import Client
 from django.urls import reverse
 
 import pytest
@@ -15,12 +16,22 @@ def url(review_document):
 
 
 @pytest.fixture
+def client_factory():
+    def factory(csrf_checks=True):
+        return Client(enforce_csrf_checks=csrf_checks)
+
+    return factory
+
+
+@pytest.fixture
 def response(url, client_factory, erm_user):
-    return client_factory(csrf_checks=False).post(url, user=erm_user)
+    client = client_factory(csrf_checks=False)
+    client.force_login(erm_user)
+    return client.post(url)
 
 
 def test_delete(response):
-    assert response.status == "302 Found"
+    assert response.status_code == 302
     assert Document.objects.count() == 0
 
 

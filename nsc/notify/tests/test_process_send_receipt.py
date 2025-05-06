@@ -10,16 +10,11 @@ pytestmark = pytest.mark.django_db
 
 
 def test_request_is_get_response_is_not_allowed(client):
-    assert (
-        client.get(reverse("notify:receipt"), expect_errors=True).status_code == 405
-    )
+    assert client.get(reverse("notify:receipt"), expect_errors=True).status_code == 405
 
 
 def test_no_auth_set_response_is_forbidden(client):
-    assert (
-        client.post(reverse("notify:receipt"), expect_errors=True).status_code
-        == 403
-    )
+    assert client.post(reverse("notify:receipt"), expect_errors=True).status_code == 403
 
 
 @pytest.mark.parametrize(
@@ -82,12 +77,12 @@ def test_email_object_doesnt_exist_is_not_found(new_status, client, make_email):
         Email.STATUS.technical_failure,
     ],
 )
-def test_status_is_not_valid_response_is_bad_data(new_status, client, make_email):
+def test_status_is_not_valid_response_is_bad_data(new_status, django_app, make_email):
     token = ReceiptUserToken.objects.first()
     email = make_email(status=Email.STATUS.sending)
 
     assert (
-        client.post(
+        django_app.post(
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": f"bearer {token.token}"},
@@ -106,11 +101,11 @@ def test_status_is_not_valid_response_is_bad_data(new_status, client, make_email
         Email.STATUS.technical_failure,
     ],
 )
-def test_status_is_valid_email_is_updated(new_status, client, make_email):
+def test_status_is_valid_email_is_updated(new_status, django_app, make_email):
     token = ReceiptUserToken.objects.first()
     email = make_email(status=Email.STATUS.sending)
 
-    client.post(
+    django_app.post(
         reverse("notify:receipt"),
         expect_errors=True,
         headers={"Authorization": f"bearer {token.token}"},

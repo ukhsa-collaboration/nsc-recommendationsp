@@ -52,11 +52,11 @@ def test_access_no_user(django_app):
 
 
 @pytest.fixture()
-def test_access_not_user_can_access(erm_permission, client):
+def test_access_not_user_can_access(erm_permission, django_app):
     def _test_access_not_user_can_access(url):
         user = baker.make(get_user_model())
         user.user_permissions.add(erm_permission)
-        response = client.get(url, user=user, expect_errors=True)
+        response = django_app.get(url, user=user, expect_errors=True)
         assert response.status == "200 OK"
 
     return _test_access_not_user_can_access

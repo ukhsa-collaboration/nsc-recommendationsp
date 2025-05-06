@@ -15,8 +15,8 @@ def url(stakeholder):
 
 
 @pytest.fixture
-def response(url, erm_user, client):
-    return client.get(url, user=erm_user)
+def response(url, erm_user, django_app):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture

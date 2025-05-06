@@ -23,8 +23,8 @@ def url():
 
 
 @pytest.fixture
-def response(url, erm_user, client):
-    return client.get(url, user=erm_user)
+def response(url, erm_user, django_app):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture
@@ -56,11 +56,11 @@ def test_back_link(dom):
     assert link.text.strip() == _("Back")
 
 
-def test_back_link__next(erm_user, client):
+def test_back_link__next(erm_user, django_app):
     """
     Test the back link returns to the stakeholder list page
     """
-    response = client.get(reverse("stakeholder:add") + "?next=/", user=erm_user)
+    response = django_app.get(reverse("stakeholder:add") + "?next=/", user=erm_user)
     dom = BeautifulSoup(response.content, "html.parser")
     link = dom.find(id="back-link-id")
     assert link["href"] == "/"
@@ -83,11 +83,11 @@ def test_success_url(policy, response):
     assert actual.request.path == Stakeholder.objects.first().get_detail_url()
 
 
-def test_success_url__next(erm_user, policy, client):
+def test_success_url__next(erm_user, policy, django_app):
     """
     Test saving a contact returns to the stakeholder list page.
     """
-    response = client.get(f'{reverse("stakeholder:add")}?next=/', user=erm_user)
+    response = django_app.get(f'{reverse("stakeholder:add")}?next=/', user=erm_user)
     form = response.forms[1]
     form["name"] = "Name"
     form["is_public"] = True
