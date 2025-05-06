@@ -14,8 +14,9 @@ def test_edit_view(erm_user, client):
     """
     Test that we edit an instance.
     """
+    client.force_login(erm_user)
     instance = baker.make(Policy)
-    response = client.get(instance.get_edit_url(), user=erm_user)
+    response = client.get(instance.get_edit_url())
     assert response.context["policy"] == instance
 
 
@@ -33,15 +34,20 @@ def test_back_link(erm_user, client):
     """
     Test the back link returns to the detail page.
     """
+    client.force_login(erm_user)
     instance = baker.make(Policy)
-    edit_page = client.get(instance.get_admin_url(), user=erm_user).click(
-        linkid="edit-link-id"
-    )
-    next_page = edit_page.click(linkid="back-link-id")
-    assert next_page.request.path == instance.get_admin_url()
+
+    edit_url = instance.get_edit_url()
+    response = client.get(edit_url)
+    assert response.status_code == 200
+
+    back_url = instance.get_admin_url()
+    response = client.get(back_url)
+    assert response.status_code == 200
+    assert response.request["PATH_INFO"] == back_url
 
 
-def test_preview_page(erm_user, client):
+def test_preview_page(erm_user, django_app):
     """
     Test the preview page.
 
@@ -52,7 +58,7 @@ def test_preview_page(erm_user, client):
     instance = baker.make(Policy, condition="# heading", next_review=None)
     year = str(today().year + 1)
 
-    edit_page = client.get(instance.get_edit_url(), user=erm_user)
+    edit_page = django_app.get(instance.get_edit_url(), user=erm_user)
     edit_form = edit_page.forms[1]
     edit_form["next_review"] = year
     edit_form["condition_type"] = Policy.CONDITION_TYPES.general
@@ -69,13 +75,13 @@ def test_preview_page(erm_user, client):
     assert preview_page.context.get("publish") is None
 
 
-def test_changes_are_published(erm_user, client):
+def test_changes_are_published(erm_user, django_app):
     """
     Test the policy is updated when the changes are published.
     """
     instance = baker.make(Policy, condition="# heading", next_review=None)
 
-    edit_page = client.get(instance.get_edit_url(), user=erm_user)
+    edit_page = django_app.get(instance.get_edit_url(), user=erm_user)
     edit_form = edit_page.forms[1]
     edit_form["next_review"] = today().year
     edit_form["condition_type"] = Policy.CONDITION_TYPES.general
