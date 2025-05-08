@@ -1,13 +1,14 @@
+@use "govuk-frontend/dist/govuk" as govuk;
 .title-field,
 .first-name-field,
 .last-name-field {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 $govuk-gutter-half;
+  padding: 0 govuk.$govuk-gutter-half;
 }
 
 .title-field {
-  @include govuk-media-query($from: tablet) {
+  @include govuk.govuk-media-query($from: tablet) {
     width: 20%;
     float: left;
   }
@@ -15,7 +16,7 @@
 
 .first-name-field,
 .last-name-field {
-  @include govuk-media-query($from: tablet) {
+  @include govuk.govuk-media-query($from: tablet) {
     width: 40%;
     float: left;
   }
