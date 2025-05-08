@@ -60,7 +60,7 @@ def get_recommendation(node):
 def scrape_row(row):
     fields = row.find_all("td")
     if len(fields) < 3:
-        print("⚠️ Skipping row: not enough <td> fields")
+        print("Skipping row: not enough <td> fields")
         return None
     return {
         "name": get_name(fields[0]),

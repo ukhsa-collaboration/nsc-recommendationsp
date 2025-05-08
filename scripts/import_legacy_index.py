@@ -13,7 +13,7 @@ def run():
         data = json.load(f)
 
     if not data:
-        print("⚠️ No data to import. legacy_index.json is empty.")
+        print("No data to import. legacy_index.json is empty.")
         return
 
     count = 0
@@ -36,7 +36,7 @@ def run():
                 "background_html": convert(item.get("background", "")),
             },
         )
-        print(f"{'✔️ Created' if created else '🔄 Updated'}: {obj.name}")
+        print(f"{'Created' if created else 'Updated'}: {obj.name}")
         count += 1 if created else 0
 
     print(f"\nImported or updated {count} policies.")
