@@ -6,6 +6,7 @@ WORKDIR /build
 # Build process dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+    postgresql-client \
     gcc \
     libc6-dev \
     netcat-openbsd \
