@@ -21,6 +21,7 @@ pytest-django
 pytest-isort
 pytest-flake8==1.0.7
 freezegun
+markdown>=3.4.1
 
 # Documentation
 sphinx==3.5.4

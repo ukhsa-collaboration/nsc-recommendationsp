@@ -27,16 +27,9 @@ class PolicyQuerySet(models.QuerySet):
         return self.filter(is_active=True)
 
     def overdue(self):
-        """
-        Get the policies where the next review is in the past.
-        """
         return self.filter(Q(next_review__lt=get_today()) | Q(next_review__isnull=True))
 
     def upcoming(self):
-        """
-        Get the policies due for a review in the next 12 month, ordered by the
-        next review date, soonest, first.
-        """
         today = get_today()
         next_year = today + relativedelta(months=12)
         return self.filter(next_review__gte=today, next_review__lt=next_year)
@@ -47,35 +40,21 @@ class PolicyQuerySet(models.QuerySet):
         )
 
     def in_progress(self):
-        """
-        Get the policies which have a review in progress of any state.
-        """
         return self.exclude(reviews__published=True)
 
     def open_for_comments(self):
-        """
-        Get the policies which are currently in review and where the period for
-        public comments is open.
-        """
         review_model = apps.get_model(app_label="review", model_name="Review")
         return self.filter(
             reviews__in=review_model.objects.open_for_comments()
         ).distinct()
 
     def closed_for_comments(self):
-        """
-        Get the policies which are currently not open for public comments - either
-        because they are not in review or in review but not in that particular phase.
-        """
         review_model = apps.get_model(app_label="review", model_name="Review")
         return self.filter(
             reviews__in=review_model.objects.closed_for_comments()
         ).distinct()
 
     def prefetch_reviews_in_consultation(self):
-        """
-        Get the list of Policies, pre-fetching any reviews that are currently open for comment.
-        """
         return self.prefetch_related(
             Prefetch(
                 "reviews",
@@ -108,8 +87,8 @@ class Policy(TimeStampedModel):
     condition_type = models.CharField(choices=CONDITION_TYPES, max_length=8, null=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
-    recommendation = models.NullBooleanField(
-        verbose_name=_("recommendation"), default=None
+    recommendation = models.BooleanField(
+        verbose_name=_("recommendation"), null=True, default=None
     )
 
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
@@ -197,10 +176,6 @@ class Policy(TimeStampedModel):
 
     @cached_property
     def reviews_for_public_documents(self):
-        """
-        Two cycles of supporting documents are shown for public,
-        once a in open consultation only one is show.
-        """
         limit = 2
         if self.current_review and self.current_review.in_consultation():
             limit = 1
@@ -222,7 +197,6 @@ class Policy(TimeStampedModel):
     def send_notifications(self, relation, template, extra_context=None):
         email_context = self.get_email_context(**(extra_context or {}))
 
-        # find each stakeholder without a notification object and create one
         existing_notification_emails = relation.values_list("address", flat=True)
         relation.add(
             *Email.objects.bulk_create(

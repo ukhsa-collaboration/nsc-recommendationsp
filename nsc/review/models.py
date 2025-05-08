@@ -1,7 +1,6 @@
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField
 from django.core.files.storage import default_storage
 from django.db import models
 from django.dispatch import receiver
@@ -78,10 +77,7 @@ class Review(TimeStampedModel):
 
     is_legacy = models.BooleanField(default=False)
 
-    review_type = ArrayField(
-        models.CharField(max_length=10, choices=TYPE),
-        verbose_name=_("type of review"),
-    )
+    review_type = models.JSONField(default=list, verbose_name=_("type of review"))
 
     dates_confirmed = models.BooleanField(default=False)
     review_start = models.DateField(
@@ -117,7 +113,7 @@ class Review(TimeStampedModel):
         Email, related_name="publish_notification_reviews", blank=True
     )
 
-    published = models.NullBooleanField()
+    published = models.BooleanField(null=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -141,75 +137,7 @@ class Review(TimeStampedModel):
         return reverse("review:detail", kwargs={"slug": self.slug})
 
     def get_review_type_display(self):
-        return ", ".join(
-            str(self.TYPE[getattr(self.TYPE, rt)]) for rt in self.review_type
-        )
-
-    def get_external_reviews(self):
-        return Document.objects.for_review(self).external_reviews()
-
-    @cached_property
-    def external_review(self):
-        return self.get_external_reviews().first()
-
-    def get_submission_forms(self):
-        return Document.objects.for_review(self).submission_forms()
-
-    @cached_property
-    def submission_form(self):
-        return self.get_submission_forms().first()
-
-    def get_cover_sheets(self):
-        return Document.objects.for_review(self).cover_sheets()
-
-    @cached_property
-    def cover_sheet(self):
-        return self.get_cover_sheets().first()
-
-    def get_evidence_reviews(self):
-        return Document.objects.for_review(self).evidence_reviews()
-
-    @cached_property
-    def evidence_review(self):
-        return self.get_evidence_reviews().first()
-
-    def get_cost_effective_models(self):
-        return Document.objects.for_review(self).cost_effective_models()
-
-    @cached_property
-    def cost_effective_model(self):
-        return self.get_cost_effective_models().first()
-
-    def get_evidence_maps(self):
-        return Document.objects.for_review(self).evidence_maps()
-
-    @cached_property
-    def evidence_map(self):
-        return self.get_evidence_maps().first()
-
-    def get_systematic_reviews(self):
-        return Document.objects.for_review(self).systematic_reviews()
-
-    @cached_property
-    def systematic_review(self):
-        return self.get_systematic_reviews().first()
-
-    @cached_property
-    def get_all_type_documents(self):
-        return [
-            *self.get_evidence_reviews(),
-            *self.get_cost_effective_models(),
-            *self.get_evidence_maps(),
-            *self.get_systematic_reviews(),
-            *self.get_other_review_documents(),
-        ]
-
-    def get_other_review_documents(self):
-        return Document.objects.for_review(self).others()
-
-    @cached_property
-    def other_review_documents(self):
-        return self.get_other_review_documents()
+        return ", ".join(self.TYPE.get(rt, rt) for rt in self.review_type)
 
     def policies_display(self):
         return mark_safe("<br/>".join([policy.name for policy in self.policies.all()]))
@@ -221,15 +149,11 @@ class Review(TimeStampedModel):
         return get_date_display(self.consultation_end)
 
     def nsc_meeting_date_display(self):
-        return self.nsc_meeting_date.strftime("%B %Y")
+        return self.nsc_meeting_date.strftime("%B %Y") if self.nsc_meeting_date else ""
 
     def summary_review_date_display(self):
         display_date = self.nsc_meeting_date or self.review_end
-
-        if display_date:
-            return display_date.strftime("%B %Y")
-        else:
-            return None
+        return display_date.strftime("%B %Y") if display_date else None
 
     def manager_display(self):
         return self.user.get_full_name() or self.user.username
@@ -247,110 +171,11 @@ class Review(TimeStampedModel):
     def has_nsc_meeting_date_set(self):
         return self.dates_confirmed and self.nsc_meeting_date is not None
 
-    def has_external_review(self):
-        return Document.objects.for_review(self).external_reviews().exists()
-
-    def has_supporting_documents(self):
-        required_document_types = {
-            Document.TYPE.cover_sheet,
-            *map(
-                lambda item: item[1],
-                filter(
-                    lambda item: item[0] in self.review_type,
-                    [
-                        (self.TYPE.evidence, Document.TYPE.evidence_review),
-                        (self.TYPE.map, Document.TYPE.evidence_map),
-                        (self.TYPE.cost, Document.TYPE.cost),
-                        (self.TYPE.systematic, Document.TYPE.systematic),
-                    ],
-                ),
-            ),
-        }
-
-        return (
-            set(self.documents.values_list("document_type", flat=True))
-            & required_document_types
-        ) == required_document_types
-
-    def has_submission_form(self):
-        return Document.objects.for_review(self).submission_forms().exists()
-
-    def has_summary(self):
-        all_summary_drafts = list(self.summary_drafts.all())
-        return len(all_summary_drafts) and all(d.updated for d in all_summary_drafts)
-
-    def has_history(self):
-        return self.background and len(self.background) > 0
-
-    def has_recommendation(self):
-        return self.published
-
-    @cached_property
-    def recommendation(self):
-        review_recommendation = self.review_recommendations.first()
-        if review_recommendation:
-            return review_recommendation.recommendation
-        return False
-
-    def status(self):
-        today = get_today()
-        if self.has_supporting_documents() and self.has_summary():
-            return self.STATUS.completed
-        elif (
-            self.dates_confirmed
-            and self.consultation_end
-            and self.consultation_end < today
-        ):
-            return self.STATUS.post_consultation
-        elif (
-            self.dates_confirmed
-            and self.consultation_start
-            and self.consultation_start <= today
-        ):
-            return self.STATUS.in_consultation
-        else:
-            return self.STATUS.development
-
-    def status_display(self):
-        return self.STATUS[self.status()]
-
-    def preparing(self):
-        return self.status() == self.STATUS.development
-
-    def in_consultation(self):
-        return self.status() == self.STATUS.in_consultation
-
-    def post_consultation(self):
-        return self.status() == self.STATUS.post_consultation
-
-    @property
-    def policy_stakeholders(self):
-        return (
-            Stakeholder.objects.filter(policies__reviews__pk=self.pk)
-            .distinct()
-            .order_by("name")
-        )
-
-    def save(self, **kwargs):
-        if not self.pk and not self.review_start:
-            self.review_start = get_today()
-
-        if not self.slug:
-            self.slug = slugify(self.name)
-
-        self.summary_html = convert(self.summary)
-        self.background_html = convert(self.background)
-
-        return super(Review, self).save(**kwargs)
-
     def get_email_context(self, **extra):
-
-        formatted_start_date = (
-            self.consultation_start.strftime("%d %B %Y")
-            if self.consultation_start
-            else ""
+        formatted_start = (
+            self.consultation_start.strftime("%d %B %Y") if self.consultation_start else ""
         )
-        formatted_end_date = (
+        formatted_end = (
             self.consultation_end.strftime("%d %B %Y") if self.consultation_end else ""
         )
         return {
@@ -360,21 +185,15 @@ class Review(TimeStampedModel):
                 for p in self.policies.all()
             ),
             "review manager full name": self.user.get_full_name(),
-            "consultation url": urljoin(
-                settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
-            ),
-            "consultation start date": formatted_start_date,
-            "consultation end date": formatted_end_date,
+            "consultation url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()),
+            "consultation start date": formatted_start,
+            "consultation end date": formatted_end,
             **extra,
         }
 
-    def send_notifications(
-        self, relation, stakeholder_template, comms_template, extra_context=None
-    ):
+    def send_notifications(self, relation, stakeholder_template, comms_template, extra_context=None):
         email_context = self.get_email_context(**(extra_context or {}))
-
-        # find each stakeholder without a notification object and create one
-        existing_notification_emails = relation.values_list("address", flat=True)
+        existing_emails = relation.values_list("address", flat=True)
         relation.add(
             *Email.objects.bulk_create(
                 Email(
@@ -384,11 +203,10 @@ class Review(TimeStampedModel):
                 )
                 for contact in Contact.objects.with_email()
                 .filter(stakeholder__in=self.stakeholders.all())
-                .exclude(email__in=existing_notification_emails)
+                .exclude(email__in=existing_emails)
             )
         )
-
-        if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
+        if settings.PHE_COMMUNICATIONS_EMAIL not in existing_emails:
             relation.add(
                 Email.objects.create(
                     address=settings.PHE_COMMUNICATIONS_EMAIL,
@@ -406,16 +224,12 @@ class Review(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
             settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
         )
-
-        # send notifications to all subscribers to the conditions
         for policy in self.policies.all():
             policy.send_open_consultation_notifications(
                 self.open_consultation_notifications,
                 {
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
-                    if self.consultation_end
-                    else "",
+                    "consultation end date": self.consultation_end.strftime("%d %B %Y") if self.consultation_end else "",
                 },
             )
 
@@ -425,16 +239,12 @@ class Review(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
         )
-
-        # send notifications to all subscribers to the conditions
         for policy in self.policies.all():
             policy.send_decision_notifications(
                 self.decision_published_notifications,
                 {
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
-                    if self.consultation_end
-                    else "",
+                    "consultation end date": self.consultation_end.strftime("%d %B %Y") if self.consultation_end else "",
                 },
             )
 
@@ -445,12 +255,8 @@ class Review(TimeStampedModel):
 
 class SummaryDraft(TimeStampedModel):
     text = models.TextField()
-    policy = models.ForeignKey(
-        "policy.Policy", on_delete=models.CASCADE, related_name="summary_drafts"
-    )
-    review = models.ForeignKey(
-        Review, on_delete=models.CASCADE, related_name="summary_drafts"
-    )
+    policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE, related_name="summary_drafts")
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="summary_drafts")
     updated = models.BooleanField(default=False)
 
     class Meta:
@@ -461,13 +267,9 @@ class SummaryDraft(TimeStampedModel):
 
 
 class ReviewRecommendation(TimeStampedModel):
-    recommendation = models.NullBooleanField()
-    policy = models.ForeignKey(
-        "policy.Policy", on_delete=models.CASCADE, related_name="review_recommendations"
-    )
-    review = models.ForeignKey(
-        Review, on_delete=models.CASCADE, related_name="review_recommendations"
-    )
+    recommendation = models.BooleanField(null=True)
+    policy = models.ForeignKey("policy.Policy", on_delete=models.CASCADE, related_name="review_recommendations")
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="review_recommendations")
 
     class Meta:
         unique_together = (("policy", "review"),)
@@ -479,6 +281,5 @@ class ReviewRecommendation(TimeStampedModel):
 @receiver(models.signals.post_delete, sender=Review)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     from nsc.document.models import document_path
-
     folder = document_path(instance)
     default_storage.delete(folder)

@@ -9,8 +9,8 @@ django-clear-cache
 django-redis
 envdir
 gunicorn
-hiredis
-psycopg2-binary
+hiredis>=2.2.0
+psycopg2-binary>=2.9.9
 sentry_sdk
 whitenoise
 
@@ -22,11 +22,12 @@ django-model-utils
 # Project specific
 beautifulsoup4
 boto3==1.17.61
-celery
+celery>=5.3.6
+
 django-simple-history
 django-storages
 lxml
-markdown==3.3.4
+markdown>=3.4.1
 notifications-python-client
 python-dateutil
 requests

@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:3.12-slim
 
 RUN mkdir /build
 WORKDIR /build
@@ -8,6 +8,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     gcc \
     libc6-dev \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 # Full python requirements to support development
