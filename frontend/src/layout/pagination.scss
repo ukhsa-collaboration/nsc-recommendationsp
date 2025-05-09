@@ -2,7 +2,7 @@
 // https://github.com/alphagov/govuk-design-system-backlog/issues/77
 // The following was taken from
 // https://home-office-digital-patterns.herokuapp.com/components/pagination
-
+@use '~govuk-frontend/dist/govuk' as govuk;
 .pagination .pagination_list-items {
 
   li {
@@ -68,7 +68,7 @@ button.pagination__link {
   background-color: transparent;
   border: 0;
   font-size: 1em;
-  color: $govuk-link-colour;
+  color: govuk.$govuk-link-colour;
 
   &.current {
     color: inherit;

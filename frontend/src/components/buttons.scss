@@ -1,8 +1,9 @@
+@use "govuk-frontend/dist/govuk" as govuk; 
 button.as-link {
   background-color: transparent;
   border: 0;
   font-size: 1em;
-  color: $govuk-link-colour;
+  color: govuk.$govuk-link-colour;
 
   &:hover {
     text-decoration: underline;

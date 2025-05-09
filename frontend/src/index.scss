@@ -1,8 +1,8 @@
 $govuk-assets-path: "/static/govuk/";
 
-@import "govuk-frontend/govuk/index";
-@import "~accessible-autocomplete";
+@use "govuk-frontend/dist/govuk";
+@use "accessible-autocomplete" as autocomplete;;
 
-@import "layout";
-@import "pages";
-@import "components";
+@use "layout";
+@use "pages";
+@use "components";
