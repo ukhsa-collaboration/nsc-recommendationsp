@@ -24,7 +24,7 @@ def test_page(response):
     """
     Test the consultation page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
 
 
 def test_back_link(response, dom):

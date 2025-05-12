@@ -64,13 +64,13 @@ def test_policy_is_closed(client):
 
 
 @pytest.mark.parametrize("num_policies", [1, 9])
-def test_list_view_query_count(num_policies, client, django_assert_num_queries):
+def test_list_view_query_count(num_policies, django_app, django_assert_num_queries):
     """
     Test that fetching the list takes a fixed number of queries.
     """
     baker.make(Policy, _quantity=num_policies)
     with django_assert_num_queries(3):
-        client.get(condition_list_url)
+        django_app.get(condition_list_url)
 
 
 def test_list_view_is_paginated(client):
@@ -87,11 +87,13 @@ def test_search_form_blank(client):
     """
     Test that the fields in the search form are initially blank.
     """
-    form = client.get(condition_list_url).forms[1]
-    assert form["name"].value == ""
-    assert form["comments"].value is None
-    assert form["affects"].value is None
-    assert form["screen"].value is None
+    response = client.get(condition_list_url)
+    form = response.context["form"]
+
+    assert form.fields["name"].initial in (None, "")
+    assert form.fields["comments"].initial is None
+    assert form.fields["affects"].initial is None
+    assert form.fields["screen"].initial is None
 
 
 def test_search_on_condition_name(client):
@@ -113,7 +115,7 @@ def test_search_on_open_for_comment(client):
     policy = baker.make(Policy, name="name")
     review = baker.make(Review, consultation_start=tomorrow, consultation_end=later)
     policy.reviews.add(review)
-    response = client.get(condition_list_url, comments="open")
+    response = client.get(condition_list_url, {"comments":"open"})
     assert not response.context["object_list"]
 
 
@@ -122,7 +124,7 @@ def test_search_on_age_affected(client):
     Test the list of policies can be filtered by the age of those affected.
     """
     baker.make(Policy, ages="{adult}")
-    response = client.get(condition_list_url, affects="child")
+    response = client.get(condition_list_url, {"affects":"child"})
     assert not response.context["object_list"]
 
 
@@ -132,7 +134,7 @@ def test_search_on_recommendation(client):
     screened for or not.
     """
     baker.make(Policy, recommendation=False)
-    response = client.get(condition_list_url, screen="yes")
+    response = client.get(condition_list_url, {"screen":"yes"})
     assert not response.context["object_list"]
 
 
@@ -140,27 +142,30 @@ def test_search_form_shows_name_term(client):
     """
     Test when the search results are shown the form shows the entered condition name.
     """
-    form = client.get(condition_list_url, name="name").forms[1]
-    assert form["name"].value == "name"
-    assert form["affects"].value is None
-    assert form["screen"].value is None
+    response = client.get(condition_list_url, {"name":"name"})
+    form = response.context["form"]
+    assert form["name"].value() == "name"
+    assert form["affects"].value() is None
+    assert form["screen"].value() is None
 
 
 def test_search_form_shows_affects_term(client):
     """
     Test when the search results are shown the form shows the selected age.
     """
-    form = client.get(condition_list_url, affects="child").forms[1]
-    assert form["name"].value == ""
-    assert form["affects"].value == "child"
-    assert form["screen"].value is None
+    response = client.get(condition_list_url, {"affects":"child"})
+    form = response.context["form"]
+    assert form["name"].value() is None
+    assert form["affects"].value() == "child"
+    assert form["screen"].value() is None
 
 
 def test_search_form_shows_screen_term(client):
     """
     Test when the search results are shown the form shows the selected recommendation.
     """
-    form = client.get(condition_list_url, screen="no").forms[1]
-    assert form["name"].value == ""
-    assert form["affects"].value is None
-    assert form["screen"].value == "no"
+    response = client.get(condition_list_url, {"screen":"no"})
+    form = response.context["form"]
+    assert form["name"].value() is None
+    assert form["affects"].value() is None
+    assert form["screen"].value() == "no"
