@@ -17,6 +17,7 @@ def url(make_review, client):
 
 @pytest.fixture
 def response(url, erm_user, client):
+    client.force_login(erm_user)
     return client.get(url, user=erm_user)
 
 
@@ -29,7 +30,7 @@ def test_view(response):
     """
     Test that the page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
 
 
 def test_view__no_user(url, test_access_no_user):
