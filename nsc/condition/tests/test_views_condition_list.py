@@ -115,7 +115,7 @@ def test_search_on_open_for_comment(client):
     policy = baker.make(Policy, name="name")
     review = baker.make(Review, consultation_start=tomorrow, consultation_end=later)
     policy.reviews.add(review)
-    response = client.get(condition_list_url, {"comments":"open"})
+    response = client.get(condition_list_url, {"comments": "open"})
     assert not response.context["object_list"]
 
 
@@ -124,7 +124,7 @@ def test_search_on_age_affected(client):
     Test the list of policies can be filtered by the age of those affected.
     """
     baker.make(Policy, ages="{adult}")
-    response = client.get(condition_list_url, {"affects":"child"})
+    response = client.get(condition_list_url, {"affects": "child"})
     assert not response.context["object_list"]
 
 
@@ -134,7 +134,7 @@ def test_search_on_recommendation(client):
     screened for or not.
     """
     baker.make(Policy, recommendation=False)
-    response = client.get(condition_list_url, {"screen":"yes"})
+    response = client.get(condition_list_url, {"screen": "yes"})
     assert not response.context["object_list"]
 
 
@@ -142,7 +142,7 @@ def test_search_form_shows_name_term(client):
     """
     Test when the search results are shown the form shows the entered condition name.
     """
-    response = client.get(condition_list_url, {"name":"name"})
+    response = client.get(condition_list_url, {"name": "name"})
     form = response.context["form"]
     assert form["name"].value() == "name"
     assert form["affects"].value() is None
@@ -153,7 +153,7 @@ def test_search_form_shows_affects_term(client):
     """
     Test when the search results are shown the form shows the selected age.
     """
-    response = client.get(condition_list_url, {"affects":"child"})
+    response = client.get(condition_list_url, {"affects": "child"})
     form = response.context["form"]
     assert form["name"].value() is None
     assert form["affects"].value() == "child"
@@ -164,7 +164,7 @@ def test_search_form_shows_screen_term(client):
     """
     Test when the search results are shown the form shows the selected recommendation.
     """
-    response = client.get(condition_list_url, {"screen":"no"})
+    response = client.get(condition_list_url, {"screen": "no"})
     form = response.context["form"]
     assert form["name"].value() is None
     assert form["affects"].value() is None

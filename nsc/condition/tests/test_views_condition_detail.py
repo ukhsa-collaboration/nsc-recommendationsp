@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 import pytest
+from django_webtest import WebTest
 from model_bakery import baker
 
 from nsc.policy.models import Policy
@@ -23,20 +24,6 @@ def test_detail_view(client):
     assert response.context["policy"] == instance
 
 
-def test_back_link(client):
-    """
-    Test the back link returns to the previous page. This ensures that search results
-    are not lost.
-    """
-    instance = baker.make(Policy, name="condition", ages="{child}")
-    form = client.get(reverse("condition:list")).forms[1]
-    form["affects"] = "child"
-    results = form.submit()
-    detail = results.click(href=instance.get_public_url())
-    referer = detail.click(linkid="back-link-id")
-    assert results.request.url == referer.request.url
-
-
 def test_consultation_status_for_review_in_pre_consultation(
     review_in_pre_consultation, client
 ):
@@ -45,25 +32,29 @@ def test_consultation_status_for_review_in_pre_consultation(
     in the pre-consultation phase.
     """
     policy = review_in_pre_consultation.policies.first()
-    page = client.get(policy.get_public_url())
-    assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in page
-    assert "This condition is currently under review." in page
+    response = client.get(policy.get_public_url())
+
+    html = response.content.decode("utf-8")
+
+    assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in html
+    assert "This condition is currently under review." in html
 
 
-def test_consultation_status_for_review_in_consultation(
-    review_in_consultation, client
-):
+def test_consultation_status_for_review_in_consultation(review_in_consultation, client):
     """
     Test the link to submit a comment is not visible when a review is
     in the pre-consultation phase.
     """
     policy = review_in_consultation.policies.first()
-    page = client.get(policy.get_public_url())
-    assert reverse("condition:consultation", kwargs={"slug": policy.slug}) in page
+    response = client.get(policy.get_public_url())
+
+    html = response.content.decode("utf-8")
+
+    assert reverse("condition:consultation", kwargs={"slug": policy.slug}) in html
     assert (
         "The UK NSC is consulting on whether to change its "
-        "recommendation on this condition and is accepting public comments." in page
-    )
+        "recommendation on this condition and is accepting public comments."
+    ) in html
 
 
 def test_consultation_status_for_review_in_post_consultation(
@@ -74,9 +65,11 @@ def test_consultation_status_for_review_in_post_consultation(
     in this post-consultation phase.
     """
     policy = review_in_post_consultation.policies.first()
-    page = client.get(policy.get_public_url())
-    assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in page
-    assert "We are no longer accepting comments on this condition." in page
+    response = client.get(policy.get_public_url())
+    html = response.content.decode("utf-8")
+
+    assert reverse("condition:consultation", kwargs={"slug": policy.slug}) not in html
+    assert "We are no longer accepting comments on this condition." in html
 
 
 def test_consultation_status_for_review_is_completed(review_completed, client):
@@ -102,9 +95,12 @@ def test_consultation_closing_date(review_in_consultation, client):
     Test the closing date is shown for a review in the consultation phase.
     """
     policy = review_in_consultation.policies.first()
-    page = client.get(policy.get_public_url())
+    response = client.get(policy.get_public_url())
+    html = response.content.decode("utf-8")
     date = get_date_display(review_in_consultation.consultation_end)
-    assert str(_("Closing date: %s" % date)) in page
+
+    expected_text = str(_("Closing date: %s" % date))
+    assert expected_text in html
 
 
 def test_consultation_archived(client):
@@ -112,10 +108,12 @@ def test_consultation_archived(client):
     Test the link to submit a comment is not visible when a review has been published.
     """
     policy = baker.make(Policy, name="condition", archived=True)
-    page = client.get(policy.get_public_url())
+    response = client.get(policy.get_public_url())
+    html = response.content.decode("utf-8")
+
     assert (
         "This recommendation has been archived and is no longer regularly reviewed by the UK NSC."
-        in page
+        in html
     )
 
 
@@ -125,7 +123,23 @@ def test_previous_documents__in_consultation(
     """
     Test that the correct number of review documents is shown when in consultation.
     """
+    # instance = review_in_consultation.policies.first()
+    # for year in [2019, 2018]:
+    #     review = make_review(
+    #         name="review_a",
+    #         review_start=date(year, 1, 1),
+    #         review_end=date(year, 2, 1),
+    #         published=True,
+    #     )
+    #     instance.reviews.add(review)
+    #     make_review_recommendation(policy=instance, review=review, recommendation=True)
+
+    # page = client.get(instance.get_public_url())
+    # assert str("Supporting documents from the 2019 review") in page
+    # assert str("Supporting documents from the 2018 review") not in page
+
     instance = review_in_consultation.policies.first()
+
     for year in [2019, 2018]:
         review = make_review(
             name="review_a",
@@ -136,9 +150,11 @@ def test_previous_documents__in_consultation(
         instance.reviews.add(review)
         make_review_recommendation(policy=instance, review=review, recommendation=True)
 
-    page = client.get(instance.get_public_url())
-    assert str("Supporting documents from the 2019 review") in page
-    assert str("Supporting documents from the 2018 review") not in page
+    response = client.get(instance.get_public_url())
+    html = response.content.decode("utf-8")
+
+    assert "Supporting documents from the 2019 review" in html
+    assert "Supporting documents from the 2018 review" not in html
 
 
 def test_previous_documents__not_in_consultation(
@@ -148,6 +164,7 @@ def test_previous_documents__not_in_consultation(
     Test that the correct number of review documents is shown when not in consultation.
     """
     instance = baker.make(Policy)
+
     for year in [2019, 2018]:
         review = make_review(
             name="review_a",
@@ -158,6 +175,29 @@ def test_previous_documents__not_in_consultation(
         instance.reviews.add(review)
         make_review_recommendation(policy=instance, review=review, recommendation=True)
 
-    page = client.get(instance.get_public_url())
-    assert str("Supporting documents from the 2019 review") in page
-    assert str("Supporting documents from the 2018 review") in page
+    response = client.get(instance.get_public_url())
+    html = response.content.decode("utf-8")
+
+    assert "Supporting documents from the 2019 review" in html
+    assert "Supporting documents from the 2018 review" in html
+
+
+class TestViewConditionDetail(WebTest):
+    def test_back_link(self):
+        # Create a test Policy instance
+        instance = baker.make(Policy, name="condition", ages="{child}")
+
+        # Load the search form page and submit the form
+        page = self.app.get(reverse("condition:list"))
+        form = page.forms[1]
+        form["affects"] = "child"
+        results = form.submit()
+
+        # Click the link to the detail page
+        detail = results.click(href=instance.get_public_url())
+
+        # Click the "back" link
+        referer = detail.click(linkid="back-link-id")
+
+        # Assert that we returned to the search results page
+        assert results.request.url == referer.request.url
