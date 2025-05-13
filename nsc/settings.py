@@ -149,7 +149,6 @@ class Common(Configuration):
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "django_extensions",
-        "clear_cache",
         "simple_history",
         "storages",
         "django_filters",

@@ -3,9 +3,9 @@
 #
 
 # Core Django and deployment
-django>=3.2,<4.0
-django-configurations
-django-clear-cache
+django>=5.0,<6.0
+django-configurations>=2.5.1
+django-cache-cleaner
 django-redis
 envdir
 gunicorn
@@ -34,4 +34,4 @@ requests
 html2markdown
 bleach
 bleach_whitelist
-django-auth-adfs
+django-auth-adfs>=1.15.0
