@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from django.urls import reverse
 
 import pytest
@@ -17,6 +19,7 @@ def url(stakeholder):
 
 @pytest.fixture
 def response(url, erm_user, client):
+    client.force_login(erm_user)
     return client.get(url, user=erm_user)
 
 
@@ -29,7 +32,7 @@ def test_delete_view(stakeholder, response):
     """
     Test that the delete stakeholder page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
     assert response.context["object"] == stakeholder
 
 
@@ -50,17 +53,25 @@ def test_back_link(stakeholder, dom):
     assert stakeholder.name in link.text
 
 
-def test_success_url(response):
+def test_success_url(response, client, stakeholder):
     """
     Test deleting an stakeholder returns to the stakeholder list page.
     """
-    actual = response.forms[1].submit().follow()
-    assert actual.request.path == reverse("stakeholder:list")
+    # client.force_login(erm_user)
+    url = reverse("stakeholder:delete", kwargs={"pk": stakeholder.pk})
+    response = client.post(url)
+
+    # Strip fragment and compare only path
+    parsed_url = urlparse(response.url)
+    assert parsed_url.path == reverse("stakeholder:list")
 
 
-def test_stakeholder_deleted(stakeholder, response):
+def test_stakeholder_deleted(stakeholder, client, response):
     """
     Test that the stakeholder object is deleted from the database.
     """
-    response.forms[1].submit().follow()
+    # client.force_login(erm_user)
+    url = reverse("stakeholder:delete", kwargs={"pk": stakeholder.pk})
+    client.post(url)
+
     assert not Stakeholder.objects.filter(pk=stakeholder.pk).exists()

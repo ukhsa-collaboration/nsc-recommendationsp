@@ -16,6 +16,7 @@ def url(stakeholder):
 
 @pytest.fixture
 def response(url, erm_user, client):
+    client.force_login(erm_user)
     return client.get(url, user=erm_user)
 
 
@@ -28,7 +29,7 @@ def test_detail_view(stakeholder, response):
     """
     Test that the stakeholder detail page can be displayed
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
     assert response.context["stakeholder"] == stakeholder
 
 
