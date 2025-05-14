@@ -161,3 +161,4 @@ def test_previous_documents__not_in_consultation(
     page = client.get(instance.get_public_url())
     assert str("Supporting documents from the 2019 review") in page
     assert str("Supporting documents from the 2018 review") in page
+    
