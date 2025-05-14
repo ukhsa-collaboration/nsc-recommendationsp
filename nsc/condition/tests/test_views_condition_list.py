@@ -64,13 +64,13 @@ def test_policy_is_closed(client):
 
 
 @pytest.mark.parametrize("num_policies", [1, 9])
-def test_list_view_query_count(num_policies, django_app, django_assert_num_queries):
+def test_list_view_query_count(num_policies, client, django_assert_num_queries):
     """
     Test that fetching the list takes a fixed number of queries.
     """
     baker.make(Policy, _quantity=num_policies)
     with django_assert_num_queries(3):
-        django_app.get(condition_list_url)
+        client.get(condition_list_url)
 
 
 def test_list_view_is_paginated(client):

@@ -1,5 +1,6 @@
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
+from urllib.parse import urlsplit
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
@@ -33,20 +34,27 @@ def non_user():
 
 
 @pytest.fixture()
-def test_access_forbidden(non_user, django_app):
+def test_access_forbidden(non_user, client):
     def _test_access_forbidden(url):
-        response = django_app.get(url, user=non_user, expect_errors=True)
-        assert response.status == "403 Forbidden"
+        client.force_login(non_user)
+        response = client.get(url, user=non_user, expect_errors=True)
+        assert response.status_code == 403
 
     return _test_access_forbidden
 
 
 @pytest.fixture()
-def test_access_no_user(django_app):
+def test_access_no_user(client):
     def _test_access_forbidden(url):
-        response = django_app.get(url)
-        assert response.status == "302 Found"
-        assert response.url == f"/accounts/login/?next={url}"
+        response = client.get(url)
+        redirected_url = response.url
+        # Remove fragments before comparison
+        redirected_url_no_fragment = (
+            urlsplit(redirected_url)._replace(fragment="").geturl()
+        )
+        expected_url = f"/accounts/login/?next={url}"
+        assert response.status_code == 302
+        assert redirected_url_no_fragment == expected_url
 
     return _test_access_forbidden
 
@@ -57,7 +65,7 @@ def test_access_not_user_can_access(erm_permission, client):
         user = baker.make(get_user_model())
         user.user_permissions.add(erm_permission)
         response = client.get(url, user=user, expect_errors=True)
-        assert response.status == "200 OK"
+        assert response.status_code == 200
 
     return _test_access_not_user_can_access
 
