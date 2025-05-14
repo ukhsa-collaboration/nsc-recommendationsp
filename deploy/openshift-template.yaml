@@ -788,7 +788,7 @@ parameters:
   # Versions
   - name: PYTHON_VERSION
     displayName: Version of Python Image
-    description: Version of Python image to be used (3.6 or latest).
+    description: Version of Python image to be used (3.12 or latest).
     value: "3.12.2"
     required: true
   - name: REDIS_VERSION
