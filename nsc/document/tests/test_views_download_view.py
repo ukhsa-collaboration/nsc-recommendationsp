@@ -7,11 +7,11 @@ import pytest
 pytestmark = pytest.mark.django_db
 
 
-def test_view(review_document, client):
+def test_view(review_document, django_app):
     """
     Test that the page can be displayed
     """
-    response = client.get(
+    response = django_app.get(
         reverse("document:download", kwargs={"pk": review_document.pk})
     )
     assert response.status == "200 OK"

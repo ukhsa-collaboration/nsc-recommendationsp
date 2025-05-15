@@ -100,7 +100,7 @@ def test_emails_match_subscription_is_created(
 
 
 def test_subscription_already_exists_for_email_new_policies_are_added(
-    client, make_subscription, make_policy
+    django_app, make_subscription, make_policy
 ):
     selected_policies = make_policy(_quantity=3)
     new_policies = make_policy(_quantity=3)
@@ -111,14 +111,14 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", new_policies))
 
-    response = client.get(f"{url}?{policies_url_args}")
+    response = django_app.get(f"{url}?{policies_url_args}")
 
     data = {
         "email": "foo@example.com",
         "email_confirmation": "foo@example.com",
         "policies": [p.id for p in selected_policies] + [p.id for p in new_policies],
     }
-    response = client.post(url, data=data)
+    response = django_app.post(url, data=data)
 
     sub = Subscription.objects.first()
     assert Subscription.objects.count() == 1

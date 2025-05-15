@@ -1,6 +1,5 @@
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
-from urllib.parse import urlsplit
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
