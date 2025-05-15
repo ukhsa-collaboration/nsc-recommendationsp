@@ -788,8 +788,8 @@ parameters:
   # Versions
   - name: PYTHON_VERSION
     displayName: Version of Python Image
-    description: Version of Python image to be used (3.6 or latest).
-    value: "3.6"
+    description: Version of Python image to be used (3.12 or latest).
+    value: "3.12.2"
     required: true
   - name: REDIS_VERSION
     displayName: Version of Redis Image
@@ -798,8 +798,8 @@ parameters:
     required: true
   - name: NODE_VERSION
     displayName: Version of Node Image
-    description: Version of Node image to be used (12 or latest).
-    value: "10"
+    description: Version of Node image to be used (20 or latest).
+    value: "20.19.0"
     required: true
   #
   # Resource management
