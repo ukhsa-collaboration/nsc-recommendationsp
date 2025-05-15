@@ -44,28 +44,22 @@ def test_access_forbidden(non_user, client):
 
 
 @pytest.fixture()
-def test_access_no_user(client):
+def test_access_no_user(django_app):
     def _test_access_forbidden(url):
-        response = client.get(url)
-        redirected_url = response.url
-        # Remove fragments before comparison
-        redirected_url_no_fragment = (
-            urlsplit(redirected_url)._replace(fragment="").geturl()
-        )
-        expected_url = f"/accounts/login/?next={url}"
-        assert response.status_code == 302
-        assert redirected_url_no_fragment == expected_url
+        response = django_app.get(url)
+        assert response.status == "302 Found"
+        assert response.url == f"/accounts/login/?next={url}"
 
     return _test_access_forbidden
 
 
 @pytest.fixture()
-def test_access_not_user_can_access(erm_permission, client):
+def test_access_not_user_can_access(erm_permission, django_app):
     def _test_access_not_user_can_access(url):
         user = baker.make(get_user_model())
         user.user_permissions.add(erm_permission)
-        response = client.get(url, user=user, expect_errors=True)
-        assert response.status_code == 200
+        response = django_app.get(url, user=user, expect_errors=True)
+        assert response.status == "200 OK"
 
     return _test_access_not_user_can_access
 

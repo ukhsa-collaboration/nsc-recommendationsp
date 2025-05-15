@@ -9,12 +9,12 @@ from nsc.review.models import Review
 pytestmark = pytest.mark.django_db
 
 
-def test_view(erm_user, make_review, client):
+def test_view(erm_user, make_review, django_app):
     """
     Test that the page can be displayed.
     """
     review = make_review()
-    response = client.get(
+    response = django_app.get(
         reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
@@ -35,12 +35,12 @@ def test_view__incorrect_permission(make_review, test_access_forbidden):
     )
 
 
-def test_success_url(erm_user, make_review, client, minimal_pdf):
+def test_success_url(erm_user, make_review, django_app, minimal_pdf):
     """
     Test success url on submit.
     """
     review = make_review(slug="abc")
-    response = client.get(
+    response = django_app.get(
         reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
@@ -54,12 +54,12 @@ def test_success_url(erm_user, make_review, client, minimal_pdf):
     assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
 
 
-def test_success_url__next(erm_user, make_review, client, minimal_pdf):
+def test_success_url__next(erm_user, make_review, django_app, minimal_pdf):
     """
     Test success url is next when provided.
     """
     review = make_review(slug="abc")
-    response = client.get(
+    response = django_app.get(
         reverse("review:add-review-documents", kwargs={"slug": review.slug})
         + "?next=/",
         user=erm_user,
@@ -84,10 +84,10 @@ def test_success_url__next(erm_user, make_review, client, minimal_pdf):
     ),
 )
 def review_has_types_set_only_correct_fields_are_shown(
-    erm_user, review_type, expected_field, make_review, client
+    erm_user, review_type, expected_field, make_review, django_app
 ):
     review = make_review(review_type=[review_type])
-    response = client.get(
+    response = django_app.get(
         reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
