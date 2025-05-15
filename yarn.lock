@@ -1759,17 +1759,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:^5.28.5":
-  version: 5.28.5
-  resolution: "@types/webpack@npm:5.28.5"
-  dependencies:
-    "@types/node": "npm:*"
-    tapable: "npm:^2.2.0"
-    webpack: "npm:^5"
-  checksum: 10c0/d1fec1f678af79dd0d84333740bdd2ce128c7f4fd1f8d14bb0ec0f4c5af70580af68350f677e3696003a8cb2e2b5f510f8c0ed7ee5ad2bc7874c87f80ecd7c8d
-  languageName: node
-  linkType: hard
-
 "@types/ws@npm:^8.5.10":
   version: 8.18.1
   resolution: "@types/ws@npm:8.18.1"
@@ -5866,7 +5855,6 @@ __metadata:
     "@babel/core": "npm:^7.27.1"
     "@babel/preset-env": "npm:^7.27.1"
     "@microsoft/set-webpack-public-path-plugin": "npm:^2.4.0"
-    "@types/webpack": "npm:^5.28.5"
     accessible-autocomplete: "npm:^3.0.1"
     babel-loader: "npm:^10.0.0"
     clean-webpack-plugin: "npm:^4.0.0"
@@ -8319,7 +8307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5, webpack@npm:^5.99.6":
+"webpack@npm:^5.99.6":
   version: 5.99.8
   resolution: "webpack@npm:5.99.8"
   dependencies:
