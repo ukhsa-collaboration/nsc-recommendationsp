@@ -16,8 +16,8 @@ def url(contact):
 
 
 @pytest.fixture
-def response(url, client, erm_user):
-    return client.get(url, user=erm_user)
+def response(url, django_app, erm_user):
+    return django_app.get(url, user=erm_user)
 
 
 @pytest.fixture
