@@ -7,7 +7,7 @@
 #       This is handled in openshift
 #
 
-FROM python:3.12-slim
+FROM registry.redhat.io/ubi9/python-312:latest
 
 USER root
 

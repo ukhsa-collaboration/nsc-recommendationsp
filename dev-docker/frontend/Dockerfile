@@ -1,4 +1,4 @@
-FROM node:20.19.0-slim
+FROM registry.redhat.io/ubi9/nodejs-20:latest
 
 # Default to watching
 # Override with:
