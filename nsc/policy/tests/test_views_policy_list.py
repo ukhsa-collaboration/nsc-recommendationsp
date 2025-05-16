@@ -64,21 +64,21 @@ def test_search_field_blank(erm_user, django_app):
     assert form["name"].value == ""
 
 
-def test_search_on_condition_name(erm_user, django_app):
+def test_search_on_condition_name(erm_user, django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
     baker.make(Policy, name="name")
-    response = django_app.get(policy_list_url, params={"name": "other"}, user=erm_user)
+    response = django_app_form(policy_list_url, name="other", user=erm_user)
     assert not response.context["object_list"]
 
 
-def test_search_on_review_status(review_in_consultation, erm_user, django_app):
+def test_search_on_review_status(review_in_consultation, erm_user, django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
-    response = django_app.get(
-        policy_list_url, params={"review_status": "in_consultation"}, user=erm_user
+    response = django_app_form(
+        policy_list_url, review_status="in_consultation", user=erm_user
     )
     assert (
         response.context["object_list"][0].pk
@@ -86,38 +86,34 @@ def test_search_on_review_status(review_in_consultation, erm_user, django_app):
     )
 
 
-def test_search_on_recommendation(erm_user, django_app):
+def test_search_on_recommendation(erm_user, django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
     expected = baker.make(Policy, name="name", recommendation=True)
     baker.make(Policy, name="name", recommendation=False)
-    response = django_app.get(
-        policy_list_url, params={"recommendation": "yes"}, user=erm_user
-    )
+    response = django_app_form(policy_list_url, recommendation="yes", user=erm_user)
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_on_include_archived(erm_user, django_app):
+def test_search_on_include_archived(erm_user, django_app_form):
     """
     Test the list of policies can be filtered by the condition name.
     """
     expected = baker.make(Policy, name="name", archived=True)
 
-    response = django_app.get(policy_list_url, user=erm_user)
+    response = django_app_form(policy_list_url, user=erm_user)
     assert not response.context["object_list"]
 
-    response = django_app.get(policy_list_url, params={"archived": "on"}, user=erm_user)
+    response = django_app_form(policy_list_url, archived="on", user=erm_user)
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_field_shows_name_term(erm_user, django_app):
+def test_search_field_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the search field shows the entered condition name.
     """
-    form = django_app.get(
-        policy_list_url, params={"name": "name"}, user=erm_user
-    ).forms[1]
+    form = django_app_form(policy_list_url, name="name", user=erm_user).forms[1]
     assert form["name"].value == "name"
 
 

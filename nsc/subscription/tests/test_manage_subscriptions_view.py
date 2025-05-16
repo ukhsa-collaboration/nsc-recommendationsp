@@ -14,7 +14,7 @@ from ..signer import get_object_signature
 pytestmark = pytest.mark.django_db
 
 
-def test_object_does_not_exist_result_is_not_found(client, make_subscription):
+def test_object_does_not_exist_result_is_not_found(django_app, make_subscription):
     sub = make_subscription()
 
     url = reverse(
@@ -24,10 +24,10 @@ def test_object_does_not_exist_result_is_not_found(client, make_subscription):
 
     sub.delete()
 
-    assert client.get(url, expect_errors=True).status_code == 404
+    assert django_app.get(url, expect_errors=True).status_code == 404
 
 
-def test_signature_is_incorrect_result_is_not_found(client, make_subscription):
+def test_signature_is_incorrect_result_is_not_found(django_app, make_subscription):
     sub1, sub2 = make_subscription(_quantity=2)
 
     url = reverse(
@@ -35,10 +35,10 @@ def test_signature_is_incorrect_result_is_not_found(client, make_subscription):
         kwargs={"token": get_object_signature(sub1), "pk": sub2.id},
     )
 
-    assert client.get(url, expect_errors=True).status_code == 404
+    assert django_app.get(url, expect_errors=True).status == "404 Not Found"
 
 
-def test_signature_is_correct_result_is_found(client, make_subscription):
+def test_signature_is_correct_result_is_found(django_app, make_subscription):
     sub = make_subscription()
 
     url = reverse(
@@ -46,10 +46,10 @@ def test_signature_is_correct_result_is_found(client, make_subscription):
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
-    assert client.get(url).status_code == 200
+    assert django_app.get(url).status == "200 OK"
 
 
-def test_subscription_is_updated(client, make_subscription, make_policy):
+def test_subscription_is_updated(django_app, make_subscription, make_policy):
     selected_policies = make_policy(_quantity=3)
     new_selected_policies = make_policy(_quantity=3)
     make_policy(_quantity=3)
@@ -61,7 +61,11 @@ def test_subscription_is_updated(client, make_subscription, make_policy):
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
-    response = client.get(url)
+    print("URL", url)
+    response = django_app.get(url, expect_errors=True)
+    print("RES CODE", response.status_code)
+    print("RES TEXT", response.text)
+    # response = django_app.get(url)
 
     form = response.forms[1]
     form["policies"] = [p.id for p in chain(selected_policies, new_selected_policies)]
@@ -91,7 +95,7 @@ def test_subscription_is_updated(client, make_subscription, make_policy):
     )
 
 
-def test_subscription_is_deleted(client, make_subscription):
+def test_subscription_is_deleted(django_app, make_subscription):
     sub = make_subscription()
 
     url = reverse(
@@ -99,7 +103,7 @@ def test_subscription_is_deleted(client, make_subscription):
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
-    response = client.get(url)
+    response = django_app.get(url)
 
     form = response.forms[1]
     response = form.submit("delete")

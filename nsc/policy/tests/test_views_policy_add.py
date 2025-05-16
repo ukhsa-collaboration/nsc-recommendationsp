@@ -96,11 +96,10 @@ def test_add_summary_view__updated(policy, erm_user, django_app):
 
 
 def test_add_recommendation_view(policy, erm_user, django_app):
-    policy._history_user = erm_user
-    policy.save()
-    django_app.force_login(erm_user)
-    response = django_app.get(reverse("policy:add:recommendation", args=(policy.slug,)))
-    assert response.status_code == 200
+    response = django_app.get(
+        reverse("policy:add:recommendation", args=(policy.slug,)), user=erm_user
+    )
+    assert response.status == "200 OK"
 
 
 def test_add_recommendation_view__no_user(policy, test_access_no_user):
