@@ -33,7 +33,8 @@ def test_add_start_view__incorrect_permission(test_access_forbidden):
 
 
 def test_add_start_view__created(erm_user, django_app):
-    start = django_app.get(reverse("policy:add:start"), user=erm_user)
+    url = reverse("policy:add:start")
+    start = django_app.get(url, user=erm_user)
     start_form = start.forms[1]
 
     start_form["name"] = "name"
