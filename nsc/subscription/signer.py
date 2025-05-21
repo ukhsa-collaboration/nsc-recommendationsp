@@ -15,5 +15,4 @@ def check_object(obj, signature):
     value = get_value_to_sign(obj)
 
     # manually recompute signature and compare
-    expected_signature = signer.signature(value)
-    return signature == expected_signature
+    return signature == signer.signature(value)
