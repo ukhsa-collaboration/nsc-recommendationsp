@@ -61,11 +61,7 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
-    print("URL", url)
     response = django_app.get(url, expect_errors=True)
-    print("RES CODE", response.status_code)
-    print("RES TEXT", response.text)
-    # response = django_app.get(url)
 
     form = response.forms[1]
     form["policies"] = [p.id for p in chain(selected_policies, new_selected_policies)]

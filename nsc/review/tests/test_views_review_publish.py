@@ -56,7 +56,6 @@ def test_response_is_no_recommendations_are_not_updated(
     make_review_recommendation(
         policy=second_policy, review=review, recommendation=False
     )
-    client.force_login(erm_user)
     url = reverse("review:publish", kwargs={"slug": review.slug})
     response = client.post(url, data={"published": False}, follow=True)
 
@@ -87,7 +86,6 @@ def test_response_is_no_summaries_are_not_updated(
         policy=second_policy, review=review, text="**new** ~second~ `summary`"
     )
 
-    client.force_login(erm_user)
     url = reverse("review:publish", kwargs={"slug": review.slug})
     client.post(url, data={"published": False}, follow=True)
 
@@ -109,7 +107,6 @@ def test_response_is_no_documents_arent_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    client.force_login(erm_user)
     url = reverse("review:publish", kwargs={"slug": review.slug})
     client.post(url, data={"published": False}, follow=True)
 
