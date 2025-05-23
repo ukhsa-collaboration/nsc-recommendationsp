@@ -7,11 +7,11 @@ import pytest
 pytestmark = pytest.mark.django_db
 
 
-def test_view(erm_user, make_review, client):
+def test_view(make_review, client):
     """
     Test that the page can be displayed.
     """
-    client.force_login(erm_user)
+    client.force_login()
     review = make_review()
     response = client.get(
         reverse("review:stakeholders", kwargs={"slug": review.slug})
