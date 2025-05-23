@@ -25,7 +25,7 @@ def url():
 @pytest.fixture
 def response(url, erm_user, client):
     client.force_login(erm_user)
-    return client.get(url, user=erm_user)
+    return client.get(url)
 
 
 @pytest.fixture
@@ -62,7 +62,7 @@ def test_back_link__next(erm_user, client):
     Test the back link returns to the stakeholder list page
     """
     client.force_login(erm_user)
-    response = client.get(reverse("stakeholder:add") + "?next=/", user=erm_user)
+    response = client.get(reverse("stakeholder:add") + "?next=/")
     dom = BeautifulSoup(response.content, "html.parser")
     link = dom.find(id="back-link-id")
     assert link["href"] == "/"

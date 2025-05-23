@@ -14,7 +14,7 @@ def test_view(erm_user, make_review, client):
     client.force_login(erm_user)
     review = make_review()
     response = client.get(
-        reverse("review:stakeholders", kwargs={"slug": review.slug}), user=erm_user
+        reverse("review:stakeholders", kwargs={"slug": review.slug})
     )
     assert response.status_code == 200
 
