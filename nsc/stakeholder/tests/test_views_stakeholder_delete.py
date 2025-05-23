@@ -20,7 +20,7 @@ def url(stakeholder):
 @pytest.fixture
 def response(url, erm_user, client):
     client.force_login(erm_user)
-    return client.get(url, user=erm_user)
+    return client.get(url)
 
 
 @pytest.fixture

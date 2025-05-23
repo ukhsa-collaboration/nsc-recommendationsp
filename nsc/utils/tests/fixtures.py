@@ -36,7 +36,7 @@ def non_user():
 def test_access_forbidden(non_user, client):
     def _test_access_forbidden(url):
         client.force_login(non_user)
-        response = client.get(url, user=non_user, expect_errors=True)
+        response = client.get(url, expect_errors=True)
         assert response.status_code == 403
 
     return _test_access_forbidden
