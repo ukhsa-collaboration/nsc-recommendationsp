@@ -57,6 +57,8 @@ This document outlines the major upgrade of this project:
 | source-map-loader     | 0.2.4       | 5.0.0       | Major → ✅ |
 | svg-url-loader       | 3.0.3       | 8.0.0       | Major → ✅ |
 | url-loader           | 3.0.0       | 4.1.1       | Major → ✅ |
+|optimize-css-assets-webpack-plugin (5.0.1) -> css-minimizer-webpack-plugin (7.0.2)|||✅ Replaced|
+
 
 ---
 
