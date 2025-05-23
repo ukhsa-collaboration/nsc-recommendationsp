@@ -20,7 +20,6 @@ def test_view(erm_user, client):
     review = baker.make(Review)
     response = client.get(
         reverse("review:add-external-review", kwargs={"slug": review.slug}),
-        user=erm_user,
     )
     assert response.status_code == 200
 
