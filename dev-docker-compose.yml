@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data   
+      - "../backup:/backup"
+      - ".:/project"
+    environment:
+      POSTGRES_PASSWORD: nsc
+      POSTGRES_USER: nsc
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "nsc"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  frontend:
+    build:
+      context: ./  
+      dockerfile: "./dev-docker/frontend/Dockerfile"
+    environment:
+      - FRONTEND_MODE=watch
+    ports:
+      - "8080:8080"
+    volumes:
+      - ".:/project"
+
+  django:
+    build:
+      context: ./  
+      dockerfile: "./dev-docker/django/Dockerfile"
+    environment:
+      DJANGO_CONFIGURATION: Dev
+      DATABASE_HOST: postgres
+      REDIS_SERVICE_HOST: redis
+      WEBPACK_DEV_HOST: static
+      WEBPACK_DEV_PORT: 8080
+      WEBPACK_DEV_URL: http://localhost:8080/static/
+    ports:
+      - "8000:8000"
+    volumes:
+      - ".:/project"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  pgdata:
