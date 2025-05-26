@@ -12,5 +12,10 @@ done
 echo "Database is up. Running migrations..."
 ./manage.py migrate
 
+echo "Loading initial data..."
+./manage.py loaddata fixtures/legacy_index.json
+
+
 echo "Starting Django development server..."
 ./manage.py runserver 0.0.0.0:8000
+

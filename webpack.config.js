@@ -23,6 +23,7 @@ const config = {
   },
   devtool: 'source-map',
   devServer: {
+    host:"0.000",
     static: {
       directory: path.resolve(__dirname, pathDist),
       publicPath: '/static/',  // Serve content at /static/

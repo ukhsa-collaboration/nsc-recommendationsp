@@ -1,1094 +1,2736 @@
 [
     {
-        "name": "Abdominal Aortic Aneurysm",
-        "slug": "abdominal-aortic-aneurysm",
-        "url": "https://legacyscreening.phe.org.uk/aaa",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Alcohol Misuse",
-        "slug": "alcohol-misuse",
-        "url": "https://legacyscreening.phe.org.uk/alcohol",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "ALD",
-        "slug": "ald",
-        "url": "https://legacyscreening.phe.org.uk/ald",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Amino acid metabolism disorders",
-        "slug": "amino-acid-metabolism-disorders",
-        "url": "https://legacyscreening.phe.org.uk/aminoacidmetabolism",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Anaemia",
-        "slug": "anaemia",
-        "url": "https://legacyscreening.phe.org.uk/anaemia",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Asymptomatic bacteriuria",
-        "slug": "asymptomatic-bacteriuria",
-        "url": "https://legacyscreening.phe.org.uk/asymptomaticbacteriuria",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Atrial Fibrillation",
-        "slug": "atrial-fibrillation",
-        "url": "https://legacyscreening.phe.org.uk/atrialfibrillation",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Autism",
-        "slug": "autism",
-        "url": "https://legacyscreening.phe.org.uk/autism",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Bacterial vaginosis",
-        "slug": "bacterial-vaginosis",
-        "url": "https://legacyscreening.phe.org.uk/bacterialvaginosis",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Biliary atresia",
-        "slug": "biliary-atresia",
-        "url": "https://legacyscreening.phe.org.uk/biliaryatresia",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Biotinidase deficiency",
-        "slug": "biotinidase-deficiency",
-        "url": "https://legacyscreening.phe.org.uk/biotinidasedeficiency",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Bladder Cancer",
-        "slug": "bladder-cancer",
-        "url": "https://legacyscreening.phe.org.uk/bladdercancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Blood group & RhD status and red cell alloantibodies",
-        "slug": "blood-group-rhd-status-and-red-cell-alloantibodies",
-        "url": "https://legacyscreening.phe.org.uk/alloantibody",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Bowel Cancer",
-        "slug": "bowel-cancer",
-        "url": "https://legacyscreening.phe.org.uk/bowelcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Breast Cancer",
-        "slug": "breast-cancer",
-        "url": "https://legacyscreening.phe.org.uk/breastcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Cervical Cancer",
-        "slug": "cervical-cancer",
-        "url": "https://legacyscreening.phe.org.uk/cervicalcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Chlamydia (adult)",
-        "slug": "chlamydia-adult",
-        "url": "https://legacyscreening.phe.org.uk/chlamydia-adult",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Chlamydia (pregnancy)",
-        "slug": "chlamydia-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/chlamydia-pregnancy",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Coeliac Disease",
-        "slug": "coeliac-disease",
-        "url": "https://legacyscreening.phe.org.uk/coeliacdisease",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Congenital adrenal hyperplasia",
-        "slug": "congenital-adrenal-hyperplasia",
-        "url": "https://legacyscreening.phe.org.uk/congenitaladrenalhyperplasia",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Congenital cataracts",
-        "slug": "congenital-cataracts",
-        "url": "https://legacyscreening.phe.org.uk/congenitalcataracts",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Congenital heart disease",
-        "slug": "congenital-heart-disease",
-        "url": "https://legacyscreening.phe.org.uk/congenitalheartdisease",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Congenital hypothyroidism",
-        "slug": "congenital-hypothyroidism",
-        "url": "https://legacyscreening.phe.org.uk/congenitalhypothyroidism",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "COPD",
-        "slug": "copd",
-        "url": "https://legacyscreening.phe.org.uk/copd",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Cryptorchidism",
-        "slug": "cryptorchidism",
-        "url": "https://legacyscreening.phe.org.uk/cryptorchidism",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Cystic fibrosis (newborn)",
-        "slug": "cystic-fibrosis-newborn",
-        "url": "https://legacyscreening.phe.org.uk/cysticfibrosis-newborn",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Cystic fibrosis (pregnancy)",
-        "slug": "cystic-fibrosis-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/cysticfibrosis-pregnancy",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Cytomegalovirus",
-        "slug": "cytomegalovirus",
-        "url": "https://legacyscreening.phe.org.uk/cytomegalovirus",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Dementia",
-        "slug": "dementia",
-        "url": "https://legacyscreening.phe.org.uk/dementia",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Dental Disease",
-        "slug": "dental-disease",
-        "url": "https://legacyscreening.phe.org.uk/dental",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Depression",
-        "slug": "depression",
-        "url": "https://legacyscreening.phe.org.uk/depression",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Development & Behaviour",
-        "slug": "development-behaviour",
-        "url": "https://legacyscreening.phe.org.uk/developmentbehaviour",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Developmental dislocation of the hip",
-        "slug": "developmental-dislocation-of-the-hip",
-        "url": "https://legacyscreening.phe.org.uk/hipdislocation",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Diabetes",
-        "slug": "diabetes",
-        "url": "https://legacyscreening.phe.org.uk/diabetes",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Diabetic Retinopathy",
-        "slug": "diabetic-retinopathy",
-        "url": "https://legacyscreening.phe.org.uk/diabeticretinopathy",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Down's syndrome",
-        "slug": "downs-syndrome",
-        "url": "https://legacyscreening.phe.org.uk/downs",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Duchenne muscular dystrophy",
-        "slug": "duchenne-muscular-dystrophy",
-        "url": "https://legacyscreening.phe.org.uk/musculardystrophy",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Familial Hypercholesterolaemia (adult)",
-        "slug": "familial-hypercholesterolaemia-adult",
-        "url": "https://legacyscreening.phe.org.uk/familialhypercholesterolaemia-adult",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Familial Hypercholesterolaemia (child)",
-        "slug": "familial-hypercholesterolaemia-child",
-        "url": "https://legacyscreening.phe.org.uk/familialhypercholesterolaemia-child",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Fatty-acid oxidation disorders",
-        "slug": "fatty-acid-oxidation-disorders",
-        "url": "https://legacyscreening.phe.org.uk/fattyacidoxidation",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Fetal anomalies",
-        "slug": "fetal-anomalies",
-        "url": "https://legacyscreening.phe.org.uk/fetalanomalies",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "FMAIT",
-        "slug": "fmait",
-        "url": "https://legacyscreening.phe.org.uk/thrombocytopenia",
-        "ages": [
-            "antenatal",
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Fragile X",
-        "slug": "fragile-x",
-        "url": "https://legacyscreening.phe.org.uk/fragilex",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "GA1",
-        "slug": "ga1",
-        "url": "https://legacyscreening.phe.org.uk/ga1",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Galactosaemia",
-        "slug": "galactosaemia",
-        "url": "https://legacyscreening.phe.org.uk/galactosemia",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Gaucher disease",
-        "slug": "gaucher-disease",
-        "url": "https://legacyscreening.phe.org.uk/gauchers",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Genital Herpes",
-        "slug": "genital-herpes",
-        "url": "https://legacyscreening.phe.org.uk/genitalherpes",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Gestational diabetes",
-        "slug": "gestational-diabetes",
-        "url": "https://legacyscreening.phe.org.uk/gestational-diabetes",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Glaucoma",
-        "slug": "glaucoma",
-        "url": "https://legacyscreening.phe.org.uk/glaucoma",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Group B Streptococcus",
-        "slug": "group-b-streptococcus",
-        "url": "https://legacyscreening.phe.org.uk/groupbstreptococcus",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Growth",
-        "slug": "growth",
-        "url": "https://legacyscreening.phe.org.uk/growth",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Haemochromatosis",
-        "slug": "haemochromatosis",
-        "url": "https://legacyscreening.phe.org.uk/haemochromatosis",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "HCU",
-        "slug": "hcu",
-        "url": "https://legacyscreening.phe.org.uk/hcu",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Hearing (child)",
-        "slug": "hearing-child",
-        "url": "https://legacyscreening.phe.org.uk/hearing-child",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Hearing (newborn)",
-        "slug": "hearing-newborn",
-        "url": "https://legacyscreening.phe.org.uk/hearing-newborn",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Hearing Loss (adult)",
-        "slug": "hearing-loss-adult",
-        "url": "https://legacyscreening.phe.org.uk/hearing-adult",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Hepatitis B",
-        "slug": "hepatitis-b",
-        "url": "https://legacyscreening.phe.org.uk/hepatitisb",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Hepatitis C (pregnancy)",
-        "slug": "hepatitis-c-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/hepatitisc-pregnancy",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "HTLV",
-        "slug": "htlv",
-        "url": "https://legacyscreening.phe.org.uk/htlv",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Human immunodeficiency virus",
-        "slug": "human-immunodeficiency-virus",
-        "url": "https://legacyscreening.phe.org.uk/hiv",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Hypertension (adult)",
-        "slug": "hypertension-adult",
-        "url": "https://legacyscreening.phe.org.uk/hypertension-adult",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Hypertension (child)",
-        "slug": "hypertension-child",
-        "url": "https://legacyscreening.phe.org.uk/hypertension-child",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Iron Deficiency Anaemia",
-        "slug": "iron-deficiency-anaemia",
-        "url": "https://legacyscreening.phe.org.uk/irondeficiency",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "IVA",
-        "slug": "iva",
-        "url": "https://legacyscreening.phe.org.uk/iva",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Kernicterus",
-        "slug": "kernicterus",
-        "url": "https://legacyscreening.phe.org.uk/kernicterus",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Kidney disease",
-        "slug": "kidney-disease",
-        "url": "https://legacyscreening.phe.org.uk/kidneydisease",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "LCHADD",
-        "slug": "lchadd",
-        "url": "https://legacyscreening.phe.org.uk/lchadd",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Lead Poisoning",
-        "slug": "lead-poisoning",
-        "url": "https://legacyscreening.phe.org.uk/leadpoisoning",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Lung cancer",
-        "slug": "lung-cancer",
-        "url": "https://legacyscreening.phe.org.uk/lungcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "MCADD",
-        "slug": "mcadd",
-        "url": "https://legacyscreening.phe.org.uk/mcadd",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "MPS I",
-        "slug": "mps-i",
-        "url": "https://legacyscreening.phe.org.uk/mps1",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "MSUD",
-        "slug": "msud",
-        "url": "https://legacyscreening.phe.org.uk/msud",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Neural tube defect",
-        "slug": "neural-tube-defect",
-        "url": "https://legacyscreening.phe.org.uk/neuraltubedefect",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Neuroblastoma",
-        "slug": "neuroblastoma",
-        "url": "https://legacyscreening.phe.org.uk/neuroblastoma",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Obesity",
-        "slug": "obesity",
-        "url": "https://legacyscreening.phe.org.uk/obesity",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Oral Cancer",
-        "slug": "oral-cancer",
-        "url": "https://legacyscreening.phe.org.uk/oralcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Organic acid oxidation disorders",
-        "slug": "organic-acid-oxidation-disorders",
-        "url": "https://legacyscreening.phe.org.uk/organicacidmetabolism",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Osteoporosis",
-        "slug": "osteoporosis",
-        "url": "https://legacyscreening.phe.org.uk/osteoporosis",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Ovarian cancer",
-        "slug": "ovarian-cancer",
-        "url": "https://legacyscreening.phe.org.uk/ovariancancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Partner Violence",
-        "slug": "partner-violence",
-        "url": "https://legacyscreening.phe.org.uk/partnerviolence",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Partner violence (pregnancy)",
-        "slug": "partner-violence-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/partnerviolence-pregnancy",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Parvovirus",
-        "slug": "parvovirus",
-        "url": "https://legacyscreening.phe.org.uk/parvovirus",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "PKU",
-        "slug": "pku",
-        "url": "https://legacyscreening.phe.org.uk/pku",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Placenta praevia",
-        "slug": "placenta-praevia",
-        "url": "https://legacyscreening.phe.org.uk/placentapraevia",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Postnatal depression",
-        "slug": "postnatal-depression",
-        "url": "https://legacyscreening.phe.org.uk/postnataldepression",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Pre-eclampsia",
-        "slug": "pre-eclampsia",
-        "url": "https://legacyscreening.phe.org.uk/pre-eclampsia",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Preterm birth",
-        "slug": "preterm-birth",
-        "url": "https://legacyscreening.phe.org.uk/pretermbirth",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Prostate Cancer",
-        "slug": "prostate-cancer",
-        "url": "https://legacyscreening.phe.org.uk/prostatecancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Psychiatric illness",
-        "slug": "psychiatric-illness",
-        "url": "https://legacyscreening.phe.org.uk/psychiatricillness",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Rubella susceptibility",
-        "slug": "rubella-susceptibility",
-        "url": "https://legacyscreening.phe.org.uk/rubellasusceptibility",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "SCID",
-        "slug": "scid",
-        "url": "https://legacyscreening.phe.org.uk/scid",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Scoliosis",
-        "slug": "scoliosis",
-        "url": "https://legacyscreening.phe.org.uk/scoliosis",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Sickle cell and Thalassaemia",
-        "slug": "sickle-cell-and-thalassaemia",
-        "url": "https://legacyscreening.phe.org.uk/sicklecellthalassaemia",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Sickle Cell Disease (newborn)",
-        "slug": "sickle-cell-disease-newborn",
-        "url": "https://legacyscreening.phe.org.uk/sicklecelldisease",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "SMA",
-        "slug": "sma",
-        "url": "https://legacyscreening.phe.org.uk/sma",
-        "ages": [
-            "antenatal",
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Speech & Language Delay",
-        "slug": "speech-language-delay",
-        "url": "https://legacyscreening.phe.org.uk/speechlanguage",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Stillbirth",
-        "slug": "stillbirth",
-        "url": "https://legacyscreening.phe.org.uk/stillbirth",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Stomach cancer",
-        "slug": "stomach-cancer",
-        "url": "https://legacyscreening.phe.org.uk/stomachcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Sudden Cardiac Death",
-        "slug": "sudden-cardiac-death",
-        "url": "https://legacyscreening.phe.org.uk/suddencardiacdeath",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Syphilis",
-        "slug": "syphilis",
-        "url": "https://legacyscreening.phe.org.uk/syphilis",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "T18 and T13",
-        "slug": "t18-and-t13",
-        "url": "https://legacyscreening.phe.org.uk/t18andt13",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Thrombophilia",
-        "slug": "thrombophilia",
-        "url": "https://legacyscreening.phe.org.uk/thrombophilia",
-        "ages": [
-            "all"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Thyroid disease",
-        "slug": "thyroid-disease",
-        "url": "https://legacyscreening.phe.org.uk/thyroid",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Toxoplasmosis",
-        "slug": "toxoplasmosis",
-        "url": "https://legacyscreening.phe.org.uk/toxoplasmosis",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Tyrosinaemia",
-        "slug": "tyrosinaemia",
-        "url": "https://legacyscreening.phe.org.uk/tyrosinaemia",
-        "ages": [
-            "newborn"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Varicella susceptibility",
-        "slug": "varicella-susceptibility",
-        "url": "https://legacyscreening.phe.org.uk/varicella",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Vasa praevia",
-        "slug": "vasa-praevia",
-        "url": "https://legacyscreening.phe.org.uk/vasapraevia",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Vascular risk",
-        "slug": "vascular-risk",
-        "url": "https://legacyscreening.phe.org.uk/vascularrisk",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Vision Defects",
-        "slug": "vision-defects",
-        "url": "https://legacyscreening.phe.org.uk/vision-child",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": true
+        "model": "policy.policy",
+        "fields": {
+            "name": "Abdominal Aortic Aneurysm",
+            "slug": "abdominal-aortic-aneurysm",
+            "ages": [
+                "adult"
+            ],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Abdominal Aortic Aneurysm",
+            "condition_html": "<p>Abdominal Aortic Aneurysm</p>",
+            "summary": "Abdominal Aortic Aneurysm screening",
+            "summary_html": "<p>Abdominal Aortic Aneurysm screening</p>",
+            "background": "Background information about Abdominal Aortic Aneurysm",
+            "background_html": "<p>Background information about Abdominal Aortic Aneurysm</p>",
+            "keywords": "abdominal aortic aneurysm, AAA, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "url": "https://legacyscreening.phe.org.uk/aaa",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Alcohol Misuse",
+            "slug": "alcohol-misuse",
+            "ages": [
+                "adult"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Alcohol Misuse",
+            "condition_html": "<p>Alcohol Misuse</p>",
+            "summary": "Alcohol Misuse screening",
+            "summary_html": "<p>Alcohol Misuse screening</p>",
+            "background": "Background information about Alcohol Misuse",
+            "background_html": "<p>Background information about Alcohol Misuse</p>",
+            "keywords": "alcohol misuse, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "url": "https://legacyscreening.phe.org.uk/alcoholmisuse",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "ALD",
+            "slug": "ald",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "ALD",
+            "condition_html": "<p>ALD</p>",
+            "summary": "ALD screening",
+            "summary_html": "<p>ALD screening</p>",
+            "background": "Background information about ALD",
+            "background_html": "<p>Background information about ALD</p>",
+            "keywords": "ALD, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "url": "https://legacyscreening.phe.org.uk/ald",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Amino acid metabolism disorders",
+            "slug": "amino-acid-metabolism-disorders",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Amino acid metabolism disorders",
+            "condition_html": "<p>Amino acid metabolism disorders</p>",
+            "summary": "Amino acid metabolism disorders screening",
+            "summary_html": "<p>Amino acid metabolism disorders screening</p>",
+            "background": "Background information about Amino acid metabolism disorders",
+            "background_html": "<p>Background information about Amino acid metabolism disorders</p>",
+            "keywords": "amino acid metabolism disorders, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "url": "https://legacyscreening.phe.org.uk/aminoacidmetabolism",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Anaemia",
+            "slug": "anaemia",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Anaemia",
+            "condition_html": "<p>Anaemia</p>",
+            "summary": "Anaemia screening",
+            "summary_html": "<p>Anaemia screening</p>",
+            "background": "Background information about Anaemia",
+            "background_html": "<p>Background information about Anaemia</p>",
+            "keywords": "anaemia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "url": "https://legacyscreening.phe.org.uk/anaemia",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Asymptomatic bacteriuria",
+            "slug": "asymptomatic-bacteriuria",
+            "url": "https://legacyscreening.phe.org.uk/asymptomaticbacteriuria",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Asymptomatic bacteriuria",
+            "condition_html": "<p>Asymptomatic bacteriuria</p>",
+            "summary": "Asymptomatic bacteriuria screening",
+            "summary_html": "<p>Asymptomatic bacteriuria screening</p>",
+            "background": "Background information about Asymptomatic bacteriuria",
+            "background_html": "<p>Background information about Asymptomatic bacteriuria</p>",
+            "keywords": "asymptomatic bacteriuria, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Atrial Fibrillation",
+            "slug": "atrial-fibrillation",
+            "url": "https://legacyscreening.phe.org.uk/atrialfibrillation",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Atrial Fibrillation",
+            "condition_html": "<p>Atrial Fibrillation</p>",
+            "summary": "Atrial Fibrillation screening",
+            "summary_html": "<p>Atrial Fibrillation screening</p>",
+            "background": "Background information about Atrial Fibrillation",
+            "background_html": "<p>Background information about Atrial Fibrillation</p>",
+            "keywords": "atrial fibrillation, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Autism",
+            "slug": "autism",
+            "url": "https://legacyscreening.phe.org.uk/autism",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Autism",
+            "condition_html": "<p>Autism</p>",
+            "summary": "Autism screening",
+            "summary_html": "<p>Autism screening</p>",
+            "background": "Background information about Autism",
+            "background_html": "<p>Background information about Autism</p>",
+            "keywords": "autism, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Bacterial vaginosis",
+            "slug": "bacterial-vaginosis",
+            "url": "https://legacyscreening.phe.org.uk/bacterialvaginosis",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Bacterial vaginosis",
+            "condition_html": "<p>Bacterial vaginosis</p>",
+            "summary": "Bacterial vaginosis screening",
+            "summary_html": "<p>Bacterial vaginosis screening</p>",
+            "background": "Background information about Bacterial vaginosis",
+            "background_html": "<p>Background information about Bacterial vaginosis</p>",
+            "keywords": "bacterial vaginosis, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Biliary atresia",
+            "slug": "biliary-atresia",
+            "url": "https://legacyscreening.phe.org.uk/biliaryatresia",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Biliary atresia",
+            "condition_html": "<p>Biliary atresia</p>",
+            "summary": "Biliary atresia screening",
+            "summary_html": "<p>Biliary atresia screening</p>",
+            "background": "Background information about Biliary atresia",
+            "background_html": "<p>Background information about Biliary atresia</p>",
+            "keywords": "biliary atresia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Biotinidase deficiency",
+            "slug": "biotinidase-deficiency",
+            "url": "https://legacyscreening.phe.org.uk/biotinidasedeficiency",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Biotinidase deficiency",
+            "condition_html": "<p>Biotinidase deficiency</p>",
+            "summary": "Biotinidase deficiency screening",
+            "summary_html": "<p>Biotinidase deficiency screening</p>",
+            "background": "Background information about Biotinidase deficiency",
+            "background_html": "<p>Background information about Biotinidase deficiency</p>",
+            "keywords": "biotinidase deficiency, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Bladder Cancer",
+            "slug": "bladder-cancer",
+            "url": "https://legacyscreening.phe.org.uk/bladdercancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Bladder Cancer",
+            "condition_html": "<p>Bladder Cancer</p>",
+            "summary": "Bladder Cancer screening",
+            "summary_html": "<p>Bladder Cancer screening</p>",
+            "background": "Background information about Bladder Cancer",
+            "background_html": "<p>Background information about Bladder Cancer</p>",
+            "keywords": "bladder cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Blood group & RhD status and red cell alloantibodies",
+            "slug": "blood-group-rhd-status-and-red-cell-alloantibodies",
+            "url": "https://legacyscreening.phe.org.uk/alloantibody",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Blood group & RhD status and red cell alloantibodies",
+            "condition_html": "<p>Blood group & RhD status and red cell alloantibodies</p>",
+            "summary": "Blood group & RhD status and red cell alloantibodies screening",
+            "summary_html": "<p>Blood group & RhD status and red cell alloantibodies screening</p>",
+            "background": "Background information about Blood group & RhD status and red cell alloantibodies",
+            "background_html": "<p>Background information about Blood group & RhD status and red cell alloantibodies</p>",
+            "keywords": "blood group, RhD status, red cell alloantibodies, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Bowel Cancer",
+            "slug": "bowel-cancer",
+            "url": "https://legacyscreening.phe.org.uk/bowelcancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Bowel Cancer",
+            "condition_html": "<p>Bowel Cancer</p>",
+            "summary": "Bowel Cancer screening",
+            "summary_html": "<p>Bowel Cancer screening</p>",
+            "background": "Background information about Bowel Cancer",
+            "background_html": "<p>Background information about Bowel Cancer</p>",
+            "keywords": "bowel cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Breast Cancer",
+            "slug": "breast-cancer",
+            "url": "https://legacyscreening.phe.org.uk/breastcancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Breast Cancer",
+            "condition_html": "<p>Breast Cancer</p>",
+            "summary": "Breast Cancer screening",
+            "summary_html": "<p>Breast Cancer screening</p>",
+            "background": "Background information about Breast Cancer",
+            "background_html": "<p>Background information about Breast Cancer</p>",
+            "keywords": "breast cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Cervical Cancer",
+            "slug": "cervical-cancer",
+            "url": "https://legacyscreening.phe.org.uk/cervicalcancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Cervical Cancer",
+            "condition_html": "<p>Cervical Cancer</p>",
+            "summary": "Cervical Cancer screening",
+            "summary_html": "<p>Cervical Cancer screening</p>",
+            "background": "Background information about Cervical Cancer",
+            "background_html": "<p>Background information about Cervical Cancer</p>",
+            "keywords": "cervical cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Chlamydia (adult)",
+            "slug": "chlamydia-adult",
+            "url": "https://legacyscreening.phe.org.uk/chlamydia-adult",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Chlamydia (adult)",
+            "condition_html": "<p>Chlamydia (adult)</p>",
+            "summary": "Chlamydia (adult) screening",
+            "summary_html": "<p>Chlamydia (adult) screening</p>",
+            "background": "Background information about Chlamydia (adult)",
+            "background_html": "<p>Background information about Chlamydia (adult)</p>",
+            "keywords": "chlamydia, adult, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Chlamydia (pregnancy)",
+            "slug": "chlamydia-pregnancy",
+            "url": "https://legacyscreening.phe.org.uk/chlamydia-pregnancy",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Chlamydia (pregnancy)",
+            "condition_html": "<p>Chlamydia (pregnancy)</p>",
+            "summary": "Chlamydia (pregnancy) screening",
+            "summary_html": "<p>Chlamydia (pregnancy) screening</p>",
+            "background": "Background information about Chlamydia (pregnancy)",
+            "background_html": "<p>Background information about Chlamydia (pregnancy)</p>",
+            "keywords": "chlamydia, pregnancy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Coeliac Disease",
+            "slug": "coeliac-disease",
+            "url": "https://legacyscreening.phe.org.uk/coeliacdisease",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Coeliac Disease",
+            "condition_html": "<p>Coeliac Disease</p>",
+            "summary": "Coeliac Disease screening",
+            "summary_html": "<p>Coeliac Disease screening</p>",
+            "background": "Background information about Coeliac Disease",
+            "background_html": "<p>Background information about Coeliac Disease</p>",
+            "keywords": "coeliac disease, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Congenital adrenal hyperplasia",
+            "slug": "congenital-adrenal-hyperplasia",
+            "url": "https://legacyscreening.phe.org.uk/congenitaladrenalhyperplasia",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Congenital adrenal hyperplasia",
+            "condition_html": "<p>Congenital adrenal hyperplasia</p>",
+            "summary": "Congenital adrenal hyperplasia screening",
+            "summary_html": "<p>Congenital adrenal hyperplasia screening</p>",
+            "background": "Background information about Congenital adrenal hyperplasia",
+            "background_html": "<p>Background information about Congenital adrenal hyperplasia</p>",
+            "keywords": "congenital adrenal hyperplasia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Congenital cataracts",
+            "slug": "congenital-cataracts",
+            "url": "https://legacyscreening.phe.org.uk/congenitalcataracts",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Congenital cataracts",
+            "condition_html": "<p>Congenital cataracts</p>",
+            "summary": "Congenital cataracts screening",
+            "summary_html": "<p>Congenital cataracts screening</p>",
+            "background": "Background information about Congenital cataracts",
+            "background_html": "<p>Background information about Congenital cataracts</p>",
+            "keywords": "congenital cataracts, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Congenital heart disease",
+            "slug": "congenital-heart-disease",
+            "url": "https://legacyscreening.phe.org.uk/congenitalheartdisease",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Congenital heart disease",
+            "condition_html": "<p>Congenital heart disease</p>",
+            "summary": "Congenital heart disease screening",
+            "summary_html": "<p>Congenital heart disease screening</p>",
+            "background": "Background information about Congenital heart disease",
+            "background_html": "<p>Background information about Congenital heart disease</p>",
+            "keywords": "congenital heart disease, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Congenital hypothyroidism",
+            "slug": "congenital-hypothyroidism",
+            "url": "https://legacyscreening.phe.org.uk/congenitalhypothyroidism",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Congenital hypothyroidism",
+            "condition_html": "<p>Congenital hypothyroidism</p>",
+            "summary": "Congenital hypothyroidism screening",
+            "summary_html": "<p>Congenital hypothyroidism screening</p>",
+            "background": "Background information about Congenital hypothyroidism",
+            "background_html": "<p>Background information about Congenital hypothyroidism</p>",
+            "keywords": "congenital hypothyroidism, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "COPD",
+            "slug": "copd",
+            "url": "https://legacyscreening.phe.org.uk/copd",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "COPD",
+            "condition_html": "<p>COPD</p>",
+            "summary": "COPD screening",
+            "summary_html": "<p>COPD screening</p>",
+            "background": "Background information about COPD",
+            "background_html": "<p>Background information about COPD</p>",
+            "keywords": "COPD, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Cryptorchidism",
+            "slug": "cryptorchidism",
+            "url": "https://legacyscreening.phe.org.uk/cryptorchidism",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Cryptorchidism",
+            "condition_html": "<p>Cryptorchidism</p>",
+            "summary": "Cryptorchidism screening",
+            "summary_html": "<p>Cryptorchidism screening</p>",
+            "background": "Background information about Cryptorchidism",
+            "background_html": "<p>Background information about Cryptorchidism</p>",
+            "keywords": "cryptorchidism, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Cystic fibrosis (newborn)",
+            "slug": "cystic-fibrosis-newborn",
+            "url": "https://legacyscreening.phe.org.uk/cysticfibrosis-newborn",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Cystic fibrosis (newborn)",
+            "condition_html": "<p>Cystic fibrosis (newborn)</p>",
+            "summary": "Cystic fibrosis (newborn) screening",
+            "summary_html": "<p>Cystic fibrosis (newborn) screening</p>",
+            "background": "Background information about Cystic fibrosis (newborn)",
+            "background_html": "<p>Background information about Cystic fibrosis (newborn)</p>",
+            "keywords": "cystic fibrosis, newborn, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Cystic fibrosis (pregnancy)",
+            "slug": "cystic-fibrosis-pregnancy",
+            "url": "https://legacyscreening.phe.org.uk/cysticfibrosis-pregnancy",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Cystic fibrosis (pregnancy)",
+            "condition_html": "<p>Cystic fibrosis (pregnancy)</p>",
+            "summary": "Cystic fibrosis (pregnancy) screening",
+            "summary_html": "<p>Cystic fibrosis (pregnancy) screening</p>",
+            "background": "Background information about Cystic fibrosis (pregnancy)",
+            "background_html": "<p>Background information about Cystic fibrosis (pregnancy)</p>",
+            "keywords": "cystic fibrosis, pregnancy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Cytomegalovirus",
+            "slug": "cytomegalovirus",
+            "url": "https://legacyscreening.phe.org.uk/cytomegalovirus",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Cytomegalovirus",
+            "condition_html": "<p>Cytomegalovirus</p>",
+            "summary": "Cytomegalovirus screening",
+            "summary_html": "<p>Cytomegalovirus screening</p>",
+            "background": "Background information about Cytomegalovirus",
+            "background_html": "<p>Background information about Cytomegalovirus</p>",
+            "keywords": "cytomegalovirus, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Dementia",
+            "slug": "dementia",
+            "url": "https://legacyscreening.phe.org.uk/dementia",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Dementia",
+            "condition_html": "<p>Dementia</p>",
+            "summary": "Dementia screening",
+            "summary_html": "<p>Dementia screening</p>",
+            "background": "Background information about Dementia",
+            "background_html": "<p>Background information about Dementia</p>",
+            "keywords": "dementia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Dental Disease",
+            "slug": "dental-disease",
+            "url": "https://legacyscreening.phe.org.uk/dental",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Dental Disease",
+            "condition_html": "<p>Dental Disease</p>",
+            "summary": "Dental Disease screening",
+            "summary_html": "<p>Dental Disease screening</p>",
+            "background": "Background information about Dental Disease",
+            "background_html": "<p>Background information about Dental Disease</p>",
+            "keywords": "dental disease, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Depression",
+            "slug": "depression",
+            "url": "https://legacyscreening.phe.org.uk/depression",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Depression",
+            "condition_html": "<p>Depression</p>",
+            "summary": "Depression screening",
+            "summary_html": "<p>Depression screening</p>",
+            "background": "Background information about Depression",
+            "background_html": "<p>Background information about Depression</p>",
+            "keywords": "depression, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Development & Behaviour",
+            "slug": "development-behaviour",
+            "url": "https://legacyscreening.phe.org.uk/developmentbehaviour",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Development & Behaviour",
+            "condition_html": "<p>Development & Behaviour</p>",
+            "summary": "Development & Behaviour screening",
+            "summary_html": "<p>Development & Behaviour screening</p>",
+            "background": "Background information about Development & Behaviour",
+            "background_html": "<p>Background information about Development & Behaviour</p>",
+            "keywords": "development, behaviour, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Developmental dislocation of the hip",
+            "slug": "developmental-dislocation-of-the-hip",
+            "url": "https://legacyscreening.phe.org.uk/hipdislocation",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Developmental dislocation of the hip",
+            "condition_html": "<p>Developmental dislocation of the hip</p>",
+            "summary": "Developmental dislocation of the hip screening",
+            "summary_html": "<p>Developmental dislocation of the hip screening</p>",
+            "background": "Background information about Developmental dislocation of the hip",
+            "background_html": "<p>Background information about Developmental dislocation of the hip</p>",
+            "keywords": "developmental dislocation, hip, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Diabetes",
+            "slug": "diabetes",
+            "url": "https://legacyscreening.phe.org.uk/diabetes",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Diabetes",
+            "condition_html": "<p>Diabetes</p>",
+            "summary": "Diabetes screening",
+            "summary_html": "<p>Diabetes screening</p>",
+            "background": "Background information about Diabetes",
+            "background_html": "<p>Background information about Diabetes</p>",
+            "keywords": "diabetes, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Diabetic Retinopathy",
+            "slug": "diabetic-retinopathy",
+            "url": "https://legacyscreening.phe.org.uk/diabeticretinopathy",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Diabetic Retinopathy",
+            "condition_html": "<p>Diabetic Retinopathy</p>",
+            "summary": "Diabetic Retinopathy screening",
+            "summary_html": "<p>Diabetic Retinopathy screening</p>",
+            "background": "Background information about Diabetic Retinopathy",
+            "background_html": "<p>Background information about Diabetic Retinopathy</p>",
+            "keywords": "diabetic retinopathy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Down's syndrome",
+            "slug": "downs-syndrome",
+            "url": "https://legacyscreening.phe.org.uk/downssyndrome",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Down's syndrome",
+            "condition_html": "<p>Down's syndrome</p>",
+            "summary": "Down's syndrome screening",
+            "summary_html": "<p>Down's syndrome screening</p>",
+            "background": "Background information about Down's syndrome",
+            "background_html": "<p>Background information about Down's syndrome</p>",
+            "keywords": "down's syndrome, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Duchenne muscular dystrophy",
+            "slug": "duchenne-muscular-dystrophy",
+            "url": "https://legacyscreening.phe.org.uk/duchenne",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Duchenne muscular dystrophy",
+            "condition_html": "<p>Duchenne muscular dystrophy</p>",
+            "summary": "Duchenne muscular dystrophy screening",
+            "summary_html": "<p>Duchenne muscular dystrophy screening</p>",
+            "background": "Background information about Duchenne muscular dystrophy",
+            "background_html": "<p>Background information about Duchenne muscular dystrophy</p>",
+            "keywords": "duchenne, muscular dystrophy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Dyslipidaemia",
+            "slug": "dyslipidaemia",
+            "url": "https://legacyscreening.phe.org.uk/dyslipidaemia",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Dyslipidaemia",
+            "condition_html": "<p>Dyslipidaemia</p>",
+            "summary": "Dyslipidaemia screening",
+            "summary_html": "<p>Dyslipidaemia screening</p>",
+            "background": "Background information about Dyslipidaemia",
+            "background_html": "<p>Background information about Dyslipidaemia</p>",
+            "keywords": "dyslipidaemia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Ectopic pregnancy",
+            "slug": "ectopic-pregnancy",
+            "url": "https://legacyscreening.phe.org.uk/ectopicpregnancy",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Ectopic pregnancy",
+            "condition_html": "<p>Ectopic pregnancy</p>",
+            "summary": "Ectopic pregnancy screening",
+            "summary_html": "<p>Ectopic pregnancy screening</p>",
+            "background": "Background information about Ectopic pregnancy",
+            "background_html": "<p>Background information about Ectopic pregnancy</p>",
+            "keywords": "ectopic pregnancy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Edward's syndrome",
+            "slug": "edwards-syndrome",
+            "url": "https://legacyscreening.phe.org.uk/edwardssyndrome",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Edward's syndrome",
+            "condition_html": "<p>Edward's syndrome</p>",
+            "summary": "Edward's syndrome screening",
+            "summary_html": "<p>Edward's syndrome screening</p>",
+            "background": "Background information about Edward's syndrome",
+            "background_html": "<p>Background information about Edward's syndrome</p>",
+            "keywords": "edward's syndrome, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Familial Hypercholesterolaemia (adult)",
+            "slug": "familial-hypercholesterolaemia-adult",
+            "url": "https://legacyscreening.phe.org.uk/familialhypercholesterolaemia",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Familial Hypercholesterolaemia (adult)",
+            "condition_html": "<p>Familial Hypercholesterolaemia (adult)</p>",
+            "summary": "Familial Hypercholesterolaemia screening for adults",
+            "summary_html": "<p>Familial Hypercholesterolaemia screening for adults</p>",
+            "background": "Background information about Familial Hypercholesterolaemia in adults",
+            "background_html": "<p>Background information about Familial Hypercholesterolaemia in adults</p>",
+            "keywords": "familial hypercholesterolaemia, adult, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Familial Hypercholesterolaemia (child)",
+            "slug": "familial-hypercholesterolaemia-child",
+            "url": "https://legacyscreening.phe.org.uk/familialhypercholesterolaemia",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Familial Hypercholesterolaemia (child)",
+            "condition_html": "<p>Familial Hypercholesterolaemia (child)</p>",
+            "summary": "Familial Hypercholesterolaemia screening for children",
+            "summary_html": "<p>Familial Hypercholesterolaemia screening for children</p>",
+            "background": "Background information about Familial Hypercholesterolaemia in children",
+            "background_html": "<p>Background information about Familial Hypercholesterolaemia in children</p>",
+            "keywords": "familial hypercholesterolaemia, child, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Fatty-acid oxidation disorders",
+            "slug": "fatty-acid-oxidation-disorders",
+            "url": "https://legacyscreening.phe.org.uk/fattyacidoxidation",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Fatty-acid oxidation disorders",
+            "condition_html": "<p>Fatty-acid oxidation disorders</p>",
+            "summary": "Fatty-acid oxidation disorders screening",
+            "summary_html": "<p>Fatty-acid oxidation disorders screening</p>",
+            "background": "Background information about Fatty-acid oxidation disorders",
+            "background_html": "<p>Background information about Fatty-acid oxidation disorders</p>",
+            "keywords": "fatty-acid oxidation, disorders, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Fetal anomalies",
+            "slug": "fetal-anomalies",
+            "url": "https://legacyscreening.phe.org.uk/fetalanomalies",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Fetal anomalies",
+            "condition_html": "<p>Fetal anomalies</p>",
+            "summary": "Fetal anomalies screening",
+            "summary_html": "<p>Fetal anomalies screening</p>",
+            "background": "Background information about Fetal anomalies",
+            "background_html": "<p>Background information about Fetal anomalies</p>",
+            "keywords": "fetal anomalies, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "FMAIT",
+            "slug": "fmait",
+            "url": "https://legacyscreening.phe.org.uk/fmait",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "FMAIT",
+            "condition_html": "<p>FMAIT</p>",
+            "summary": "FMAIT screening",
+            "summary_html": "<p>FMAIT screening</p>",
+            "background": "Background information about FMAIT",
+            "background_html": "<p>Background information about FMAIT</p>",
+            "keywords": "fmait, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Fragile X",
+            "slug": "fragile-x",
+            "url": "https://legacyscreening.phe.org.uk/fragilex",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Fragile X",
+            "condition_html": "<p>Fragile X</p>",
+            "summary": "Fragile X screening",
+            "summary_html": "<p>Fragile X screening</p>",
+            "background": "Background information about Fragile X",
+            "background_html": "<p>Background information about Fragile X</p>",
+            "keywords": "fragile x, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "GA1",
+            "slug": "ga1",
+            "url": "https://legacyscreening.phe.org.uk/ga1",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "GA1",
+            "condition_html": "<p>GA1</p>",
+            "summary": "GA1 screening",
+            "summary_html": "<p>GA1 screening</p>",
+            "background": "Background information about GA1",
+            "background_html": "<p>Background information about GA1</p>",
+            "keywords": "ga1, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Galactosaemia",
+            "slug": "galactosaemia",
+            "url": "https://legacyscreening.phe.org.uk/galactosaemia",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Galactosaemia",
+            "condition_html": "<p>Galactosaemia</p>",
+            "summary": "Galactosaemia screening",
+            "summary_html": "<p>Galactosaemia screening</p>",
+            "background": "Background information about Galactosaemia",
+            "background_html": "<p>Background information about Galactosaemia</p>",
+            "keywords": "galactosaemia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Gaucher disease",
+            "slug": "gaucher-disease",
+            "url": "https://legacyscreening.phe.org.uk/gaucher",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Gaucher disease",
+            "condition_html": "<p>Gaucher disease</p>",
+            "summary": "Gaucher disease screening",
+            "summary_html": "<p>Gaucher disease screening</p>",
+            "background": "Background information about Gaucher disease",
+            "background_html": "<p>Background information about Gaucher disease</p>",
+            "keywords": "gaucher disease, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Genital Herpes",
+            "slug": "genital-herpes",
+            "url": "https://legacyscreening.phe.org.uk/genitalherpes",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Genital Herpes",
+            "condition_html": "<p>Genital Herpes</p>",
+            "summary": "Genital Herpes screening",
+            "summary_html": "<p>Genital Herpes screening</p>",
+            "background": "Background information about Genital Herpes",
+            "background_html": "<p>Background information about Genital Herpes</p>",
+            "keywords": "genital herpes, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Gestational diabetes",
+            "slug": "gestational-diabetes",
+            "url": "https://legacyscreening.phe.org.uk/gestational-diabetes",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Gestational diabetes",
+            "condition_html": "<p>Gestational diabetes</p>",
+            "summary": "Gestational diabetes screening",
+            "summary_html": "<p>Gestational diabetes screening</p>",
+            "background": "Background information about Gestational diabetes",
+            "background_html": "<p>Background information about Gestational diabetes</p>",
+            "keywords": "gestational diabetes, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Glaucoma",
+            "slug": "glaucoma",
+            "url": "https://legacyscreening.phe.org.uk/glaucoma",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Glaucoma",
+            "condition_html": "<p>Glaucoma</p>",
+            "summary": "Glaucoma screening",
+            "summary_html": "<p>Glaucoma screening</p>",
+            "background": "Background information about Glaucoma",
+            "background_html": "<p>Background information about Glaucoma</p>",
+            "keywords": "glaucoma, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Group B Streptococcus",
+            "slug": "group-b-streptococcus",
+            "url": "https://legacyscreening.phe.org.uk/groupbstreptococcus",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Group B Streptococcus",
+            "condition_html": "<p>Group B Streptococcus</p>",
+            "summary": "Group B Streptococcus screening",
+            "summary_html": "<p>Group B Streptococcus screening</p>",
+            "background": "Background information about Group B Streptococcus",
+            "background_html": "<p>Background information about Group B Streptococcus</p>",
+            "keywords": "group b streptococcus, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Growth",
+            "slug": "growth",
+            "url": "https://legacyscreening.phe.org.uk/growth",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Growth",
+            "condition_html": "<p>Growth</p>",
+            "summary": "Growth screening",
+            "summary_html": "<p>Growth screening</p>",
+            "background": "Background information about Growth",
+            "background_html": "<p>Background information about Growth</p>",
+            "keywords": "growth, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Haemochromatosis",
+            "slug": "haemochromatosis",
+            "url": "https://legacyscreening.phe.org.uk/haemochromatosis",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Haemochromatosis",
+            "condition_html": "<p>Haemochromatosis</p>",
+            "summary": "Haemochromatosis screening",
+            "summary_html": "<p>Haemochromatosis screening</p>",
+            "background": "Background information about Haemochromatosis",
+            "background_html": "<p>Background information about Haemochromatosis</p>",
+            "keywords": "haemochromatosis, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "HCU",
+            "slug": "hcu",
+            "url": "https://legacyscreening.phe.org.uk/hcu",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "HCU",
+            "condition_html": "<p>HCU</p>",
+            "summary": "HCU screening",
+            "summary_html": "<p>HCU screening</p>",
+            "background": "Background information about HCU",
+            "background_html": "<p>Background information about HCU</p>",
+            "keywords": "hcu, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hearing (child)",
+            "slug": "hearing-child",
+            "url": "https://legacyscreening.phe.org.uk/hearing-child",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Hearing (child)",
+            "condition_html": "<p>Hearing (child)</p>",
+            "summary": "Hearing (child) screening",
+            "summary_html": "<p>Hearing (child) screening</p>",
+            "background": "Background information about Hearing (child)",
+            "background_html": "<p>Background information about Hearing (child)</p>",
+            "keywords": "hearing, child, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hearing (newborn)",
+            "slug": "hearing-newborn",
+            "url": "https://legacyscreening.phe.org.uk/hearing-newborn",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Hearing (newborn)",
+            "condition_html": "<p>Hearing (newborn)</p>",
+            "summary": "Hearing (newborn) screening",
+            "summary_html": "<p>Hearing (newborn) screening</p>",
+            "background": "Background information about Hearing (newborn)",
+            "background_html": "<p>Background information about Hearing (newborn)</p>",
+            "keywords": "hearing, newborn, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hearing Loss (adult)",
+            "slug": "hearing-loss-adult",
+            "url": "https://legacyscreening.phe.org.uk/hearing-adult",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Hearing Loss (adult)",
+            "condition_html": "<p>Hearing Loss (adult)</p>",
+            "summary": "Hearing Loss (adult) screening",
+            "summary_html": "<p>Hearing Loss (adult) screening</p>",
+            "background": "Background information about Hearing Loss (adult)",
+            "background_html": "<p>Background information about Hearing Loss (adult)</p>",
+            "keywords": "hearing loss, adult, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hepatitis B",
+            "slug": "hepatitis-b",
+            "url": "https://legacyscreening.phe.org.uk/hepatitisb",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Hepatitis B",
+            "condition_html": "<p>Hepatitis B</p>",
+            "summary": "Hepatitis B screening",
+            "summary_html": "<p>Hepatitis B screening</p>",
+            "background": "Background information about Hepatitis B",
+            "background_html": "<p>Background information about Hepatitis B</p>",
+            "keywords": "hepatitis b, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hepatitis C (pregnancy)",
+            "slug": "hepatitis-c-pregnancy",
+            "url": "https://legacyscreening.phe.org.uk/hepatitisc-pregnancy",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Hepatitis C (pregnancy)",
+            "condition_html": "<p>Hepatitis C (pregnancy)</p>",
+            "summary": "Hepatitis C (pregnancy) screening",
+            "summary_html": "<p>Hepatitis C (pregnancy) screening</p>",
+            "background": "Background information about Hepatitis C (pregnancy)",
+            "background_html": "<p>Background information about Hepatitis C (pregnancy)</p>",
+            "keywords": "hepatitis c, pregnancy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "HTLV",
+            "slug": "htlv",
+            "url": "https://legacyscreening.phe.org.uk/htlv",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "HTLV",
+            "condition_html": "<p>HTLV</p>",
+            "summary": "HTLV screening",
+            "summary_html": "<p>HTLV screening</p>",
+            "background": "Background information about HTLV",
+            "background_html": "<p>Background information about HTLV</p>",
+            "keywords": "htlv, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Human immunodeficiency virus",
+            "slug": "human-immunodeficiency-virus",
+            "url": "https://legacyscreening.phe.org.uk/hiv",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Human immunodeficiency virus",
+            "condition_html": "<p>Human immunodeficiency virus</p>",
+            "summary": "Human immunodeficiency virus screening",
+            "summary_html": "<p>Human immunodeficiency virus screening</p>",
+            "background": "Background information about Human immunodeficiency virus",
+            "background_html": "<p>Background information about Human immunodeficiency virus</p>",
+            "keywords": "human immunodeficiency virus, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hypertension (adult)",
+            "slug": "hypertension-adult",
+            "url": "https://legacyscreening.phe.org.uk/hypertension-adult",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Hypertension (adult)",
+            "condition_html": "<p>Hypertension (adult)</p>",
+            "summary": "Hypertension (adult) screening",
+            "summary_html": "<p>Hypertension (adult) screening</p>",
+            "background": "Background information about Hypertension (adult)",
+            "background_html": "<p>Background information about Hypertension (adult)</p>",
+            "keywords": "hypertension, adult, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Hypertension (child)",
+            "slug": "hypertension-child",
+            "url": "https://legacyscreening.phe.org.uk/hypertension-child",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Hypertension (child)",
+            "condition_html": "<p>Hypertension (child)</p>",
+            "summary": "Hypertension (child) screening",
+            "summary_html": "<p>Hypertension (child) screening</p>",
+            "background": "Background information about Hypertension (child)",
+            "background_html": "<p>Background information about Hypertension (child)</p>",
+            "keywords": "hypertension, child, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Iron Deficiency Anaemia",
+            "slug": "iron-deficiency-anaemia",
+            "url": "https://legacyscreening.phe.org.uk/irondeficiency",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Iron Deficiency Anaemia",
+            "condition_html": "<p>Iron Deficiency Anaemia</p>",
+            "summary": "Iron Deficiency Anaemia screening",
+            "summary_html": "<p>Iron Deficiency Anaemia screening</p>",
+            "background": "Background information about Iron Deficiency Anaemia",
+            "background_html": "<p>Background information about Iron Deficiency Anaemia</p>",
+            "keywords": "iron deficiency anaemia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "IVA",
+            "slug": "iva",
+            "url": "https://legacyscreening.phe.org.uk/iva",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "IVA",
+            "condition_html": "<p>IVA</p>",
+            "summary": "IVA screening",
+            "summary_html": "<p>IVA screening</p>",
+            "background": "Background information about IVA",
+            "background_html": "<p>Background information about IVA</p>",
+            "keywords": "iva, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Kernicterus",
+            "slug": "kernicterus",
+            "url": "https://legacyscreening.phe.org.uk/kernicterus",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Kernicterus",
+            "condition_html": "<p>Kernicterus</p>",
+            "summary": "Kernicterus screening",
+            "summary_html": "<p>Kernicterus screening</p>",
+            "background": "Background information about Kernicterus",
+            "background_html": "<p>Background information about Kernicterus</p>",
+            "keywords": "kernicterus, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Kidney disease",
+            "slug": "kidney-disease",
+            "url": "https://legacyscreening.phe.org.uk/kidneydisease",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Kidney disease",
+            "condition_html": "<p>Kidney disease</p>",
+            "summary": "Kidney disease screening",
+            "summary_html": "<p>Kidney disease screening</p>",
+            "background": "Background information about Kidney disease",
+            "background_html": "<p>Background information about Kidney disease</p>",
+            "keywords": "kidney disease, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "LCHADD",
+            "slug": "lchadd",
+            "url": "https://legacyscreening.phe.org.uk/lchadd",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "LCHADD",
+            "condition_html": "<p>LCHADD</p>",
+            "summary": "LCHADD screening",
+            "summary_html": "<p>LCHADD screening</p>",
+            "background": "Background information about LCHADD",
+            "background_html": "<p>Background information about LCHADD</p>",
+            "keywords": "lchadd, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Lead Poisoning",
+            "slug": "lead-poisoning",
+            "url": "https://legacyscreening.phe.org.uk/leadpoisoning",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Lead Poisoning",
+            "condition_html": "<p>Lead Poisoning</p>",
+            "summary": "Lead Poisoning screening",
+            "summary_html": "<p>Lead Poisoning screening</p>",
+            "background": "Background information about Lead Poisoning",
+            "background_html": "<p>Background information about Lead Poisoning</p>",
+            "keywords": "lead poisoning, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Lung cancer",
+            "slug": "lung-cancer",
+            "url": "https://legacyscreening.phe.org.uk/lungcancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Lung cancer",
+            "condition_html": "<p>Lung cancer</p>",
+            "summary": "Lung cancer screening",
+            "summary_html": "<p>Lung cancer screening</p>",
+            "background": "Background information about Lung cancer",
+            "background_html": "<p>Background information about Lung cancer</p>",
+            "keywords": "lung cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "MCADD",
+            "slug": "mcadd",
+            "url": "https://legacyscreening.phe.org.uk/mcadd",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "MCADD",
+            "condition_html": "<p>MCADD</p>",
+            "summary": "MCADD screening",
+            "summary_html": "<p>MCADD screening</p>",
+            "background": "Background information about MCADD",
+            "background_html": "<p>Background information about MCADD</p>",
+            "keywords": "mcadd, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "MPS I",
+            "slug": "mps-i",
+            "url": "https://legacyscreening.phe.org.uk/mps1",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "MPS I",
+            "condition_html": "<p>MPS I</p>",
+            "summary": "MPS I screening",
+            "summary_html": "<p>MPS I screening</p>",
+            "background": "Background information about MPS I",
+            "background_html": "<p>Background information about MPS I</p>",
+            "keywords": "mps i, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "MSUD",
+            "slug": "msud",
+            "url": "https://legacyscreening.phe.org.uk/msud",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "MSUD",
+            "condition_html": "<p>MSUD</p>",
+            "summary": "MSUD screening",
+            "summary_html": "<p>MSUD screening</p>",
+            "background": "Background information about MSUD",
+            "background_html": "<p>Background information about MSUD</p>",
+            "keywords": "msud, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Neural tube defect",
+            "slug": "neural-tube-defect",
+            "url": "https://legacyscreening.phe.org.uk/neuraltubedefect",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Neural tube defect",
+            "condition_html": "<p>Neural tube defect</p>",
+            "summary": "Neural tube defect screening",
+            "summary_html": "<p>Neural tube defect screening</p>",
+            "background": "Background information about Neural tube defect",
+            "background_html": "<p>Background information about Neural tube defect</p>",
+            "keywords": "neural tube defect, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Neuroblastoma",
+            "slug": "neuroblastoma",
+            "url": "https://legacyscreening.phe.org.uk/neuroblastoma",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Neuroblastoma",
+            "condition_html": "<p>Neuroblastoma</p>",
+            "summary": "Neuroblastoma screening",
+            "summary_html": "<p>Neuroblastoma screening</p>",
+            "background": "Background information about Neuroblastoma",
+            "background_html": "<p>Background information about Neuroblastoma</p>",
+            "keywords": "neuroblastoma, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Obesity",
+            "slug": "obesity",
+            "url": "https://legacyscreening.phe.org.uk/obesity",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Obesity",
+            "condition_html": "<p>Obesity</p>",
+            "summary": "Obesity screening",
+            "summary_html": "<p>Obesity screening</p>",
+            "background": "Background information about Obesity",
+            "background_html": "<p>Background information about Obesity</p>",
+            "keywords": "obesity, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Oral Cancer",
+            "slug": "oral-cancer",
+            "url": "https://legacyscreening.phe.org.uk/oralcancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Oral Cancer",
+            "condition_html": "<p>Oral Cancer</p>",
+            "summary": "Oral Cancer screening",
+            "summary_html": "<p>Oral Cancer screening</p>",
+            "background": "Background information about Oral Cancer",
+            "background_html": "<p>Background information about Oral Cancer</p>",
+            "keywords": "oral cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Organic acid oxidation disorders",
+            "slug": "organic-acid-oxidation-disorders",
+            "url": "https://legacyscreening.phe.org.uk/organicacidmetabolism",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Organic acid oxidation disorders",
+            "condition_html": "<p>Organic acid oxidation disorders</p>",
+            "summary": "Organic acid oxidation disorders screening",
+            "summary_html": "<p>Organic acid oxidation disorders screening</p>",
+            "background": "Background information about Organic acid oxidation disorders",
+            "background_html": "<p>Background information about Organic acid oxidation disorders</p>",
+            "keywords": "organic acid oxidation, disorders, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Osteoporosis",
+            "slug": "osteoporosis",
+            "url": "https://legacyscreening.phe.org.uk/osteoporosis",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Osteoporosis",
+            "condition_html": "<p>Osteoporosis</p>",
+            "summary": "Osteoporosis screening",
+            "summary_html": "<p>Osteoporosis screening</p>",
+            "background": "Background information about Osteoporosis",
+            "background_html": "<p>Background information about Osteoporosis</p>",
+            "keywords": "osteoporosis, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Ovarian cancer",
+            "slug": "ovarian-cancer",
+            "url": "https://legacyscreening.phe.org.uk/ovariancancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Ovarian cancer",
+            "condition_html": "<p>Ovarian cancer</p>",
+            "summary": "Ovarian cancer screening",
+            "summary_html": "<p>Ovarian cancer screening</p>",
+            "background": "Background information about Ovarian cancer",
+            "background_html": "<p>Background information about Ovarian cancer</p>",
+            "keywords": "ovarian cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Partner Violence",
+            "slug": "partner-violence",
+            "url": "https://legacyscreening.phe.org.uk/partnerviolence",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Partner Violence",
+            "condition_html": "<p>Partner Violence</p>",
+            "summary": "Partner Violence screening",
+            "summary_html": "<p>Partner Violence screening</p>",
+            "background": "Background information about Partner Violence",
+            "background_html": "<p>Background information about Partner Violence</p>",
+            "keywords": "partner violence, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Partner violence (pregnancy)",
+            "slug": "partner-violence-pregnancy",
+            "url": "https://legacyscreening.phe.org.uk/partnerviolence-pregnancy",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Partner violence (pregnancy)",
+            "condition_html": "<p>Partner violence (pregnancy)</p>",
+            "summary": "Partner violence (pregnancy) screening",
+            "summary_html": "<p>Partner violence (pregnancy) screening</p>",
+            "background": "Background information about Partner violence (pregnancy)",
+            "background_html": "<p>Background information about Partner violence (pregnancy)</p>",
+            "keywords": "partner violence, pregnancy, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Parvovirus",
+            "slug": "parvovirus",
+            "url": "https://legacyscreening.phe.org.uk/parvovirus",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Parvovirus",
+            "condition_html": "<p>Parvovirus</p>",
+            "summary": "Parvovirus screening",
+            "summary_html": "<p>Parvovirus screening</p>",
+            "background": "Background information about Parvovirus",
+            "background_html": "<p>Background information about Parvovirus</p>",
+            "keywords": "parvovirus, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "PKU",
+            "slug": "pku",
+            "url": "https://legacyscreening.phe.org.uk/pku",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "PKU",
+            "condition_html": "<p>PKU</p>",
+            "summary": "PKU screening",
+            "summary_html": "<p>PKU screening</p>",
+            "background": "Background information about PKU",
+            "background_html": "<p>Background information about PKU</p>",
+            "keywords": "pku, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Placenta praevia",
+            "slug": "placenta-praevia",
+            "url": "https://legacyscreening.phe.org.uk/placentapraevia",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Placenta praevia",
+            "condition_html": "<p>Placenta praevia</p>",
+            "summary": "Placenta praevia screening",
+            "summary_html": "<p>Placenta praevia screening</p>",
+            "background": "Background information about Placenta praevia",
+            "background_html": "<p>Background information about Placenta praevia</p>",
+            "keywords": "placenta praevia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Postnatal depression",
+            "slug": "postnatal-depression",
+            "url": "https://legacyscreening.phe.org.uk/postnataldepression",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Postnatal depression",
+            "condition_html": "<p>Postnatal depression</p>",
+            "summary": "Postnatal depression screening",
+            "summary_html": "<p>Postnatal depression screening</p>",
+            "background": "Background information about Postnatal depression",
+            "background_html": "<p>Background information about Postnatal depression</p>",
+            "keywords": "postnatal depression, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Pre-eclampsia",
+            "slug": "pre-eclampsia",
+            "url": "https://legacyscreening.phe.org.uk/pre-eclampsia",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Pre-eclampsia",
+            "condition_html": "<p>Pre-eclampsia</p>",
+            "summary": "Pre-eclampsia screening",
+            "summary_html": "<p>Pre-eclampsia screening</p>",
+            "background": "Background information about Pre-eclampsia",
+            "background_html": "<p>Background information about Pre-eclampsia</p>",
+            "keywords": "pre-eclampsia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Preterm birth",
+            "slug": "preterm-birth",
+            "url": "https://legacyscreening.phe.org.uk/pretermbirth",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Preterm birth",
+            "condition_html": "<p>Preterm birth</p>",
+            "summary": "Preterm birth screening",
+            "summary_html": "<p>Preterm birth screening</p>",
+            "background": "Background information about Preterm birth",
+            "background_html": "<p>Background information about Preterm birth</p>",
+            "keywords": "preterm birth, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Prostate Cancer",
+            "slug": "prostate-cancer",
+            "url": "https://legacyscreening.phe.org.uk/prostatecancer",
+            "ages": ["adult"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Prostate Cancer",
+            "condition_html": "<p>Prostate Cancer</p>",
+            "summary": "Prostate Cancer screening",
+            "summary_html": "<p>Prostate Cancer screening</p>",
+            "background": "Background information about Prostate Cancer",
+            "background_html": "<p>Background information about Prostate Cancer</p>",
+            "keywords": "prostate cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Psychiatric illness",
+            "slug": "psychiatric-illness",
+            "url": "https://legacyscreening.phe.org.uk/psychiatricillness",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Psychiatric illness",
+            "condition_html": "<p>Psychiatric illness</p>",
+            "summary": "Psychiatric illness screening",
+            "summary_html": "<p>Psychiatric illness screening</p>",
+            "background": "Background information about Psychiatric illness",
+            "background_html": "<p>Background information about Psychiatric illness</p>",
+            "keywords": "psychiatric illness, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Rubella susceptibility",
+            "slug": "rubella-susceptibility",
+            "url": "https://legacyscreening.phe.org.uk/rubellasusceptibility",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Rubella susceptibility",
+            "condition_html": "<p>Rubella susceptibility</p>",
+            "summary": "Rubella susceptibility screening",
+            "summary_html": "<p>Rubella susceptibility screening</p>",
+            "background": "Background information about Rubella susceptibility",
+            "background_html": "<p>Background information about Rubella susceptibility</p>",
+            "keywords": "rubella susceptibility, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "SCID",
+            "slug": "scid",
+            "url": "https://legacyscreening.phe.org.uk/scid",
+            "ages": ["antenatal"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "SCID",
+            "condition_html": "<p>SCID</p>",
+            "summary": "SCID screening",
+            "summary_html": "<p>SCID screening</p>",
+            "background": "Background information about SCID",
+            "background_html": "<p>Background information about SCID</p>",
+            "keywords": "scid, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Scoliosis",
+            "slug": "scoliosis",
+            "url": "https://legacyscreening.phe.org.uk/scoliosis",
+            "ages": ["child"],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Scoliosis",
+            "condition_html": "<p>Scoliosis</p>",
+            "summary": "Scoliosis screening",
+            "summary_html": "<p>Scoliosis screening</p>",
+            "background": "Background information about Scoliosis",
+            "background_html": "<p>Background information about Scoliosis</p>",
+            "keywords": "scoliosis, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Sickle cell and Thalassaemia",
+            "slug": "sickle-cell-and-thalassaemia",
+            "url": "https://legacyscreening.phe.org.uk/sicklecellthalassaemia",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Sickle cell and Thalassaemia",
+            "condition_html": "<p>Sickle cell and Thalassaemia</p>",
+            "summary": "Sickle cell and Thalassaemia screening",
+            "summary_html": "<p>Sickle cell and Thalassaemia screening</p>",
+            "background": "Background information about Sickle cell and Thalassaemia",
+            "background_html": "<p>Background information about Sickle cell and Thalassaemia</p>",
+            "keywords": "sickle cell and thalassaemia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Sickle Cell Disease (newborn)",
+            "slug": "sickle-cell-disease-newborn",
+            "url": "https://legacyscreening.phe.org.uk/sicklecelldisease",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Sickle Cell Disease (newborn)",
+            "condition_html": "<p>Sickle Cell Disease (newborn)</p>",
+            "summary": "Sickle Cell Disease (newborn) screening",
+            "summary_html": "<p>Sickle Cell Disease (newborn) screening</p>",
+            "background": "Background information about Sickle Cell Disease (newborn)",
+            "background_html": "<p>Background information about Sickle Cell Disease (newborn)</p>",
+            "keywords": "sickle cell disease (newborn), screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "SMA",
+            "slug": "sma",
+            "url": "https://legacyscreening.phe.org.uk/sma",
+            "ages": [
+                "antenatal",
+                "newborn"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "SMA",
+            "condition_html": "<p>SMA</p>",
+            "summary": "SMA screening",
+            "summary_html": "<p>SMA screening</p>",
+            "background": "Background information about SMA",
+            "background_html": "<p>Background information about SMA</p>",
+            "keywords": "sma, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Speech & Language Delay",
+            "slug": "speech-language-delay",
+            "url": "https://legacyscreening.phe.org.uk/speechlanguage",
+            "ages": [
+                "child"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Speech & Language Delay",
+            "condition_html": "<p>Speech & Language Delay</p>",
+            "summary": "Speech & Language Delay screening",
+            "summary_html": "<p>Speech & Language Delay screening</p>",
+            "background": "Background information about Speech & Language Delay",
+            "background_html": "<p>Background information about Speech & Language Delay</p>",
+            "keywords": "speech & language delay, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Stillbirth",
+            "slug": "stillbirth",
+            "url": "https://legacyscreening.phe.org.uk/stillbirth",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Stillbirth",
+            "condition_html": "<p>Stillbirth</p>",
+            "summary": "Stillbirth screening",
+            "summary_html": "<p>Stillbirth screening</p>",
+            "background": "Background information about Stillbirth",
+            "background_html": "<p>Background information about Stillbirth</p>",
+            "keywords": "stillbirth, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Stomach cancer",
+            "slug": "stomach-cancer",
+            "url": "https://legacyscreening.phe.org.uk/stomachcancer",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Stomach cancer",
+            "condition_html": "<p>Stomach cancer</p>",
+            "summary": "Stomach cancer screening",
+            "summary_html": "<p>Stomach cancer screening</p>",
+            "background": "Background information about Stomach cancer",
+            "background_html": "<p>Background information about Stomach cancer</p>",
+            "keywords": "stomach cancer, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Sudden Cardiac Death",
+            "slug": "sudden-cardiac-death",
+            "url": "https://legacyscreening.phe.org.uk/suddencardiacdeath",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Sudden Cardiac Death",
+            "condition_html": "<p>Sudden Cardiac Death</p>",
+            "summary": "Sudden Cardiac Death screening",
+            "summary_html": "<p>Sudden Cardiac Death screening</p>",
+            "background": "Background information about Sudden Cardiac Death",
+            "background_html": "<p>Background information about Sudden Cardiac Death</p>",
+            "keywords": "sudden cardiac death, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Syphilis",
+            "slug": "syphilis",
+            "url": "https://legacyscreening.phe.org.uk/syphilis",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Syphilis",
+            "condition_html": "<p>Syphilis</p>",
+            "summary": "Syphilis screening",
+            "summary_html": "<p>Syphilis screening</p>",
+            "background": "Background information about Syphilis",
+            "background_html": "<p>Background information about Syphilis</p>",
+            "keywords": "syphilis, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "T18 and T13",
+            "slug": "t18-and-t13",
+            "url": "https://legacyscreening.phe.org.uk/t18andt13",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "T18 and T13",
+            "condition_html": "<p>T18 and T13</p>",
+            "summary": "T18 and T13 screening",
+            "summary_html": "<p>T18 and T13 screening</p>",
+            "background": "Background information about T18 and T13",
+            "background_html": "<p>Background information about T18 and T13</p>",
+            "keywords": "t18 and t13, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Thrombophilia",
+            "slug": "thrombophilia",
+            "url": "https://legacyscreening.phe.org.uk/thrombophilia",
+            "ages": [
+                "all"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Thrombophilia",
+            "condition_html": "<p>Thrombophilia</p>",
+            "summary": "Thrombophilia screening",
+            "summary_html": "<p>Thrombophilia screening</p>",
+            "background": "Background information about Thrombophilia",
+            "background_html": "<p>Background information about Thrombophilia</p>",
+            "keywords": "thrombophilia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Thyroid disease",
+            "slug": "thyroid-disease",
+            "url": "https://legacyscreening.phe.org.uk/thyroid",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Thyroid disease",
+            "condition_html": "<p>Thyroid disease</p>",
+            "summary": "Thyroid disease screening",
+            "summary_html": "<p>Thyroid disease screening</p>",
+            "background": "Background information about Thyroid disease",
+            "background_html": "<p>Background information about Thyroid disease</p>",
+            "keywords": "thyroid disease, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Toxoplasmosis",
+            "slug": "toxoplasmosis",
+            "url": "https://legacyscreening.phe.org.uk/toxoplasmosis",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Toxoplasmosis",
+            "condition_html": "<p>Toxoplasmosis</p>",
+            "summary": "Toxoplasmosis screening",
+            "summary_html": "<p>Toxoplasmosis screening</p>",
+            "background": "Background information about Toxoplasmosis",
+            "background_html": "<p>Background information about Toxoplasmosis</p>",
+            "keywords": "toxoplasmosis, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Tyrosinaemia",
+            "slug": "tyrosinaemia",
+            "url": "https://legacyscreening.phe.org.uk/tyrosinaemia",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Tyrosinaemia",
+            "condition_html": "<p>Tyrosinaemia</p>",
+            "summary": "Tyrosinaemia screening",
+            "summary_html": "<p>Tyrosinaemia screening</p>",
+            "background": "Background information about Tyrosinaemia",
+            "background_html": "<p>Background information about Tyrosinaemia</p>",
+            "keywords": "tyrosinaemia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Varicella susceptibility",
+            "slug": "varicella-susceptibility",
+            "url": "https://legacyscreening.phe.org.uk/varicella",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Varicella susceptibility",
+            "condition_html": "<p>Varicella susceptibility</p>",
+            "summary": "Varicella susceptibility screening",
+            "summary_html": "<p>Varicella susceptibility screening</p>",
+            "background": "Background information about Varicella susceptibility",
+            "background_html": "<p>Background information about Varicella susceptibility</p>",
+            "keywords": "varicella susceptibility, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Vasa praevia",
+            "slug": "vasa-praevia",
+            "url": "https://legacyscreening.phe.org.uk/vasapraevia",
+            "ages": [
+                "antenatal"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Vasa praevia",
+            "condition_html": "<p>Vasa praevia</p>",
+            "summary": "Vasa praevia screening",
+            "summary_html": "<p>Vasa praevia screening</p>",
+            "background": "Background information about Vasa praevia",
+            "background_html": "<p>Background information about Vasa praevia</p>",
+            "keywords": "vasa praevia, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Vascular risk",
+            "slug": "vascular-risk",
+            "url": "https://legacyscreening.phe.org.uk/vascularrisk",
+            "ages": [
+                "adult"
+            ],
+            "is_active": true,
+            "recommendation": false,
+            "condition": "Vascular risk",
+            "condition_html": "<p>Vascular risk</p>",
+            "summary": "Vascular risk screening",
+            "summary_html": "<p>Vascular risk screening</p>",
+            "background": "Background information about Vascular risk",
+            "background_html": "<p>Background information about Vascular risk</p>",
+            "keywords": "vascular risk, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
+    },
+    {
+        "model": "policy.policy",
+        "fields": {
+            "name": "Vision Defects",
+            "slug": "vision-defects",
+            "url": "https://legacyscreening.phe.org.uk/vision-child",
+            "ages": [
+                "child"
+            ],
+            "is_active": true,
+            "recommendation": true,
+            "condition": "Vision Defects",
+            "condition_html": "<p>Vision Defects</p>",
+            "summary": "Vision Defects screening",
+            "summary_html": "<p>Vision Defects screening</p>",
+            "background": "Background information about Vision Defects",
+            "background_html": "<p>Background information about Vision Defects</p>",
+            "keywords": "vision defects, screening",
+            "archived": false,
+            "archived_reason": "",
+            "archived_reason_html": "",
+            "condition_type": "general",
+            "created": "2024-03-19T00:00:00Z",
+            "modified": "2024-03-19T00:00:00Z"
+        }
     }
+    
 ]

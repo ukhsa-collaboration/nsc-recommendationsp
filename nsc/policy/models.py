@@ -106,6 +106,7 @@ class Policy(TimeStampedModel):
     name = models.CharField(verbose_name=_("name"), max_length=100)
     slug = models.SlugField(verbose_name=_("slug"), max_length=100, unique=True)
     condition_type = models.CharField(choices=CONDITION_TYPES, max_length=8, null=True)
+    url = models.URLField(verbose_name=_("legacy URL"), max_length=200, blank=True, null=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
     recommendation = models.BooleanField(
