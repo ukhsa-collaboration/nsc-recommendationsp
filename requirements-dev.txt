@@ -292,7 +292,7 @@ mypy-extensions==0.4.3
     # via
     #   -r requirements-dev.in
     #   black
-notifications-python-client==6.3.0
+notifications-python-client==10.0.1
     # via
     #   -r requirements-dev.in
     #   -r requirements.in
