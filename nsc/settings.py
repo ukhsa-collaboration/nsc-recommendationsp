@@ -636,7 +636,11 @@ class Deployed(Build):
     #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
     # }
 
-    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+    }
 
     @property
     def CACHES(self):
