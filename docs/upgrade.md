@@ -30,6 +30,35 @@ This document outlines the major upgrade of this project:
 | vine	     | 5.0.0	     |  Removed	   | Removed ❌     |
 
 ---
+## 🌐 Django Upgrade
+
+**From:** Django 3.2.13  
+**To:** Django 5.0.14
+
+### ⚙️ Django Compatibility
+
+**Updated:** The configuration for **storage backends** in `settings.py` has been updated to use the new **dotted path syntax** introduced in **Django 5.3**.
+
+#### 🔄 Before (Deprecated in Django 5.3)
+
+⚙️ Django Compatibility
+Updated: The configuration for storage backends in settings.py has been updated to use the new dotted path syntax introduced in Django 5.3.
+
+🔄 Before
+DEFAULT_FILE_STORAGE = 'nsc.storage.MediaStorage'
+
+✅ After (In Django 5.3)
+
+STORAGES = {
+    "default": {
+        "BACKEND": "nsc.storage.MediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+---
 
 ## 🟢  Node Upgrade
 
@@ -114,31 +143,5 @@ Refer: [Yarn Migration Guide](https://yarnpkg.com/migration/guide)
 - Python, Node, and Postgres version images updated in `.github/workflows/ci.yml`
 - Postgres version updated from 10.8 to 13
 
-## 🌐 Django Upgrade
 
-**From:** Django 3.2.13  
-**To:** Django 5.0.14
-
-### ⚙️ Django Compatibility
-
-**Updated:** The configuration for **storage backends** in `settings.py` has been updated to use the new **dotted path syntax** introduced in **Django 5.3**.
-
-#### 🔄 Before (Deprecated in Django 5.3)
-
-⚙️ Django Compatibility
-Updated: The configuration for storage backends in settings.py has been updated to use the new dotted path syntax introduced in Django 5.3.
-
-🔄 Before
-DEFAULT_FILE_STORAGE = 'nsc.storage.MediaStorage'
-
-✅ After (In Django 5.3)
-
-STORAGES = {
-    "default": {
-        "BACKEND": "nsc.storage.MediaStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
 
