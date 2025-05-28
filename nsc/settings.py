@@ -636,7 +636,14 @@ class Deployed(Build):
     #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
     # }
 
-    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "nsc.storage.MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
     @property
     def CACHES(self):
