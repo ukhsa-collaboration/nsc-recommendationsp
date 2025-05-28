@@ -100,7 +100,7 @@ def test_emails_match_subscription_is_created(
 
 
 def test_subscription_already_exists_for_email_new_policies_are_added(
-    client, make_subscription, make_policy
+    django_app, make_subscription, make_policy
 ):
     selected_policies = make_policy(_quantity=3)
     new_policies = make_policy(_quantity=3)
@@ -111,14 +111,15 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     url = reverse("subscription:public-subscribe")
     policies_url_args = "&".join(map(lambda p: f"policies={p.id}", new_policies))
 
-    response = client.get(f"{url}?{policies_url_args}")
+    response = django_app.get(f"{url}?{policies_url_args}")
 
-    data = {
-        "email": "foo@example.com",
-        "email_confirmation": "foo@example.com",
-        "policies": [p.id for p in selected_policies] + [p.id for p in new_policies],
-    }
-    response = client.post(url, data=data)
+    form = response.forms[1]
+
+    form["email"] = "foo@example.com"
+    form["email_confirmation"] = "foo@example.com"
+    form.set("policies", [str(p.id) for p in selected_policies + new_policies])
+
+    response = form.submit()
 
     sub = Subscription.objects.first()
     assert Subscription.objects.count() == 1
@@ -126,11 +127,9 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     assert set(sub.policies.values_list("id", flat=True)) == {
         s.id for s in chain(selected_policies, new_policies)
     }
-    assert (
-        response.url
-        == reverse(
+    assert response.url.rstrip("/") == (
+        reverse(
             "subscription:public-complete",
             kwargs={"token": get_object_signature(sub), "pk": sub.id},
-        )
-        + "#"
+        ).rstrip("/")
     )
