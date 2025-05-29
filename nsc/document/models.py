@@ -11,7 +11,7 @@ from model_utils import Choices
 from simple_history.models import HistoricalRecords
 
 from nsc.utils.datetime import get_today
-
+import uuid
 
 class DocumentQuerySet(models.QuerySet):
     def for_policy(self, policy):
@@ -82,7 +82,7 @@ class DocumentPolicy(TimeStampedModel):
 
 
 class Document(TimeStampedModel):
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     TYPE = Choices(
         ("cover_sheet", _("Coversheet")),
         ("submission_form", _("Submission form")),

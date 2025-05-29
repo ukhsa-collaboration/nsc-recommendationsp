@@ -31,7 +31,7 @@ def test_get_download_url():
     Test getting the URL for downloading a document
     """
     instance = baker.make(Document)
-    expected = reverse("document:download", kwargs={"pk": instance.pk})
+    expected = reverse("document:download", kwargs={"uuid": instance.uuid})
     assert instance.get_download_url() == expected
 
 
