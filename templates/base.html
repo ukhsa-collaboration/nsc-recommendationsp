@@ -108,7 +108,7 @@
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
-          <button class="govuk-button govuk-button--secondary" type="submit">Logout</button>
+          <button class="govuk-button" type="submit">Logout</button>
         </form>
         {% endif %}
       </div>
