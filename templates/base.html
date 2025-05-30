@@ -69,8 +69,9 @@
 
   {% include "widgets/cookie_banner.html" %}
 
-  <header class="govuk-header " role="banner" data-module="govuk-header">
+  <header class="govuk-header" role="banner" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
+      <div class="govuk-grid-column-three-quarters">
       <div class="govuk-header__logo">
         <a href="/" class="govuk-header__link govuk-header__link--homepage">
           <svg
@@ -101,6 +102,15 @@
         <a href="/" class="govuk-header__link govuk-header__service-name">
           UK National Screening Committee
         </a>
+      </div>
+      </div>
+      <div class="govuk-grid-column-one-quarter govuk-header__logout" style="text-align: right;">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="govuk-button govuk-button--secondary" type="submit">Logout</button>
+        </form>
+        {% endif %}
       </div>
     </div>
   </header>

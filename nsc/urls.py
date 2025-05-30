@@ -5,6 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
+from django.urls import reverse_lazy
 
 from nsc.review.views import ReviewDashboardView
 
@@ -37,11 +38,16 @@ urlpatterns = [
 
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
     urlpatterns += [
-        path("accounts/", include("django_auth_adfs.urls")),
+        path("accounts/", include("django_auth_adfs.urls", namespace="django_auth_adfs")),
     ]
 else:
     urlpatterns += [
-        path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
+       path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+       path(
+        'accounts/logout/',
+        auth_views.LogoutView.as_view(next_page=reverse_lazy('login')),
+        name='logout'
+    ),
     ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

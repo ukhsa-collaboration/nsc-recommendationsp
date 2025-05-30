@@ -494,6 +494,12 @@ class Dev(Webpack, Common):
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
 
+
+    SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day for local testing
+    SESSION_SAVE_EVERY_REQUEST = True
+    # other local-specific settings...
+
+
     MAIN_DOMAIN = "localhost:8000"
 
     @property
@@ -579,7 +585,7 @@ class Deployed(Build):
     SESSION_COOKIE_HTTPONLY = True
 
     # Sets the maximum age of a session (4 hours in seconds)
-    SESSION_COOKIE_AGE = 4 * 60 * 60
+    SESSION_COOKIE_AGE = 1
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
@@ -605,6 +611,7 @@ class Deployed(Build):
     DATABASE_USER = get_secret("postgresql", "database-user")
     DATABASE_PASSWORD = get_secret("postgresql", "database-password")
     DATABASE_NAME = get_secret("postgresql", "database-name")
+    SESSION_SAVE_EVERY_REQUEST = True
 
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
