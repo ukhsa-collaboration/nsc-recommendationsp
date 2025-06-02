@@ -97,8 +97,9 @@ class AddReviewDocumentsView(ReviewManagerRequiredMixin, generic.UpdateView):
 
 class DownloadView(generic.DetailView):
     model = Document
-    slug_field = 'uuid'
-    slug_url_kwarg = 'uuid'
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+
     def get(self, request, *args, **kwargs):
         document = self.get_object()
         storage = document.upload.storage
@@ -117,8 +118,9 @@ class DownloadView(generic.DetailView):
 
 class DeleteView(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Document
-    slug_field = 'uuid'
-    slug_url_kwarg = 'uuid'
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+
     def get_success_url(self):
         return clean_url(
             self.request.POST.get("next"),
