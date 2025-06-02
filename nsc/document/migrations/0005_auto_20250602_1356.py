@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
+            CREATE EXTENSION IF NOT EXISTS "pgcrypto";
             UPDATE document_document
             SET uuid = gen_random_uuid()
             WHERE uuid IS NULL;
