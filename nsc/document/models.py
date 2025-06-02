@@ -84,7 +84,10 @@ class DocumentPolicy(TimeStampedModel):
 
 class Document(TimeStampedModel):
     uuid = models.UUIDField(
-        default=uuid.uuid4, editable=False, unique=True, db_index=True
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        db_index=True,
     )
     TYPE = Choices(
         ("cover_sheet", _("Coversheet")),
