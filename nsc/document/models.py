@@ -133,10 +133,10 @@ class Document(TimeStampedModel):
         return self.name
 
     def get_download_url(self):
-        return reverse("document:download", kwargs={"pk": self.pk})
+        return reverse("document:download", kwargs={"uuid": str(self.uuid)})
 
     def exists(self):
-        return Document.objects.filter(pk=self.pk).exists() if self.pk else False
+        return Document.objects.filter(uuid=self.uuid).exists() if self.uuid else False
 
     def file_exists(self):
         return self.upload.storage.exists(self.upload.name)
