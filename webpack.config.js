@@ -17,7 +17,7 @@ const config = {
   },
   output: {
     path: path.resolve(__dirname, pathDist),
-    publicPath: '/static/',
+    publicPath: '/frontend/dist/',
     filename: '[name].js',
     library: "NSCR"
   },
@@ -25,7 +25,7 @@ const config = {
   devServer: {
     static: {
       directory: path.resolve(__dirname, pathDist),
-      publicPath: '/static/',  // Serve content at /static/
+      publicPath: '/frontend/dist/',
     },
     hot: true,
     allowedHosts: 'all',
@@ -34,7 +34,7 @@ const config = {
       'Access-Control-Allow-Origin': '*',
     },
     devMiddleware: {
-      publicPath: '/static/', 
+      publicPath: '/frontend/dist/', 
       writeToDisk: (filePath) => {
         return filePath.startsWith(pathDistGov);
       },
@@ -69,14 +69,6 @@ const config = {
           options: {
             presets: ['@babel/preset-env'],
           },
-        },
-      },
-      {
-        test: /\.(gif|png|jpe?g|svg)$/i,
-        loader: 'image-webpack-loader',
-        options: {
-          enforce: 'pre',
-          disable: true,
         },
       },
       {
@@ -121,6 +113,16 @@ const config = {
 };
 
 module.exports = (env, argv) => {
+  const imageLoaderRule = {
+    test: /\.(gif|png|jpe?g|svg)$/i,
+    loader: 'image-webpack-loader',
+    options: {
+      enforce: 'pre',
+      disable: argv.mode !== 'production', // Enable in production only
+    },
+  };
+
+  config.module.rules.splice(1, 0, imageLoaderRule);
   if (argv.mode === 'production') {
     console.log('Running in production mode');
   } else {
