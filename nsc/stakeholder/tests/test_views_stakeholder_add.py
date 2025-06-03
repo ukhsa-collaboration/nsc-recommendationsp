@@ -24,7 +24,8 @@ def url():
 
 @pytest.fixture
 def response(url, erm_user, client):
-    return client.get(url, user=erm_user)
+    client.force_login(erm_user)
+    return client.get(url)
 
 
 @pytest.fixture
@@ -36,7 +37,7 @@ def test_add_view(response):
     """
     Test that the add stakeholder page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
 
 
 def test_add_view__no_user(url, test_access_no_user):
@@ -60,95 +61,175 @@ def test_back_link__next(erm_user, client):
     """
     Test the back link returns to the stakeholder list page
     """
-    response = client.get(reverse("stakeholder:add") + "?next=/", user=erm_user)
+    client.force_login(erm_user)
+    response = client.get(reverse("stakeholder:add") + "?next=/")
     dom = BeautifulSoup(response.content, "html.parser")
     link = dom.find(id="back-link-id")
     assert link["href"] == "/"
     assert link.text.strip() == _("Back")
 
 
-def test_success_url(policy, response):
+def test_success_url(policy, response, client):
     """
     Test saving a contact returns to the stakeholder list page.
     """
-    form = response.forms[1]
-    form["name"] = "Name"
-    form["is_public"] = True
-    form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
-    form["contacts-0-name"] = "Name"
-    form["contacts-0-email"] = "name@example.com"
-    form["policies-0-policy"] = policy.id
-    actual = form.submit().follow()
-    assert actual.request.path == Stakeholder.objects.first().get_detail_url()
+    post_data = {
+        "name": "Name",
+        "is_public": True,
+        "type": Stakeholder.TYPE_INDIVIDUAL,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
+        "contacts-0-name": "Name",
+        "contacts-0-email": "name@example.com",
+        "policies-0-policy": policy.id,
+        # include form management data for formsets
+        "contacts-TOTAL_FORMS": "1",
+        "contacts-INITIAL_FORMS": "0",
+        "contacts-MIN_NUM_FORMS": "0",
+        "contacts-MAX_NUM_FORMS": "1000",
+        "policies-TOTAL_FORMS": "1",
+        "policies-INITIAL_FORMS": "0",
+        "policies-MIN_NUM_FORMS": "0",
+        "policies-MAX_NUM_FORMS": "1000",
+    }
+
+    response = client.post(reverse("stakeholder:add"), data=post_data, follow=True)
+
+    expected_path = reverse("stakeholder:detail", args=[Stakeholder.objects.first().pk])
+    assert response.request["PATH_INFO"] == expected_path
 
 
 def test_success_url__next(erm_user, policy, client):
     """
     Test saving a contact returns to the stakeholder list page.
     """
-    response = client.get(f'{reverse("stakeholder:add")}?next=/', user=erm_user)
-    form = response.forms[1]
-    form["name"] = "Name"
-    form["is_public"] = True
-    form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
-    form["contacts-0-name"] = "Name"
-    form["contacts-0-email"] = "name@example.com"
-    form["policies-0-policy"] = policy.id
-    actual = form.submit().follow()
-    assert actual.request.path == "/"
+    client.force_login(erm_user)
+
+    url = f'{reverse("stakeholder:add")}?next=/'
+
+    post_data = {
+        "name": "Name",
+        "is_public": True,
+        "type": Stakeholder.TYPE_INDIVIDUAL,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
+        # Contact formset
+        "contacts-TOTAL_FORMS": "1",
+        "contacts-INITIAL_FORMS": "0",
+        "contacts-MIN_NUM_FORMS": "0",
+        "contacts-MAX_NUM_FORMS": "1000",
+        "contacts-0-name": "Name",
+        "contacts-0-email": "name@example.com",
+        # Policy formset
+        "policies-TOTAL_FORMS": "1",
+        "policies-INITIAL_FORMS": "0",
+        "policies-MIN_NUM_FORMS": "0",
+        "policies-MAX_NUM_FORMS": "1000",
+        "policies-0-policy": policy.id,
+    }
+
+    response = client.post(url, data=post_data, follow=True)
+
+    assert response.status_code == 200
+    assert response.request["PATH_INFO"] == "/"
 
 
-def test_stakeholder_created(policy, response):
+def test_stakeholder_created(policy, client, erm_user):
     """
     Test that the stakeholder object is created.
     """
+    client.force_login(erm_user)
     assert Stakeholder.objects.count() == 0
-    form = response.forms[1]
-    form["name"] = "Name"
-    form["is_public"] = True
-    form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
-    form["contacts-0-name"] = "Name"
-    form["contacts-0-email"] = "name@example.com"
-    form["policies-0-policy"] = policy.id
-    form.submit()
+
+    post_data = {
+        "name": "Name",
+        "is_public": True,
+        "type": Stakeholder.TYPE_INDIVIDUAL,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
+        # Contact formset
+        "contacts-TOTAL_FORMS": "1",
+        "contacts-INITIAL_FORMS": "0",
+        "contacts-MIN_NUM_FORMS": "0",
+        "contacts-MAX_NUM_FORMS": "1000",
+        "contacts-0-name": "Name",
+        "contacts-0-email": "name@example.com",
+        # Policy formset
+        "policies-TOTAL_FORMS": "1",
+        "policies-INITIAL_FORMS": "0",
+        "policies-MIN_NUM_FORMS": "0",
+        "policies-MAX_NUM_FORMS": "1000",
+        "policies-0-policy": policy.id,
+    }
+
+    client.post(reverse("stakeholder:add"), data=post_data)
+
     assert Stakeholder.objects.count() == 1
 
 
-def test_contact_created(policy, response):
+def test_contact_created(policy, client, erm_user):
     """
     Test that the stakeholder object is created.
     """
+    client.force_login(erm_user)
+
     assert Contact.objects.count() == 0
-    form = response.forms[1]
-    form["name"] = "Name"
-    form["is_public"] = True
-    form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
-    form["contacts-0-name"] = "Name"
-    form["contacts-0-email"] = "name@example.com"
-    form["policies-0-policy"] = policy.id
-    form.submit()
+
+    post_data = {
+        "name": "Name",
+        "is_public": True,
+        "type": Stakeholder.TYPE_INDIVIDUAL,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
+        # Contact formset
+        "contacts-TOTAL_FORMS": "1",
+        "contacts-INITIAL_FORMS": "0",
+        "contacts-MIN_NUM_FORMS": "0",
+        "contacts-MAX_NUM_FORMS": "1000",
+        "contacts-0-name": "Name",
+        "contacts-0-email": "name@example.com",
+        # Policy formset
+        "policies-TOTAL_FORMS": "1",
+        "policies-INITIAL_FORMS": "0",
+        "policies-MIN_NUM_FORMS": "0",
+        "policies-MAX_NUM_FORMS": "1000",
+        "policies-0-policy": policy.id,
+    }
+
+    client.post(reverse("stakeholder:add"), data=post_data)
+
+    # assert response.status_code in (302, 200)
     assert Contact.objects.count() == 1
 
 
-def test_policy_is_linked(policy, response):
+def test_policy_is_linked(policy, client, erm_user):
     """
     Test that the stakeholder object is created.
     """
+    client.force_login(erm_user)
+
     assert Contact.objects.count() == 0
-    form = response.forms[1]
-    form["name"] = "Name"
-    form["is_public"] = True
-    form["type"] = Stakeholder.TYPE_INDIVIDUAL
-    form["countries"] = [Stakeholder.COUNTRY_ENGLAND]
-    form["contacts-0-name"] = "Name"
-    form["contacts-0-email"] = "name@example.com"
-    form["policies-0-policy"] = policy.id
-    form.submit()
+    assert Stakeholder.objects.count() == 0
+
+    post_data = {
+        "name": "Name",
+        "is_public": True,
+        "type": Stakeholder.TYPE_INDIVIDUAL,
+        "countries": [Stakeholder.COUNTRY_ENGLAND],
+        # Contact formset
+        "contacts-TOTAL_FORMS": "1",
+        "contacts-INITIAL_FORMS": "0",
+        "contacts-MIN_NUM_FORMS": "0",
+        "contacts-MAX_NUM_FORMS": "1000",
+        "contacts-0-name": "Name",
+        "contacts-0-email": "name@example.com",
+        # Policy formset
+        "policies-TOTAL_FORMS": "1",
+        "policies-INITIAL_FORMS": "0",
+        "policies-MIN_NUM_FORMS": "0",
+        "policies-MAX_NUM_FORMS": "1000",
+        "policies-0-policy": policy.id,
+    }
+
+    client.post(reverse("stakeholder:add"), data=post_data)
+
     assert Stakeholder.objects.count() == 1
-    assert list(Stakeholder.objects.first().policies.values_list("id", flat=True)) == [
-        policy.id
-    ]
+
+    stakeholder = Stakeholder.objects.first()
+    assert list(stakeholder.policies.values_list("id", flat=True)) == [policy.id]

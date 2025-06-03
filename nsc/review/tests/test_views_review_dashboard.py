@@ -11,19 +11,21 @@ def test_view(erm_user, client):
     """
     Test that the page can be displayed
     """
-    response = client.get(reverse("dashboard"), user=erm_user)
-    assert response.status == "200 OK"
+    client.force_login(erm_user)
+    response = client.get(reverse("dashboard"))
+    assert response.status_code == 200
 
 
 def test_view__own_reviews(make_review, erm_user, non_user, client):
     """
     Test that the page can be displayed
     """
+    client.force_login(erm_user)
     expected = make_review()
     make_review(user=non_user)
-    response = client.get(reverse("dashboard"), user=erm_user)
+    response = client.get(reverse("dashboard"))
 
-    assert response.status == "200 OK"
+    assert response.status_code == 200
     assert len(response.context["reviews"]) == 1
     assert response.context["reviews"][0].pk == expected.pk
 

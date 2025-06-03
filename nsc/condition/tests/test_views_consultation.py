@@ -9,10 +9,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(review_in_consultation, client):
+def response(review_in_consultation, django_app):
     policy = review_in_consultation.policies.first()
     url = reverse("condition:consultation", kwargs={"slug": policy.slug})
-    return client.get(url)
+    return django_app.get(url)
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def test_page(response):
     """
     Test the consultation page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
 
 
 def test_back_link(response, dom):

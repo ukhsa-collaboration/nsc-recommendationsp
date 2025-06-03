@@ -33,10 +33,11 @@ def non_user():
 
 
 @pytest.fixture()
-def test_access_forbidden(non_user, django_app):
+def test_access_forbidden(non_user, client):
     def _test_access_forbidden(url):
-        response = django_app.get(url, user=non_user, expect_errors=True)
-        assert response.status == "403 Forbidden"
+        client.force_login(non_user)
+        response = client.get(url, expect_errors=True)
+        assert response.status_code == 403
 
     return _test_access_forbidden
 
@@ -52,11 +53,11 @@ def test_access_no_user(django_app):
 
 
 @pytest.fixture()
-def test_access_not_user_can_access(erm_permission, client):
+def test_access_not_user_can_access(erm_permission, django_app):
     def _test_access_not_user_can_access(url):
         user = baker.make(get_user_model())
         user.user_permissions.add(erm_permission)
-        response = client.get(url, user=user, expect_errors=True)
+        response = django_app.get(url, user=user, expect_errors=True)
         assert response.status == "200 OK"
 
     return _test_access_not_user_can_access
