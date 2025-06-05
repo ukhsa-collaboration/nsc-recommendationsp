@@ -242,7 +242,7 @@ django-simple-history==3.0.0
     # via
    
     #   -r requirements-dev.in
-django-storages==1.12.3
+django-storages==1.14.2
     # via
    
     #   -r requirements-dev.in
