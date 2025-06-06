@@ -62,7 +62,7 @@ def test_email_object_doesnt_exist_is_not_found(new_status, client, make_email):
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": f"bearer {token.token}"},
-            params={"reference": email.id + 1, "status": new_status},
+            data={"reference": email.id + 1, "status": new_status},
         ).status_code
         == 404
     )
@@ -109,9 +109,9 @@ def test_status_is_valid_email_is_updated(new_status, client, make_email):
         reverse("notify:receipt"),
         expect_errors=True,
         headers={"Authorization": f"bearer {token.token}"},
-        data={"reference": email.id, "status": f"{new_status}"},
+        data={"reference": email.id, "status": new_status},
     )
 
-    email.refresh_from_db()
+    updated_email = Email.objects.get(id=email.id)
 
-    assert email.status == new_status
+    assert updated_email.status == new_status
