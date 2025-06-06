@@ -7,4 +7,4 @@ from .models import Contact
 class ContactAdmin(admin.ModelAdmin):
 
     list_display = ("name", "phone", "email", "stakeholder")
-    search_fields = ("name", "phone", "email", "stakeholder")
+    search_fields = ("^name", "=phone", "email", "stakeholder__name")
