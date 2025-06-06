@@ -695,10 +695,6 @@ ruamel-yaml-clib==0.2.12
     #   ruamel-yaml
 ruff==0.11.7
 
-s3transfer==0.4.2
-    # via
-    #   -r requirements-dev.in
-    #   boto3
 safety==3.5.1
 
 safety-schemas==0.0.14
