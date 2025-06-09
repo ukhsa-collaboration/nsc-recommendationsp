@@ -17,7 +17,7 @@ class AdminIPRestrictionMiddleware:
         self.get_response = get_response
         raw_ip_ranges = settings.DJANGO_ADMIN_IP_RANGES.strip()
         if not raw_ip_ranges:
-            raise RuntimeError("ALLOWED_ADMIN_IPS environment variable is not set or empty")
+            raise RuntimeError("DJANGO_ADMIN_IP_RANGES environment variable is not set or empty")
         raw_ip_list = raw_ip_ranges.split(",")
         stripped_ips = [raw_ip.strip() for raw_ip in raw_ip_list if raw_ip.strip()]
         # Converting the strings into IPv4Network objects
