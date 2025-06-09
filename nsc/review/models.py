@@ -375,28 +375,42 @@ class Review(TimeStampedModel):
 
         # find each stakeholder without a notification object and create one
         existing_notification_emails = relation.values_list("address", flat=True)
-        relation.add(
-            *Email.objects.bulk_create(
+        
+        # Add notifications for stakeholders
+        stakeholder_emails = []
+        for contact in Contact.objects.with_email().filter(
+            stakeholder__in=self.stakeholders.all()
+        ).exclude(email__in=existing_notification_emails):
+            stakeholder_context = {
+                "recipient name": contact.name,
+                "policy": self.policies.first().name if self.policies.exists() else "",
+                "policy list": "\n".join(f"* {p.name}" for p in self.policies.all()),
+                **email_context
+            }
+            stakeholder_emails.append(
                 Email(
                     address=contact.email,
                     template_id=stakeholder_template,
-                    context={"recipient name": contact.name, **email_context},
+                    context=stakeholder_context,
                 )
-                for contact in Contact.objects.with_email()
-                .filter(stakeholder__in=self.stakeholders.all())
-                .exclude(email__in=existing_notification_emails)
             )
-        )
+        
+        if stakeholder_emails:
+            relation.add(*Email.objects.bulk_create(stakeholder_emails))
 
+        # Add notification for PHE Communications if not already sent
         if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
+            comms_context = {
+                "recipient name": settings.PHE_COMMUNICATIONS_NAME,
+                "policy": self.policies.first().name if self.policies.exists() else "",
+                "policy list": "\n".join(f"* {p.name}" for p in self.policies.all()),
+                **email_context,
+            }
             relation.add(
                 Email.objects.create(
                     address=settings.PHE_COMMUNICATIONS_EMAIL,
                     template_id=comms_template,
-                    context={
-                        "recipient name": settings.PHE_COMMUNICATIONS_NAME,
-                        **email_context,
-                    },
+                    context=comms_context,
                 )
             )
 
@@ -422,24 +436,32 @@ class Review(TimeStampedModel):
             )
 
     def send_decision_notifications(self):
+        # First, send notifications to stakeholders and PHE Communications
         self.send_notifications(
             self.decision_published_notifications,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
         )
 
-        # send notifications to all subscribers to the conditions
+        # Then, send notifications to all subscribers to the conditions
         for policy in self.policies.all():
+            # Get the policy name and URL for this specific policy
+            policy_context = {
+                "policy": policy.name,
+                "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, policy.get_public_url()),
+                "policy list": f"* {policy.name}",  # Single policy per notification
+                "review manager full name": self.user.get_full_name(),
+                "consultation end date": (
+                    self.consultation_end.strftime("%d %B %Y")
+                    if self.consultation_end
+                    else ""
+                ),
+            }
+            
+            # Send notifications to subscribers of this policy
             policy.send_decision_notifications(
                 self.decision_published_notifications,
-                {
-                    "review manager full name": self.user.get_full_name(),
-                    "consultation end date": (
-                        self.consultation_end.strftime("%d %B %Y")
-                        if self.consultation_end
-                        else ""
-                    ),
-                },
+                policy_context,
             )
 
     @property

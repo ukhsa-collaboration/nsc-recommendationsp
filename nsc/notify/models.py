@@ -103,7 +103,13 @@ class Email(TimeStampedModel):
             self.address, self.template_id, context=self.context, reference=str(self.id)
         )
 
-        if resp and "errors" not in resp:
+        if resp is None:
+            logger.error(
+                f"Failed to send email {self.id}, notification service not configured or disabled"
+            )
+            return
+
+        if "errors" not in resp:
             self.status = self.STATUS.sending
             self.notify_id = resp["id"]
         else:

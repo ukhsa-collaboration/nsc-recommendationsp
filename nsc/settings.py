@@ -318,10 +318,8 @@ class Common(Configuration):
     PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default=None)
     PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL", default=None)
     CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS", default=None)
-    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
-    NOTIFY_SERVICE_API_KEY = get_secret(
-        "notify", "api-key", required=False, default=None
-    )
+    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLED", default=0, cast=int))
+    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env(
         "NOTIFY_TEMPLATE_CONSULTATION_OPEN", default=None
     )
@@ -501,28 +499,28 @@ class Dev(Webpack, Common):
         return f"http://{self.MAIN_DOMAIN}"  # noqa
 
     # Settings for the GDS Notify service for sending emails.
-    PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
-    PHE_COMMUNICATIONS_NAME = "PHE Comms"
-    PHE_HELP_DESK_EMAIL = "phehelpdesk@example.com"
-    CONSULTATION_COMMENT_ADDRESS = "phecomments@example.com"
-    NOTIFY_SERVICE_ENABLED = False
-    NOTIFY_SERVICE_API_KEY = None
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
-    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
-        "subscriber-consultation-open-template"
-    )
-    NOTIFY_TEMPLATE_DECISION_PUBLISHED = "decision-published-template"
-    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = (
-        "subscriber-decision-published-template"
-    )
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT = "public-comment-template"
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "stakeholder-comment-template"
-    NOTIFY_TEMPLATE_SUBSCRIBED = "subscribed-template"
-    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = "updated-subscription-template"
-    NOTIFY_TEMPLATE_UNSUBSCRIBE = "unsubscribed-template"
-    NOTIFY_TEMPLATE_HELP_DESK = "help-desk-template"
-    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = "help-desk-confirmation-template"
+    PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default="phecomms@example.com")
+    PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default="PHE Comms")
+    PHE_HELP_DESK_EMAIL = get_env("PHE_HELP_DESK_EMAIL", default="phehelpdesk@example.com")
+    CONSULTATION_COMMENT_ADDRESS = get_env("CONSULTATION_COMMENT_ADDRESS", default="phecomments@example.com")
+    
+    # Use environment variables for notification service settings
+    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLED", default=0, cast=int))
+    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
+    
+    # Template IDs - use environment variables without defaults to ensure valid UUIDs
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env("NOTIFY_TEMPLATE_CONSULTATION_OPEN")
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = get_env("NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS")
+    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = get_env("NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN")
+    NOTIFY_TEMPLATE_DECISION_PUBLISHED = get_env("NOTIFY_TEMPLATE_DECISION_PUBLISHED")
+    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = get_env("NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED")
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env("NOTIFY_TEMPLATE_PUBLIC_COMMENT")
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env("NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT")
+    NOTIFY_TEMPLATE_SUBSCRIBED = get_env("NOTIFY_TEMPLATE_SUBSCRIBED")
+    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = get_env("NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION")
+    NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env("NOTIFY_TEMPLATE_UNSUBSCRIBE")
+    NOTIFY_TEMPLATE_HELP_DESK = get_env("NOTIFY_TEMPLATE_HELP_DESK")
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = get_env("NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION")
 
     @property
     def INSTALLED_APPS(self):
