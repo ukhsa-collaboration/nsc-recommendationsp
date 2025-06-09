@@ -15,7 +15,7 @@ RUN apt-get update \
 
 # Full python requirements to support development
 COPY ./requirements-dev.txt /build/requirements-dev.txt
-RUN pip install --no-cache-dir -r requirements-dev.txt
+RUN pip install -r requirements-dev.txt
 # Run Django
 WORKDIR /project
 CMD ["/project/dev-docker/django/run.sh"]
