@@ -254,6 +254,11 @@ objects:
                 configMapKeyRef:
                   name: django-webpack
                   key: APP_CONFIG
+            - name: DJANGO_ADMIN_IP_RANGES
+              valueFrom:
+                configMapKeyRef:
+                  name: django-webpack
+                  key: DJANGO_ADMIN_IP_RANGES
             - name: DJANGO_CONFIG_DIR
               value: "/run/configs/common"
             - name: DJANGO_SECRET_DIR
