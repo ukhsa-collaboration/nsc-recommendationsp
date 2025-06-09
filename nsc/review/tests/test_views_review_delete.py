@@ -51,3 +51,30 @@ def test_back_link(response, dom):
     review = response.context["object"]
     link = dom.find(id="back-link-id")
     assert link["href"] == review.get_absolute_url()
+
+import pytest
+from django.urls import reverse
+
+def test_logout_functionality(client, django_user_model, settings):
+    # Force the setting to False for the test
+    settings.AUTH_USE_ACTIVE_DIRECTORY = False
+
+    # Create a user and log them in
+    username = "user"
+    password = "pass"
+    user = django_user_model.objects.create_user(username=username, password=password)
+    client.login(username=username, password=password)
+
+    # Ensure user is authenticated
+    response = client.get(reverse("login"))
+    assert response.wsgi_request.user.is_authenticated
+
+    # Perform logout
+    response = client.post(reverse("logout"), follow=True)
+
+    # After logout, user should be anonymous
+    assert not response.wsgi_request.user.is_authenticated
+
+    # Should be redirected to login page
+    assert response.status_code == 200
+    assert b"Login" in response.content 
