@@ -38,7 +38,7 @@ urlpatterns = [
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
     urlpatterns += [
         path(
-            "accounts/", include("django_auth_adfs.urls", namespace="django_auth_adfs")
+            "accounts/", include("django_auth_adfs.urls")
         ),
     ]
 else:
