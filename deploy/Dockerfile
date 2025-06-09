@@ -20,7 +20,7 @@ WORKDIR $SRC_ROOT
 # install python dependencies
 RUN pip install -U pip
 COPY requirements.txt ${SRC_ROOT}requirements.txt
-RUN pip install -r ${SRC_ROOT}requirements.txt
+RUN pip install --no-cache-dir -r ${SRC_ROOT}requirements.txt
 
 # copy the source to the container
 COPY . ${SRC_ROOT}
