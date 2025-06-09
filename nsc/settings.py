@@ -494,12 +494,6 @@ class Dev(Webpack, Common):
     EMAIL_FILE_PATH = "/tmp/app-emails"
     INTERNAL_IPS = ["127.0.0.1"]
 
-
-    SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day for local testing
-    SESSION_SAVE_EVERY_REQUEST = True
-    # other local-specific settings...
-
-
     MAIN_DOMAIN = "localhost:8000"
 
     @property
@@ -584,8 +578,8 @@ class Deployed(Build):
     # Prevent client-side JS from accessing the session cookie.
     SESSION_COOKIE_HTTPONLY = True
 
-    # Sets the maximum age of a session (4 hours in seconds)
-    SESSION_COOKIE_AGE = 1
+    # Sets the maximum age of a session (15 min in seconds)
+    SESSION_COOKIE_AGE = 900
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
