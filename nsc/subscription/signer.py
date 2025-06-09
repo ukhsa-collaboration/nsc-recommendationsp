@@ -1,4 +1,4 @@
-from django.core.signing import Signer
+from django.core.signing import BadSignature, Signer
 
 
 def get_value_to_sign(obj):
@@ -14,5 +14,7 @@ def check_object(obj, signature):
     signer = Signer()
     value = get_value_to_sign(obj)
 
-    # manually recompute signature and compare
-    return signature == signer.signature(value)
+    try:
+        return signer.unsign(f"{value}:{signature}") == value  # noqa
+    except BadSignature:
+        return False
