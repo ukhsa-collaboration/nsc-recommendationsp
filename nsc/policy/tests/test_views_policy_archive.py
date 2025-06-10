@@ -147,7 +147,7 @@ def test_update_view__published(erm_user, django_app):
     instance.refresh_from_db()
     assert instance.archived_reason == "# heading"
 
-    preview_form = preview_page.forms[1]
+    preview_form = preview_page.forms[2]
     result = preview_form.submit(name="publish")
 
     assert result.status == "302 Found"
