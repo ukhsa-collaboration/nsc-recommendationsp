@@ -123,7 +123,7 @@ def test_update_view__preview(erm_user, django_app):
     update_form["archived_reason"] = "# updated"
 
     preview_page = update_form.submit(name="preview")
-    preview_form = preview_page.forms[1]
+    preview_form = preview_page.forms[2]
     assert preview_form["archived_reason"].attrs["type"] == "hidden"
     assert preview_form["archived_reason"].value == "# updated"
     assert preview_page.context.get("preview") == "preview"
