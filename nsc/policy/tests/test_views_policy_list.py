@@ -78,7 +78,7 @@ def test_search_on_review_status(review_in_consultation, erm_user, django_app):
     Test the list of policies can be filtered by the condition name.
     """
     page = django_app.get(policy_list_url, user=erm_user)
-    form = [f for f in page.forms.values() if "review_status" in f.fields][1]
+    form = [f for f in page.forms.values() if "review_status" in f.fields][0]
     form["review_status"] = "in_consultation"
     response = form.submit()
     assert (
