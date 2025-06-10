@@ -962,15 +962,12 @@ parameters:
   - name: PHE_COMMUNICATIONS_EMAIL
     displayName: PHE Communications Email
     description: Email address for PHE communications
-    value: 'uknsc@dhsc.gov.uk'
     required: true
   - name: PHE_COMMUNICATIONS_NAME
     displayName: PHE Communications Name
     description: Name for PHE communications
-    value: 'uknsc'
     required: true
   - name: PHE_HELP_DESK_EMAIL
     displayName: PHE Help Desk Email
     description: Email address for PHE help desk
-    value: 'uknsc@dhsc.gov.uk'
     required: true
