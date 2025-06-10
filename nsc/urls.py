@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LogoutView
 from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -24,6 +25,7 @@ urlpatterns = [
         name="feedback",
     ),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
+    path(r'admin-logout/', LogoutView.as_view(next_page='/admin/login/'), name='admin_logout'),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
     path(r"document/", include("nsc.document.urls", namespace="document")),
     path(r"stakeholder/", include("nsc.stakeholder.urls", namespace="stakeholder")),
