@@ -24,7 +24,7 @@ def test_subscription_start_forwards_to_creation_form(
 
     response = django_app.get(url)
 
-    form = response.forms[2]
+    form = response.forms[1]
     form["policies"] = [s.pk for s in selected_policies]
     response = form.submit("save")
 

@@ -84,7 +84,7 @@ def test_submit(response):
 
 
 def test_submit__no_subscribe(response):
-    form = response.forms[2]
+    form = response.forms[1]
 
     form["name"] = "name"
     form["email"] = "email@email.com"

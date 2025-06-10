@@ -29,7 +29,7 @@ def test_back_link(django_app):
     are not lost.
     """
     instance = baker.make(Policy, name="condition", ages="{child}")
-    form = django_app.get(reverse("condition:list")).forms[2]
+    form = django_app.get(reverse("condition:list")).forms[1]
     form["affects"] = "child"
     results = form.submit()
     detail = results.click(href=instance.get_public_url())
