@@ -63,5 +63,5 @@ def test_contact_deleted(contact, response):
     """
     Test that the contact object is deleted from the database.
     """
-    response.forms[1].submit().follow()
+    response.forms[2].submit().follow()
     assert not Contact.objects.filter(pk=contact.pk).exists()
