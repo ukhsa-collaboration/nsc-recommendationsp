@@ -73,13 +73,14 @@ def test_search_on_condition_name(erm_user, django_app_form):
     assert not response.context["object_list"]
 
 
-def test_search_on_review_status(review_in_consultation, erm_user, django_app_form):
+def test_search_on_review_status(review_in_consultation, erm_user, django_app):
     """
     Test the list of policies can be filtered by the condition name.
     """
-    response = django_app_form(
-        policy_list_url, review_status="in_consultation", user=erm_user
-    )
+    page = django_app.get(policy_list_url, user=erm_user)
+    form = [f for f in page.forms.values() if "review_status" in f.fields][1]
+    form["review_status"] = "in_consultation"
+    response = form.submit()
     assert (
         response.context["object_list"][0].pk
         == review_in_consultation.policies.all()[0].pk
@@ -114,6 +115,7 @@ def test_search_field_shows_name_term(erm_user, django_app_form):
     Test when the search results are shown the search field shows the entered condition name.
     """
     form = django_app_form(policy_list_url, name="name", user=erm_user).forms[2]
+    assert "name" in form.fields, f"Fields present: {list(form.fields)}"
     assert form["name"].value == "name"
 
 
