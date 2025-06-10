@@ -119,11 +119,11 @@ def test_update_view__preview(erm_user, django_app):
     update_page = django_app.get(
         reverse("policy:archive:update", args=(instance.slug,)), user=erm_user
     )
-    update_form = update_page.forms[1]
+    update_form = update_page.forms[2]
     update_form["archived_reason"] = "# updated"
 
     preview_page = update_form.submit(name="preview")
-    preview_form = preview_page.forms[2]
+    preview_form = preview_page.forms[1]
     assert preview_form["archived_reason"].attrs["type"] == "hidden"
     assert preview_form["archived_reason"].value == "# updated"
     assert preview_page.context.get("preview") == "preview"
@@ -147,7 +147,7 @@ def test_update_view__published(erm_user, django_app):
     instance.refresh_from_db()
     assert instance.archived_reason == "# heading"
 
-    preview_form = preview_page.forms[2]
+    preview_form = preview_page.forms[1]
     result = preview_form.submit(name="publish")
 
     assert result.status == "302 Found"
