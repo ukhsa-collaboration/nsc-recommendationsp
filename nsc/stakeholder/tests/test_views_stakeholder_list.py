@@ -61,7 +61,10 @@ def test_search_form_blank(erm_user, django_app):
     """
     Test that the fields in the search form are initially blank.
     """
-    form = django_app.get(stakeholder_list_url, user=erm_user).forms[1]
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+    # Find the form with both 'name' and 'condition' fields
+    form = [f for f in page.forms.values() if "name" in f.fields and "condition" in f.fields][0]
+
     assert form["name"].value == ""
     assert form["condition"].value == ""
 
