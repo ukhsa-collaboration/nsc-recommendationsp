@@ -5,6 +5,8 @@ from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
+import logging
+logger = logging.getLogger(__name__)
 
 from nsc.review.views import ReviewDashboardView
 
@@ -36,10 +38,12 @@ urlpatterns = [
 ]
 
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
+    logger.info("Using Active Directory authentication URLs.")
     urlpatterns += [
         path("accounts/", include("django_auth_adfs.urls")),
     ]
 else:
+    logger.info("Using default Django login view.")
     urlpatterns += [
         path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
     ]
