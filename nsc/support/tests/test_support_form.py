@@ -25,7 +25,7 @@ def valid_data():
 
 @pytest.fixture
 def form(django_app):
-    return django_app.get(reverse("support:contact")).forms[2]
+    return django_app.get(reverse("support:contact")).forms[1]
 
 
 def submit_form(form, data):
