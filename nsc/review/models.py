@@ -344,7 +344,6 @@ class Review(TimeStampedModel):
         return super(Review, self).save(**kwargs)
 
     def get_email_context(self, **extra):
-
         formatted_start_date = (
             self.consultation_start.strftime("%d %B %Y")
             if self.consultation_start
@@ -355,10 +354,7 @@ class Review(TimeStampedModel):
         )
         return {
             "review": self.name,
-            "policy list": "\n".join(
-                f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
-                for p in self.policies.all()
-            ),
+            "policy list": "\n".join(f"* {p.name}" for p in self.policies.all()),
             "review manager full name": self.user.get_full_name(),
             "consultation url": urljoin(
                 settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
@@ -375,44 +371,34 @@ class Review(TimeStampedModel):
 
         # find each stakeholder without a notification object and create one
         existing_notification_emails = relation.values_list("address", flat=True)
-        
+
         # Add notifications for stakeholders
-        stakeholder_emails = []
-        for contact in Contact.objects.with_email().filter(
-            stakeholder__in=self.stakeholders.all()
-        ).exclude(email__in=existing_notification_emails):
-            stakeholder_context = {
-                "recipient name": contact.name,
-                "policy": self.policies.first().name if self.policies.exists() else "",
-                "policy list": "\n".join(f"* {p.name}" for p in self.policies.all()),
-                **email_context
-            }
-            stakeholder_emails.append(
-                Email(
-                    address=contact.email,
-                    template_id=stakeholder_template,
-                    context=stakeholder_context,
-                )
+        for contact in (
+            Contact.objects.with_email()
+            .filter(stakeholder__in=self.stakeholders.all())
+            .exclude(email__in=existing_notification_emails)
+        ):
+            stakeholder_context = email_context.copy()
+            stakeholder_context["recipient name"] = contact.name
+            email = Email.objects.create(
+                address=contact.email,
+                template_id=stakeholder_template,
+                context=stakeholder_context,
+                status=Email.STATUS.pending,
             )
-        
-        if stakeholder_emails:
-            relation.add(*Email.objects.bulk_create(stakeholder_emails))
+            relation.add(email)
 
         # Add notification for PHE Communications if not already sent
         if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
-            comms_context = {
-                "recipient name": settings.PHE_COMMUNICATIONS_NAME,
-                "policy": self.policies.first().name if self.policies.exists() else "",
-                "policy list": "\n".join(f"* {p.name}" for p in self.policies.all()),
-                **email_context,
-            }
-            relation.add(
-                Email.objects.create(
-                    address=settings.PHE_COMMUNICATIONS_EMAIL,
-                    template_id=comms_template,
-                    context=comms_context,
-                )
+            comms_context = email_context.copy()
+            comms_context["recipient name"] = settings.PHE_COMMUNICATIONS_NAME
+            email = Email.objects.create(
+                address=settings.PHE_COMMUNICATIONS_EMAIL,
+                template_id=comms_template,
+                context=comms_context,
+                status=Email.STATUS.pending,
             )
+            relation.add(email)
 
     def send_open_consultation_notifications(self):
         self.send_notifications(
@@ -445,11 +431,8 @@ class Review(TimeStampedModel):
 
         # Then, send notifications to all subscribers to the conditions
         for policy in self.policies.all():
-            # Get the policy name and URL for this specific policy
-            policy_context = {
-                "policy": policy.name,
-                "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, policy.get_public_url()),
-                "policy list": f"* {policy.name}",  # Single policy per notification
+            # Create the subscription context first
+            subscription_context = {
                 "review manager full name": self.user.get_full_name(),
                 "consultation end date": (
                     self.consultation_end.strftime("%d %B %Y")
@@ -457,11 +440,9 @@ class Review(TimeStampedModel):
                     else ""
                 ),
             }
-            
-            # Send notifications to subscribers of this policy
             policy.send_decision_notifications(
                 self.decision_published_notifications,
-                policy_context,
+                subscription_context,
             )
 
     @property

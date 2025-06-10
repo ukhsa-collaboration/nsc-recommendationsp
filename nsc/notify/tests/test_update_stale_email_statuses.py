@@ -13,6 +13,9 @@ from nsc.notify.tasks import update_stale_email_statuses
 # All tests require the database
 pytestmark = pytest.mark.django_db
 
+# Use a fixed time for all tests
+FROZEN_TIME = "2023-01-01 12:00:00"
+
 
 @pytest.mark.parametrize(
     "status",
@@ -24,6 +27,7 @@ pytestmark = pytest.mark.django_db
         Email.STATUS.technical_failure,
     ],
 )
+@freeze_time(FROZEN_TIME)
 def test_emails_are_not_in_sending_status___statuses_arent_updated(
     status, notify_client_mock, make_email
 ):
@@ -47,6 +51,7 @@ def test_emails_are_not_in_sending_status___statuses_arent_updated(
         Email.STATUS.created,
     ],
 )
+@freeze_time(FROZEN_TIME)
 def test_emails_are_not_stale___statuses_arent_updated(
     status, notify_client_mock, make_email
 ):
@@ -70,6 +75,7 @@ def test_emails_are_not_stale___statuses_arent_updated(
         Email.STATUS.created,
     ],
 )
+@freeze_time(FROZEN_TIME)
 def test_emails_do_not_have_notify_id___statuses_arent_updated(
     status, notify_client_mock, make_email
 ):
@@ -104,19 +110,21 @@ def test_emails_do_not_have_notify_id___statuses_arent_updated(
         Email.STATUS.technical_failure,
     ],
 )
+@freeze_time(FROZEN_TIME)
 def test_emails_are_stale___statuses_are_updated(
     status, new_status, notify_client_mock, make_email
 ):
     email = make_email(status=status, notify_id="notify_id")
+    stale_time = now() + timedelta(minutes=settings.NOTIFY_STALE_MINUTES)
 
-    with freeze_time(now() + timedelta(minutes=settings.NOTIFY_STALE_MINUTES)):
+    with freeze_time(stale_time):
         notify_client_mock.get_notification_by_id.return_value = {"status": new_status}
 
         update_stale_email_statuses()
 
         email.refresh_from_db()
 
-        assert email.modified == now()
+        assert email.modified == stale_time
         assert email.status == new_status
         notify_client_mock.get_notification_by_id.assert_called_once_with(
             email.notify_id

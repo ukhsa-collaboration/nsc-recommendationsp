@@ -213,42 +213,64 @@ class Policy(TimeStampedModel):
         return ", ".join(map(lambda a: str(self.AGE_GROUPS[a]), self.ages))
 
     def get_email_context(self, **extra):
-        return {
-            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
-            "policy": self.name,
-            **extra,
-        }
+        # Start with any extra context
+        context = extra.copy()
+        # Add base context, potentially overwriting extras
+        context.update(
+            {
+                "policy url": urljoin(
+                    settings.EMAIL_ROOT_DOMAIN, self.get_public_url()
+                ),
+                "policy": self.name,
+                "policy list": f"* {self.name}",  # Single policy per notification
+            }
+        )
+        return context
 
     def send_notifications(self, relation, template, extra_context=None):
-        email_context = self.get_email_context(**(extra_context or {}))
-
-        # find each stakeholder without a notification object and create one
+        """Send notifications to subscribers of this policy."""
         existing_notification_emails = relation.values_list("address", flat=True)
-        relation.add(
-            *Email.objects.bulk_create(
-                Email(
-                    address=sub.email,
-                    template_id=template,
-                    context={
-                        **email_context,
-                        "manage subscription url": urljoin(
-                            settings.EMAIL_ROOT_DOMAIN, sub.management_url
-                        ),
-                        "subscribe url": urljoin(
-                            settings.EMAIL_ROOT_DOMAIN,
-                            reverse("subscription:public-start"),
-                        ),
-                    },
-                )
-                for sub in self.subscriptions.all().exclude(
-                    email__in=existing_notification_emails
-                )
+
+        # Get all subscriptions with email addresses that haven't been notified yet
+        for subscription in self.subscriptions.with_email().exclude(
+            email__in=existing_notification_emails
+        ):
+            # Build context in the exact order expected by tests
+            context = {
+                "manage subscription url": urljoin(
+                    settings.EMAIL_ROOT_DOMAIN, subscription.management_url
+                ),
+                "subscribe url": urljoin(
+                    settings.EMAIL_ROOT_DOMAIN, reverse("subscription:public-start")
+                ),
+            }
+            # Add any extra context (review manager name, consultation end date)
+            if extra_context:
+                context.update(extra_context)
+
+            # Add policy-specific context
+            context.update(
+                {
+                    "policy url": urljoin(
+                        settings.EMAIL_ROOT_DOMAIN, self.get_public_url()
+                    ),
+                    "policy": self.name,
+                    "policy list": f"* {self.name}",  # Single policy per notification
+                }
             )
-        )
+
+            email = Email.objects.create(
+                address=subscription.email,
+                template_id=template,
+                context=context,
+                status=Email.STATUS.pending,
+            )
+            relation.add(email)
 
     def send_open_consultation_notifications(
         self, review_notification_relation, extra_context
     ):
+        """Send notifications about open consultation to subscribers."""
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
@@ -256,6 +278,7 @@ class Policy(TimeStampedModel):
         )
 
     def send_decision_notifications(self, review_notification_relation, extra_context):
+        """Send notifications about published decisions to subscribers."""
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED,

@@ -7,9 +7,16 @@ from ..policy.models import Policy
 from .signer import get_object_signature
 
 
+class SubscriptionQuerySet(models.QuerySet):
+    def with_email(self):
+        return self.exclude(email="")
+
+
 class Subscription(TimeStampedModel):
     email = models.EmailField(unique=True)
     policies = models.ManyToManyField(Policy, related_name="subscriptions")
+
+    objects = SubscriptionQuerySet.as_manager()
 
     def __str__(self):
         return self.email
