@@ -116,7 +116,7 @@ def test_search_form_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
-    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).forms[1]
+    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).forms[2]
     assert form["name"].value == "name"
     assert form["condition"].value == ""
 
