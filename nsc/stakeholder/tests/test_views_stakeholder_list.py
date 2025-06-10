@@ -86,15 +86,19 @@ def test_search_on_condition_name(erm_user, django_app_form):
     assert not response.context["object_list"]
 
 
-def test_search_on_stakeholder_country(erm_user, django_app_form):
+def test_search_on_stakeholder_country(erm_user, django_app):
     """
     Test the list of stakeholders can be filtered by the stakeholder country.
     """
     expected = baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_ENGLAND])
     baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_NORTHERN_IRELAND])
-    response = django_app_form(
-        stakeholder_list_url, country=Stakeholder.COUNTRY_ENGLAND, user=erm_user
-    )
+
+    # Get the page and select the correct form (with a "country" field)
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+    form = [f for f in page.forms.values() if "country" in f.fields][0]
+    form["country"] = Stakeholder.COUNTRY_ENGLAND
+
+    response = form.submit()
 
     assert len(response.context["object_list"]) == 1
     assert response.context["object_list"][0].pk == expected.pk
