@@ -48,7 +48,7 @@ def test_not_all_summaries_are_updated_errors_are_raised(
         reverse("review:summary", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.forms[1]
+    form = response.forms[2]
     form["summary-0-text"] = "first content"
     form.submit()
 
@@ -83,7 +83,7 @@ def test_default_value_is_the_original_policy_summary(
         reverse("review:summary", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.forms[1]
+    form = response.forms[2]
     form["summary-0-text"] = "first content"
     form.submit()
 

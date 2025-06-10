@@ -55,7 +55,7 @@ def test_success_url(contact, response):
     """
     Test deleting a contact returns to the stakeholder detail page.
     """
-    actual = response.forms[1].submit().follow()
+    actual = response.forms[2].submit().follow()
     assert actual.request.path == contact.stakeholder.get_detail_url()
 
 
