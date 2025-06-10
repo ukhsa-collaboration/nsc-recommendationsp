@@ -40,6 +40,25 @@ objects:
       DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
       DJANGO_REDIS_PORT: "6379"
       MEDIA_HOST_DOMAIN: "${MEDIA_HOST_DOMAIN}"
+      # GOV.UK Notify Configuration
+      NOTIFY_SERVICE_ENABLED: "${NOTIFY_SERVICE_ENABLED}"
+      NOTIFY_SERVICE_API_KEY: "${NOTIFY_SERVICE_API_KEY}"
+      NOTIFY_TEMPLATE_CONSULTATION_OPEN: "${NOTIFY_TEMPLATE_CONSULTATION_OPEN}"
+      NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS: "${NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS}"
+      NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN: "${NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN}"
+      NOTIFY_TEMPLATE_DECISION_PUBLISHED: "${NOTIFY_TEMPLATE_DECISION_PUBLISHED}"
+      NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED: "${NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED}"
+      NOTIFY_TEMPLATE_PUBLIC_COMMENT: "${NOTIFY_TEMPLATE_PUBLIC_COMMENT}"
+      NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "${NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT}"
+      NOTIFY_TEMPLATE_SUBSCRIBED: "${NOTIFY_TEMPLATE_SUBSCRIBED}"
+      NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION: "${NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION}"
+      NOTIFY_TEMPLATE_UNSUBSCRIBE: "${NOTIFY_TEMPLATE_UNSUBSCRIBE}"
+      NOTIFY_TEMPLATE_HELP_DESK: "${NOTIFY_TEMPLATE_HELP_DESK}"
+      NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION: "${NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION}"
+      PHE_COMMUNICATIONS_EMAIL: "${PHE_COMMUNICATIONS_EMAIL}"
+      PHE_COMMUNICATIONS_NAME: "${PHE_COMMUNICATIONS_NAME}"
+      PHE_HELP_DESK_EMAIL: "${PHE_HELP_DESK_EMAIL}"
+      CONSULTATION_COMMENT_ADDRESS: "${CONSULTATION_COMMENT_ADDRESS}"
 
   #
   # ImageStreams
@@ -883,3 +902,75 @@ parameters:
     displayName: Consultation comment email address
     description: The email address where comments during the consultation period are sent
     value: 'screening.evidence@nhs.net'
+  - name: NOTIFY_SERVICE_ENABLED
+    displayName: GOV.UK Notify Service Enabled
+    description: Whether the GOV.UK Notify service is enabled (1) or disabled (0)
+    value: '1'
+    required: true
+  - name: NOTIFY_SERVICE_API_KEY
+    displayName: GOV.UK Notify Service API Key
+    description: The API key for the GOV.UK Notify service
+    required: true
+  - name: NOTIFY_TEMPLATE_CONSULTATION_OPEN
+    displayName: GOV.UK Notify Template ID for Consultation Open
+    description: Template ID for consultation open notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS
+    displayName: GOV.UK Notify Template ID for Consultation Open (Communications)
+    description: Template ID for consultation open communications notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN
+    displayName: GOV.UK Notify Template ID for Subscriber Consultation Open
+    description: Template ID for subscriber consultation open notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_DECISION_PUBLISHED
+    displayName: GOV.UK Notify Template ID for Decision Published
+    description: Template ID for decision published notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED
+    displayName: GOV.UK Notify Template ID for Subscriber Decision Published
+    description: Template ID for subscriber decision published notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_PUBLIC_COMMENT
+    displayName: GOV.UK Notify Template ID for Public Comment
+    description: Template ID for public comment notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT
+    displayName: GOV.UK Notify Template ID for Stakeholder Comment
+    description: Template ID for stakeholder comment notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_SUBSCRIBED
+    displayName: GOV.UK Notify Template ID for Subscribed
+    description: Template ID for subscription notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION
+    displayName: GOV.UK Notify Template ID for Updated Subscription
+    description: Template ID for updated subscription notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_UNSUBSCRIBE
+    displayName: GOV.UK Notify Template ID for Unsubscribe
+    description: Template ID for unsubscribe notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_HELP_DESK
+    displayName: GOV.UK Notify Template ID for Help Desk
+    description: Template ID for help desk notifications
+    required: true
+  - name: NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION
+    displayName: GOV.UK Notify Template ID for Help Desk Confirmation
+    description: Template ID for help desk confirmation notifications
+    required: true
+  - name: PHE_COMMUNICATIONS_EMAIL
+    displayName: PHE Communications Email
+    description: Email address for PHE communications
+    value: 'uknsc@dhsc.gov.uk'
+    required: true
+  - name: PHE_COMMUNICATIONS_NAME
+    displayName: PHE Communications Name
+    description: Name for PHE communications
+    value: 'uknsc'
+    required: true
+  - name: PHE_HELP_DESK_EMAIL
+    displayName: PHE Help Desk Email
+    description: Email address for PHE help desk
+    value: 'uknsc@dhsc.gov.uk'
+    required: true
