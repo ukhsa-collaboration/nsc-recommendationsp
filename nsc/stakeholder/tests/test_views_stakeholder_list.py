@@ -66,7 +66,7 @@ def test_search_form_blank(erm_user, django_app):
     assert form["condition"].value == ""
 
 
-def test_search_on_stakeholder_name(erm_user, django_app_form):
+def test_search_on_stakeholder_name(erm_user, django_app):
     """
     Test the list of stakeholders can be filtered by the stakeholder name.
     """
@@ -129,7 +129,9 @@ def test_search_form_shows_name_term(erm_user, django_app_form):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
-    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).forms[2]
+    page = django_app.get(stakeholder_list_url, params={"name": "name"}, user=erm_user)
+    # Find the correct form by field name
+    form = [f for f in page.forms.values() if "name" in f.fields][0]
     assert form["name"].value == "name"
     assert form["condition"].value == ""
 
