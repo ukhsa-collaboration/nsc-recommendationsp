@@ -126,7 +126,9 @@ def test_search_form_shows_condition_term(erm_user, django_app):
     Test when the search results are shown the form shows the selected condition.
     """
     # Load the page with the search param in the URL
-    page = django_app.get(stakeholder_list_url, params={"condition": "other"}, user=erm_user)
+    page = django_app.get(
+        stakeholder_list_url, params={"condition": "other"}, user=erm_user
+    )
     # Select the form containing the 'condition' field
     form = [f for f in page.forms.values() if "condition" in f.fields][1]
     assert form["name"].value == ""

@@ -63,7 +63,7 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
 
     response = django_app.get(url, expect_errors=True)
 
-    form = response.forms[2]
+    form = response.forms[1]
     form["policies"] = [p.id for p in chain(selected_policies, new_selected_policies)]
     response = form.submit("save")
 
@@ -101,7 +101,7 @@ def test_subscription_is_deleted(django_app, make_subscription):
 
     response = django_app.get(url)
 
-    form = response.forms[2]
+    form = response.forms[1]
     response = form.submit("delete")
 
     assert Subscription.objects.count() == 0

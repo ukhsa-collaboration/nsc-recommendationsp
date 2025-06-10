@@ -310,7 +310,7 @@ def test_export_conditions_query_count(
 
     response = django_app.get(url, user=erm_user)
     with django_assert_num_queries(7):  # 3 for export, 4 for session
-        form = response.forms[4]
+        form = response.forms[3]
         form["export_type"] = "conditions"
         form.submit()
 
