@@ -70,8 +70,21 @@ def test_search_on_stakeholder_name(erm_user, django_app_form):
     """
     Test the list of stakeholders can be filtered by the stakeholder name.
     """
-    baker.make(Policy, name="name")
-    response = django_app_form(stakeholder_list_url, name="other", user=erm_user)
+    # Create a Stakeholder and associate it with a Policy
+    instance = baker.make(Stakeholder)
+    instance.policies.add(baker.make(Policy))
+
+    # Load the page as the erm_user
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+
+    # Find the form with the "name" field
+    form = [f for f in page.forms.values() if "name" in f.fields][0]
+
+    # Fill out the form and submit
+    form["name"] = "other"
+    response = form.submit()
+
+    # Assert the correct filtering
     assert not response.context["object_list"]
 
 
