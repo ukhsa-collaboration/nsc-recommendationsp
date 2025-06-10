@@ -110,11 +110,13 @@ def test_search_on_include_archived(erm_user, django_app_form):
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_field_shows_name_term(erm_user, django_app_form):
+def test_search_field_shows_name_term(erm_user, django_app):
     """
     Test when the search results are shown the search field shows the entered condition name.
     """
-    form = django_app_form(policy_list_url, name="name", user=erm_user).forms[2]
+    page = django_app.get(policy_list_url, params={"name": "name"}, user=erm_user)
+    # Find the form that contains the 'name' field
+    form = [f for f in page.forms.values() if "name" in f.fields][0]
     assert form["name"].value == "name"
 
 

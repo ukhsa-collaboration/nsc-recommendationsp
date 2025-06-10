@@ -63,7 +63,9 @@ def test_search_form_blank(erm_user, django_app):
     """
     page = django_app.get(stakeholder_list_url, user=erm_user)
     # Find the form with both 'name' and 'condition' fields
-    form = [f for f in page.forms.values() if "name" in f.fields and "condition" in f.fields][0]
+    form = [
+        f for f in page.forms.values() if "name" in f.fields and "condition" in f.fields
+    ][0]
 
     assert form["name"].value == ""
     assert form["condition"].value == ""
@@ -128,7 +130,7 @@ def test_search_on_stakeholder_country(erm_user, django_app):
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_form_shows_name_term(erm_user, django_app_form):
+def test_search_form_shows_name_term(erm_user, django_app):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
