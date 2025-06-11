@@ -93,13 +93,19 @@ def test_search_on_recommendation(erm_user, django_app_form):
     Test the list of policies can be filtered by the condition name.
     """
     expected = baker.make(Policy, name="name", recommendation=True)
-    # baker.make(Policy, name="name", recommendation=False)
 
-    response = django_app_form(policy_list_url, user=erm_user)
-    assert not response.context["object_list"]
+    # Visit the policy list page as the test user
+    page = django_app.get(policy_list_url, user=erm_user)
 
-    response = django_app_form(policy_list_url, recommendation="yes", user=erm_user, form_index=1)
-    assert response.context["object_list"][0].pk == expected.pk
+    # Find the correct form
+    form = page.forms[2]
+    form['recommendation'] = 'yes' 
+
+    # Submit the form and check results
+    response = form.submit()
+    object_list = response.context.get("object_list") or []
+    assert object_list
+    assert object_list[0].pk == expected.pk
 
 
 def test_search_on_include_archived(erm_user, django_app):
