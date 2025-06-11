@@ -64,12 +64,13 @@ def test_search_field_blank(erm_user, django_app):
     assert form["name"].value == ""
 
 
-def test_search_on_condition_name(erm_user, django_app_form):
+def test_search_on_condition_name(erm_user, django_app):
     """
     Test the list of policies can be filtered by the condition name.
     """
-    baker.make(Policy, name="name")
-    response = django_app_form(policy_list_url, name="other", user=erm_user)
+    form = django_app.get(policy_list_url, user=erm_user).forms[1]
+    form['name'] = 'other'
+    response = form.submit()
     assert not response.context["object_list"]
 
 
@@ -93,7 +94,7 @@ def test_search_on_recommendation(erm_user, django_app_form):
     """
     expected = baker.make(Policy, name="name", recommendation=True)
     baker.make(Policy, name="name", recommendation=False)
-    response = django_app_form(policy_list_url, recommendation="yes", user=erm_user)
+    response = django_app_form(policy_list_url, recommendation="yes", user=erm_user, form_index=1)
     assert response.context["object_list"][0].pk == expected.pk
 
 
@@ -106,7 +107,7 @@ def test_search_on_include_archived(erm_user, django_app_form):
     response = django_app_form(policy_list_url, user=erm_user)
     assert not response.context["object_list"]
 
-    response = django_app_form(policy_list_url, archived="on", user=erm_user)
+    response = django_app_form(policy_list_url, archived="on", user=erm_user, form_index=1)
     assert response.context["object_list"][0].pk == expected.pk
 
 
