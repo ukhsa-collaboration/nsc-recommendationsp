@@ -48,7 +48,7 @@ def test_review_is_created(erm_user, django_app):
     policy = baker.make(Policy, name="name", slug="name")
     assert policy.reviews.count() == 0
 
-    form = django_app.get(reverse("review:add"), user=erm_user).forms[1]
+    form = django_app.get(reverse("review:add"), user=erm_user).forms[2]
     form["name"] = "Review"
     form["review_type"] = [Review.TYPE.evidence]
     form["policies-TOTAL_FORMS"] = 1
