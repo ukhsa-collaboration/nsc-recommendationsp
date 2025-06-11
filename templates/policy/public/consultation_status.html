@@ -27,13 +27,13 @@
                 View documents
             </a>
         </div>
-        <div>
+        <div class="govuk-!-font-weight-regular">
             {% blocktrans with closing_date=policy.current_review.consultation_end_display %}
                 Closing date: {{ closing_date }}.
             {% endblocktrans %}
         </div>
         {% if policy.current_review.nsc_meeting_date %}
-            <div>
+            <div class="govuk-!-font-weight-regular">
                 {% blocktrans with review_date=policy.current_review.nsc_meeting_date_display %}
                     Scheduled UK NSC meeting date: {{ review_date }}.
                 {% endblocktrans %}
