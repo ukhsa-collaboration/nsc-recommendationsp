@@ -113,7 +113,7 @@ def test_search_on_include_archived(erm_user, django_app):
     Test the list of policies can be filtered by the condition name.
     """
     # Set up an archived policy
-    expected = baker.make("Policy", name="name", archived=True)
+    expected = baker.make(Policy, name="name", archived=True)
 
     page = django_app.get(policy_list_url, user=erm_user)
     filter_form = page.forms[2]
