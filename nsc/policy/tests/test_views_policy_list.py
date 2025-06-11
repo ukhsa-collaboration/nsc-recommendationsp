@@ -94,7 +94,7 @@ def test_search_on_recommendation(erm_user, django_app_form):
     """
     expected = baker.make(Policy, name="name", recommendation=True)
     baker.make(Policy, name="name", recommendation=False)
-    response = django_app_form(policy_list_url, recommendation="yes", user=erm_user, form_index=1)
+    response = django_app_form(policy_list_url, recommendation="yes", user=erm_user, form_index=2)
     assert response.context["object_list"][0].pk == expected.pk
 
 
