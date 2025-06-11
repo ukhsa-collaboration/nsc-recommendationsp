@@ -222,7 +222,7 @@ class Policy(TimeStampedModel):
                     settings.EMAIL_ROOT_DOMAIN, self.get_public_url()
                 ),
                 "policy": self.name,
-                "policy list": f"* {self.name}",  # Single policy per notification
+                "policy list": f"* [{self.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())})",  # Single policy with inline link
             }
         )
         return context
@@ -255,7 +255,7 @@ class Policy(TimeStampedModel):
                         settings.EMAIL_ROOT_DOMAIN, self.get_public_url()
                     ),
                     "policy": self.name,
-                    "policy list": f"* {self.name}",  # Single policy per notification
+                    "policy list": f"* [{self.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())})",  # Single policy with inline link
                 }
             )
 

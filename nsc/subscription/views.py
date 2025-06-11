@@ -1,4 +1,5 @@
 from itertools import chain
+from urllib.parse import urljoin
 
 from django.conf import settings
 from django.db import transaction
@@ -138,10 +139,8 @@ class PublicSubscriptionEmails(generic.UpdateView):
             template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
             context={
                 "policy list": "\n".join(
-                    f"* {p}"
-                    for p in self.object.policies.values_list(
-                        "name", flat=True
-                    ).order_by("name")
+                    f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
+                    for p in self.object.policies.all().order_by("name")
                 ),
                 "manage subscription url": self.request.build_absolute_uri(
                     reverse(

@@ -81,7 +81,7 @@ def test_emails_match_subscription_is_created(
         template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBED,
         context={
             "policy list": "\n".join(
-                f"* {p.name}"
+                f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
                 for p in sorted(selected_policies, key=lambda p: p.name.lower())
             ),
             "manage subscription url": urljoin(

@@ -354,7 +354,10 @@ class Review(TimeStampedModel):
         )
         return {
             "review": self.name,
-            "policy list": "\n".join(f"* {p.name}" for p in self.policies.all()),
+            "policy list": "\n".join(
+                f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
+                for p in self.policies.all()
+            ),
             "review manager full name": self.user.get_full_name(),
             "consultation url": urljoin(
                 settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
