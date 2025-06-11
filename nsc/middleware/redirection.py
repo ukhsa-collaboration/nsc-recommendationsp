@@ -8,7 +8,7 @@ def redirect_url_fragment(get_response):
     Sets the fragment of the redirect urls
     """
 
-    def middleware(request):
+    def redirection(request):
         response = get_response(request)
 
         if (
@@ -19,4 +19,4 @@ def redirect_url_fragment(get_response):
 
         return response
 
-    return middleware
+    return redirection
