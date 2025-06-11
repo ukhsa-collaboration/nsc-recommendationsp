@@ -102,7 +102,7 @@ def test_search_on_recommendation(erm_user, django_app_form):
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_on_include_archived(erm_user, django_app_form):
+def test_search_on_include_archived(erm_user, django_app):
     """
     Test the list of policies can be filtered by the condition name.
     """
