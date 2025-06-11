@@ -1,5 +1,3 @@
-import logging
-
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -9,9 +7,6 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from nsc.review.views import ReviewDashboardView
-
-
-logger = logging.getLogger(__name__)
 
 admin.autodiscover()
 
@@ -45,12 +40,10 @@ urlpatterns = [
 ]
 
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
-    logger.info("Using Active Directory authentication URLs.")
     urlpatterns += [
         path("accounts/", include("django_auth_adfs.urls")),
     ]
 else:
-    logger.info("Using default Django login view.")
     urlpatterns += [
         path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
     ]
