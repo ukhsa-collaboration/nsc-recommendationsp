@@ -69,7 +69,7 @@ def test_search_on_condition_name(erm_user, django_app):
     Test the list of policies can be filtered by the condition name.
     """
     form = django_app.get(policy_list_url, user=erm_user).forms[2]
-    form['name'] = 'other'
+    form["name"] = "other"
     response = form.submit()
     assert not response.context["object_list"]
 
@@ -88,7 +88,7 @@ def test_search_on_review_status(review_in_consultation, erm_user, django_app):
     )
 
 
-def test_search_on_recommendation(erm_user, django_app_form):
+def test_search_on_recommendation(erm_user, django_app):
     """
     Test the list of policies can be filtered by the condition name.
     """
@@ -99,7 +99,7 @@ def test_search_on_recommendation(erm_user, django_app_form):
 
     # Find the correct form
     form = page.forms[2]
-    form['recommendation'] = 'yes' 
+    form["recommendation"] = "yes"
 
     # Submit the form and check results
     response = form.submit()
@@ -121,7 +121,7 @@ def test_search_on_include_archived(erm_user, django_app):
     assert not object_list
 
     # With ?archived=on: should include archived policy
-    response = django_app.get(policy_list_url+"?archived=on", user=erm_user)
+    response = django_app.get(policy_list_url + "?archived=on", user=erm_user)
     object_list = response.context.get("object_list", []) or []
     assert object_list[0].pk == expected.pk
 
