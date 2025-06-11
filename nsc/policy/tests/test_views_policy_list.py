@@ -112,18 +112,22 @@ def test_search_on_include_archived(erm_user, django_app):
     """
     Test the list of policies can be filtered by the condition name.
     """
-    # Create an archived policy
+    # Set up an archived policy
     expected = baker.make("Policy", name="name", archived=True)
 
-    # Without filter: should not include archived by default
-    response = django_app.get(policy_list_url, user=erm_user)
-    object_list = response.context.get("object_list", []) or []
+    page = django_app.get(policy_list_url, user=erm_user)
+    filter_form = page.forms[2]  
+    response = filter_form.submit()
+    object_list = response.context.get("object_list") or []
     assert not object_list
 
-    # With ?archived=on: should include archived policy
-    response = django_app.get(policy_list_url + "?archived=on", user=erm_user)
-    object_list = response.context.get("object_list", []) or []
+    filter_form = page.forms[2]
+    filter_form['archived'] = 'on'
+    response = filter_form.submit()
+    object_list = response.context.get("object_list") or []
+    assert object_list
     assert object_list[0].pk == expected.pk
+
 
 
 def test_search_field_shows_name_term(erm_user, django_app):
