@@ -599,7 +599,7 @@ class Deployed(Build):
     SECURE_REFERRER_POLICY = "same-origin"
 
     # Sets HTTP Strict Transport Security header on all responses.
-    SECURE_HSTS_SECONDS = 31536000 # Seconds
+    SECURE_HSTS_SECONDS = 31536000  # Seconds
 
     # Include subdomains in HSTS policy
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
