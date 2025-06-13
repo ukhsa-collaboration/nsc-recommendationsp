@@ -40,6 +40,23 @@ objects:
       DJANGO_REDIS_HOST: "${REDIS_SERVICE_NAME}"
       DJANGO_REDIS_PORT: "6379"
       MEDIA_HOST_DOMAIN: "${MEDIA_HOST_DOMAIN}"
+      # GOV.UK Notify Configuration
+      NOTIFY_SERVICE_ENABLE: "1"
+      NOTIFY_TEMPLATE_CONSULTATION_OPEN: "b2dc7cc0-c2ee-4cd6-8245-e400d8154ffb"
+      NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS: "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
+      NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN: "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
+      NOTIFY_TEMPLATE_DECISION_PUBLISHED: "0698a56f-0d57-4467-86ab-2a931ff578d9"
+      NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED: "9e5685d2-ace5-4359-998a-d55dee05a198"
+      NOTIFY_TEMPLATE_PUBLIC_COMMENT: "24a18541-19a1-4395-b175-29ba393bf336"
+      NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT: "191e9b98-9efb-4105-9821-477b1e5d66d2"
+      NOTIFY_TEMPLATE_SUBSCRIBED: "6e8b2e36-b3db-4e30-a070-746e07b6578c"
+      NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION: "7cd7b0bd-5a37-48c1-b7bb-7ce4b9c1809e"
+      NOTIFY_TEMPLATE_UNSUBSCRIBE: "35041ec3-3568-43ee-a18b-c21d3d1a902e"
+      NOTIFY_TEMPLATE_HELP_DESK: "35e6fe74-d5e2-4bd6-8462-37e65abdaeea"
+      NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION: "9a3bf35f-242f-46bd-8381-0685d547d06e"
+      PHE_COMMUNICATIONS_EMAIL: "${PHE_COMMUNICATIONS_EMAIL}"
+      PHE_COMMUNICATIONS_NAME: "${PHE_COMMUNICATIONS_NAME}"
+      PHE_HELP_DESK_EMAIL: "${PHE_HELP_DESK_EMAIL}"
 
   #
   # ImageStreams
@@ -888,3 +905,19 @@ parameters:
     displayName: Consultation comment email address
     description: The email address where comments during the consultation period are sent
     value: 'screening.evidence@nhs.net'
+  # GOV.UK Notify Email Configuration
+  - name: PHE_COMMUNICATIONS_EMAIL
+    displayName: PHE Communications Email
+    description: Email address for PHE communications team
+    required: true
+    value: "screening.evidence@nhs.net"
+  - name: PHE_COMMUNICATIONS_NAME
+    displayName: PHE Communications Name
+    description: Name for PHE communications team
+    required: true
+    value: "UK NSC"
+  - name: PHE_HELP_DESK_EMAIL
+    displayName: PHE Help Desk Email
+    description: Email address for help desk enquiries
+    required: true
+    value: "screening.evidence@nhs.net"
