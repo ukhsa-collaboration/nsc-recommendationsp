@@ -25,9 +25,13 @@ This document outlines the major upgrade of this project:
 | pytest     | 6.2.3       | 8.3.5       | Major 🔺       |
 | django     | 3.2.13      | 5.0.3       | Major 🔺       |
 | pip-tools  | —           | 6.4.0       | Major 🔺       |
-| celery	   | 5.2.7       | >=5.3.6     | Major 🔺       |
-| billiard	 | 3.6.4.0     |	Removed	   | Removed ❌     |
-| vine	     | 5.0.0	     |  Removed	   | Removed ❌     |
+| celery	 | 5.2.7       | >=5.3.6     | Major 🔺       |
+| billiard	 | 3.6.4.0     | Removed	 | Removed ❌     |
+| vine	     | 5.0.0	   | Removed	 | Removed ❌     |
+| s3transfer | 0.4.2       | Removed     | Removed ❌     |
+| botocore   | 1.17.61     | 1.38.30     | Minor 🔻       |
+| boto3      | 1.20.112    | 1.38.30     | Minor 🔻       |
+| django-storages| 1.12.3  | 1.14.2      | Minor 🔻       |
 
 ---
 ## 🌐 Django Upgrade
