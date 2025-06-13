@@ -599,7 +599,10 @@ class Deployed(Build):
     SECURE_REFERRER_POLICY = "same-origin"
 
     # Sets HTTP Strict Transport Security header on all responses.
-    SECURE_HSTS_SECONDS = 3600  # Seconds
+    SECURE_HSTS_SECONDS = 31536000  # Seconds
+
+    # Include subdomains in HSTS policy
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
