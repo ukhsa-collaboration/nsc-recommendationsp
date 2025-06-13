@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -82,7 +83,12 @@ class DocumentPolicy(TimeStampedModel):
 
 
 class Document(TimeStampedModel):
-
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        db_index=True,
+    )
     TYPE = Choices(
         ("cover_sheet", _("Coversheet")),
         ("submission_form", _("Submission form")),
@@ -130,10 +136,10 @@ class Document(TimeStampedModel):
         return self.name
 
     def get_download_url(self):
-        return reverse("document:download", kwargs={"pk": self.pk})
+        return reverse("document:download", kwargs={"uuid": str(self.uuid)})
 
     def exists(self):
-        return Document.objects.filter(pk=self.pk).exists() if self.pk else False
+        return Document.objects.filter(uuid=self.uuid).exists() if self.uuid else False
 
     def file_exists(self):
         return self.upload.storage.exists(self.upload.name)
