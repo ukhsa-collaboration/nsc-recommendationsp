@@ -505,64 +505,28 @@ class Dev(Webpack, Common):
         return f"http://{self.MAIN_DOMAIN}"  # noqa
 
     # Settings for the GDS Notify service for sending emails.
-    PHE_COMMUNICATIONS_EMAIL = get_env(
-        "PHE_COMMUNICATIONS_EMAIL", default="phecomms@example.com"
+    PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
+    PHE_COMMUNICATIONS_NAME = "PHE Comms"
+    PHE_HELP_DESK_EMAIL = "phehelpdesk@example.com"
+    CONSULTATION_COMMENT_ADDRESS = "phecomments@example.com"
+    NOTIFY_SERVICE_ENABLED = False
+    NOTIFY_SERVICE_API_KEY = None
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
+    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
+        "subscriber-consultation-open-template"
     )
-    PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default="PHE Comms")
-    PHE_HELP_DESK_EMAIL = get_env(
-        "PHE_HELP_DESK_EMAIL", default="phehelpdesk@example.com"
+    NOTIFY_TEMPLATE_DECISION_PUBLISHED = "decision-published-template"
+    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = (
+        "subscriber-decision-published-template"
     )
-    CONSULTATION_COMMENT_ADDRESS = get_env(
-        "CONSULTATION_COMMENT_ADDRESS", default="phecomments@example.com"
-    )
-    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
-    NOTIFY_SERVICE_API_KEY = get_secret(
-        "notify", "api-key", required=False, default=None
-    )
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN = get_env(
-        "NOTIFY_TEMPLATE_CONSULTATION_OPEN",
-        default="b2dc7cc0-c2ee-4cd6-8245-e400d8154ffb",
-    )
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = get_env(
-        "NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS",
-        default="9e5685d2-ace5-4359-998a-d55dee05a198",
-    )
-    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN",
-        default="f4c6b33e-5405-4c7b-b0b8-b825b7b9b3a4",
-    )
-    NOTIFY_TEMPLATE_DECISION_PUBLISHED = get_env(
-        "NOTIFY_TEMPLATE_DECISION_PUBLISHED",
-        default="8a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d",
-    )
-    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED",
-        default="9b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e",
-    )
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT = get_env(
-        "NOTIFY_TEMPLATE_PUBLIC_COMMENT", default="ac6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9eaf"
-    )
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = get_env(
-        "NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT",
-        default="bd7e8f9a-0b1c-2d3e-4f5a-6b7c8d9eafb0",
-    )
-    NOTIFY_TEMPLATE_SUBSCRIBED = get_env(
-        "NOTIFY_TEMPLATE_SUBSCRIBED", default="ce8f9a0b-1c2d-3e4f-5a6b-7c8d9eafb0c1"
-    )
-    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = get_env(
-        "NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION",
-        default="df9a0b1c-2d3e-4f5a-6b7c-8d9eafb0c1d2",
-    )
-    NOTIFY_TEMPLATE_UNSUBSCRIBE = get_env(
-        "NOTIFY_TEMPLATE_UNSUBSCRIBE", default="ea0b1c2d-3e4f-5a6b-7c8d-9eafb0c1d2e3"
-    )
-    NOTIFY_TEMPLATE_HELP_DESK = get_env(
-        "NOTIFY_TEMPLATE_HELP_DESK", default="35e6fe74-d5e2-4bd6-8462-37e65abdaeea"
-    )
-    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = get_env(
-        "NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION",
-        default="fb1c2d3e-4f5a-6b7c-8d9e-afb0c1d2e3f4",
-    )
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = "public-comment-template"
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "stakeholder-comment-template"
+    NOTIFY_TEMPLATE_SUBSCRIBED = "subscribed-template"
+    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = "updated-subscription-template"
+    NOTIFY_TEMPLATE_UNSUBSCRIBE = "unsubscribed-template"
+    NOTIFY_TEMPLATE_HELP_DESK = "help-desk-template"
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = "help-desk-confirmation-template"
 
     @property
     def INSTALLED_APPS(self):
