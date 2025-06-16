@@ -1,4 +1,6 @@
+@use '~govuk-frontend/dist/govuk' as govuk;
+
 .filter-box {
-  background-color: govuk-tint(govuk-colour("light-grey"), 50);
-  padding: govuk-spacing(6);
+  background-color: #f9f9f8;
+  padding: govuk.govuk-spacing(6);
 }
