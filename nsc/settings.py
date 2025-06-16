@@ -535,7 +535,7 @@ class Dev(Webpack, Common):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "LOCATION": "redis://{}:{}/1".format(self.REDIS_HOST, self.REDIS_PORT),
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
