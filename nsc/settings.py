@@ -513,9 +513,13 @@ class Dev(Webpack, Common):
     NOTIFY_SERVICE_API_KEY = "nsc_development-04e9cfec-122d-4464-8836-b727424bb10c-7e2f1fee-8d84-445c-87d1-f9cd0289cd34"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "b2dc7cc0-c2ee-4cd6-8245-e400d8154ffb"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
-    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
+    NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
+        "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
+    )
     NOTIFY_TEMPLATE_DECISION_PUBLISHED = "0698a56f-0d57-4467-86ab-2a931ff578d9"
-    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = "9e5685d2-ace5-4359-998a-d55dee05a198"
+    NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = (
+        "9e5685d2-ace5-4359-998a-d55dee05a198"
+    )
     NOTIFY_TEMPLATE_PUBLIC_COMMENT = "24a18541-19a1-4395-b175-29ba393bf336"
     NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "191e9b98-9efb-4105-9821-477b1e5d66d2"
     NOTIFY_TEMPLATE_SUBSCRIBED = "6e8b2e36-b3db-4e30-a070-746e07b6578c"
@@ -723,14 +727,16 @@ class Stage(Deployed):
     """
     Staging environment settings
     """
+
     # Enable notify service for staging
     NOTIFY_SERVICE_ENABLED = True
 
 
 class Prod(Deployed):
     """
-    Production environment settings  
+    Production environment settings
     """
+
     # Enable notify service for production
     NOTIFY_SERVICE_ENABLED = True
 
