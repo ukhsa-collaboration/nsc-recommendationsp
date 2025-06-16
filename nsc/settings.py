@@ -582,8 +582,8 @@ class Deployed(Build):
     # Prevent client-side JS from accessing the session cookie.
     SESSION_COOKIE_HTTPONLY = True
 
-    # Sets the maximum age of a session (4 hours in seconds)
-    SESSION_COOKIE_AGE = 4 * 60 * 60
+    # Sets the maximum age of a session (15 min in seconds)
+    SESSION_COOKIE_AGE = 900
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
