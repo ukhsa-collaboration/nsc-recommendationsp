@@ -2,11 +2,14 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 
 from ..notify.models import Email
 from .forms import ContactForm
 
 
+@method_decorator(ratelimit(key='ip', rate='5/h', method='POST', block=True), name='post')
 class ContactHelpDesk(generic.FormView):
     form_class = ContactForm
     template_name = "support/contact_help_desk.html"

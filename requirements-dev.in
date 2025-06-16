@@ -8,6 +8,7 @@ ipython
 ipdb
 pip-tools
 django-debug-toolbar
+django-ratelimit==4.1.0
 
 # Testing
 django-webtest

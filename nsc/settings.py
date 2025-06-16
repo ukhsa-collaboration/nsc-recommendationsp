@@ -152,6 +152,7 @@ class Common(Configuration):
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "django_extensions",
+        "django_ratelimit",
         "clear_cache",
         "simple_history",
         "storages",
@@ -527,6 +528,20 @@ class Dev(Webpack, Common):
     NOTIFY_TEMPLATE_UNSUBSCRIBE = "unsubscribed-template"
     NOTIFY_TEMPLATE_HELP_DESK = "help-desk-template"
     NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = "help-desk-confirmation-template"
+
+    # Override the dummy cache with Redis for rate limiting support
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                },
+            }
+        }
 
     @property
     def INSTALLED_APPS(self):
