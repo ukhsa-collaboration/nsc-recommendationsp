@@ -567,6 +567,8 @@ class Deployed(Build):
     """
     Settings which are for a non-local deployment
     """
+    NOTIFY_SERVICE_ENABLED = True
+    NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
 
     DEBUG = False
 
