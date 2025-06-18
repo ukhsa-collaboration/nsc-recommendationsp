@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..review.models import Review
 from .models import Document, DocumentPolicy
-
+from nsc.utils.virus_scanner import is_file_clean
 
 def document_formset_form_factory(
     _document_type,
@@ -27,7 +27,7 @@ def document_formset_form_factory(
             validators=[
                 FileExtensionValidator(
                     allowed_extensions=["pdf", "odt"],
-                    message=_("The selected file must be a pdf or odt file."),
+                    message=_("The selected file must be a pdf or odt file from doc formset form."),
                 )
             ],
         )
@@ -139,7 +139,7 @@ class SubmissionForm(forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file."),
+                message=_("The selected file must be a pdf or odt file from submission form."),
             )
         ],
     )
@@ -156,6 +156,14 @@ class SubmissionForm(forms.ModelForm):
         self.fields["document_type"].widget = HiddenInput()
         self.fields["review"].widget = HiddenInput()
 
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in ["cover_sheet", "evidence_review", "evidence_map", "cost_effective_model", "systematic_review"]:
+            file = cleaned_data.get(field)
+            if file and not is_file_clean(file):
+                self.add_error(field, "Malware detected in the uploaded file. Please upload a clean file.")
+        return cleaned_data
+
 
 class ReviewDocumentsForm(forms.ModelForm):
 
@@ -166,7 +174,7 @@ class ReviewDocumentsForm(forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file."),
+                message=_("The selected file must be a pdf or odt file from ReviewDocumentsForm cover_sheet."),
             )
         ],
     )
@@ -178,7 +186,7 @@ class ReviewDocumentsForm(forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file."),
+                message=_("The selected file must be a pdf or odt file from ReviewDocumentsForm evidence_review."),
             )
         ],
     )
@@ -190,7 +198,7 @@ class ReviewDocumentsForm(forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file."),
+                message=_("The selected file must be a pdf or odt file from ReviewDocumentsForm evidence_map."),
             )
         ],
     )
@@ -198,11 +206,11 @@ class ReviewDocumentsForm(forms.ModelForm):
     cost_effective_model = forms.FileField(
         label=_("Cost-effective model"),
         required=False,
-        error_messages={"required": _("Select a cost-effective model to upload")},
+        error_messages={"required": _("Select a cost-effective model to upload ReviewDocumentsForm cost_effective_model")},
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file."),
+                message=_("The selected file must be a pdf or odt file ReviewDocumentsForm cost_effective_model."),
             )
         ],
     )
@@ -214,7 +222,7 @@ class ReviewDocumentsForm(forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file."),
+                message=_("The selected file must be a pdf or odt file ReviewDocumentsForm systematic_review."),
             )
         ],
     )
@@ -222,6 +230,14 @@ class ReviewDocumentsForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ()
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in ["cover_sheet", "evidence_review", "evidence_map", "cost_effective_model", "systematic_review"]:
+            file = cleaned_data.get(field)
+            if file and not is_file_clean(file):
+                self.add_error(field, "Malware detected in the uploaded file. Please upload a clean file.")
+        return cleaned_data
 
     def __init__(self, instance=None, initial=None, **kwargs):
         initial = {
