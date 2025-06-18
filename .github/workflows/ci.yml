@@ -48,4 +48,3 @@ jobs:
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
           REDIS_SERVICE_HOST: localhost
-          DJANGO_ADMIN_IP_RANGES: "127.0.0.1/32"
