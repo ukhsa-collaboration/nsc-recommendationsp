@@ -1,6 +1,8 @@
+@use '~govuk-frontend/dist/govuk' as govuk;
+
 .sub-heading {
   h1, h2, h3, h4 {
-    color: govuk-colour("dark-grey");
+    color: govuk.govuk-colour("dark-grey");
     font-weight: normal;
     margin-bottom: 0;
 

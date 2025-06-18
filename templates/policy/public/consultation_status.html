@@ -8,7 +8,7 @@
         </div>
         <div>
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <span class="govuk-warning-text__assistive">{% trans "Warning" %}</span>
+            <span class="govuk-visually-hidden">{% trans "Warning" %}</span>
             {% blocktrans %}
                 <a href="{{ subscription_url }}">Subscribe to updates</a> to be notified when a public consultation has opened.
             {% endblocktrans %}
@@ -19,7 +19,7 @@
         </div>
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <div class="govuk-!-font-weight-bold">
-            <span class="govuk-warning-text__assistive">{% trans "Warning" %}</span>
+            <span class="govuk-visually-hidden">{% trans "Warning" %}</span>
             <a href="{% url 'condition:consultation' policy.slug %}" class="govuk-button govuk-!-margin-bottom-1 govuk-!-margin-top-2">
                 Submit comments
             </a>
@@ -27,13 +27,13 @@
                 View documents
             </a>
         </div>
-        <div>
+        <div class="govuk-!-font-weight-regular">
             {% blocktrans with closing_date=policy.current_review.consultation_end_display %}
                 Closing date: {{ closing_date }}.
             {% endblocktrans %}
         </div>
         {% if policy.current_review.nsc_meeting_date %}
-            <div>
+            <div class="govuk-!-font-weight-regular">
                 {% blocktrans with review_date=policy.current_review.nsc_meeting_date_display %}
                     Scheduled UK NSC meeting date: {{ review_date }}.
                 {% endblocktrans %}
