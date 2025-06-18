@@ -3,7 +3,7 @@ from django.urls import reverse
 import pytest
 from unittest.mock import patch
 from nsc.review.models import Review
-
+from io import BytesIO
 
 # All tests require the database
 pytestmark = pytest.mark.django_db
@@ -74,7 +74,7 @@ def test_success_url__next(mock_scan, erm_user, make_review, django_app, minimal
     form = response.forms[1]
     form["cover_sheet"] = (
         "document.pdf",
-        minimal_pdf.encode(),
+        BytesIO(b"%PDF-1.4 mock pdf content"),
         "application/pdf",
     )
     actual = form.submit().follow()
