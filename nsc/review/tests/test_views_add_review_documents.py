@@ -42,7 +42,7 @@ def test_view__incorrect_permission(make_review, test_access_forbidden):
     )
 
 @patch("nsc.utils.virus_scanner.is_file_clean", return_value=True)
-def test_success_url(erm_user, make_review, django_app, minimal_pdf):
+def test_success_url(mock_scan, erm_user, make_review, django_app, minimal_pdf):
     """
     Test success url on submit.
     """
