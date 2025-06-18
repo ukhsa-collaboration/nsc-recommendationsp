@@ -60,8 +60,8 @@ def test_success_url(mock_scan, erm_user, make_review, django_app, minimal_pdf):
     actual = form.submit().follow()
     assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
 
-
-def test_success_url__next(erm_user, make_review, django_app, minimal_pdf):
+@patch("nsc.utils.virus_scanner.is_file_clean", return_value=True)
+def test_success_url__next(mock_scan, erm_user, make_review, django_app, minimal_pdf):
     """
     Test success url is next when provided.
     """
