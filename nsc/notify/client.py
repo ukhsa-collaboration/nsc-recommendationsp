@@ -14,13 +14,17 @@ if settings.NOTIFY_SERVICE_ENABLED and settings.NOTIFY_SERVICE_API_KEY:
     logger.info("Notify service initialized successfully")
 else:
     client = None
-    logger.warning("Notify service not initialized - check NOTIFY_SERVICE_ENABLED and API key")
+    logger.warning(
+        "Notify service not initialized - check NOTIFY_SERVICE_ENABLED and API key"
+    )
 
 
 def send_email(address, template, context=None, reference=None):
     logger.info(f"Sending email to {address} using template {template}")
     if client is None:
-        logger.info(f"Email service not enabled - email not sent to {address} {template} {context}")
+        logger.info(
+            f"Email service not enabled - email not sent to {address} {template} {context}"
+        )
         return
 
     try:
@@ -29,9 +33,9 @@ def send_email(address, template, context=None, reference=None):
             "template_id": template,
             "personalisation": context,
             "reference": reference,
-        }      
+        }
         logger.info(f"Sending email with params: {params}")
-        
+
         response = client.send_email_notification(**params)
         logger.info(f"Email sent successfully with response: {response}")
         return response
