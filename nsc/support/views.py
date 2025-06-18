@@ -13,10 +13,6 @@ from .forms import ContactForm
 @method_decorator(
     ratelimit(key="ip", rate="3/h", method="POST", block=True), name="post"
 )
-@method_decorator(
-    ratelimit(key="header:x-forwarded-for", rate="3/h", method="POST", block=True),
-    name="post",
-)
 class ContactHelpDesk(generic.FormView):
     form_class = ContactForm
     template_name = "support/contact_help_desk.html"
