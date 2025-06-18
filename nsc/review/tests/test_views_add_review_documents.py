@@ -61,7 +61,7 @@ def test_success_url(mock_scan, erm_user, make_review, django_app, minimal_pdf):
     assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
 
 @patch("nsc.utils.virus_scanner.is_file_clean", return_value=True)
-def test_success_url__next(mock_scan, erm_user, make_review, django_app, minimal_pdf):
+def test_success_url__next(mock_scan, erm_user, make_review, django_app):
     """
     Test success url is next when provided.
     """
@@ -74,7 +74,7 @@ def test_success_url__next(mock_scan, erm_user, make_review, django_app, minimal
     form = response.forms[1]
     form["cover_sheet"] = (
         "document.pdf",
-        BytesIO(b"%PDF-1.4 mock pdf content"),
+        b"%PDF-1.4 mock pdf content",
         "application/pdf",
     )
     actual = form.submit().follow()
