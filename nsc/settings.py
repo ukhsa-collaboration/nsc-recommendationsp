@@ -550,7 +550,8 @@ class Test(Dev):
     Default test settings
     """
 
-    pass
+    # Use dummy cache for tests to avoid Redis dependency
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
 
 class Build(Common):
