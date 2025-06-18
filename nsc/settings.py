@@ -606,6 +606,9 @@ class Deployed(Build):
     DATABASE_PASSWORD = get_secret("postgresql", "database-password")
     DATABASE_NAME = get_secret("postgresql", "database-name")
 
+    NOTIFY_SERVICE_ENABLED = True
+    NOTIFY_SERVICE_API_KEY = get_secret("NOTIFY_SERVICE_API_KEY")
+
     # Change default cache
     REDIS_HOST = get_env("REDIS_SERVICE_HOST", required=True)
 
