@@ -8,6 +8,9 @@ from nsc.review.models import Review
 # All tests require the database
 pytestmark = pytest.mark.django_db
 
+@pytest.fixture(autouse=True)
+def patch_virus_scanner(monkeypatch):
+    monkeypatch.setattr("nsc.utils.virus_scanner.is_file_clean", lambda f: True)
 
 def test_view(erm_user, make_review, django_app):
     """
