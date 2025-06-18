@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..review.models import Review
 from .models import Document, DocumentPolicy
-from nsc.utils.virus_scanner import is_file_clean
+from nsc.document.mixins import FileVirusScanMixin
 
 def document_formset_form_factory(
     _document_type,
@@ -131,7 +131,7 @@ class ExternalReviewForm(ReviewDocumentForm):
     required_error_message = _("Select the external review for upload")
 
 
-class SubmissionForm(forms.ModelForm):
+class SubmissionForm(FileVirusScanMixin, forms.ModelForm):
 
     upload = forms.FileField(
         label=_("Upload a file"),
@@ -143,6 +143,7 @@ class SubmissionForm(forms.ModelForm):
             )
         ],
     )
+    virus_scan_fields = ("upload")
 
     class Meta:
         model = Document
@@ -156,16 +157,8 @@ class SubmissionForm(forms.ModelForm):
         self.fields["document_type"].widget = HiddenInput()
         self.fields["review"].widget = HiddenInput()
 
-    def clean(self):
-        cleaned_data = super().clean()
-        for field in ["cover_sheet", "evidence_review", "evidence_map", "cost_effective_model", "systematic_review"]:
-            file = cleaned_data.get(field)
-            if file and not is_file_clean(file):
-                self.add_error(field, "Malware detected in the uploaded file. Please upload a clean file.")
-        return cleaned_data
 
-
-class ReviewDocumentsForm(forms.ModelForm):
+class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
 
     cover_sheet = forms.FileField(
         label=_("Cover sheet"),
@@ -227,17 +220,18 @@ class ReviewDocumentsForm(forms.ModelForm):
         ],
     )
 
+    virus_scan_fields = (
+        "cover_sheet",
+        "evidence_review",
+        "evidence_map",
+        "cost_effective_model",
+        "systematic_review",
+    )
+    
     class Meta:
         model = Review
         fields = ()
     
-    def clean(self):
-        cleaned_data = super().clean()
-        for field in ["cover_sheet", "evidence_review", "evidence_map", "cost_effective_model", "systematic_review"]:
-            file = cleaned_data.get(field)
-            if file and not is_file_clean(file):
-                self.add_error(field, "Malware detected in the uploaded file. Please upload a clean file.")
-        return cleaned_data
 
     def __init__(self, instance=None, initial=None, **kwargs):
         initial = {
