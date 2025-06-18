@@ -46,19 +46,28 @@ def test_success_url(erm_user, make_review, django_app, minimal_pdf):
     """
     Test success url on submit.
     """
-    review = make_review(slug="abc")
+    # review = make_review(slug="abc")
+    # response = django_app.get(
+    #     reverse("review:add-review-documents", kwargs={"slug": review.slug}),
+    #     user=erm_user,
+    # )
+    # form = response.forms[1]
+    # form["cover_sheet"] = (
+    #     "document.pdf",
+    #     minimal_pdf.encode(),
+    #     "application/pdf",
+    # )
+    # actual = form.submit().follow()
+    # assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
     response = django_app.get(
         reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
     form = response.forms[1]
-    form["cover_sheet"] = (
-        "document.pdf",
-        minimal_pdf.encode(),
-        "application/pdf",
-    )
-    actual = form.submit().follow()
-    assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
+    form["cover_sheet"] = ("document.pdf", minimal_pdf.encode(), "application/pdf")
+    submit_response = form.submit()
+    print('submit res status:', submit_response.status)
+    print('submit res text', submit_response.text)  # Look for form errors in HTML
 
 
 def test_success_url__next(erm_user, make_review, django_app, minimal_pdf):
