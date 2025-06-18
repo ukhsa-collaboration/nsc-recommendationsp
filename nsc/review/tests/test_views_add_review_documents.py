@@ -12,6 +12,10 @@ pytestmark = pytest.mark.django_db
 def patch_virus_scanner(monkeypatch):
     monkeypatch.setattr("nsc.utils.virus_scanner.is_file_clean", lambda f: True)
 
+def test_patch(monkeypatch):
+    from nsc.utils.virus_scanner import is_file_clean
+    assert is_file_clean("dummy") is True
+
 def test_view(erm_user, make_review, django_app):
     """
     Test that the page can be displayed.
