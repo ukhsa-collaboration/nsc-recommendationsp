@@ -227,7 +227,12 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+        }
+    }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -357,6 +362,9 @@ class Common(Configuration):
         "tracking", "gtm-property-id", required=False, default=None
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
+
+    # Rate limiting settings
+    RATELIMIT_USE_CACHE = "default"
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa
