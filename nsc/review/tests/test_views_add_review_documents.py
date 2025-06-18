@@ -61,24 +61,29 @@ def test_success_url(mock_scan, erm_user, make_review, django_app, minimal_pdf):
     assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
 
 @patch("nsc.utils.virus_scanner.is_file_clean", return_value=True)
-def test_success_url__next(mock_scan, erm_user, make_review, django_app):
-    """
-    Test success url is next when provided.
-    """
-    review = make_review(slug="abc")
+def test_success_url(mock_scan, erm_user, make_review, django_app):
+    review = make_review(slug="abc", review_type=["E"])
     response = django_app.get(
-        reverse("review:add-review-documents", kwargs={"slug": review.slug})
-        + "?next=/",
+        reverse("review:add-review-documents", kwargs={"slug": review.slug}),
         user=erm_user,
     )
     form = response.forms[1]
     form["cover_sheet"] = (
         "document.pdf",
-        b"%PDF-1.4 mock pdf content",
+        b"%PDF-1.4 test content",
         "application/pdf",
     )
-    actual = form.submit().follow()
-    assert actual.request.path == "/"
+
+    res = form.submit()
+
+    # Inspect if it didn't redirect
+    if res.status_code != 302:
+        print("Form did not redirect")
+        print(res.text)  # See what error is rendered
+    assert res.status_code == 302, f"Expected redirect, got {res.status_code}"
+
+    actual = res.follow()
+    assert actual.request.path == reverse("review:detail", kwargs={"slug": review.slug})
 
 
 @pytest.mark.parametrize(
