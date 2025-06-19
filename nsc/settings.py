@@ -506,7 +506,9 @@ class Dev(Webpack, Common):
     PHE_HELP_DESK_EMAIL = "phehelpdesk@example.com"
     CONSULTATION_COMMENT_ADDRESS = "phecomments@example.com"
     NOTIFY_SERVICE_ENABLED = True
-    NOTIFY_SERVICE_API_KEY = "nsc_development-04e9cfec-122d-4464-8836-b727424bb10c-7e2f1fee-8d84-445c-87d1-f9cd0289cd34"
+    NOTIFY_SERVICE_API_KEY = get_secret(
+        "notify", "api-key", required=False, default=None
+    )
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
@@ -565,6 +567,9 @@ class Deployed(Build):
     """
 
     DEBUG = False
+
+    # Enable notify service for all deployed environments (Stage & Prod)
+    NOTIFY_SERVICE_ENABLED = True
 
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
