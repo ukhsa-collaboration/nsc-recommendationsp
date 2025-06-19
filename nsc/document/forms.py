@@ -18,7 +18,7 @@ def document_formset_form_factory(
     policy=None,
     source=None,
 ):
-    class DocumentFormsetForm(forms.ModelForm):
+    class DocumentFormsetForm(FileVirusScanMixin, forms.ModelForm):
         document_type = _document_type
         upload = forms.FileField(
             label=_("Upload a file"),
@@ -123,7 +123,7 @@ class ReviewDocumentForm(forms.ModelForm):
                 doc.save()
 
         return super().save(commit=commit)
-
+    virus_scan_fields = ("upload")
 
 class ExternalReviewForm(ReviewDocumentForm):
     document_type = Document.TYPE.external_review
