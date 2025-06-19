@@ -569,7 +569,10 @@ class Deployed(Build):
     DEBUG = False
 
     # Enable notify service for all deployed environments (Stage & Prod)
-    NOTIFY_SERVICE_ENABLED = True
+    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
+    NOTIFY_SERVICE_API_KEY = get_secret(
+        "notify", "api-key", required=False, default=None
+    )
 
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
