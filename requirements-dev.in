@@ -94,7 +94,7 @@ markupsafe==2.0.1
 mccabe==0.7.0
 model-bakery==1.20.4
 mypy-extensions==0.4.3
-notifications-python-client==10.01
+notifications-python-client==10.0.1
 packaging==25.0
 paramiko==3.4.0
 parso==0.7.1

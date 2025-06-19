@@ -442,7 +442,7 @@ nltk==3.9.1
     # via
    
     #   safety
-notifications-python-client==10.01
+notifications-python-client==10.0.1
     # via
    
     #   -r requirements-dev.in

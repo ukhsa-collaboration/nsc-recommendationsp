@@ -347,7 +347,7 @@ nltk==3.9.1
     # via
     #   -r requirements.in
     #   safety
-notifications-python-client==10.01
+notifications-python-client==10.0.1
     # via -r requirements.in
 packageurl-python==0.16.0
     # via
