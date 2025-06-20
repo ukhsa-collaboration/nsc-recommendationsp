@@ -35,7 +35,12 @@ class SubscriptionLanding(generic.TemplateView):
 
 
 @method_decorator(
-    ratelimit(key="ip", rate=f"{settings.RATE_LIMIT}/m", method="POST", block=True),
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
+        method="POST",
+        block=True,
+    ),
     name="post",
 )
 class PublicSubscriptionStart(generic.FormView):
