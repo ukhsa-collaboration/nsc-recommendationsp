@@ -11,7 +11,7 @@ from .forms import ContactForm
 
 
 @method_decorator(
-    ratelimit(key="ip", rate="3/h", method="POST", block=True), name="post"
+    ratelimit(key="ip", rate=f"{settings.RATE_LIMIT}/h", method="POST", block=True), name="post"
 )
 class ContactHelpDesk(generic.FormView):
     form_class = ContactForm

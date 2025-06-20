@@ -227,12 +227,7 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis:6379/1",
-        }
-    }
+   CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -517,6 +512,7 @@ class Dev(Webpack, Common):
     NOTIFY_SERVICE_API_KEY = get_secret(
         "notify", "api-key", required=False, default=None
     )
+    RATE_LIMIT= 5
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
@@ -551,9 +547,7 @@ class Test(Dev):
     """
     Default test settings
     """
-
-    # Use dummy cache for tests to avoid Redis dependency
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+    pass
 
 
 class Build(Common):
@@ -582,6 +576,7 @@ class Deployed(Build):
     NOTIFY_SERVICE_API_KEY = get_secret(
         "notify", "api-key", required=False, default=None
     )
+    RATE_LIMIT = 5
 
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
