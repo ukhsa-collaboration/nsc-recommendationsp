@@ -17,6 +17,9 @@ else:
     logger.warning(
         "Notify service not initialized - check NOTIFY_SERVICE_ENABLED and API key"
     )
+    # Print the values to see what went wrong
+    logger.info(f"NOTIFY_SERVICE_ENABLED: {settings.NOTIFY_SERVICE_ENABLED}")
+    logger.info(f"NOTIFY_SERVICE_API_KEY: {settings.NOTIFY_SERVICE_API_KEY}")
 
 
 def send_email(address, template, context=None, reference=None):

@@ -360,6 +360,10 @@ class Common(Configuration):
 
     # Rate limiting settings
     RATELIMIT_USE_CACHE = "default"
+    RATE_LIMIT = get_env("RATE_LIMIT", default=5, cast=int)
+    FORM_SUBMIT_LIMIT_PER_MINUTE = get_env(
+        "FORM_SUBMIT_LIMIT_PER_MINUTE", default=5, cast=int
+    )
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa
@@ -512,7 +516,6 @@ class Dev(Webpack, Common):
     NOTIFY_SERVICE_API_KEY = get_secret(
         "notify", "api-key", required=False, default=None
     )
-    RATE_LIMIT = 5
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
@@ -572,12 +575,7 @@ class Deployed(Build):
 
     DEBUG = False
 
-    # Enable notify service for all deployed environments (Stage & Prod)
-    NOTIFY_SERVICE_ENABLED = bool(get_env("NOTIFY_SERVICE_ENABLE", default=0, cast=int))
-    NOTIFY_SERVICE_API_KEY = get_secret(
-        "notify", "api-key", required=False, default=None
-    )
-    RATE_LIMIT = 5
+    # Rate limiting is already defined in Common class, no need to redefine
 
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
