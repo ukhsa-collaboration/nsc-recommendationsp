@@ -230,7 +230,7 @@ class Common(Configuration):
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379/0",
+            "LOCATION": "redis://redis:6379/0",
         }
     }
 
