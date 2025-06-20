@@ -227,7 +227,12 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
+        }
+    }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -312,6 +317,7 @@ class Common(Configuration):
     # dont use the get_env function here as the property isn't read into the celery config correctly
     REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
+    REDIS_DB = int(environ.get("DJANGO_REDIS_DB", 1))
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
