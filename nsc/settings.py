@@ -358,9 +358,6 @@ class Common(Configuration):
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
-    # Rate limiting settings
-    RATELIMIT_USE_CACHE = "default"
-    RATE_LIMIT = get_env("RATE_LIMIT", default=5, cast=int)
     FORM_SUBMIT_LIMIT_PER_MINUTE = get_env(
         "FORM_SUBMIT_LIMIT_PER_MINUTE", default=5, cast=int
     )
@@ -574,8 +571,6 @@ class Deployed(Build):
     """
 
     DEBUG = False
-
-    # Rate limiting is already defined in Common class, no need to redefine
 
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
