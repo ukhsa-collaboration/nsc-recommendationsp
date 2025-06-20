@@ -226,7 +226,7 @@ class Common(Configuration):
                 "PASSWORD": self.DATABASE_PASSWORD,
             }
         }
-        
+
         CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
     # Password validation
@@ -512,7 +512,7 @@ class Dev(Webpack, Common):
     NOTIFY_SERVICE_API_KEY = get_secret(
         "notify", "api-key", required=False, default=None
     )
-    RATE_LIMIT= 5
+    RATE_LIMIT = 5
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
@@ -547,6 +547,7 @@ class Test(Dev):
     """
     Default test settings
     """
+
     pass
 
 

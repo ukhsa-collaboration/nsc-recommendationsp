@@ -84,7 +84,8 @@ class ConsultationView(ConsultationMixin, TemplateView):
 
 
 @method_decorator(
-    ratelimit(key="ip", rate=f"{settings.RATE_LIMIT}/h", method="POST", block=True), name="post"
+    ratelimit(key="ip", rate=f"{settings.RATE_LIMIT}/h", method="POST", block=True),
+    name="post",
 )
 class PublicCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
@@ -165,7 +166,8 @@ class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
 
 
 @method_decorator(
-    ratelimit(key="ip", rate=f"{settings.RATE_LIMIT}/h", method="POST", block=True), name="post"
+    ratelimit(key="ip", rate=f"{settings.RATE_LIMIT}/h", method="POST", block=True),
+    name="post",
 )
 class StakeholderCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
