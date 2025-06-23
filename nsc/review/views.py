@@ -26,7 +26,7 @@ from .forms import (
 from .models import Review
 
 
-class ReviewDashboardView(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.TemplateView):
+class ReviewDashboardView(ReviewManagerRequiredMixin, generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):

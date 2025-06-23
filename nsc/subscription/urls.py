@@ -46,4 +46,5 @@ urlpatterns = [
         name="stakeholder-complete",
     ),
 ]
+
 app_name = "subscription"
