@@ -10,6 +10,7 @@ from django.views import generic
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 
 from ..document.models import Document
 from .forms import (
@@ -25,7 +26,7 @@ from .forms import (
 from .models import Review
 
 
-class ReviewDashboardView(ReviewManagerRequiredMixin, generic.TemplateView):
+class ReviewDashboardView(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
@@ -51,7 +52,7 @@ class ReviewDetail(ReviewManagerRequiredMixin, generic.DetailView):
     context_object_name = "review"
 
 
-class ReviewAdd(ReviewManagerRequiredMixin, generic.CreateView):
+class ReviewAdd(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.CreateView):
     model = Review
     form_class = ReviewForm
 
@@ -77,7 +78,7 @@ class ReviewDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("dashboard")
 
 
-class ReviewDates(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewDates(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewDatesForm
@@ -114,28 +115,28 @@ class ReviewDates(ReviewManagerRequiredMixin, generic.UpdateView):
         return reverse_lazy("review:open", kwargs={"slug": self.object.slug})
 
 
-class ReviewStakeholders(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewStakeholders(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewStakeholdersForm
     template_name = "review/review_stakeholders.html"
 
 
-class ReviewSummary(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewSummary(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewSummaryForm
     template_name = "review/review_summary.html"
 
 
-class ReviewHistory(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewHistory(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewHistoryForm
     template_name = "review/review_history.html"
 
 
-class ReviewRecommendation(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewRecommendation(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewRecommendationForm
@@ -145,7 +146,7 @@ class ReviewRecommendation(ReviewManagerRequiredMixin, generic.UpdateView):
         return reverse("review:publish", kwargs={"slug": self.object.slug})
 
 
-class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewPublish(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewPublishForm
@@ -160,7 +161,7 @@ class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView):
         )
 
 
-class ReviewDateConfirmation(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewDateConfirmation(RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewDateConfirmationForm
