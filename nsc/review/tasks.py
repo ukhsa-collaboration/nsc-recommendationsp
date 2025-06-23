@@ -1,9 +1,11 @@
 import logging
+
 from django.core.cache import cache
 from django.db.models import Count
 
 from ..celery import app
 from .models import Review
+
 
 logger = logging.getLogger(__name__)
 

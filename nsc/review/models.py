@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -20,9 +21,9 @@ from nsc.contact.models import Contact
 from nsc.document.models import Document
 from nsc.notify.models import Email
 from nsc.stakeholder.models import Stakeholder
-import logging
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
+
 
 logger = logging.getLogger(__name__)
 
@@ -379,7 +380,7 @@ class Review(TimeStampedModel):
         # Check if template is configured
         if not stakeholder_template:
             logger.error(
-                f"MISSING TEMPLATE: NOTIFY_TEMPLATE_DECISION_PUBLISHED is not set!"
+                "MISSING TEMPLATE: NOTIFY_TEMPLATE_DECISION_PUBLISHED is not set!"
             )
             return
 
@@ -413,7 +414,7 @@ class Review(TimeStampedModel):
                 },
             )
             relation.add(comms_email)
-            logger.info(f"Created communications email")
+            logger.info("Created communications email")
 
     def send_open_consultation_notifications(self):
         self.send_notifications(
@@ -440,10 +441,11 @@ class Review(TimeStampedModel):
         stakeholders = self.stakeholders.all()
 
         # Simple check: Do we have stakeholders?
-        logger.info(f" Review '{self.name}' has {stakeholders.count()} stakeholders")
+        logger.info(f"Review '{self.name}' has {stakeholders.count()} stakeholders")
         if stakeholders.count() == 0:
             logger.warning(
-                f"NO STAKEHOLDERS - No stakeholder emails will be sent for '{self.name}'"
+                f"NO STAKEHOLDERS - No stakeholder emails will be sent for "
+                f"'{self.name}'"
             )
 
         self.send_notifications(
@@ -455,12 +457,11 @@ class Review(TimeStampedModel):
         # send notifications to all subscribers to the conditions
         for policy in self.policies.all():
             subscribers = policy.subscriptions.all()
-            logger.info(
-                f" Policy '{policy.name}' has {subscribers.count()} subscribers"
-            )
+            logger.info(f"Policy '{policy.name}' has {subscribers.count()} subscribers")
             if subscribers.count() == 0:
                 logger.warning(
-                    f" NO SUBSCRIBERS - No subscriber emails will be sent for policy '{policy.name}'"
+                    f"NO SUBSCRIBERS - No subscriber emails will be sent for "
+                    f"policy '{policy.name}'"
                 )
 
             policy.send_decision_notifications(

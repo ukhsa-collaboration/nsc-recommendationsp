@@ -22,6 +22,7 @@ from nsc.utils.datetime import get_today
 from nsc.utils.forms import ChoiceArrayField
 from nsc.utils.markdown import convert
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -228,7 +229,8 @@ class Policy(TimeStampedModel):
         # Check if subscriber template is configured
         if not template:
             logger.error(
-                f" MISSING TEMPLATE: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED is not set!"
+                "MISSING TEMPLATE: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED "
+                "is not set!"
             )
             return
 
@@ -257,7 +259,7 @@ class Policy(TimeStampedModel):
         )
         relation.add(*emails_created)
 
-        logger.info(f" Created {len(emails_created)} subscriber emails")
+        logger.info(f"Created {len(emails_created)} subscriber emails")
 
     def send_open_consultation_notifications(
         self, review_notification_relation, extra_context
