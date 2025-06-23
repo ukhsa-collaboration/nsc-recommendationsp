@@ -80,7 +80,7 @@ class ConsultationView(ConsultationMixin, TemplateView):
         )
 
 
-class PublicCommentView(ConsultationMixin, FormView):
+class PublicCommentView(RatelimitExceptionMixin, ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
     form_class = PublicCommentForm
 
@@ -158,7 +158,7 @@ class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
         )
 
 
-class StakeholderCommentView(ConsultationMixin, FormView):
+class StakeholderCommentView(RatelimitExceptionMixin, ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
 
