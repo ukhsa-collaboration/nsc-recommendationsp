@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urljoin
 
 from django.apps import apps
@@ -21,6 +22,7 @@ from nsc.utils.datetime import get_today
 from nsc.utils.forms import ChoiceArrayField
 from nsc.utils.markdown import convert
 
+logger = logging.getLogger(__name__)
 
 class PolicyQuerySet(models.QuerySet):
     def active(self):
@@ -222,29 +224,37 @@ class Policy(TimeStampedModel):
     def send_notifications(self, relation, template, extra_context=None):
         email_context = self.get_email_context(**(extra_context or {}))
 
+        # Check if subscriber template is configured
+        if not template:
+            logger.error(f" MISSING TEMPLATE: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED is not set!")
+            return
+
         # find each stakeholder without a notification object and create one
         existing_notification_emails = relation.values_list("address", flat=True)
-        relation.add(
-            *Email.objects.bulk_create(
-                Email(
-                    address=sub.email,
-                    template_id=template,
-                    context={
-                        **email_context,
-                        "manage subscription url": urljoin(
-                            settings.EMAIL_ROOT_DOMAIN, sub.management_url
-                        ),
-                        "subscribe url": urljoin(
-                            settings.EMAIL_ROOT_DOMAIN,
-                            reverse("subscription:public-start"),
-                        ),
-                    },
-                )
-                for sub in self.subscriptions.all().exclude(
-                    email__in=existing_notification_emails
-                )
-            )
+        subscriptions_to_email = self.subscriptions.all().exclude(
+            email__in=existing_notification_emails
         )
+        
+        emails_created = Email.objects.bulk_create(
+            Email(
+                address=sub.email,
+                template_id=template,
+                context={
+                    **email_context,
+                    "manage subscription url": urljoin(
+                        settings.EMAIL_ROOT_DOMAIN, sub.management_url
+                    ),
+                    "subscribe url": urljoin(
+                        settings.EMAIL_ROOT_DOMAIN,
+                        reverse("subscription:public-start"),
+                    ),
+                },
+            )
+            for sub in subscriptions_to_email
+        )
+        relation.add(*emails_created)
+        
+        logger.info(f" Created {len(emails_created)} subscriber emails")
 
     def send_open_consultation_notifications(
         self, review_notification_relation, extra_context

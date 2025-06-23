@@ -20,8 +20,11 @@ from nsc.contact.models import Contact
 from nsc.document.models import Document
 from nsc.notify.models import Email
 from nsc.stakeholder.models import Stakeholder
+import logging
 from nsc.utils.datetime import get_date_display, get_today
 from nsc.utils.markdown import convert
+
+logger = logging.getLogger(__name__)
 
 
 class ReviewQuerySet(models.QuerySet):
@@ -373,32 +376,40 @@ class Review(TimeStampedModel):
     ):
         email_context = self.get_email_context(**(extra_context or {}))
 
+        # Check if template is configured
+        if not stakeholder_template:
+            logger.error(f"❌ MISSING TEMPLATE: NOTIFY_TEMPLATE_DECISION_PUBLISHED is not set!")
+            return
+            
         # find each stakeholder without a notification object and create one
         existing_notification_emails = relation.values_list("address", flat=True)
-        relation.add(
-            *Email.objects.bulk_create(
-                Email(
-                    address=contact.email,
-                    template_id=stakeholder_template,
-                    context={"recipient name": contact.name, **email_context},
-                )
-                for contact in Contact.objects.with_email()
-                .filter(stakeholder__in=self.stakeholders.all())
-                .exclude(email__in=existing_notification_emails)
+        contacts_to_email = Contact.objects.with_email().filter(
+            stakeholder__in=self.stakeholders.all()
+        ).exclude(email__in=existing_notification_emails)
+        
+        emails_created = Email.objects.bulk_create(
+            Email(
+                address=contact.email,
+                template_id=stakeholder_template,
+                context={"recipient name": contact.name, **email_context},
             )
+            for contact in contacts_to_email
         )
+        relation.add(*emails_created)
+        
+        logger.info(f"✅ Created {len(emails_created)} stakeholder emails")
 
         if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
-            relation.add(
-                Email.objects.create(
-                    address=settings.PHE_COMMUNICATIONS_EMAIL,
-                    template_id=comms_template,
-                    context={
-                        "recipient name": settings.PHE_COMMUNICATIONS_NAME,
-                        **email_context,
-                    },
-                )
+            comms_email = Email.objects.create(
+                address=settings.PHE_COMMUNICATIONS_EMAIL,
+                template_id=comms_template,
+                context={
+                    "recipient name": settings.PHE_COMMUNICATIONS_NAME,
+                    **email_context,
+                },
             )
+            relation.add(comms_email)
+            logger.info(f"✅ Created communications email")
 
     def send_open_consultation_notifications(self):
         self.send_notifications(
@@ -422,14 +433,26 @@ class Review(TimeStampedModel):
             )
 
     def send_decision_notifications(self):
+        stakeholders = self.stakeholders.all()
+        
+        # Simple check: Do we have stakeholders?
+        logger.info(f"👥 Review '{self.name}' has {stakeholders.count()} stakeholders")
+        if stakeholders.count() == 0:
+            logger.warning(f"⚠️  NO STAKEHOLDERS - No stakeholder emails will be sent for '{self.name}'")
+        
         self.send_notifications(
             self.decision_published_notifications,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
         )
 
-        # send notifications to all subscribers to the conditions
+        # send notifications to all subscribers to the conditions  
         for policy in self.policies.all():
+            subscribers = policy.subscriptions.all()
+            logger.info(f"📮 Policy '{policy.name}' has {subscribers.count()} subscribers")
+            if subscribers.count() == 0:
+                logger.warning(f"⚠️  NO SUBSCRIBERS - No subscriber emails will be sent for policy '{policy.name}'")
+            
             policy.send_decision_notifications(
                 self.decision_published_notifications,
                 {
