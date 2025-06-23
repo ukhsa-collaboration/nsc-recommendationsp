@@ -24,6 +24,7 @@ from nsc.utils.markdown import convert
 
 logger = logging.getLogger(__name__)
 
+
 class PolicyQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
@@ -226,7 +227,9 @@ class Policy(TimeStampedModel):
 
         # Check if subscriber template is configured
         if not template:
-            logger.error(f" MISSING TEMPLATE: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED is not set!")
+            logger.error(
+                f" MISSING TEMPLATE: NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED is not set!"
+            )
             return
 
         # find each stakeholder without a notification object and create one
@@ -234,7 +237,7 @@ class Policy(TimeStampedModel):
         subscriptions_to_email = self.subscriptions.all().exclude(
             email__in=existing_notification_emails
         )
-        
+
         emails_created = Email.objects.bulk_create(
             Email(
                 address=sub.email,
@@ -253,7 +256,7 @@ class Policy(TimeStampedModel):
             for sub in subscriptions_to_email
         )
         relation.add(*emails_created)
-        
+
         logger.info(f" Created {len(emails_created)} subscriber emails")
 
     def send_open_consultation_notifications(

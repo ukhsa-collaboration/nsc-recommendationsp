@@ -378,15 +378,19 @@ class Review(TimeStampedModel):
 
         # Check if template is configured
         if not stakeholder_template:
-            logger.error(f"❌ MISSING TEMPLATE: NOTIFY_TEMPLATE_DECISION_PUBLISHED is not set!")
+            logger.error(
+                f"MISSING TEMPLATE: NOTIFY_TEMPLATE_DECISION_PUBLISHED is not set!"
+            )
             return
-            
+
         # find each stakeholder without a notification object and create one
         existing_notification_emails = relation.values_list("address", flat=True)
-        contacts_to_email = Contact.objects.with_email().filter(
-            stakeholder__in=self.stakeholders.all()
-        ).exclude(email__in=existing_notification_emails)
-        
+        contacts_to_email = (
+            Contact.objects.with_email()
+            .filter(stakeholder__in=self.stakeholders.all())
+            .exclude(email__in=existing_notification_emails)
+        )
+
         emails_created = Email.objects.bulk_create(
             Email(
                 address=contact.email,
@@ -396,8 +400,8 @@ class Review(TimeStampedModel):
             for contact in contacts_to_email
         )
         relation.add(*emails_created)
-        
-        logger.info(f"✅ Created {len(emails_created)} stakeholder emails")
+
+        logger.info(f"Created {len(emails_created)} stakeholder emails")
 
         if settings.PHE_COMMUNICATIONS_EMAIL not in existing_notification_emails:
             comms_email = Email.objects.create(
@@ -409,7 +413,7 @@ class Review(TimeStampedModel):
                 },
             )
             relation.add(comms_email)
-            logger.info(f"✅ Created communications email")
+            logger.info(f"Created communications email")
 
     def send_open_consultation_notifications(self):
         self.send_notifications(
@@ -434,25 +438,31 @@ class Review(TimeStampedModel):
 
     def send_decision_notifications(self):
         stakeholders = self.stakeholders.all()
-        
+
         # Simple check: Do we have stakeholders?
-        logger.info(f"👥 Review '{self.name}' has {stakeholders.count()} stakeholders")
+        logger.info(f" Review '{self.name}' has {stakeholders.count()} stakeholders")
         if stakeholders.count() == 0:
-            logger.warning(f"⚠️  NO STAKEHOLDERS - No stakeholder emails will be sent for '{self.name}'")
-        
+            logger.warning(
+                f"NO STAKEHOLDERS - No stakeholder emails will be sent for '{self.name}'"
+            )
+
         self.send_notifications(
             self.decision_published_notifications,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
             settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
         )
 
-        # send notifications to all subscribers to the conditions  
+        # send notifications to all subscribers to the conditions
         for policy in self.policies.all():
             subscribers = policy.subscriptions.all()
-            logger.info(f"📮 Policy '{policy.name}' has {subscribers.count()} subscribers")
+            logger.info(
+                f" Policy '{policy.name}' has {subscribers.count()} subscribers"
+            )
             if subscribers.count() == 0:
-                logger.warning(f"⚠️  NO SUBSCRIBERS - No subscriber emails will be sent for policy '{policy.name}'")
-            
+                logger.warning(
+                    f" NO SUBSCRIBERS - No subscriber emails will be sent for policy '{policy.name}'"
+                )
+
             policy.send_decision_notifications(
                 self.decision_published_notifications,
                 {
