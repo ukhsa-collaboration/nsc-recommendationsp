@@ -9,6 +9,10 @@ from django_ratelimit.decorators import ratelimit
 from ..notify.models import Email
 from .forms import ContactForm
 
+from django.shortcuts import render
+from django_ratelimit.exceptions import Ratelimited
+from django.views.defaults import permission_denied
+from ..utils.urls import render_custom_403
 
 @method_decorator(
     ratelimit(
@@ -22,6 +26,12 @@ from .forms import ContactForm
 class ContactHelpDesk(generic.FormView):
     form_class = ContactForm
     template_name = "support/contact_help_desk.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
 
     def form_valid(self, form):
         Email.objects.create(

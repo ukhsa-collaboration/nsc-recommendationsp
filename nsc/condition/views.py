@@ -12,9 +12,9 @@ from nsc.review.models import Review
 from nsc.subscription.models import Subscription
 
 from ..utils.urls import clean_url
+from ..utils.urls import render_custom_403
 from .filters import SearchFilter
 from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
-
 
 class ConditionList(ListView):
     template_name = "policy/public/policy_list.html"
@@ -96,6 +96,12 @@ class PublicCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
     form_class = PublicCommentForm
 
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
+    
     def get_success_url(self):
         return reverse(
             "condition:public-comment-submitted", kwargs={"slug": self.kwargs["slug"]}
@@ -183,6 +189,12 @@ class StakeholderCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
 
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
+
     def get_success_url(self):
         return reverse(
             "condition:stakeholder-comment-submitted",
@@ -208,7 +220,7 @@ class StakeholderCommentView(ConsultationMixin, FormView):
             )
 
         return valid
-
+    
 
 class StakeholderCommentSubmittedView(ConsultationMixin, TemplateView):
     template_name = "policy/public/stakeholder_comment_submitted.html"

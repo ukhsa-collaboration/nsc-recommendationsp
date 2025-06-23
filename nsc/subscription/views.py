@@ -10,6 +10,8 @@ from django.views import generic
 from django_ratelimit.decorators import ratelimit
 
 from ..notify.models import Email
+from ..nsc.utils import render_custom_403
+
 from .forms import (
     CreateStakeholderSubscriptionForm,
     CreateSubscriptionForm,
@@ -18,7 +20,6 @@ from .forms import (
 )
 from .models import StakeholderSubscription, Subscription
 from .signer import check_object, get_object_signature
-
 
 class GetObjectFromTokenMixin:
     def get_object(self, queryset=None):
@@ -52,6 +53,12 @@ class PublicSubscriptionStart(generic.FormView):
             **super().get_form_kwargs(),
             "data": self.request.POST or self.request.GET or None,
         }
+    
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
 
     def form_valid(self, form):
         if "save" in form.data:
@@ -86,6 +93,12 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
     model = Subscription
     form_class = ManageSubscriptionsForm
     template_name = "subscription/public_subscription_management_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
 
     def get_success_url(self):
         return reverse(
@@ -145,6 +158,12 @@ class PublicSubscriptionEmails(generic.UpdateView):
     model = Subscription
     form_class = CreateSubscriptionForm
     template_name = "subscription/public_subscription_email_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
 
     def get_initial(self):
         return {"policies": self.request.GET.getlist("policies", [])}
@@ -207,6 +226,12 @@ class StakeholderSubscriptionStart(generic.CreateView):
     template_name = "subscription/stakeholder_subscription_creation.html"
     form_class = CreateStakeholderSubscriptionForm
     success_url = reverse_lazy("subscription:stakeholder-complete")
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Ratelimited as e:
+            return render_custom_403(request, exception=e)
 
 
 class StakeholderSubscriptionComplete(generic.TemplateView):
