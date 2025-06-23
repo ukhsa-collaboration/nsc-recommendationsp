@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.utils.encoding import iri_to_uri
 from django.utils.http import url_has_allowed_host_and_scheme
 
