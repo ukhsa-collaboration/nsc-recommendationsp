@@ -1,10 +1,7 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, FormView, ListView, TemplateView
-
-from django_ratelimit.decorators import ratelimit
 
 from nsc.notify.models import Email
 from nsc.policy.models import Policy
@@ -12,9 +9,9 @@ from nsc.review.models import Review
 from nsc.subscription.models import Subscription
 
 from ..utils.urls import clean_url
-from ..utils.urls import render_custom_403
 from .filters import SearchFilter
 from .forms import PublicCommentForm, SearchForm, StakeholderCommentForm
+
 
 class ConditionList(ListView):
     template_name = "policy/public/policy_list.html"
@@ -83,25 +80,10 @@ class ConsultationView(ConsultationMixin, TemplateView):
         )
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
 class PublicCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
     form_class = PublicCommentForm
 
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            return super().dispatch(request, *args, **kwargs)
-        except Ratelimited as e:
-            return render_custom_403(request, exception=e)
-    
     def get_success_url(self):
         return reverse(
             "condition:public-comment-submitted", kwargs={"slug": self.kwargs["slug"]}
@@ -176,24 +158,9 @@ class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
         )
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
 class StakeholderCommentView(ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
-
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            return super().dispatch(request, *args, **kwargs)
-        except Ratelimited as e:
-            return render_custom_403(request, exception=e)
 
     def get_success_url(self):
         return reverse(
@@ -220,7 +187,7 @@ class StakeholderCommentView(ConsultationMixin, FormView):
             )
 
         return valid
-    
+
 
 class StakeholderCommentSubmittedView(ConsultationMixin, TemplateView):
     template_name = "policy/public/stakeholder_comment_submitted.html"

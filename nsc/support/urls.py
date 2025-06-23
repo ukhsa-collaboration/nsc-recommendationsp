@@ -12,5 +12,4 @@ urlpatterns = [
         name="complete",
     ),
 ]
-
 app_name = "support"

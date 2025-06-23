@@ -1,7 +1,9 @@
+from django.shortcuts import render
 from django.utils.encoding import iri_to_uri
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.shortcuts import render
+
 from django_ratelimit.exceptions import Ratelimited
+
 
 def clean_url(target, default, allowed_hosts, require_secure):
     if target:
@@ -13,6 +15,7 @@ def clean_url(target, default, allowed_hosts, require_secure):
             return i18n_target
 
     return default
+
 
 def render_custom_403(request, exception=None):
     print("Custom 403 handler called!")

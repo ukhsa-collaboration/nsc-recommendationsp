@@ -36,5 +36,4 @@ urlpatterns = [
         name="stakeholder-comment-submitted",
     ),
 ]
-
 app_name = "condition"
