@@ -9,7 +9,7 @@ from django_ratelimit.exceptions import Ratelimited
 
 def render_custom_403(request, exception=None):
     if isinstance(exception, Ratelimited) or getattr(request, "limited", False):
-        ratelimit_message = "Too many requests. Please try again later."
+        ratelimit_message = "You've reached the daily form submission limit. You can try again tomorrow, or go back to the previous page to download the form and submit it via email."
         return render(
             request,
             "form_limit_exceeded.html",
