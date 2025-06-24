@@ -120,7 +120,9 @@ class PolicyAddDocument(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
     next_section = "recommendation"
 
 
-class PolicyAddRecommendation(RatelimitExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView):
+class PolicyAddRecommendation(
+    RatelimitExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView
+):
     form_class = PolicyAddRecommendationForm
     lookup_field = "slug"
     template_name = "policy/admin/add/recommendation.html"
@@ -131,7 +133,9 @@ class PolicyAddRecommendation(RatelimitExceptionMixin, SuccessMessageMixin, Poli
         return reverse("review:add") + f"?policy={self.object.slug}"
 
 
-class PolicyEdit(RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView):
+class PolicyEdit(
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
+):
     model = Policy
     lookup_field = "slug"
     form_class = PolicyEditForm
@@ -154,7 +158,9 @@ class ArchiveDocumentDetail(ReviewManagerRequiredMixin, DetailView):
     template_name = "policy/admin/archive/document.html"
 
 
-class ArchiveDocumentUploadView(RatelimitExceptionMixin, ReviewManagerRequiredMixin, UpdateView):
+class ArchiveDocumentUploadView(
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, UpdateView
+):
     form_class = PolicyDocumentForm
     model = Policy
     lookup_field = "slug"
@@ -165,7 +171,9 @@ class ArchiveDocumentUploadView(RatelimitExceptionMixin, ReviewManagerRequiredMi
         return reverse("policy:archive:upload", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveUpdate(RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView):
+class ArchiveUpdate(
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
+):
     form_class = ArchiveForm
     model = Policy
     lookup_field = "slug"
