@@ -313,6 +313,11 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
+            "nsc.notify": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
         },
     }
 
