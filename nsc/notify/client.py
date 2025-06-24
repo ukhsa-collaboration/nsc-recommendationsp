@@ -8,6 +8,7 @@ from notifications_python_client.notifications import NotificationsAPIClient
 
 logger = logging.getLogger(__name__)
 
+logger.info("Notify client called")
 
 if settings.NOTIFY_SERVICE_ENABLED and settings.NOTIFY_SERVICE_API_KEY:
     client = NotificationsAPIClient(settings.NOTIFY_SERVICE_API_KEY)
