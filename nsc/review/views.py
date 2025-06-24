@@ -2,16 +2,17 @@ from os import path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
+from django.conf import settings
 from django.http import FileResponse, Http404
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
+
 from django_ratelimit.decorators import ratelimit
 
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
-from django.conf import settings
 from nsc.utils.datetime import get_today
 
 from ..document.models import Document
