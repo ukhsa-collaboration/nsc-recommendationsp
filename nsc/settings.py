@@ -513,28 +513,28 @@ class Dev(Webpack, Common):
         return f"http://{self.MAIN_DOMAIN}"  # noqa
 
     # Settings for the GDS Notify service for sending emails.
-    PHE_COMMUNICATIONS_EMAIL = "benita.owusu@ukhsa.gov.uk"
+    PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
     PHE_COMMUNICATIONS_NAME = "PHE Comms"
-    PHE_HELP_DESK_EMAIL = "benita.owusu@ukhsa.gov.uk"
-    CONSULTATION_COMMENT_ADDRESS = "benita.owusu@ukhsa.gov.uk"
-    NOTIFY_SERVICE_ENABLED = True
-    NOTIFY_SERVICE_API_KEY = get_env("NOTIFY_SERVICE_API_KEY", default=None)
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN = "b2dc7cc0-c2ee-4cd6-8245-e400d8154ffb"
-    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
+    PHE_HELP_DESK_EMAIL = "phehelpdesk@example.com"
+    CONSULTATION_COMMENT_ADDRESS = "phecomments@example.com"
+    NOTIFY_SERVICE_ENABLED = False
+    NOTIFY_SERVICE_API_KEY = None
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
+    NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
-        "18d25b7f-ea13-42b4-ab2b-e6eb00f0171d"
+        "subscriber-consultation-open-template"
     )
-    NOTIFY_TEMPLATE_DECISION_PUBLISHED = "0698a56f-0d57-4467-86ab-2a931ff578d9"
+    NOTIFY_TEMPLATE_DECISION_PUBLISHED = "decision-published-template"
     NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED = (
-        "9e5685d2-ace5-4359-998a-d55dee05a198"
+        "subscriber-decision-published-template"
     )
-    NOTIFY_TEMPLATE_PUBLIC_COMMENT = "24a18541-19a1-4395-b175-29ba393bf336"
-    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "191e9b98-9efb-4105-9821-477b1e5d66d2"
-    NOTIFY_TEMPLATE_SUBSCRIBED = "6e8b2e36-b3db-4e30-a070-746e07b6578c"
-    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = "7cd7b0bd-5a37-48c1-b7bb-7ce4b9c1809e"
-    NOTIFY_TEMPLATE_UNSUBSCRIBE = "35041ec3-3568-43ee-a18b-c21d3d1a902a"
-    NOTIFY_TEMPLATE_HELP_DESK = "35e6fe74-d5e2-4bd6-8462-37e65abdaeea"
-    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = "9a3bf35f-242f-46bd-8381-0685d547d06e"
+    NOTIFY_TEMPLATE_PUBLIC_COMMENT = "public-comment-template"
+    NOTIFY_TEMPLATE_STAKEHOLDER_COMMENT = "stakeholder-comment-template"
+    NOTIFY_TEMPLATE_SUBSCRIBED = "subscribed-template"
+    NOTIFY_TEMPLATE_UPDATED_SUBSCRIPTION = "updated-subscription-template"
+    NOTIFY_TEMPLATE_UNSUBSCRIBE = "unsubscribed-template"
+    NOTIFY_TEMPLATE_HELP_DESK = "help-desk-template"
+    NOTIFY_TEMPLATE_HELP_DESK_CONFIRMATION = "help-desk-confirmation-template"
 
     @property
     def INSTALLED_APPS(self):
