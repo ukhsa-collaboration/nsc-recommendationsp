@@ -37,7 +37,7 @@ class SubscriptionLanding(generic.TemplateView):
 @method_decorator(
     ratelimit(
         key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
         method="POST",
         block=True,
     ),
@@ -76,7 +76,7 @@ class PublicSubscriptionStart(generic.FormView):
 @method_decorator(
     ratelimit(
         key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
         method="POST",
         block=True,
     ),
@@ -135,7 +135,7 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
 @method_decorator(
     ratelimit(
         key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
         method="POST",
         block=True,
     ),
@@ -196,7 +196,7 @@ class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
 @method_decorator(
     ratelimit(
         key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
         method="POST",
         block=True,
     ),
