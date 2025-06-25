@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
-from nsc.mixins.notifymixin import Notify429ExceptionMixin
+from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
 
@@ -26,7 +26,7 @@ from .forms import (
 from .models import Review
 
 
-class ReviewDashboardView(Notify429ExceptionMixin, generic.TemplateView):
+class ReviewDashboardView(ReviewManagerRequiredMixin, generic.TemplateView):
     template_name = "review/review_dashboard.html"
 
     def get_context_data(self, **kwargs):
@@ -38,7 +38,7 @@ class ReviewDashboardView(Notify429ExceptionMixin, generic.TemplateView):
         return super().get_context_data(reviews=reviews)
 
 
-class ReviewList(Notify429ExceptionMixin, generic.TemplateView):
+class ReviewList(ReviewManagerRequiredMixin, generic.TemplateView):
     template_name = "review/review_list.html"
 
     def get_context_data(self, **kwargs):
@@ -46,14 +46,14 @@ class ReviewList(Notify429ExceptionMixin, generic.TemplateView):
         return super().get_context_data(reviews=reviews)
 
 
-class ReviewDetail(Notify429ExceptionMixin, generic.DetailView):
+class ReviewDetail(ReviewManagerRequiredMixin, generic.DetailView):
     model = Review
     lookup_field = "slug"
     context_object_name = "review"
 
 
 class ReviewAdd(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.CreateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.CreateView
 ):
     model = Review
     form_class = ReviewForm
@@ -75,13 +75,13 @@ class ReviewAdd(
         return initial
 
 
-class ReviewDelete(Notify429ExceptionMixin, generic.DeleteView):
+class ReviewDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Review
     success_url = reverse_lazy("dashboard")
 
 
 class ReviewDates(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"
@@ -120,7 +120,7 @@ class ReviewDates(
 
 
 class ReviewStakeholders(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"
@@ -129,7 +129,7 @@ class ReviewStakeholders(
 
 
 class ReviewSummary(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"
@@ -138,7 +138,7 @@ class ReviewSummary(
 
 
 class ReviewHistory(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"
@@ -147,7 +147,7 @@ class ReviewHistory(
 
 
 class ReviewRecommendation(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"
@@ -159,7 +159,7 @@ class ReviewRecommendation(
 
 
 class ReviewPublish(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"
@@ -176,7 +176,7 @@ class ReviewPublish(
 
 
 class ReviewDateConfirmation(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, generic.UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
     model = Review
     lookup_field = "slug"

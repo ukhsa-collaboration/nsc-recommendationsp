@@ -5,7 +5,8 @@ from django.views.generic import CreateView, DetailView, UpdateView
 
 from django_filters.views import FilterView
 
-from nsc.mixins.notifymixin import Notify429ExceptionMixin
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+from nsc.permissions import ReviewManagerRequiredMixin
 
 from .filters import SearchFilter
 from .forms import (
@@ -43,7 +44,7 @@ class PublishPreviewMixin:
             )
 
 
-class PolicyList(Notify429ExceptionMixin, FilterView):
+class PolicyList(ReviewManagerRequiredMixin, FilterView):
     model = Policy
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
@@ -59,7 +60,7 @@ class PolicyList(Notify429ExceptionMixin, FilterView):
         return super().get_context_data(form=form)
 
 
-class PolicyDetail(Notify429ExceptionMixin, DetailView):
+class PolicyDetail(ReviewManagerRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
@@ -71,7 +72,7 @@ class PolicyDetail(Notify429ExceptionMixin, DetailView):
         )
 
 
-class PolicyAddMixin(Notify429ExceptionMixin):
+class PolicyAddMixin(ReviewManagerRequiredMixin):
     model = Policy
     section = None
     next_section = None
@@ -88,7 +89,7 @@ class PolicyAddMixin(Notify429ExceptionMixin):
         )
 
 
-class PolicyAdd(PolicyAddMixin, Notify429ExceptionMixin, CreateView):
+class PolicyAdd(RatelimitExceptionMixin, PolicyAddMixin, CreateView):
     form_class = PolicyAddForm
     model = Policy
     template_name = "policy/admin/add/start.html"
@@ -97,7 +98,7 @@ class PolicyAdd(PolicyAddMixin, Notify429ExceptionMixin, CreateView):
     markdown_guide = True
 
 
-class PolicyAddSummary(PolicyAddMixin, Notify429ExceptionMixin, UpdateView):
+class PolicyAddSummary(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
     form_class = PolicyAddSummaryForm
     lookup_field = "slug"
     template_name = "policy/admin/add/summary.html"
@@ -106,7 +107,7 @@ class PolicyAddSummary(PolicyAddMixin, Notify429ExceptionMixin, UpdateView):
     markdown_guide = True
 
 
-class PolicyAddDocument(Notify429ExceptionMixin, PolicyAddMixin, UpdateView):
+class PolicyAddDocument(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
     """
     Note - after a discussion with Adrian, this overlaps with review and for now will not be used
     until there is a document that needs to be capture and is therefore not used in the add flow.
@@ -120,7 +121,7 @@ class PolicyAddDocument(Notify429ExceptionMixin, PolicyAddMixin, UpdateView):
 
 
 class PolicyAddRecommendation(
-    Notify429ExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView
+    RatelimitExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView
 ):
     form_class = PolicyAddRecommendationForm
     lookup_field = "slug"
@@ -133,7 +134,7 @@ class PolicyAddRecommendation(
 
 
 class PolicyEdit(
-    Notify429ExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
 ):
     model = Policy
     lookup_field = "slug"
@@ -143,14 +144,14 @@ class PolicyEdit(
     success_message = "Published changes to conditions page."
 
 
-class ArchiveDetail(Notify429ExceptionMixin, DetailView):
+class ArchiveDetail(ReviewManagerRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/detail.html"
 
 
-class ArchiveDocumentDetail(Notify429ExceptionMixin, DetailView):
+class ArchiveDocumentDetail(ReviewManagerRequiredMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
@@ -158,7 +159,7 @@ class ArchiveDocumentDetail(Notify429ExceptionMixin, DetailView):
 
 
 class ArchiveDocumentUploadView(
-    Notify429ExceptionMixin, Notify429ExceptionMixin, UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, UpdateView
 ):
     form_class = PolicyDocumentForm
     model = Policy
@@ -171,7 +172,7 @@ class ArchiveDocumentUploadView(
 
 
 class ArchiveUpdate(
-    Notify429ExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
 ):
     form_class = ArchiveForm
     model = Policy
@@ -183,7 +184,7 @@ class ArchiveUpdate(
         return reverse("policy:archive:complete", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveComplete(Notify429ExceptionMixin, PublishPreviewMixin, DetailView):
+class ArchiveComplete(ReviewManagerRequiredMixin, PublishPreviewMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
