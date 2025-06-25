@@ -2,5 +2,6 @@
 {% load i18n %}
 
 {% block content %}
-    <h1 class="govuk-heading-m">{{ ratelimit_message }}</h1>
+    <h1 class="govuk-heading-m">{{ ratelimit_headline }}</h1>
+    <div class="govuk-body">{{ratelimit_detail}}</div>
 {% endblock %}
