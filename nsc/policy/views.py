@@ -88,7 +88,7 @@ class PolicyAddMixin(Notify429ExceptionMixin):
         )
 
 
-class PolicyAdd(Notify429ExceptionMixin, PolicyAddMixin, CreateView):
+class PolicyAdd(PolicyAddMixin, Notify429ExceptionMixin, CreateView):
     form_class = PolicyAddForm
     model = Policy
     template_name = "policy/admin/add/start.html"
@@ -97,7 +97,7 @@ class PolicyAdd(Notify429ExceptionMixin, PolicyAddMixin, CreateView):
     markdown_guide = True
 
 
-class PolicyAddSummary(Notify429ExceptionMixin, PolicyAddMixin, UpdateView):
+class PolicyAddSummary(PolicyAddMixin, Notify429ExceptionMixin, UpdateView):
     form_class = PolicyAddSummaryForm
     lookup_field = "slug"
     template_name = "policy/admin/add/summary.html"
