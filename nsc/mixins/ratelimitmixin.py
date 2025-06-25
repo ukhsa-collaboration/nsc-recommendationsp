@@ -10,7 +10,7 @@ from django_ratelimit.exceptions import Ratelimited
 def handle_429(request, exception=None):
     if isinstance(exception, Ratelimited) or getattr(request, "limited", False):
         ratelimit_headline = "You've reached the daily form submission limit."
-        ratelimit_detail = "You can try again tomorrow, or go back to the previous page to download the form and submit it via email."
+        ratelimit_detail = "You can try again tomorrow, or Please email uknsc@dhsc.gov.uk if you have any queries."
         return render(
             request,
             "form_limit_exceeded.html",
