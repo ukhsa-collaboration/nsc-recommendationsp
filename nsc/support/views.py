@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+
 from ..notify.models import Email
 from .forms import ContactForm
 
