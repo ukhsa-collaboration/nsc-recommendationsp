@@ -6,14 +6,13 @@ from django.views import generic
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 from ..notify.models import Email
 from .forms import ContactForm
-from notifications_python_client.errors import HTTPError
 
 
 class ContactHelpDesk(RatelimitExceptionMixin, generic.FormView):
     form_class = ContactForm
     template_name = "support/contact_help_desk.html"
 
-    def form_valid(self, form):   
+    def form_valid(self, form):
         Email.objects.create(
             address=settings.PHE_HELP_DESK_EMAIL,
             template_id=settings.NOTIFY_TEMPLATE_HELP_DESK,

@@ -34,6 +34,7 @@ urlpatterns = [
     path(r"django-admin/", admin.site.urls),
     path(r"", include("nsc.condition.urls", namespace="condition")),
 ]
+
 if settings.AUTH_USE_ACTIVE_DIRECTORY:
     urlpatterns += [
         path("accounts/", include("django_auth_adfs.urls")),

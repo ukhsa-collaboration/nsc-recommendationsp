@@ -2,10 +2,8 @@ from os import path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
-from django.conf import settings
 from django.http import FileResponse, Http404
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
@@ -77,15 +75,6 @@ class ReviewAdd(
         return initial
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
 class ReviewDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Review
     success_url = reverse_lazy("dashboard")
