@@ -5,8 +5,7 @@ from django.views.generic import CreateView, DetailView, UpdateView
 
 from django_filters.views import FilterView
 
-from nsc.permissions import ReviewManagerRequiredMixin
-from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+from nsc.mixins.notifymixin import Notify429ExceptionMixin
 
 from .filters import SearchFilter
 from .forms import (
@@ -44,7 +43,7 @@ class PublishPreviewMixin:
             )
 
 
-class PolicyList(ReviewManagerRequiredMixin, FilterView):
+class PolicyList(Notify429ExceptionMixin, FilterView):
     model = Policy
     paginate_by = 20
     template_name = "policy/admin/policy_list.html"
@@ -60,7 +59,7 @@ class PolicyList(ReviewManagerRequiredMixin, FilterView):
         return super().get_context_data(form=form)
 
 
-class PolicyDetail(ReviewManagerRequiredMixin, DetailView):
+class PolicyDetail(Notify429ExceptionMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
@@ -72,7 +71,7 @@ class PolicyDetail(ReviewManagerRequiredMixin, DetailView):
         )
 
 
-class PolicyAddMixin(ReviewManagerRequiredMixin):
+class PolicyAddMixin(Notify429ExceptionMixin):
     model = Policy
     section = None
     next_section = None
@@ -134,7 +133,7 @@ class PolicyAddRecommendation(
 
 
 class PolicyEdit(
-    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
+    RatelimitExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
 ):
     model = Policy
     lookup_field = "slug"
@@ -144,14 +143,14 @@ class PolicyEdit(
     success_message = "Published changes to conditions page."
 
 
-class ArchiveDetail(ReviewManagerRequiredMixin, DetailView):
+class ArchiveDetail(Notify429ExceptionMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
     template_name = "policy/admin/archive/detail.html"
 
 
-class ArchiveDocumentDetail(ReviewManagerRequiredMixin, DetailView):
+class ArchiveDocumentDetail(Notify429ExceptionMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"
@@ -159,7 +158,7 @@ class ArchiveDocumentDetail(ReviewManagerRequiredMixin, DetailView):
 
 
 class ArchiveDocumentUploadView(
-    RatelimitExceptionMixin, ReviewManagerRequiredMixin, UpdateView
+    RatelimitExceptionMixin, Notify429ExceptionMixin, UpdateView
 ):
     form_class = PolicyDocumentForm
     model = Policy
@@ -172,7 +171,7 @@ class ArchiveDocumentUploadView(
 
 
 class ArchiveUpdate(
-    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
+    RatelimitExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
 ):
     form_class = ArchiveForm
     model = Policy
@@ -184,7 +183,7 @@ class ArchiveUpdate(
         return reverse("policy:archive:complete", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveComplete(ReviewManagerRequiredMixin, PublishPreviewMixin, DetailView):
+class ArchiveComplete(Notify429ExceptionMixin, PublishPreviewMixin, DetailView):
     model = Policy
     lookup_field = "slug"
     context_object_name = "policy"

@@ -115,3 +115,20 @@ def test_data_is_valid_email_is_created(form, valid_data):
         context=valid_data,
     )
     assert res.location == reverse("support:complete") + "#"
+
+
+@pytest.mark.usefixtures("settings")
+def test_notify_429_renders_limit_exceeded_template(django_app, valid_data, settings):
+    """
+    Test that when the Notify 429 simulation is enabled, submitting the contact form
+    returns the limit exceeded template and does not send any emails.
+    """
+    # Enable simulation in settings
+    settings.SIMULATE_NOTIFY_429 = True
+
+    # Page should render the limit template and not create emails
+    form = django_app.get(reverse("support:contact")).forms[1]
+    res = submit_form(form, valid_data)
+    assert res.status_code == 429
+    assert "You've reached the daily form submission limit" in res.text
+    assert not Email.objects.exists()
