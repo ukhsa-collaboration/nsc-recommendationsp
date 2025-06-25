@@ -2,12 +2,19 @@ from os import path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
+from django.conf import settings
 from django.http import FileResponse, Http404
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
+<<<<<<< HEAD
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+=======
+from django_ratelimit.decorators import ratelimit
+
+>>>>>>> test/email-function
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
@@ -75,14 +82,36 @@ class ReviewAdd(
         return initial
 
 
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
 class ReviewDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     model = Review
     success_url = reverse_lazy("dashboard")
 
 
+<<<<<<< HEAD
 class ReviewDates(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewDates(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewDatesForm
@@ -119,36 +148,88 @@ class ReviewDates(
         return reverse_lazy("review:open", kwargs={"slug": self.object.slug})
 
 
+<<<<<<< HEAD
 class ReviewStakeholders(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewStakeholders(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewStakeholdersForm
     template_name = "review/review_stakeholders.html"
 
 
+<<<<<<< HEAD
 class ReviewSummary(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewSummary(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewSummaryForm
     template_name = "review/review_summary.html"
 
 
+<<<<<<< HEAD
 class ReviewHistory(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewHistory(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewHistoryForm
     template_name = "review/review_history.html"
 
 
+<<<<<<< HEAD
 class ReviewRecommendation(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewRecommendation(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewRecommendationForm
@@ -158,9 +239,22 @@ class ReviewRecommendation(
         return reverse("review:publish", kwargs={"slug": self.object.slug})
 
 
+<<<<<<< HEAD
 class ReviewPublish(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewPublishForm
@@ -175,9 +269,22 @@ class ReviewPublish(
         )
 
 
+<<<<<<< HEAD
 class ReviewDateConfirmation(
     RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class ReviewDateConfirmation(ReviewManagerRequiredMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Review
     lookup_field = "slug"
     form_class = ReviewDateConfirmationForm

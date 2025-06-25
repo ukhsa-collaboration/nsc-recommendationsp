@@ -159,7 +159,20 @@ class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
         )
 
 
+<<<<<<< HEAD
 class StakeholderCommentView(Notify429ExceptionMixin, ConsultationMixin, FormView):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class StakeholderCommentView(ConsultationMixin, FormView):
+>>>>>>> test/email-function
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
 

@@ -66,9 +66,22 @@ class PublicSubscriptionStart(RatelimitExceptionMixin, generic.FormView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
+<<<<<<< HEAD
 class PublicSubscriptionManage(
     RatelimitExceptionMixin, GetObjectFromTokenMixin, generic.UpdateView
 ):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
+>>>>>>> test/email-function
     model = Subscription
     form_class = ManageSubscriptionsForm
     template_name = "subscription/public_subscription_management_form.html"
@@ -118,7 +131,20 @@ class PublicSubscriptionManage(
             return self.render_to_response(self.get_context_data(form=form))
 
 
+<<<<<<< HEAD
 class PublicSubscriptionEmails(RatelimitExceptionMixin, generic.UpdateView):
+=======
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
+class PublicSubscriptionEmails(generic.UpdateView):
+>>>>>>> test/email-function
     model = Subscription
     form_class = CreateSubscriptionForm
     template_name = "subscription/public_subscription_email_form.html"
@@ -173,7 +199,7 @@ class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
 @method_decorator(
     ratelimit(
         key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_MINUTE}/m",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
         method="POST",
         block=True,
     ),

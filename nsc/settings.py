@@ -227,12 +227,14 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": "redis://redis:6379/0",
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
+            }
         }
-    }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -311,13 +313,17 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
+            "nsc.notify": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
         },
     }
 
     # dont use the get_env function here as the property isn't read into the celery config correctly
     REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
-    REDIS_DB = int(environ.get("DJANGO_REDIS_DB", 1))
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
@@ -364,8 +370,8 @@ class Common(Configuration):
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
-    FORM_SUBMIT_LIMIT_PER_MINUTE = get_env(
-        "FORM_SUBMIT_LIMIT_PER_MINUTE", default=5, cast=int
+    FORM_SUBMIT_LIMIT_PER_HOUR = get_env(
+        "FORM_SUBMIT_LIMIT_PER_HOUR", default=5, cast=int
     )
 
     # Settings for celery
@@ -515,10 +521,8 @@ class Dev(Webpack, Common):
     PHE_COMMUNICATIONS_NAME = "PHE Comms"
     PHE_HELP_DESK_EMAIL = "phehelpdesk@example.com"
     CONSULTATION_COMMENT_ADDRESS = "phecomments@example.com"
-    NOTIFY_SERVICE_ENABLED = True
-    NOTIFY_SERVICE_API_KEY = get_secret(
-        "notify", "api-key", required=False, default=None
-    )
+    NOTIFY_SERVICE_ENABLED = False
+    NOTIFY_SERVICE_API_KEY = None
     NOTIFY_TEMPLATE_CONSULTATION_OPEN = "consultation-open-templates"
     NOTIFY_TEMPLATE_CONSULTATION_OPEN_COMMS = "comms-consultation-open-templates"
     NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN = (
