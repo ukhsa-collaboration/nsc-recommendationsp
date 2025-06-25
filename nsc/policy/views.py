@@ -88,7 +88,7 @@ class PolicyAddMixin(Notify429ExceptionMixin):
         )
 
 
-class PolicyAdd(RatelimitExceptionMixin, PolicyAddMixin, CreateView):
+class PolicyAdd(Notify429ExceptionMixin, PolicyAddMixin, CreateView):
     form_class = PolicyAddForm
     model = Policy
     template_name = "policy/admin/add/start.html"
@@ -97,7 +97,7 @@ class PolicyAdd(RatelimitExceptionMixin, PolicyAddMixin, CreateView):
     markdown_guide = True
 
 
-class PolicyAddSummary(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
+class PolicyAddSummary(Notify429ExceptionMixin, PolicyAddMixin, UpdateView):
     form_class = PolicyAddSummaryForm
     lookup_field = "slug"
     template_name = "policy/admin/add/summary.html"
@@ -106,7 +106,7 @@ class PolicyAddSummary(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
     markdown_guide = True
 
 
-class PolicyAddDocument(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
+class PolicyAddDocument(Notify429ExceptionMixin, PolicyAddMixin, UpdateView):
     """
     Note - after a discussion with Adrian, this overlaps with review and for now will not be used
     until there is a document that needs to be capture and is therefore not used in the add flow.
@@ -120,7 +120,7 @@ class PolicyAddDocument(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
 
 
 class PolicyAddRecommendation(
-    RatelimitExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView
+    Notify429ExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView
 ):
     form_class = PolicyAddRecommendationForm
     lookup_field = "slug"
@@ -133,7 +133,7 @@ class PolicyAddRecommendation(
 
 
 class PolicyEdit(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
+    Notify429ExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
 ):
     model = Policy
     lookup_field = "slug"
@@ -158,7 +158,7 @@ class ArchiveDocumentDetail(Notify429ExceptionMixin, DetailView):
 
 
 class ArchiveDocumentUploadView(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, UpdateView
+    Notify429ExceptionMixin, Notify429ExceptionMixin, UpdateView
 ):
     form_class = PolicyDocumentForm
     model = Policy
@@ -171,7 +171,7 @@ class ArchiveDocumentUploadView(
 
 
 class ArchiveUpdate(
-    RatelimitExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
+    Notify429ExceptionMixin, Notify429ExceptionMixin, PublishPreviewMixin, UpdateView
 ):
     form_class = ArchiveForm
     model = Policy
