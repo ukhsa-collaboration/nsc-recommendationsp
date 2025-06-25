@@ -5,7 +5,6 @@ from django.views.generic import CreateView, DetailView, UpdateView
 
 from django_filters.views import FilterView
 
-from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 from nsc.permissions import ReviewManagerRequiredMixin
 
 from .filters import SearchFilter
@@ -89,7 +88,7 @@ class PolicyAddMixin(ReviewManagerRequiredMixin):
         )
 
 
-class PolicyAdd(RatelimitExceptionMixin, PolicyAddMixin, CreateView):
+class PolicyAdd(PolicyAddMixin, CreateView):
     form_class = PolicyAddForm
     model = Policy
     template_name = "policy/admin/add/start.html"
@@ -98,7 +97,7 @@ class PolicyAdd(RatelimitExceptionMixin, PolicyAddMixin, CreateView):
     markdown_guide = True
 
 
-class PolicyAddSummary(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
+class PolicyAddSummary(PolicyAddMixin, UpdateView):
     form_class = PolicyAddSummaryForm
     lookup_field = "slug"
     template_name = "policy/admin/add/summary.html"
@@ -107,7 +106,7 @@ class PolicyAddSummary(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
     markdown_guide = True
 
 
-class PolicyAddDocument(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
+class PolicyAddDocument(PolicyAddMixin, UpdateView):
     """
     Note - after a discussion with Adrian, this overlaps with review and for now will not be used
     until there is a document that needs to be capture and is therefore not used in the add flow.
@@ -120,9 +119,7 @@ class PolicyAddDocument(RatelimitExceptionMixin, PolicyAddMixin, UpdateView):
     next_section = "recommendation"
 
 
-class PolicyAddRecommendation(
-    RatelimitExceptionMixin, SuccessMessageMixin, PolicyAddMixin, UpdateView
-):
+class PolicyAddRecommendation(SuccessMessageMixin, PolicyAddMixin, UpdateView):
     form_class = PolicyAddRecommendationForm
     lookup_field = "slug"
     template_name = "policy/admin/add/recommendation.html"
@@ -133,9 +130,7 @@ class PolicyAddRecommendation(
         return reverse("review:add") + f"?policy={self.object.slug}"
 
 
-class PolicyEdit(
-    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
-):
+class PolicyEdit(ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView):
     model = Policy
     lookup_field = "slug"
     form_class = PolicyEditForm
@@ -158,9 +153,7 @@ class ArchiveDocumentDetail(ReviewManagerRequiredMixin, DetailView):
     template_name = "policy/admin/archive/document.html"
 
 
-class ArchiveDocumentUploadView(
-    RatelimitExceptionMixin, ReviewManagerRequiredMixin, UpdateView
-):
+class ArchiveDocumentUploadView(ReviewManagerRequiredMixin, UpdateView):
     form_class = PolicyDocumentForm
     model = Policy
     lookup_field = "slug"
@@ -171,9 +164,7 @@ class ArchiveDocumentUploadView(
         return reverse("policy:archive:upload", kwargs={"slug": self.kwargs["slug"]})
 
 
-class ArchiveUpdate(
-    RatelimitExceptionMixin, ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView
-):
+class ArchiveUpdate(ReviewManagerRequiredMixin, PublishPreviewMixin, UpdateView):
     form_class = ArchiveForm
     model = Policy
     lookup_field = "slug"
