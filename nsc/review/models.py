@@ -353,13 +353,13 @@ class Review(TimeStampedModel):
         formatted_end_date = (
             self.consultation_end.strftime("%d %B %Y") if self.consultation_end else ""
         )
+
         return {
             "review": self.name,
             "policy list": "\n".join(
                 f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
                 for p in self.policies.all()
             ),
-            "condition": ", ".join(p.name for p in self.policies.all()),
             "review manager full name": self.user.get_full_name(),
             "consultation url": urljoin(
                 settings.EMAIL_ROOT_DOMAIN, self.get_absolute_url()
@@ -406,6 +406,7 @@ class Review(TimeStampedModel):
             self.open_consultation_notifications,
             settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
             settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+            extra_context={"condition": self.policies.first().name},
         )
 
         # send notifications to all subscribers to the conditions
@@ -413,7 +414,7 @@ class Review(TimeStampedModel):
             policy.send_open_consultation_notifications(
                 self.open_consultation_notifications,
                 {
-                    "condition": ", ".join(p.name for p in self.policies.all()),
+                    "condition": self.policies.first().name,
                     "review manager full name": self.user.get_full_name(),
                     "consultation end date": (
                         self.consultation_end.strftime("%d %B %Y")
@@ -435,7 +436,6 @@ class Review(TimeStampedModel):
             policy.send_decision_notifications(
                 self.decision_published_notifications,
                 {
-                    "condition": ", ".join(p.name for p in self.policies.all()),
                     "review manager full name": self.user.get_full_name(),
                     "consultation end date": (
                         self.consultation_end.strftime("%d %B %Y")

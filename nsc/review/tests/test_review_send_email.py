@@ -71,12 +71,17 @@ def test_reviews_have_confirmed_dates_in_the_past_emails_are_created(make_review
     assert (
         Email.objects.count() == len(target_contacts) + 1
     )  # add 1 for the phe comms notification
-    assert Email.objects.filter(
-        address=target_contacts[0].email,
-        status=Email.STATUS.pending,
-        context=target.get_email_context(**{"recipient name": target_contacts[0].name}),
-        template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
-    ).count() == len(target_contacts)
+    assert (
+        Email.objects.filter(
+            address=target_contacts[0].email,
+            status=Email.STATUS.pending,
+            context=target.get_email_context(
+                **{"recipient name": target_contacts[0].name}
+            ),
+            template_id=settings.NOTIFY_TEMPLATE_CONSULTATION_OPEN,
+        ).count()
+        == len(target_contacts)
+    )
     assert Email.objects.filter(
         address=settings.PHE_COMMUNICATIONS_EMAIL,
         status=Email.STATUS.pending,
@@ -118,15 +123,15 @@ def test_open_review_conditions_have_subscribers_subs_receive_emails(
         status=Email.STATUS.pending,
         context=open_policy.get_email_context(
             **{
-                "condition": open_policy.name,
+                "condition": target_review.policies.first().name,
+                "review manager full name": target_review.user.get_full_name(),
+                "consultation end date": "",
                 "manage subscription url": urljoin(
                     settings.EMAIL_ROOT_DOMAIN, expected.management_url
                 ),
                 "subscribe url": urljoin(
                     settings.EMAIL_ROOT_DOMAIN, reverse("subscription:public-start")
                 ),
-                "review manager full name": target_review.user.get_full_name(),
-                "consultation end date": "",
             }
         ),
         template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
@@ -159,12 +164,17 @@ def test_reviews_published_emails_are_created(make_review):
     assert (
         Email.objects.count() == len(target_contacts) + 1
     )  # add 1 for the phe comms notification
-    assert Email.objects.filter(
-        address=target_contacts[0].email,
-        status=Email.STATUS.pending,
-        context=target.get_email_context(**{"recipient name": target_contacts[0].name}),
-        template_id=settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
-    ).count() == len(target_contacts)
+    assert (
+        Email.objects.filter(
+            address=target_contacts[0].email,
+            status=Email.STATUS.pending,
+            context=target.get_email_context(
+                **{"recipient name": target_contacts[0].name}
+            ),
+            template_id=settings.NOTIFY_TEMPLATE_DECISION_PUBLISHED,
+        ).count()
+        == len(target_contacts)
+    )
     assert Email.objects.filter(
         address=settings.PHE_COMMUNICATIONS_EMAIL,
         status=Email.STATUS.pending,
@@ -199,7 +209,6 @@ def test_decided_review_conditions_have_subscribers_subs_receive_emails(
         status=Email.STATUS.pending,
         context=published_policy.get_email_context(
             **{
-                "condition": published_policy.name,
                 "review manager full name": target_review.user.get_full_name(),
                 "consultation end date": "",
                 "manage subscription url": urljoin(
