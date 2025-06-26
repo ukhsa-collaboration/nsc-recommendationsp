@@ -28,7 +28,7 @@ class RatelimitExceptionMixin:
     @method_decorator(
         ratelimit(
             key="ip",
-            rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/d",
+            rate=f"{settings.FORM_SUBMIT_LIMIT_PER_DAY}/d",
             method="POST",
             block=False,
         )
