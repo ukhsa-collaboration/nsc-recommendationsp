@@ -4,8 +4,7 @@
 {% block body_class %}subscription-management{% endblock %}
 
 {% block back %}
-  {% url "subscription:landing" as back_url %}
-  {% include 'widgets/back_link.html' %}
+  {% include 'widgets/back_link.html' with back_url="/" %}
 {% endblock %}
 
 {% block title %}
@@ -79,7 +78,7 @@
         <div class="govuk-body">
           <div class="pagination__summary">
             {% with start=form.page.start_index end=form.page.end_index count=form.paginator.count %}
-              {% blocktrans %}Showing {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}
+              {% blocktrans %}Showing {{ start }} - {{ end }} of {{ count }} results{% endblocktrans %}
             {% endwith %}
           </div>
         </div>
