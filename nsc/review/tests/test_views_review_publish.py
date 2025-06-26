@@ -56,15 +56,12 @@ def test_response_is_no_recommendations_are_not_updated(
     make_review_recommendation(
         policy=second_policy, review=review, recommendation=False
     )
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    response = client.post(url, data={"published": False}, follow=True)
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
+    assert response.status_code == 200
 
-    form = response.forms[1]
-    form["published"] = False
-    form.submit()
-
+    # Check database updates
     first_policy.refresh_from_db()
     second_policy.refresh_from_db()
     assert first_policy.recommendation is False
@@ -89,13 +86,8 @@ def test_response_is_no_summaries_are_not_updated(
         policy=second_policy, review=review, text="**new** ~second~ `summary`"
     )
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = False
-    form.submit()
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": False}, follow=True)
 
     first_policy.refresh_from_db()
     second_policy.refresh_from_db()
@@ -115,13 +107,8 @@ def test_response_is_no_documents_arent_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = False
-    form.submit()
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": False}, follow=True)
 
     doc.refresh_from_db()
     assert not doc.policies.exists()
@@ -139,13 +126,9 @@ def test_response_is_yes_recommendations_are_updated(
         policy=second_policy, review=review, recommendation=False
     )
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = True
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": True}, follow=True)
 
     first_policy.refresh_from_db()
     second_policy.refresh_from_db()
@@ -165,13 +148,9 @@ def test_response_is_yes_review_end_set(
         policy=second_policy, review=review, recommendation=False
     )
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = True
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": True}, follow=True)
 
     review.refresh_from_db()
     assert review.review_end == get_today()
@@ -195,13 +174,9 @@ def test_response_is_yes_summaries_are_updated(
         policy=second_policy, review=review, text="**new** ~second~ `summary`"
     )
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = True
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": True}, follow=True)
 
     first_policy.refresh_from_db()
     second_policy.refresh_from_db()
@@ -217,13 +192,9 @@ def test_response_is_no_next_review_is_not_updated(
     first_policy, second_policy = make_policy(_quantity=2, next_review=get_today())
     review = make_review(policies=[first_policy, second_policy])
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = False
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": False}, follow=True)
 
     first_policy.refresh_from_db()
     second_policy.refresh_from_db()
@@ -237,13 +208,9 @@ def test_response_is_yes_next_review_is_updated(
     first_policy, second_policy = make_policy(_quantity=2, next_review=get_today())
     review = make_review(policies=[first_policy, second_policy])
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = True
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": True}, follow=True)
 
     first_policy.refresh_from_db()
     second_policy.refresh_from_db()
@@ -261,13 +228,9 @@ def test_response_is_yes_supporting_documents_are_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = True
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": True}, follow=True)
 
     doc.refresh_from_db()
     assert set(doc.policies.values_list("id", flat=True)) == {
@@ -286,13 +249,9 @@ def test_response_is_yes_non_supporting_documents_arent_updated(
 
     doc = make_document(review=review, document_type=doc_type)
 
-    response = client.get(
-        reverse("review:publish", kwargs={"slug": review.slug}), user=erm_user
-    )
-
-    form = response.forms[1]
-    form["published"] = True
-    form.submit()
+    client.force_login(erm_user)
+    url = reverse("review:publish", kwargs={"slug": review.slug})
+    client.post(url, data={"published": True}, follow=True)
 
     doc.refresh_from_db()
     assert not doc.policies.exists()

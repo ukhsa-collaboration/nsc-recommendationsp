@@ -227,7 +227,14 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
+            }
+        }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -306,6 +313,11 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
+            "nsc.notify": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
         },
     }
 
@@ -357,6 +369,10 @@ class Common(Configuration):
         "tracking", "gtm-property-id", required=False, default=None
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
+
+    FORM_SUBMIT_LIMIT_PER_HOUR = get_env(
+        "FORM_SUBMIT_LIMIT_PER_HOUR", default=5, cast=int
+    )
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa
@@ -542,7 +558,12 @@ class Test(Dev):
     Default test settings
     """
 
-    pass
+    # Override cache to use dummy cache for tests (no Redis needed)
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
 
 
 class Build(Common):
@@ -636,7 +657,14 @@ class Deployed(Build):
     #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
     # }
 
-    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "nsc.storage.MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
     @property
     def CACHES(self):

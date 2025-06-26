@@ -24,9 +24,8 @@ def valid_data():
 
 
 @pytest.fixture
-def form(client):
-    # use `forms[1]` since there is not the cookies form on the page
-    return client.get(reverse("support:contact")).forms[1]
+def form(django_app):
+    return django_app.get(reverse("support:contact")).forms[1]
 
 
 def submit_form(form, data):

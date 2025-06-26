@@ -10,16 +10,11 @@ pytestmark = pytest.mark.django_db
 
 
 def test_request_is_get_response_is_not_allowed(client):
-    assert (
-        client.get(reverse("notify:receipt"), expect_errors=True).status_code == 405
-    )
+    assert client.get(reverse("notify:receipt"), expect_errors=True).status_code == 405
 
 
 def test_no_auth_set_response_is_forbidden(client):
-    assert (
-        client.post(reverse("notify:receipt"), expect_errors=True).status_code
-        == 403
-    )
+    assert client.post(reverse("notify:receipt"), expect_errors=True).status_code == 403
 
 
 @pytest.mark.parametrize(
@@ -91,7 +86,7 @@ def test_status_is_not_valid_response_is_bad_data(new_status, client, make_email
             reverse("notify:receipt"),
             expect_errors=True,
             headers={"Authorization": f"bearer {token.token}"},
-            params={"reference": email.id, "status": f"{new_status}-extra"},
+            data={"reference": email.id, "status": f"{new_status}-extra"},
         ).status_code
         == 400
     )
@@ -114,7 +109,7 @@ def test_status_is_valid_email_is_updated(new_status, client, make_email):
         reverse("notify:receipt"),
         expect_errors=True,
         headers={"Authorization": f"bearer {token.token}"},
-        params={"reference": email.id, "status": f"{new_status}"},
+        data={"reference": email.id, "status": f"{new_status}"},
     )
 
     email.refresh_from_db()
