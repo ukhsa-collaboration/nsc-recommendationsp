@@ -8,6 +8,7 @@ from nsc.review.models import Review
 # All tests require the database
 pytestmark = pytest.mark.django_db
 
+
 def test_view(erm_user, make_review, django_app):
     """
     Test that the page can be displayed.

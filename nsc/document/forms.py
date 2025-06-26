@@ -6,9 +6,11 @@ from django.forms import HiddenInput, modelformset_factory
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from nsc.document.mixins import FileVirusScanMixin
+
 from ..review.models import Review
 from .models import Document, DocumentPolicy
-from nsc.document.mixins import FileVirusScanMixin
+
 
 def document_formset_form_factory(
     _document_type,
@@ -27,7 +29,9 @@ def document_formset_form_factory(
             validators=[
                 FileExtensionValidator(
                     allowed_extensions=["pdf", "odt"],
-                    message=_("The selected file must be a pdf or odt file from doc formset form."),
+                    message=_(
+                        "The selected file must be a pdf or odt file from doc formset form."
+                    ),
                 )
             ],
         )
@@ -123,7 +127,9 @@ class ReviewDocumentForm(forms.ModelForm):
                 doc.save()
 
         return super().save(commit=commit)
-    virus_scan_fields = ("upload")
+
+    virus_scan_fields = "upload"
+
 
 class ExternalReviewForm(ReviewDocumentForm):
     document_type = Document.TYPE.external_review
@@ -139,11 +145,13 @@ class SubmissionForm(FileVirusScanMixin, forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file from submission form."),
+                message=_(
+                    "The selected file must be a pdf or odt file from submission form."
+                ),
             )
         ],
     )
-    virus_scan_fields = ("upload")
+    virus_scan_fields = "upload"
 
     class Meta:
         model = Document
@@ -167,7 +175,9 @@ class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file from ReviewDocumentsForm cover_sheet."),
+                message=_(
+                    "The selected file must be a pdf or odt file from ReviewDocumentsForm cover_sheet."
+                ),
             )
         ],
     )
@@ -179,7 +189,9 @@ class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file from ReviewDocumentsForm evidence_review."),
+                message=_(
+                    "The selected file must be a pdf or odt file from ReviewDocumentsForm evidence_review."
+                ),
             )
         ],
     )
@@ -191,7 +203,9 @@ class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file from ReviewDocumentsForm evidence_map."),
+                message=_(
+                    "The selected file must be a pdf or odt file from ReviewDocumentsForm evidence_map."
+                ),
             )
         ],
     )
@@ -199,11 +213,17 @@ class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
     cost_effective_model = forms.FileField(
         label=_("Cost-effective model"),
         required=False,
-        error_messages={"required": _("Select a cost-effective model to upload ReviewDocumentsForm cost_effective_model")},
+        error_messages={
+            "required": _(
+                "Select a cost-effective model to upload ReviewDocumentsForm cost_effective_model"
+            )
+        },
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file ReviewDocumentsForm cost_effective_model."),
+                message=_(
+                    "The selected file must be a pdf or odt file ReviewDocumentsForm cost_effective_model."
+                ),
             )
         ],
     )
@@ -215,7 +235,9 @@ class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["pdf", "odt"],
-                message=_("The selected file must be a pdf or odt file ReviewDocumentsForm systematic_review."),
+                message=_(
+                    "The selected file must be a pdf or odt file ReviewDocumentsForm systematic_review."
+                ),
             )
         ],
     )
@@ -227,11 +249,10 @@ class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
         "cost_effective_model",
         "systematic_review",
     )
-    
+
     class Meta:
         model = Review
         fields = ()
-    
 
     def __init__(self, instance=None, initial=None, **kwargs):
         initial = {

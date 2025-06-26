@@ -1,7 +1,10 @@
-import clamd
 import logging
 
+import clamd
+
+
 logger = logging.getLogger(__name__)
+
 
 def is_file_clean(file):
     """
@@ -17,8 +20,8 @@ def is_file_clean(file):
     file.seek(0)
     try:
         result = cd.instream(file)
-        status, _ = result.get('stream', ('ERROR', None))
-        return status == 'OK'
+        status, _ = result.get("stream", ("ERROR", None))
+        return status == "OK"
     except Exception as e:
         logger.warning(f"Error scanning file: {e}")
         return True  # ⚠️ Fail open

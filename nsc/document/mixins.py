@@ -1,5 +1,6 @@
 from nsc.utils.virus_scanner import is_file_clean
 
+
 class FileVirusScanMixin:
     virus_scan_fields = ()
 
@@ -10,5 +11,8 @@ class FileVirusScanMixin:
             if field in self.files:
                 file = cleaned_data.get(field)
                 if file and not is_file_clean(file):
-                    self.add_error(field, "Malware detected in the uploaded file. Please upload a clean file.")
+                    self.add_error(
+                        field,
+                        "Malware detected in the uploaded file. Please upload a clean file.",
+                    )
         return cleaned_data
