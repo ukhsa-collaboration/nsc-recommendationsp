@@ -238,6 +238,10 @@ django-redis==5.2.0
     # via
    
     #   -r requirements-dev.in
+django-ratelimit==4.1.0
+    # via
+   
+    #   -r requirements-dev.in
 django-simple-history==3.0.0
     # via
    
@@ -442,7 +446,7 @@ nltk==3.9.1
     # via
    
     #   safety
-notifications-python-client==6.3.0
+notifications-python-client==10.0.1
     # via
    
     #   -r requirements-dev.in

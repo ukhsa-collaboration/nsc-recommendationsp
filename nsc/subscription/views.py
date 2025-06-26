@@ -4,7 +4,10 @@ from django.conf import settings
 from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import generic
+
+from django_ratelimit.decorators import ratelimit
 
 from ..notify.models import Email
 from .forms import (
@@ -31,6 +34,15 @@ class SubscriptionLanding(generic.TemplateView):
     template_name = "subscription/subscription_landing.html"
 
 
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
 class PublicSubscriptionStart(generic.FormView):
     form_class = SubscriptionStart
     template_name = "subscription/public_subscription_management_form.html"
@@ -61,6 +73,15 @@ class PublicSubscriptionStart(generic.FormView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
 class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
     model = Subscription
     form_class = ManageSubscriptionsForm
@@ -111,6 +132,15 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
 class PublicSubscriptionEmails(generic.UpdateView):
     model = Subscription
     form_class = CreateSubscriptionForm
@@ -163,6 +193,15 @@ class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
     template_name = "subscription/public_subscription_complete.html"
 
 
+@method_decorator(
+    ratelimit(
+        key="ip",
+        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
 class StakeholderSubscriptionStart(generic.CreateView):
     model = StakeholderSubscription
     template_name = "subscription/stakeholder_subscription_creation.html"
