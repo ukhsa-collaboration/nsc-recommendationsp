@@ -32,6 +32,8 @@ This document outlines the major upgrade of this project:
 | botocore   | 1.17.61     | 1.38.30     | Minor 🔻       |
 | boto3      | 1.20.112    | 1.38.30     | Minor 🔻       |
 | django-storages| 1.12.3  | 1.14.2      | Minor 🔻       |
+| notifications-python-client| 6.3.0  | 10.0.1  | Major 🔺|
+| django-ratelimit|- |   4.1.0     |      Added 
 
 ---
 ## 🌐 Django Upgrade
