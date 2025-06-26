@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views import generic
 
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
@@ -166,6 +165,7 @@ class PublicSubscriptionEmails(RatelimitExceptionMixin, generic.UpdateView):
 class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
     model = Subscription
     template_name = "subscription/public_subscription_complete.html"
+
 
 class StakeholderSubscriptionStart(RatelimitExceptionMixin, generic.CreateView):
     model = StakeholderSubscription
