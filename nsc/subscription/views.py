@@ -7,8 +7,6 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import generic
 
-from django_ratelimit.decorators import ratelimit
-
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 
 from ..notify.models import Email
@@ -169,17 +167,7 @@ class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
     model = Subscription
     template_name = "subscription/public_subscription_complete.html"
 
-
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class StakeholderSubscriptionStart(generic.CreateView):
+class StakeholderSubscriptionStart(RatelimitExceptionMixin, generic.CreateView):
     model = StakeholderSubscription
     template_name = "subscription/stakeholder_subscription_creation.html"
     form_class = CreateStakeholderSubscriptionForm
