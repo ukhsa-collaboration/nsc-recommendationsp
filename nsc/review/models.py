@@ -355,6 +355,9 @@ class Review(TimeStampedModel):
         )
         return {
             "review": self.name,
+            "condition": (
+                self.policies.first().name if self.policies.exists() else self.name
+            ),
             "policy list": "\n".join(
                 f"* [{p.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, p.get_public_url())})"
                 for p in self.policies.all()

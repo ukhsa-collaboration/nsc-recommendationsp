@@ -216,6 +216,7 @@ class Policy(TimeStampedModel):
         return {
             "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
             "policy": self.name,
+            "condition": self.name,
             **extra,
         }
 
