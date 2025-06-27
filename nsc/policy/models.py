@@ -13,6 +13,7 @@ from dateutil.relativedelta import relativedelta
 from django_extensions.db.models import TimeStampedModel
 from model_utils import Choices
 from simple_history.models import HistoricalRecords
+import logging
 
 from nsc.document.models import Document
 from nsc.notify.models import Email
@@ -20,6 +21,7 @@ from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 from nsc.utils.forms import ChoiceArrayField
 from nsc.utils.markdown import convert
+logger = logging.getLogger(__name__)
 
 
 class PolicyQuerySet(models.QuerySet):
@@ -249,11 +251,15 @@ class Policy(TimeStampedModel):
     def send_open_consultation_notifications(
         self, review_notification_relation, extra_context
     ):
+        
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
             extra_context,
         )
+        logger.info(
+            "Sending open consultation notifications for policy")
+        logger.info(extra_context)
 
     def send_decision_notifications(self, review_notification_relation, extra_context):
         self.send_notifications(

@@ -412,6 +412,7 @@ class Review(TimeStampedModel):
             policy.send_open_consultation_notifications(
                 self.open_consultation_notifications,
                 {
+                    "policy": policy.name if policy.name else "",
                     "review manager full name": self.user.get_full_name(),
                     "consultation end date": (
                         self.consultation_end.strftime("%d %B %Y")
