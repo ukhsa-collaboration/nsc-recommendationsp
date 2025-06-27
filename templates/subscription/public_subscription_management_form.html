@@ -4,8 +4,7 @@
 {% block body_class %}subscription-management{% endblock %}
 
 {% block back %}
-  {% url "subscription:landing" as back_url %}
-  {% include 'widgets/back_link.html' %}
+  {% include 'widgets/back_link.html' with back_url="/" %}
 {% endblock %}
 
 {% block title %}
