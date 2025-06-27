@@ -4,7 +4,8 @@
 {% block body_class %}subscription-management{% endblock %}
 
 {% block back %}
-  {% include 'widgets/back_link.html' with back_url="/" %}
+  {% url "policy:detail" as back_url %}
+  {% include 'widgets/back_link.html' %}
 {% endblock %}
 
 {% block title %}
