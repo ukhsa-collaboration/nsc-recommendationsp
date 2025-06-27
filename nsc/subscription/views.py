@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+from nsc.policy.models import Policy
 
 from ..notify.models import Email
 from .forms import (
@@ -42,6 +43,19 @@ class PublicSubscriptionStart(RatelimitExceptionMixin, generic.FormView):
             **super().get_form_kwargs(),
             "data": self.request.POST or self.request.GET or None,
         }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "policies" in self.request.GET:
+            try:
+                policy_id = self.request.GET["policies"]
+                policy = Policy.objects.get(id=policy_id)
+                context["back_url"] = "/" + policy.slug + "/"
+            except (Policy.DoesNotExist, ValueError):
+                context["back_url"] = "/"
+        else:
+            context["back_url"] = "/"
+        return context
 
     def form_valid(self, form):
         if "save" in form.data:

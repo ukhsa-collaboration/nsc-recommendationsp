@@ -4,7 +4,7 @@
 {% block body_class %}subscription-management{% endblock %}
 
 {% block back %}
-  {% include 'widgets/back_link.html' with back_url="/" %}
+  {% include 'widgets/back_link.html' with back_url=back_url|default:"/" %}
 {% endblock %}
 
 {% block title %}
