@@ -370,8 +370,8 @@ class Common(Configuration):
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
-    FORM_SUBMIT_LIMIT_PER_HOUR = get_env(
-        "FORM_SUBMIT_LIMIT_PER_HOUR", default=5, cast=int
+    FORM_SUBMIT_LIMIT_PER_DAY = get_env(
+        "FORM_SUBMIT_LIMIT_PER_DAY", default=25, cast=int
     )
 
     # Settings for celery

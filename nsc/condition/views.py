@@ -1,11 +1,9 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, FormView, ListView, TemplateView
 
-from django_ratelimit.decorators import ratelimit
-
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 from nsc.notify.models import Email
 from nsc.policy.models import Policy
 from nsc.review.models import Review
@@ -83,16 +81,7 @@ class ConsultationView(ConsultationMixin, TemplateView):
         )
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class PublicCommentView(ConsultationMixin, FormView):
+class PublicCommentView(RatelimitExceptionMixin, ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
     form_class = PublicCommentForm
 
@@ -170,16 +159,7 @@ class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
         )
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class StakeholderCommentView(ConsultationMixin, FormView):
+class StakeholderCommentView(RatelimitExceptionMixin, ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
 

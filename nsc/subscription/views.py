@@ -4,10 +4,9 @@ from django.conf import settings
 from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views import generic
 
-from django_ratelimit.decorators import ratelimit
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 
 from ..notify.models import Email
 from .forms import (
@@ -34,16 +33,7 @@ class SubscriptionLanding(generic.TemplateView):
     template_name = "subscription/subscription_landing.html"
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class PublicSubscriptionStart(generic.FormView):
+class PublicSubscriptionStart(RatelimitExceptionMixin, generic.FormView):
     form_class = SubscriptionStart
     template_name = "subscription/public_subscription_management_form.html"
 
@@ -73,16 +63,9 @@ class PublicSubscriptionStart(generic.FormView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
+class PublicSubscriptionManage(
+    RatelimitExceptionMixin, GetObjectFromTokenMixin, generic.UpdateView
+):
     model = Subscription
     form_class = ManageSubscriptionsForm
     template_name = "subscription/public_subscription_management_form.html"
@@ -132,16 +115,7 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class PublicSubscriptionEmails(generic.UpdateView):
+class PublicSubscriptionEmails(RatelimitExceptionMixin, generic.UpdateView):
     model = Subscription
     form_class = CreateSubscriptionForm
     template_name = "subscription/public_subscription_email_form.html"
@@ -193,16 +167,7 @@ class PublicSubscriptionComplete(GetObjectFromTokenMixin, generic.DetailView):
     template_name = "subscription/public_subscription_complete.html"
 
 
-@method_decorator(
-    ratelimit(
-        key="ip",
-        rate=f"{settings.FORM_SUBMIT_LIMIT_PER_HOUR}/h",
-        method="POST",
-        block=True,
-    ),
-    name="post",
-)
-class StakeholderSubscriptionStart(generic.CreateView):
+class StakeholderSubscriptionStart(RatelimitExceptionMixin, generic.CreateView):
     model = StakeholderSubscription
     template_name = "subscription/stakeholder_subscription_creation.html"
     form_class = CreateStakeholderSubscriptionForm
