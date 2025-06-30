@@ -179,3 +179,4 @@ class CreateStakeholderSubscriptionForm(forms.ModelForm):
 
 class SubscriptionForm(BaseMixin, forms.Form):
     pass
+

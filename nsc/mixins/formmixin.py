@@ -1,7 +1,7 @@
 from django import forms
 
 
-class BaseMixin(forms.Form):
+class BaseMixin:
     backup_email = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={"style": "display:none", "tabindex": "-1"}),
