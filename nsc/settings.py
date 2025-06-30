@@ -177,11 +177,11 @@ class Common(Configuration):
         "django.middleware.cache.FetchFromCacheMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "nsc.middleware.ip_restriction.AdminIPRestrictionMiddleware",
+        "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
-        "nsc.middleware.redirection.redirect_url_fragment",
+        "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
     ]
 
@@ -317,7 +317,7 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
-            "nsc.middleware.ip_restriction": {
+            "nsc.middleware.ip_restriction_middleware": {
                 "level": "INFO",
                 "handlers": ["console"],
                 "propagate": False,
