@@ -166,6 +166,7 @@ class Common(Configuration):
     ]
 
     MIDDLEWARE = [
+        'core.middleware.header_debug.HeaderDebugMiddleware',
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
