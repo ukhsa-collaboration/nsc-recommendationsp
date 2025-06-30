@@ -19,16 +19,20 @@ class AdminIPRestrictionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         raw_ip_ranges = settings.DJANGO_ADMIN_IP_RANGES.strip()
+
         if not raw_ip_ranges:
-            raise RuntimeError(
-                "DJANGO_ADMIN_IP_RANGES environment variable is not set or empty"
+            logger.warning(
+                "DJANGO_ADMIN_IP_RANGES environment variable is required but not set. If you want django-admin to be accessible to anyone on the internet (restrict no one), then set it to 0.0.0.0/0"
             )
-        raw_ip_list = raw_ip_ranges.split(",")
-        stripped_ips = [raw_ip.strip() for raw_ip in raw_ip_list if raw_ip.strip()]
-        # Converting the strings into IPv4Network objects
-        self.allowed_ips = [
-            ipaddress.ip_network(stripped_ip) for stripped_ip in stripped_ips
-        ]
+            self.allowed_ips = []
+
+        else:
+            raw_ip_list = raw_ip_ranges.split(",")
+            stripped_ips = [raw_ip.strip() for raw_ip in raw_ip_list if raw_ip.strip()]
+            # Converting the strings into IPv4Network objects
+            self.allowed_ips = [
+                ipaddress.ip_network(stripped_ip) for stripped_ip in stripped_ips
+            ]
 
     def __call__(self, request):
         admin_prefixes = ["/django-admin/", "/admin/"]
