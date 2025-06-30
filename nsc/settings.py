@@ -135,9 +135,12 @@ class Common(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
-    # Comma separated list of hosts; for exmaple:
+    # Comma separated list of hosts; for example:
     #   DJANGO_ALLOWED_HOSTS=host1.example.com,host2.example.com
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, default=["*"])
+
+    # String containing ip ranges allowed to access django-admin
+    DJANGO_ADMIN_IP_RANGES = get_env("DJANGO_ADMIN_IP_RANGES", "")
 
     INSTALLED_APPS = [
         "django.contrib.admin",
@@ -174,6 +177,7 @@ class Common(Configuration):
         "django.middleware.cache.FetchFromCacheMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
@@ -311,6 +315,11 @@ class Common(Configuration):
             "django.server": {
                 "handlers": ["django.server"],
                 "level": "INFO",
+                "propagate": False,
+            },
+            "nsc.middleware.ip_restriction_middleware": {
+                "level": "INFO",
+                "handlers": ["console"],
                 "propagate": False,
             },
             "nsc.notify": {
