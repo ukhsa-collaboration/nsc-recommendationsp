@@ -1,9 +1,10 @@
 from django import forms
 from django.forms import HiddenInput
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 from model_utils import Choices
 
+from nsc.mixins.formmixin import BaseMixin
 from nsc.policy.models import Policy
 
 
@@ -42,7 +43,7 @@ class SearchForm(forms.Form):
     )
 
 
-class PublicCommentForm(forms.Form):
+class PublicCommentForm(BaseMixin, forms.Form):
     COMMENT_FIELDS = {
         "comment_affected": "Please tell us if this condition has affected you, your family or your friends?",
         "comment_evidence": "Do you have any comments on the evidence considered by the UK NSC in the review? "
@@ -102,8 +103,7 @@ class PublicCommentForm(forms.Form):
         return cleaned_data
 
 
-class StakeholderCommentForm(forms.Form):
-
+class StakeholderCommentForm(BaseMixin, forms.Form):
     name = forms.CharField(
         label=_("Full name"), error_messages={"required": _("Enter your full name.")}
     )

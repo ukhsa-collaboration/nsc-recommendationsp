@@ -37,6 +37,10 @@
   <form method="post">
     {% csrf_token %}
 
+    <div style="display:none">
+      <input type="text" name="backup_email" value="">
+    </div>
+
     {% for hidden in form.hidden_fields %}
       {{ hidden }}
     {% endfor %}

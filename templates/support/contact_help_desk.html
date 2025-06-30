@@ -8,6 +8,16 @@
 {% endblock %}
 
 {% block content %}
+  {% if request.GET.show_hidden %}
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Test Mode</span>
+        Test Mode Active - Hidden field is now visible
+      </strong>
+    </div>
+  {% endif %}
+
   <p class="govuk-body">
     {% blocktrans %}
       <a class="govuk-link" href="https://www.gov.uk/government/organisations/uk-national-screening-committee/about">The UK National Screening Committee</a>
@@ -39,6 +49,10 @@
 
   <form method="post">
     {% csrf_token %}
+
+    <div style="display:none">
+      <input type="text" name="backup_email" value="">
+    </div>
 
     {% include "widgets/text_input.html" with field=form.name %}
     {% include "widgets/text_input.html" with field=form.organisation %}

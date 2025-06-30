@@ -1,8 +1,9 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from nsc.mixins.formmixin import BaseMixin
 
 
-class ContactForm(forms.Form):
+class ContactForm(BaseMixin, forms.Form):
     name = forms.CharField(
         max_length=255, error_messages={"required": _("Enter your name")}
     )

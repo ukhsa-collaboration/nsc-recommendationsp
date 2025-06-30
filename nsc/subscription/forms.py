@@ -5,6 +5,8 @@ from django.core.paginator import EmptyPage, Paginator
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.utils.translation import gettext_lazy as _
 
+from nsc.mixins.formmixin import BaseMixin
+
 from ..policy.filters import SearchFilter
 from ..policy.models import Policy
 from .models import StakeholderSubscription, Subscription
@@ -103,7 +105,7 @@ class SubscriptionStart(SubscriptionPolicySearchFormMixin, forms.Form):
     pass
 
 
-class CreateSubscriptionForm(forms.ModelForm):
+class CreateSubscriptionForm(BaseMixin, forms.ModelForm):
     email_confirmation = forms.EmailField(
         label=_("Please confirm your email address"),
         error_messages={"required": _("Confirm your email address")},
@@ -173,3 +175,7 @@ class CreateStakeholderSubscriptionForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class SubscriptionForm(BaseMixin, forms.Form):
+    pass

@@ -39,6 +39,10 @@
   <form method="post">
     {% csrf_token %}
 
+    <div style="display:none">
+      <input type="text" name="backup_email" value="">
+    </div>
+
     {% if form.errors %}
       {% include "widgets/error_summary.html" %}
     {% endif %}
