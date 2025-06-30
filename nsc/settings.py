@@ -317,6 +317,11 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
+            "nsc.middleware.ip_restriction": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
             "nsc.notify": {
                 "level": "INFO",
                 "handlers": ["console"],

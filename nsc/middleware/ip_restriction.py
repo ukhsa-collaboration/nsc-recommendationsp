@@ -13,7 +13,7 @@ class AdminIPRestrictionMiddleware:
     Middleware to restrict access to Django admin endpoints based on allowed IP ranges.
 
     The allowed IP ranges are read from the DJANGO_ADMIN_IP_RANGES environment variable,
-    which should be a comma-separated list of CIDR ranges (e.g. "1.2.3.4/32, 5.6.7.8/24").
+    which should be a comma-separated list of CIDR ranges (e.g. "1.2.3.4/32, 5.6.7.0/24").
     """
 
     def __init__(self, get_response):
@@ -55,9 +55,10 @@ class AdminIPRestrictionMiddleware:
 
     def get_incoming_ip(self, request):
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
-        logger.debug(f"X-Forwarded-For header: {x_forwarded_for}")
+        logger.info(f"X-Forwarded-For header: {x_forwarded_for}")
+        logger.info(f"Given that requests come from Kemp Loadmaster, the following REMOTE_ADDR should be the loadmaster's internal ip: {request.META.get("REMOTE_ADDR", "")}")
         if x_forwarded_for:
             return x_forwarded_for.split(",")[0].strip()
         fallback_ip = request.META.get("REMOTE_ADDR", "")
-        logger.debug(f"X-Forwarded-For not found. Using REMOTE_ADDR: {fallback_ip}")
+        logger.info(f"X-Forwarded-For not found. Using REMOTE_ADDR: {fallback_ip}")
         return fallback_ip
