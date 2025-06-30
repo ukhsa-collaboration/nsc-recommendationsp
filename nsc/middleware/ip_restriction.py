@@ -56,7 +56,9 @@ class AdminIPRestrictionMiddleware:
     def get_incoming_ip(self, request):
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         logger.info(f"X-Forwarded-For header: {x_forwarded_for}")
-        logger.info(f"Given that requests come from Kemp Loadmaster, the following REMOTE_ADDR should be the loadmaster's internal ip: {request.META.get("REMOTE_ADDR", "")}")
+        logger.info(
+            f"Given that requests come from Kemp Loadmaster, the following REMOTE_ADDR should be the loadmaster's internal ip: {request.META.get('REMOTE_ADDR', '')}"
+        )
         if x_forwarded_for:
             return x_forwarded_for.split(",")[0].strip()
         fallback_ip = request.META.get("REMOTE_ADDR", "")
