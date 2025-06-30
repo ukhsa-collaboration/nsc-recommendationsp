@@ -22,7 +22,8 @@ class AdminIPRestrictionMiddleware:
 
         if not raw_ip_ranges:
             logger.warning(
-                "DJANGO_ADMIN_IP_RANGES environment variable is required but not set. If you want django-admin to be accessible to anyone on the internet (restrict no one), then set it to 0.0.0.0/0"
+                "DJANGO_ADMIN_IP_RANGES environment variable is required but not set."
+                "If you want django-admin to be accessible to anyone on the internet (restrict no one), then set it to 0.0.0.0/0"
             )
             self.allowed_ips = []
 
