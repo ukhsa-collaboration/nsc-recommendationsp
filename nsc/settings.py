@@ -166,7 +166,6 @@ class Common(Configuration):
     ]
 
     MIDDLEWARE = [
-        'core.middleware.header_debug.HeaderDebugMiddleware',
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -319,6 +318,11 @@ class Common(Configuration):
                 "handlers": ["console"],
                 "propagate": False,
             },
+            "nsc.mixins.ratelimitmixin": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            }
         },
     }
 

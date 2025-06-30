@@ -6,9 +6,12 @@ from django.utils.decorators import method_decorator
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 import logging
+from django.core.cache import cache
 
 
 logger = logging.getLogger(__name__)
+
+RATE_LIMIT_HIT_COUNT_TTL = 86400
 
 
 def get_client_ip(request):
@@ -42,7 +45,7 @@ def handle_429(request, exception=None):
 class RatelimitExceptionMixin:
     @method_decorator(
         ratelimit(
-            key="user_or_ip",
+            key="ip",
             rate=f"{settings.FORM_SUBMIT_LIMIT_PER_DAY}/d",
             method="POST",
             block=False,
@@ -52,18 +55,29 @@ class RatelimitExceptionMixin:
         client_ip = get_client_ip(request)
         user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
         client_id = request.COOKIES.get("client_id", "no-client-id")
+        # Redis key format: hitcount:{ip}:{path}
+        cache_key = f"hitcount:{client_ip}:{request.path}"
+        try:
+            # Use Redis atomic increment
+            hit_count = cache.incr(cache_key)
+        except ValueError:
+            # Key does not exist yet, set to 1 and set expiration
+            cache.set(cache_key, 1, timeout=RATE_LIMIT_HIT_COUNT_TTL)
+            hit_count = 1
+
         log_info = {
             "ip": client_ip,
             "user_agent": user_agent,
             "client_id": client_id,
             "path": request.path,
+            "hit_count": hit_count,
             "limited": getattr(request, "limited", False)
         }
         logger.info(f"[RateLimit Check] {log_info}")
 
         # Check if rate limit was exceeded
         if getattr(request, "limited", False):
-            logger.warning(f"[RateLimit Hit] IP={client_ip} exceeded rate limit on {request.path}")
+            logger.warning(f"[RateLimit Hit] IP={client_ip} exceeded rate limit on {request.path} (Hits: {hit_count})")
             # You can optionally pass a Ratelimited instance for compatibility
             return handle_429(request, exception=Ratelimited())
         return super().dispatch(request, *args, **kwargs)
