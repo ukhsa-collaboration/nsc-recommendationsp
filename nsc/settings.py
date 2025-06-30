@@ -232,7 +232,7 @@ class Common(Configuration):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",
             }
         }
 
@@ -618,8 +618,11 @@ class Deployed(Build):
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
+    USE_X_FORWARDED_HOST = True
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    RATELIMIT_USE_X_FORWARDED_FOR = True
 
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")

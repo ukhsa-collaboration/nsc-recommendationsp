@@ -19,6 +19,19 @@
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','{{ GTM_PROPERTY_ID }}');
     }
+    // logic to add client_id to cookies to track user and for rate limiting logic
+    try {
+        let clientId = localStorage.getItem("client_id");
+
+        if (!clientId) {
+            clientId = self.crypto?.randomUUID?.() || Math.random().toString(36).substring(2);
+            localStorage.setItem("client_id", clientId);
+        }
+
+        document.cookie = `client_id=${clientId}; path=/; max-age=31536000`;
+    } catch (e) {
+        console.warn("Client ID generation failed:", e);
+    }
   </script>
   <!-- End Google Tag Manager -->
   {% endif %}
