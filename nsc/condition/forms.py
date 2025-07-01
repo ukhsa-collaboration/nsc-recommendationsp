@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import HiddenInput
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 
 from model_utils import Choices
 

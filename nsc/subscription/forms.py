@@ -175,7 +175,3 @@ class CreateStakeholderSubscriptionForm(forms.ModelForm):
             )
 
         return cleaned_data
-
-
-class SubscriptionForm(BaseMixin, forms.Form):
-    pass
