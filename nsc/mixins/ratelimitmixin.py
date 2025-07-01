@@ -6,7 +6,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-RATE_LIMIT_HIT_COUNT_TTL = int(settings.FORM_SUBMIT_LIMIT_TTL)
+RATE_LIMIT_HIT_COUNT_TTL = int(settings.RATE_LIMIT_HIT_COUNT_TTL)
 
 RATE_LIMIT_THRESHOLD = int(settings.FORM_SUBMIT_LIMIT_PER_DAY)
 

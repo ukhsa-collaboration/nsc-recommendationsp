@@ -210,7 +210,7 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
-    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="redis")
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
     REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
 
     @property
