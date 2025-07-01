@@ -3,10 +3,11 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbid
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 from .models import Email, ReceiptUserToken
 
 
-class ProcessSendReceipt(generic.View):
+class ProcessSendReceipt(RatelimitExceptionMixin, generic.View):
     def post(self, request, *args, **kwargs):
         auth_header = str(request.META.get("HTTP_AUTHORIZATION", ""))
         split = auth_header.split(" ")
