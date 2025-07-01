@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-  <p class="govuk-body">
+    <p class="govuk-body">
     {% blocktrans %}
       <a class="govuk-link" href="https://www.gov.uk/government/organisations/uk-national-screening-committee/about">The UK National Screening Committee</a>
       (UK NSC) makes recommendations on all aspects of population screening  in the UK. See the
@@ -39,6 +39,10 @@
 
   <form method="post">
     {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
 
     {% include "widgets/text_input.html" with field=form.name %}
     {% include "widgets/text_input.html" with field=form.organisation %}
