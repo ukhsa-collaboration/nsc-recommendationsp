@@ -210,6 +210,8 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="redis")
+    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
 
     @property
     def DATABASES(self):
@@ -232,7 +234,7 @@ class Common(Configuration):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
             }
         }
 
@@ -323,13 +325,17 @@ class Common(Configuration):
                 "handlers": ["console"],
                 "propagate": False,
             },
+            "nsc.middleware": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            }
         },
     }
 
     # dont use the get_env function here as the property isn't read into the celery config correctly
     REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
-
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = get_env("PHE_COMMUNICATIONS_EMAIL", default=None)
     PHE_COMMUNICATIONS_NAME = get_env("PHE_COMMUNICATIONS_NAME", default=None)
