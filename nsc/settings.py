@@ -384,6 +384,9 @@ class Common(Configuration):
     FORM_SUBMIT_LIMIT_PER_DAY = get_env(
         "FORM_SUBMIT_LIMIT_PER_DAY", default=25, cast=int
     )
+    RATE_LIMIT_HIT_COUNT_TTL = get_env(
+        "RATE_LIMIT_HIT_COUNT_TTL", default=86400, cast=int
+    )
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa

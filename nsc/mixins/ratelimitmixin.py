@@ -6,7 +6,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-RATE_LIMIT_HIT_COUNT_TTL = 86400  # 24 hours
+RATE_LIMIT_HIT_COUNT_TTL = int(settings.FORM_SUBMIT_LIMIT_TTL)
 
 RATE_LIMIT_THRESHOLD = int(settings.FORM_SUBMIT_LIMIT_PER_DAY)
 
@@ -41,7 +41,7 @@ class RatelimitExceptionMixin:
         if request.method == "POST":
             client_ip = get_client_ip(request)
             user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
-            cache_key = f"hitcounttest:{client_ip}:{request.path}"
+            cache_key = f"hitcount:{client_ip}:{request.path}"
 
             try:
                 hit_count = cache.incr(cache_key)
