@@ -2,6 +2,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView, TemplateView
+
 from nsc.notify.models import Email
 from nsc.policy.models import Policy
 from nsc.review.models import Review

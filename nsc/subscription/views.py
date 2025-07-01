@@ -61,8 +61,7 @@ class PublicSubscriptionStart(generic.FormView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView
-):
+class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
     model = Subscription
     form_class = ManageSubscriptionsForm
     template_name = "subscription/public_subscription_management_form.html"

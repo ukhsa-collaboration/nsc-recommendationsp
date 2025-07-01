@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+
 from .models import Email, ReceiptUserToken
 
 
