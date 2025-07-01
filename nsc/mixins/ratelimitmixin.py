@@ -1,12 +1,14 @@
 import logging
 from django.core.cache import cache
 from django.shortcuts import render
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
 
 RATE_LIMIT_HIT_COUNT_TTL = 86400  # 24 hours
-RATE_LIMIT_THRESHOLD = 5  # Set your desired threshold here
+
+RATE_LIMIT_THRESHOLD = int(settings.FORM_SUBMIT_LIMIT_PER_DAY)
 
 
 def get_client_ip(request):
@@ -36,27 +38,29 @@ def handle_rate_limit_exceeded(request, hit_count):
 
 class RatelimitExceptionMixin:
     def dispatch(self, request, *args, **kwargs):
-        client_ip = get_client_ip(request)
-        user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
-        cache_key = f"hitcount:{client_ip}:{request.path}"
+        if request.method == "POST":
+            client_ip = get_client_ip(request)
+            user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
+            cache_key = f"hitcounttest:{client_ip}:{request.path}"
 
-        try:
-            hit_count = cache.incr(cache_key)
-        except ValueError:
-            cache.set(cache_key, 1, timeout=RATE_LIMIT_HIT_COUNT_TTL)
-            hit_count = 1
+            try:
+                hit_count = cache.incr(cache_key)
+            except ValueError:
+                cache.set(cache_key, 1, timeout=RATE_LIMIT_HIT_COUNT_TTL)
+                hit_count = 1
 
-        # Optional logging
-        logger.info({
-            "ip": client_ip,
-            "user_agent": user_agent,
-            "path": request.path,
-            "hit_count": hit_count,
-            "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD
-        })
+            # Optional logging
+            logger.info({
+                "ip": client_ip,
+                "user_agent": user_agent,
+                "path": request.path,
+                "hit_count": hit_count,
+                "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD,
+                "cache_key": cache_key
+            })
 
-        # Custom rate limit threshold check
-        if hit_count > RATE_LIMIT_THRESHOLD:
-            return handle_rate_limit_exceeded(request, hit_count)
+            # Custom rate limit threshold check
+            if hit_count > RATE_LIMIT_THRESHOLD:
+                return handle_rate_limit_exceeded(request, hit_count)
 
         return super().dispatch(request, *args, **kwargs)
