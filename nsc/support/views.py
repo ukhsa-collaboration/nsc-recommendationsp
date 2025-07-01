@@ -3,11 +3,13 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+
 from ..notify.models import Email
 from .forms import ContactForm
 
 
-class ContactHelpDesk(generic.FormView):
+class ContactHelpDesk(RatelimitExceptionMixin, generic.FormView):
     form_class = ContactForm
     template_name = "support/contact_help_desk.html"
 

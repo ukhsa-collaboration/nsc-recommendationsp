@@ -51,8 +51,7 @@ class ReviewDetail(ReviewManagerRequiredMixin, generic.DetailView):
     context_object_name = "review"
 
 
-class ReviewAdd(ReviewManagerRequiredMixin, generic.CreateView
-):
+class ReviewAdd(ReviewManagerRequiredMixin, generic.CreateView):
     model = Review
     form_class = ReviewForm
 
@@ -115,16 +114,14 @@ class ReviewDates(ReviewManagerRequiredMixin, generic.UpdateView):
         return reverse_lazy("review:open", kwargs={"slug": self.object.slug})
 
 
-class ReviewStakeholders(ReviewManagerRequiredMixin, generic.UpdateView
-):
+class ReviewStakeholders(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewStakeholdersForm
     template_name = "review/review_stakeholders.html"
 
 
-class ReviewSummary(ReviewManagerRequiredMixin, generic.UpdateView
-):
+class ReviewSummary(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewSummaryForm
@@ -148,8 +145,7 @@ class ReviewRecommendation(ReviewManagerRequiredMixin, generic.UpdateView):
         return reverse("review:publish", kwargs={"slug": self.object.slug})
 
 
-class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView
-):
+class ReviewPublish(ReviewManagerRequiredMixin, generic.UpdateView):
     model = Review
     lookup_field = "slug"
     form_class = ReviewPublishForm
