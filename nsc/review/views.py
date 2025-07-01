@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
@@ -77,7 +78,9 @@ class ReviewDelete(ReviewManagerRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("dashboard")
 
 
-class ReviewDates(ReviewManagerRequiredMixin, generic.UpdateView):
+class ReviewDates(
+    RatelimitExceptionMixin, ReviewManagerRequiredMixin, generic.UpdateView
+):
     model = Review
     lookup_field = "slug"
     form_class = ReviewDatesForm
