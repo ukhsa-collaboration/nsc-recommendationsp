@@ -36,7 +36,7 @@ class AdminIPRestrictionMiddleware:
             ]
 
     def __call__(self, request):
-        admin_prefixes = ["/django-admin/", "/admin/"]
+        admin_prefixes = ["/django-admin/", "/admin/", "/policy/", "/review/"]
         if any(request.path.startswith(prefix) for prefix in admin_prefixes):
             ip = self.get_incoming_ip(request)
             logger.info(f"User attempted to access {request.path} from IP: {ip}")
