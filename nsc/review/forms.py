@@ -427,7 +427,7 @@ class ReviewStakeholdersForm(forms.ModelForm):
         label=_("Stakeholders"),
         queryset=Stakeholder.objects.none(),
         widget=forms.CheckboxSelectMultiple,
-        help_text=_("Deselect any stakeholders that are not to be notified"),
+        help_text=_("Uncheck any stakeholders you do not want to notify"),
         error_messages={"required": _("Select at least one stakeholder to notify")},
         required=False,
     )
@@ -439,11 +439,15 @@ class ReviewStakeholdersForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["stakeholders"].queryset = (
+        stakeholders_queryset = (
             (self.instance.stakeholders.distinct() | self.instance.policy_stakeholders)
             .distinct()
             .order_by("name")
         )
+        self.fields["stakeholders"].queryset = stakeholders_queryset
+
+        if not self.data:
+            self.fields["stakeholders"].initial = stakeholders_queryset
 
     def is_valid(self):
         formset_valid = self.extra_stakeholders_formset.is_valid()
