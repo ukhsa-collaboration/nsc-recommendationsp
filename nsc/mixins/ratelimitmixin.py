@@ -1,12 +1,13 @@
+import logging
+
 from django.conf import settings
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
-import logging
-from django.core.cache import cache
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ def handle_429(request, exception=None):
             {
                 "ratelimit_headline": ratelimit_headline,
                 "ratelimit_detail": ratelimit_detail,
-                "rate_limited": True
+                "rate_limited": True,
             },
             status=429,
         )
@@ -56,7 +57,7 @@ class RatelimitExceptionMixin:
         user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
         client_id = request.COOKIES.get("client_id", "no-client-id")
         # Redis key format: hitcount:{ip}:{path}
-        cache_key = f"hitcount:{client_ip}:{request.path}"
+        cache_key = f"hitcount:{client_ip}:{request.path}"  # noqa
         try:
             # Use Redis atomic increment
             hit_count = cache.incr(cache_key)
@@ -71,13 +72,15 @@ class RatelimitExceptionMixin:
             "client_id": client_id,
             "path": request.path,
             "hit_count": hit_count,
-            "limited": getattr(request, "limited", False)
+            "limited": getattr(request, "limited", False),
         }
         logger.info(f"[RateLimit Check] {log_info}")
 
         # Check if rate limit was exceeded
         if getattr(request, "limited", False):
-            logger.warning(f"[RateLimit Hit] IP={client_ip} exceeded rate limit on {request.path} (Hits: {hit_count})")
+            logger.warning(
+                f"[RateLimit Hit] IP={client_ip} exceeded rate limit on {request.path} (Hits: {hit_count})"
+            )
             # You can optionally pass a Ratelimited instance for compatibility
             return handle_429(request, exception=Ratelimited())
         return super().dispatch(request, *args, **kwargs)

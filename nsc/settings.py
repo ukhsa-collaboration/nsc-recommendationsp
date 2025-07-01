@@ -232,7 +232,7 @@ class Common(Configuration):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa
             }
         }
 
@@ -322,7 +322,7 @@ class Common(Configuration):
                 "level": "INFO",
                 "handlers": ["console"],
                 "propagate": False,
-            }
+            },
         },
     }
 
