@@ -21,6 +21,7 @@ def document_formset_form_factory(
     source=None,
 ):
     class DocumentFormsetForm(FileVirusScanMixin, forms.ModelForm):
+        virus_scan_fields = ("upload",)
         document_type = _document_type
         upload = forms.FileField(
             label=_("Upload a file"),

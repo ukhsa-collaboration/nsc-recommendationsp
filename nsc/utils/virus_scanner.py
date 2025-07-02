@@ -1,27 +1,24 @@
+import clamd
 import logging
 
-import clamd
+logger = logging.getLogger('nsc.utils.virus_scanner')
 
-
-logger = logging.getLogger(__name__)
-
+logger.debug("Virus scanner started")
 
 def is_file_clean(file):
-    """
-    Returns True if clean or scan fails (fail-open).
-    Returns False only if ClamAV definitively reports malware.
-    """
+    logger.debug("Entered is_file_clean function")
     try:
-        cd = clamd.ClamdUnixSocket()
+        cd = clamd.ClamdNetworkSocket(host='clamav', port=3310)
     except Exception as e:
-        logger.warning(f"Error connecting to clamd: {e}")
-        return True  # ⚠️ Fail open (don't block upload)
+        logger.debug(f"Error connecting to clamd: {e}")
+        return True  # fail open
 
     file.seek(0)
     try:
         result = cd.instream(file)
+        logger.debug(f"ClamAV scan result: {result}")
         status, _ = result.get("stream", ("ERROR", None))
         return status == "OK"
     except Exception as e:
-        logger.warning(f"Error scanning file: {e}")
-        return True  # ⚠️ Fail open
+        logger.debug(f"Error scanning file: {e}")
+        return True
