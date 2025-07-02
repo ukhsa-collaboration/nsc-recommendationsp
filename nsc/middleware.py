@@ -1,13 +1,11 @@
 from urllib.parse import urlparse
-import logging
-from django.http import HttpResponseRedirect
 
-logger = logging.getLogger(__name__)
+from django.http import HttpResponseRedirect
 
 
 def redirect_url_fragment(get_response):
     """
-    Middleware that logs request headers and sets URL fragment on redirects
+    Sets the fragment of the redirect urls
     """
 
     def middleware(request):
