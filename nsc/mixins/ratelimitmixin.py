@@ -1,41 +1,69 @@
+import logging
+
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 from django.shortcuts import render
-from django.utils.decorators import method_decorator
-
-from django_ratelimit.decorators import ratelimit
-from django_ratelimit.exceptions import Ratelimited
 
 
-def handle_429(request, exception=None):
-    if isinstance(exception, Ratelimited) or getattr(request, "limited", False):
-        ratelimit_headline = "You've reached the daily form submission limit."
-        ratelimit_detail = "You can try again tomorrow, or Please email uknsc@dhsc.gov.uk if you have any queries."
-        return render(
-            request,
-            "form_limit_exceeded.html",
-            {
-                "ratelimit_headline": ratelimit_headline,
-                "ratelimit_detail": ratelimit_detail,
-            },
-            status=429,
-        )
+logger = logging.getLogger(__name__)
+
+RATE_LIMIT_HIT_COUNT_TTL = int(settings.RATE_LIMIT_HIT_COUNT_TTL)
+
+RATE_LIMIT_THRESHOLD = int(settings.FORM_SUBMIT_LIMIT_PER_DAY)
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        # First IP is the original client
+        ip = x_forwarded_for.split(",")[0].strip()
     else:
-        raise PermissionDenied
+        ip = request.META.get("REMOTE_ADDR")
+    return ip
+
+
+def handle_rate_limit_exceeded(request, hit_count):
+    logger.info(
+        f"[RateLimit Exceeded] IP={get_client_ip(request)}, path={request.path}, hits={hit_count}"
+    )
+    return render(
+        request,
+        "form_limit_exceeded.html",
+        {
+            "ratelimit_headline": "You've reached the daily form submission limit.",
+            "ratelimit_detail": "You can try again tomorrow, or email uknsc@dhsc.gov.uk if you have any queries.",
+        },
+        status=429,
+    )
 
 
 class RatelimitExceptionMixin:
-    @method_decorator(
-        ratelimit(
-            key="ip",
-            rate=f"{settings.FORM_SUBMIT_LIMIT_PER_DAY}/d",
-            method="POST",
-            block=False,
-        )
-    )
     def dispatch(self, request, *args, **kwargs):
-        # Check if rate limit was exceeded
-        if getattr(request, "limited", False):
-            # You can optionally pass a Ratelimited instance for compatibility
-            return handle_429(request, exception=Ratelimited())
+        if request.method == "POST":
+            client_ip = get_client_ip(request)
+            user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
+            cache_key = f"hitcount:{client_ip}:{request.path}"  # noqa
+
+            try:
+                hit_count = cache.incr(cache_key)
+            except ValueError:
+                cache.set(cache_key, 1, timeout=RATE_LIMIT_HIT_COUNT_TTL)
+                hit_count = 1
+
+            # Optional logging
+            logger.info(
+                {
+                    "ip": client_ip,
+                    "user_agent": user_agent,
+                    "path": request.path,
+                    "hit_count": hit_count,
+                    "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD,
+                    "cache_key": cache_key,
+                }
+            )
+
+            # Custom rate limit threshold check
+            if hit_count > RATE_LIMIT_THRESHOLD:
+                return handle_rate_limit_exceeded(request, hit_count)
+
         return super().dispatch(request, *args, **kwargs)
