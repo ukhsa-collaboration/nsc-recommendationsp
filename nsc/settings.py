@@ -214,6 +214,8 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
+    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
 
     @property
     def DATABASES(self):
@@ -327,6 +329,11 @@ class Common(Configuration):
                 "handlers": ["console"],
                 "propagate": False,
             },
+            "nsc.mixins.ratelimitmixin": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
         },
     }
 
@@ -381,6 +388,9 @@ class Common(Configuration):
 
     FORM_SUBMIT_LIMIT_PER_DAY = get_env(
         "FORM_SUBMIT_LIMIT_PER_DAY", default=25, cast=int
+    )
+    RATE_LIMIT_HIT_COUNT_TTL = get_env(
+        "RATE_LIMIT_HIT_COUNT_TTL", default=86400, cast=int
     )
 
     # Settings for celery
@@ -627,8 +637,11 @@ class Deployed(Build):
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
+    USE_X_FORWARDED_HOST = True
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    RATELIMIT_USE_X_FORWARDED_FOR = True
 
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")
