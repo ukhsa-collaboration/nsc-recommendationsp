@@ -324,7 +324,7 @@ class Common(Configuration):
                 "level": "INFO",
                 "handlers": ["console"],
                 "propagate": False,
-            }
+            },
         },
     }
 

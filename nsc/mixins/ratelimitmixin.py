@@ -1,7 +1,8 @@
 import logging
+
+from django.conf import settings
 from django.core.cache import cache
 from django.shortcuts import render
-from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ class RatelimitExceptionMixin:
         if request.method == "POST":
             client_ip = get_client_ip(request)
             user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
-            cache_key = f"hitcount:{client_ip}:{request.path}"
+            cache_key = f"hitcount:{client_ip}:{request.path}"  # noqa
 
             try:
                 hit_count = cache.incr(cache_key)
@@ -50,14 +51,16 @@ class RatelimitExceptionMixin:
                 hit_count = 1
 
             # Optional logging
-            logger.info({
-                "ip": client_ip,
-                "user_agent": user_agent,
-                "path": request.path,
-                "hit_count": hit_count,
-                "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD,
-                "cache_key": cache_key
-            })
+            logger.info(
+                {
+                    "ip": client_ip,
+                    "user_agent": user_agent,
+                    "path": request.path,
+                    "hit_count": hit_count,
+                    "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD,
+                    "cache_key": cache_key,
+                }
+            )
 
             # Custom rate limit threshold check
             if hit_count > RATE_LIMIT_THRESHOLD:
