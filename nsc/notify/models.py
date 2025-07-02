@@ -47,6 +47,7 @@ class EmailQuerySet(models.QuerySet):
         )
 
     def done(self):
+        # ??? do too_many_attempts emails count as done?
         return self.filter(
             status__in=[Email.STATUS.delivered, Email.STATUS.permanent_failure]
         )
@@ -80,6 +81,7 @@ class Email(TimeStampedModel):
         ("permanent-failure", "permanent_failure", _("Permanent Failure")),
         ("temporary-failure", "temporary_failure", _("Temporary Failure")),
         ("technical-failure", "technical_failure", _("Technical Failure")),
+        ("too-many-attempts", "too_many_attempts", _("Gave up after too many attempts")),
     )
 
     notify_id = models.CharField(max_length=50, default="", blank=True, editable=False)
@@ -96,7 +98,14 @@ class Email(TimeStampedModel):
     objects = EmailQuerySet.as_manager()
 
     def send(self):
-        self.attempts += 1
+        if self.attempts > 100:  # pick appropriate threshold based on batch size, frequency & how long you want to cope with e.g., Notify being down
+            self.status = self.STATUS.too_many_attempts
+            self.save()
+            return
+        else:
+            # Safety valve to prevent us from sending forever in case any subsequent errors cause the final self.save() to fail (or not get called)
+            self.attempts += 1
+            self.save()
 
         logger.info(f"sending email: {self.id}")
         resp = send_email(
