@@ -1,5 +1,7 @@
-import clamd
 import logging
+
+import clamd
+
 
 logger = logging.getLogger('nsc.utils.virus_scanner')
 

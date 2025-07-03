@@ -1,5 +1,7 @@
-from nsc.utils.virus_scanner import is_file_clean
 import logging
+
+from nsc.utils.virus_scanner import is_file_clean
+
 
 logger = logging.getLogger('nsc.utils.virus_scanner')
 

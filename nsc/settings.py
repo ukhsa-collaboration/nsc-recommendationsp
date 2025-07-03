@@ -237,8 +237,8 @@ class Common(Configuration):
     def CACHES(self):
         return {
             "default": {
-                "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "redis://localhost:6379/0",
             }
         }
 
