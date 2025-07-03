@@ -334,6 +334,11 @@ class Common(Configuration):
                 "handlers": ["console"],
                 "propagate": False,
             },
+            "nsc.utils.virus_scanner": {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
         },
     }
 
