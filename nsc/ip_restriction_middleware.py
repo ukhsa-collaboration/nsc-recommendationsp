@@ -17,6 +17,7 @@ class AdminIPRestrictionMiddleware:
     """
 
     def __init__(self, get_response):
+        logger.info("AdminIPRestrictionMiddleware is initialized")
         self.get_response = get_response
         raw_ip_ranges = settings.DJANGO_ADMIN_IP_RANGES.strip()
 

@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 class HeaderDebugMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+        logger.info("✅ HeaderDebugMiddleware initialized.")
 
     def __call__(self, request):
         headers_to_log = [
