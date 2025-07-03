@@ -6,6 +6,8 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
+
 from ..notify.models import Email
 from .forms import (
     CreateStakeholderSubscriptionForm,
@@ -111,7 +113,7 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-class PublicSubscriptionEmails(generic.UpdateView):
+class PublicSubscriptionEmails(RatelimitExceptionMixin, generic.UpdateView):
     model = Subscription
     form_class = CreateSubscriptionForm
     template_name = "subscription/public_subscription_email_form.html"

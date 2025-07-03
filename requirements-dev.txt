@@ -238,6 +238,10 @@ django-redis==5.2.0
     # via
    
     #   -r requirements-dev.in
+django-ratelimit==4.1.0
+    # via
+   
+    #   -r requirements-dev.in
 django-simple-history==3.0.0
     # via
    

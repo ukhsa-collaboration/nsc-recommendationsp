@@ -135,9 +135,12 @@ class Common(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
-    # Comma separated list of hosts; for exmaple:
+    # Comma separated list of hosts; for example:
     #   DJANGO_ALLOWED_HOSTS=host1.example.com,host2.example.com
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, default=["*"])
+
+    # String containing ip ranges allowed to access django-admin
+    DJANGO_ADMIN_IP_RANGES = get_env("DJANGO_ADMIN_IP_RANGES", "")
 
     INSTALLED_APPS = [
         "django.contrib.admin",
@@ -174,6 +177,7 @@ class Common(Configuration):
         "django.middleware.cache.FetchFromCacheMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
@@ -210,6 +214,8 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
+    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
 
     @property
     def DATABASES(self):
@@ -227,7 +233,14 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
+            }
+        }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -306,6 +319,21 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
+            "nsc.middleware.ip_restriction_middleware": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.notify": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.mixins.ratelimitmixin": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
         },
     }
 
@@ -357,6 +385,13 @@ class Common(Configuration):
         "tracking", "gtm-property-id", required=False, default=None
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
+
+    FORM_SUBMIT_LIMIT_PER_DAY = get_env(
+        "FORM_SUBMIT_LIMIT_PER_DAY", default=25, cast=int
+    )
+    RATE_LIMIT_HIT_COUNT_TTL = get_env(
+        "RATE_LIMIT_HIT_COUNT_TTL", default=86400, cast=int
+    )
 
     # Settings for celery
     CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa
@@ -542,7 +577,12 @@ class Test(Dev):
     Default test settings
     """
 
-    pass
+    # Override cache to use dummy cache for tests (no Redis needed)
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
 
 
 class Build(Common):
@@ -597,8 +637,11 @@ class Deployed(Build):
     # Sets HTTP Strict Transport Security header on all responses.
     SECURE_HSTS_SECONDS = 3600  # Seconds
 
+    USE_X_FORWARDED_HOST = True
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    RATELIMIT_USE_X_FORWARDED_FOR = True
 
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")
