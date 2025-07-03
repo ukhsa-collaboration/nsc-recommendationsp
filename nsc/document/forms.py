@@ -5,6 +5,7 @@ from django.core.validators import FileExtensionValidator
 from django.forms import HiddenInput, modelformset_factory
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from nsc.document.mixins import FileVirusScanMixin
 
 from ..review.models import Review
 from .models import Document, DocumentPolicy
@@ -18,7 +19,8 @@ def document_formset_form_factory(
     policy=None,
     source=None,
 ):
-    class DocumentFormsetForm(forms.ModelForm):
+    class DocumentFormsetForm(FileVirusScanMixin, forms.ModelForm):
+        virus_scan_fields = ("upload",)
         document_type = _document_type
         upload = forms.FileField(
             label=_("Upload a file"),
@@ -131,8 +133,8 @@ class ExternalReviewForm(ReviewDocumentForm):
     required_error_message = _("Select the external review for upload")
 
 
-class SubmissionForm(forms.ModelForm):
-
+class SubmissionForm(FileVirusScanMixin, forms.ModelForm):
+    virus_scan_fields = ("upload",)
     upload = forms.FileField(
         label=_("Upload a file"),
         error_messages={"required": _("Select the response form for upload")},
@@ -157,8 +159,14 @@ class SubmissionForm(forms.ModelForm):
         self.fields["review"].widget = HiddenInput()
 
 
-class ReviewDocumentsForm(forms.ModelForm):
-
+class ReviewDocumentsForm(FileVirusScanMixin, forms.ModelForm):
+    virus_scan_fields = (
+        "cover_sheet",
+        "evidence_review",
+        "evidence_map",
+        "cost_effective_model",
+        "systematic_review",
+    )
     cover_sheet = forms.FileField(
         label=_("Cover sheet"),
         required=False,
