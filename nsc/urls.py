@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 
 from nsc.review.views import ReviewDashboardView
 
+
 admin.autodiscover()
 
 
