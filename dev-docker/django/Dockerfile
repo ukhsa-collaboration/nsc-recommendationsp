@@ -11,6 +11,7 @@ RUN apt-get update \
     libc6-dev \
     libffi-dev \
     netcat-openbsd \
+    clamav clamav-daemon clamav-freshclam \
     && rm -rf /var/lib/apt/lists/*
 
 # Full python requirements to support development
