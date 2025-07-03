@@ -12,7 +12,7 @@ def test_view(review_document, django_app):
     Test that the page can be displayed
     """
     response = django_app.get(
-        reverse("document:download", kwargs={"pk": review_document.pk})
+        reverse("document:download", kwargs={"uuid": review_document.uuid})
     )
     assert response.status == "200 OK"
     review_document.delete()

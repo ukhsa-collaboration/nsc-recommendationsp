@@ -5,10 +5,10 @@
   {% for file in existing_documents %}
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      <a class="govuk-link" href="{% url 'document:download' pk=file.id %}">{{ file.name }}</a>
+      <a class="govuk-link" href="{% url 'document:download' uuid=file.uuid %}">{{ file.name }}</a>
     </dt>
     <dd class="govuk-summary-list__actions">
-      <a class="govuk-link" href="{% url 'document:delete' pk=file.id %}?next={{ request.build_absolute_uri|urlencode }}">
+      <a class="govuk-link" href="{% url 'document:delete' uuid=file.uuid %}?next={{ request.build_absolute_uri|urlencode }}">
         Delete<span class="govuk-visually-hidden"> {{ file.name }}</span>
       </a>
     </dd>
