@@ -169,6 +169,7 @@ class Common(Configuration):
     ]
 
     MIDDLEWARE = [
+        "core.middleware.header_debug.HeaderDebugMiddleware",
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -319,7 +320,7 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
-            "nsc.middleware.ip_restriction_middleware": {
+            "nsc.ip_restriction_middleware": {
                 "level": "INFO",
                 "handlers": ["console"],
                 "propagate": False,
