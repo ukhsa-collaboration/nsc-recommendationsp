@@ -107,7 +107,10 @@ class Email(TimeStampedModel):
             errors = resp.get("errors", [])
             if errors and isinstance(errors, list):
                 first_error = errors[0]
-                if isinstance(first_error, dict) and first_error.get("error") == "ValidationError":
+                if (
+                    isinstance(first_error, dict)
+                    and first_error.get("error") == "ValidationError"
+                ):
                     self.status = self.STATUS.permanent_failure
             else:
                 logger.error(
