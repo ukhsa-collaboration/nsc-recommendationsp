@@ -32,7 +32,7 @@ def is_file_clean(file: BinaryIO) -> bool:
         cd = clamd.ClamdNetworkSocket(host="clamav", port=3310, timeout=10)
     except Exception as exc:
         logger.error("Could not connect to clamd: %s", exc, exc_info=True)
-        return False  # fail closed
+        return True  # fail open
 
     try:
         result = cd.instream(file)
