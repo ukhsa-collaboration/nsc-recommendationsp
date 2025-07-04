@@ -1,4 +1,5 @@
 import logging
+from ipware import get_client_ip
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +23,17 @@ class HeaderDebugMiddleware:
             "HTTP_COOKIE",
         ]
 
+        # Extract standard headers
         log_data = {
             header: request.META.get(header)
             for header in headers_to_log
             if header in request.META
         }
+
+        # Get client IP using ipware
+        client_ip, is_routable = get_client_ip(request)
+        log_data["client_ip"] = client_ip
+        log_data["is_routable"] = is_routable
 
         logger.info(f"[HeaderDebug] {log_data}")
 

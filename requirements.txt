@@ -724,3 +724,4 @@ zipp==3.6.0
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
+django-ipware==7.0.1
