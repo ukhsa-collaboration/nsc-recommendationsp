@@ -54,5 +54,5 @@ def test_success_url(contact, response):
     Test saving a contact returns to the stakeholder detail page.
     """
     stakeholder = contact.stakeholder
-    actual = response.forms[1].submit().follow()
+    actual = response.forms[2].submit().follow()
     assert actual.request.path == stakeholder.get_detail_url()

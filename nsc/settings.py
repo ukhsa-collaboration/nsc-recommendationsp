@@ -177,12 +177,13 @@ class Common(Configuration):
         "django.middleware.cache.FetchFromCacheMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
+        "nsc.header_debug_middleware.HeaderDebugMiddleware",
+        "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -319,7 +320,7 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
-            "nsc.middleware.ip_restriction_middleware": {
+            "nsc.ip_restriction_middleware": {
                 "level": "INFO",
                 "handlers": ["console"],
                 "propagate": False,
@@ -330,6 +331,11 @@ class Common(Configuration):
                 "propagate": False,
             },
             "nsc.mixins.ratelimitmixin": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.header_debug_middleware": {
                 "level": "INFO",
                 "handlers": ["console"],
                 "propagate": False,
@@ -623,8 +629,8 @@ class Deployed(Build):
     # Prevent client-side JS from accessing the session cookie.
     SESSION_COOKIE_HTTPONLY = True
 
-    # Sets the maximum age of a session (4 hours in seconds)
-    SESSION_COOKIE_AGE = 4 * 60 * 60
+    # Sets the maximum age of a session (15 min in seconds)
+    SESSION_COOKIE_AGE = 900
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
@@ -640,7 +646,7 @@ class Deployed(Build):
     SECURE_REFERRER_POLICY = "same-origin"
 
     # Sets HTTP Strict Transport Security header on all responses.
-    SECURE_HSTS_SECONDS = 3600  # Seconds
+    SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
 
     USE_X_FORWARDED_HOST = True
     # Sets up treating connections from the load balancer as secure

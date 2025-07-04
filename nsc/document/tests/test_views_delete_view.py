@@ -11,7 +11,7 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture
 def url(review_document):
-    return reverse("document:delete", kwargs={"pk": review_document.pk})
+    return reverse("document:delete", kwargs={"uuid": review_document.uuid})
 
 
 @pytest.fixture
