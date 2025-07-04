@@ -720,7 +720,3 @@ wrapt==1.14.1
 zipp==3.6.0
     # via
     #   -r requirements.in
-
-# The following packages are considered to be unsafe in a requirements file:
-# pip
-# setuptools
