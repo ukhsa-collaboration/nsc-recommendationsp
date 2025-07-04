@@ -635,7 +635,7 @@ class Deployed(Build):
     SECURE_REFERRER_POLICY = "same-origin"
 
     # Sets HTTP Strict Transport Security header on all responses.
-    SECURE_HSTS_SECONDS = 3600  # Seconds
+    SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
 
     USE_X_FORWARDED_HOST = True
     # Sets up treating connections from the load balancer as secure
