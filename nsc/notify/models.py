@@ -103,21 +103,16 @@ class Email(TimeStampedModel):
             self.address, self.template_id, context=self.context, reference=str(self.id)
         )
 
-        if resp and isinstance(resp, dict):
-            errors = resp.get("errors", [])
-            if errors and isinstance(errors, list):
-                first_error = errors[0]
-                if (
-                    isinstance(first_error, dict)
-                    and first_error.get("error") == "ValidationError"
-                ):
-                    self.status = self.STATUS.permanent_failure
-            else:
-                logger.error(
-                    f"Failed to send email {self.id}, response: {json.dumps(resp)}"
-                )
+        if resp and "errors" not in resp:
+            self.status = self.STATUS.sending
+            self.notify_id = resp["id"]
         else:
-            logger.error(f"Response is None or not a valid dict: {resp}")
+            logger.error(
+                f"Failed to send email {self.id}, response: {json.dumps(resp)}"
+            )
+
+            if resp["errors"][0]["error"] == "ValidationError":
+                self.status = self.STATUS.permanent_failure
 
         self.save()
 
