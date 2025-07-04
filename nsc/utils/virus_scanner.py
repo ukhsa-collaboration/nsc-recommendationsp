@@ -1,6 +1,8 @@
 import logging
 from typing import BinaryIO
+
 import clamd
+
 
 logger = logging.getLogger("nsc.utils.virus_scanner")
 logger.debug("Virus scanner module imported")
