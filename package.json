@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rushstack/set-webpack-public-path-plugin": "^5.1.87",
     "accessible-autocomplete": "^3.0.1",
     "govuk-frontend": "^5.10.0",
     "js-cookie": "^3.0.5",
