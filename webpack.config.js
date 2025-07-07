@@ -113,16 +113,6 @@ const config = {
 };
 
 module.exports = (env, argv) => {
-  const imageLoaderRule = {
-    test: /\.(gif|png|jpe?g|svg)$/i,
-    loader: 'image-webpack-loader',
-    options: {
-      enforce: 'pre',
-      disable: argv.mode !== 'production', // Enable in production only
-    },
-  };
-
-  config.module.rules.splice(1, 0, imageLoaderRule);
   if (argv.mode === 'production') {
     console.log('Running in production mode');
   } else {
