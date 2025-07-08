@@ -33,7 +33,9 @@ This document outlines the major upgrade of this project:
 | boto3      | 1.20.112    | 1.38.30     | Minor 🔻       |
 | django-storages| 1.12.3  | 1.14.2      | Minor 🔻       |
 | notifications-python-client| 6.3.0  | 10.0.1  | Major 🔺|
-| django-ratelimit|- |   4.1.0     |      Added 
+| django-ratelimit|   -    |   4.1.0     |  Added  ✅     |
+| clamd      |  -          |             |  Added  ✅     |
+
 
 ---
 ## 🌐 Django Upgrade
@@ -81,13 +83,14 @@ STORAGES = {
 
 ### Webpack-related Major Version Updates
 
-| Package              | Old Version | New Version | Change   |
-|----------------------|-------------|-------------|----------|
-| image-webpack-loader  | 6.0.0       | 8.0.1       | Major → ✅ |
-| resolve-url-loader    | 3.1.0       | 5.0.0       | Major → ✅ |
-| source-map-loader     | 0.2.4       | 5.0.0       | Major → ✅ |
+| Package              | Old Version | New Version | Change    |
+|----------------------|-------------|-------------|-----------|
+| image-webpack-loader | 6.0.0       | 8.0.1       | Removed ❌ |
+| resolve-url-loader   | 3.1.0       | 5.0.0       | Major → ✅ |
+| source-map-loader    | 0.2.4       | 5.0.0       | Major → ✅ |
 | svg-url-loader       | 3.0.3       | 8.0.0       | Major → ✅ |
 | url-loader           | 3.0.0       | 4.1.1       | Major → ✅ |
+| sharp                |   -         | 0.34.2      | Added  ✅  |
 |optimize-css-assets-webpack-plugin (5.0.1) -> css-minimizer-webpack-plugin (7.0.2)|||✅ Replaced|
 
 
