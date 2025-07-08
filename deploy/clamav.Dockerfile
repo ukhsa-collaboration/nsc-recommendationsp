@@ -1,4 +1,4 @@
-FROM registry.redhat.io/ubi8/ubi
+FROM ubi8:latest
 
 # Install dependencies
 RUN dnf install -y epel-release && \
@@ -13,4 +13,3 @@ EXPOSE 3310
 
 # Run ClamAV daemon in foreground
 CMD ["clamd", "-F"]
- 
