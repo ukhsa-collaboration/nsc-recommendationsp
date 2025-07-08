@@ -24,7 +24,7 @@ urlpatterns = [
     path(r"access-1234/", ReviewDashboardView.as_view(), name="dashboard"),
     path(
         "logout/",
-        auth_views.LogoutView.as_view(next_page="/django-admin/login/"),
+        auth_views.LogoutView.as_view(next_page="/access-123/login/"),
         name="logout",
     ),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
@@ -36,7 +36,7 @@ urlpatterns = [
     path("helpdesk/", include("nsc.support.urls", namespace="support")),
     path(r"_health/", lambda request: HttpResponse()),
     path("_notify/", include("nsc.notify.urls", namespace="notify")),
-    path(r"/access-123/", admin.site.urls),
+    path(r"access-123/", admin.site.urls),
     path(r"", include("nsc.condition.urls", namespace="condition")),
 ]
 
