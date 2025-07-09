@@ -16,8 +16,6 @@ class AdminIPRestrictionMiddleware:
     which should be a comma-separated list of CIDR ranges (e.g. "1.2.3.4/32, 5.6.7.0/24").
     """
 
-    ADMIN_PREFIX = "/django-admin/"
-
     def __init__(self, get_response):
         logger.info("AdminIPRestrictionMiddleware is initialized")
         self.get_response = get_response
@@ -39,12 +37,14 @@ class AdminIPRestrictionMiddleware:
             ]
 
     def __call__(self, request):
-        if request.path.startswith(self.ADMIN_PREFIX):
-            client_ip = self.get_incoming_ip(request)  # fixed name
-            logger.info("Admin access attempt to %s from %s", request.path, client_ip)
-
-            if not self.is_allowed_ip(client_ip):  # fixed name
-                logger.warning("403 Forbidden – IP %s blocked for admin", client_ip)
+        admin_prefixes = ["/django-admin/", "/admin/"]
+        if any(request.path.startswith(prefix) for prefix in admin_prefixes):
+            ip = self.get_incoming_ip(request)
+            logger.info(f"User attempted to access {request.path} from IP: {ip}")
+            if not self.is_allowed_ip(ip):
+                logger.warning(
+                    f"403 Forbidden: IP {ip} not allowed to access django-admin."
+                )
                 return HttpResponseForbidden("403 Forbidden: IP not allowed.")
             logger.info(f"Access to django-admin granted for IP: {ip}")
         return self.get_response(request)
