@@ -46,7 +46,7 @@ class AdminIPRestrictionMiddleware:
             if not self.is_allowed_ip(client_ip):  # fixed name
                 logger.warning("403 Forbidden – IP %s blocked for admin", client_ip)
                 return HttpResponseForbidden("403 Forbidden: IP not allowed.")
-
+            logger.info(f"Access to django-admin granted for IP: {ip}")
         return self.get_response(request)
 
     def is_allowed_ip(self, ip):
