@@ -15,7 +15,9 @@ class AdminIPRestrictionMiddleware:
     The allowed IP ranges are read from the DJANGO_ADMIN_IP_RANGES environment variable,
     which should be a comma-separated list of CIDR ranges (e.g. "1.2.3.4/32, 5.6.7.0/24").
     """
+
     ADMIN_PREFIX = "/django-admin/"
+
     def __init__(self, get_response):
         logger.info("AdminIPRestrictionMiddleware is initialized")
         self.get_response = get_response
@@ -38,15 +40,14 @@ class AdminIPRestrictionMiddleware:
 
     def __call__(self, request):
         if request.path.startswith(self.ADMIN_PREFIX):
-            client_ip = self.get_incoming_ip(request)   # fixed name
+            client_ip = self.get_incoming_ip(request)  # fixed name
             logger.info("Admin access attempt to %s from %s", request.path, client_ip)
 
-            if not self.is_allowed_ip(client_ip):       # fixed name
+            if not self.is_allowed_ip(client_ip):  # fixed name
                 logger.warning("403 Forbidden – IP %s blocked for admin", client_ip)
                 return HttpResponseForbidden("403 Forbidden: IP not allowed.")
 
         return self.get_response(request)
-
 
     def is_allowed_ip(self, ip):
         try:
