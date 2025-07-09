@@ -1,4 +1,4 @@
-FROM clamav/clamav:1.4.3
+FROM docker.io/clamav/clamav:1.4.3
 
 # fix check permissions error for ClamAV
 RUN chgrp -R 0 /var/lib/clamav && chmod -R g=u /var/lib/clamav
