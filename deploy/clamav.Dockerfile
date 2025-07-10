@@ -1,6 +1,6 @@
 FROM clamav/clamav:1.4.3
 
-# Fix permissions for OpenShift
+# Make group 0 the owner and set group permissions (root can write)
 RUN chgrp -R 0 /var/lib/clamav && chmod -R g=u /var/lib/clamav
 RUN chgrp -R 0 /var/log/clamav && chmod -R g=u /var/log/clamav
 
