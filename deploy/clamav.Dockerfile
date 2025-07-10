@@ -13,9 +13,9 @@ USER 0
 RUN echo '#!/bin/sh\n\
 echo "[INIT] Updating virus definitions..."\n\
 freshclam || echo "[WARNING] freshclam failed"\n\
-exec /init-unprivileged "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
+exec /init-unprivileged "$@"' > /entrypoint-clamav.sh && chmod +x /entrypoint-clamav.sh
 
 # Switch to non-root user
 USER 1001
 # Use the wrapper as the entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint-clamav.sh"]
