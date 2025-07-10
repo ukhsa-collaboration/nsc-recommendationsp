@@ -10,10 +10,10 @@ RUN chown -R 1001:0 /var/log/clamav && chmod 775 /var/log/clamav
 
 # Create the wrapper script to update virus definitions at container start
 USER 0
-RUN echo '#!/bin/sh' > /entrypoint-clamav.sh && \
-    echo 'echo "[INIT] Updating virus definitions..."' >> /entrypoint-clamav.sh && \
-    echo 'freshclam || echo "[WARNING] freshclam failed"' >> /entrypoint-clamav.sh && \
-    echo 'exec /init-unprivileged "$@"' >> /entrypoint-clamav.sh && \
+RUN echo '#!/bin/sh\n\
+echo "[INIT] Updating virus definitions..."\n\
+freshclam || echo "[WARNING] freshclam failed"\n\
+exec /init-unprivileged "$@"' > /entrypoint-clamav.sh && \
     chmod +x /entrypoint-clamav.sh
 
 # Switch to non-root user
