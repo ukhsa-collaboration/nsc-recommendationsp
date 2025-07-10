@@ -7,3 +7,5 @@ RUN chown -R 1001:0 /var/lib/clamav && chmod 775 /var/lib/clamav
 RUN chown -R 1001:0 /var/log/clamav && chmod 775 /var/log/clamav
 
 USER 1001
+
+ENTRYPOINT ["/bin/sh", "/init-unprivileged"]
