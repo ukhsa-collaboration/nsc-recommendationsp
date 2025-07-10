@@ -10,6 +10,7 @@ RUN chown -R 1001:0 /var/log/clamav && chmod 775 /var/log/clamav
 
 # Create the wrapper script to update virus definitions at container start
 USER 0
+
 RUN sh -c 'cat << "EOF" > /entrypoint-clamav.sh
 #!/bin/sh
 echo "[INIT] Updating virus definitions..."
