@@ -20,10 +20,10 @@ Follow these steps to get the project running locally using Docker and Yarn.
 
 ### 1. Clone the Repository
 
-```
-git clone https://github.com/ukhsa-collaboration/nsc-recommendationsp.git
-cd nsc-recommendationsp
-```
+
+- git clone https://github.com/ukhsa-collaboration/nsc-recommendationsp.git
+- cd nsc-recommendationsp
+
 
 ---
 
@@ -39,19 +39,17 @@ Ensure the following are installed on your machine:
 
 ### 3. Frontend Setup
 
-```
-yarn install
-yarn build
-```
+- yarn install
+- yarn build
+
 
 ---
 
 ### 4. Docker-Based Local Environment
 
-```
-cp dev-docker-compose.yml.default dev-docker-compose.yml
-docker-compose -f dev-docker-compose.yml up --build
-```
+- cp dev-docker-compose.yml.default dev-docker-compose.yml
+- docker-compose -f dev-docker-compose.yml up --build
+
 
 This will start all necessary services using Docker Compose.
 
@@ -61,18 +59,16 @@ This will start all necessary services using Docker Compose.
 
 Run the following commands inside the backend container (or using `docker exec`):
 
-```
-./manage.py makemigrations
-./manage.py migrate
-```
+- ./manage.py makemigrations
+- ./manage.py migrate
+
 
 ---
 
 ### 6. Create a Superuser
 
-```
 ./manage.py createsuperuser
-```
+
 
 Follow the prompts to set up admin credentials.
 
@@ -82,12 +78,11 @@ Follow the prompts to set up admin credentials.
 
 Run the following tools to check code quality and run tests:
 
-```
 # Run tests
-    pytest
+- pytest
 
 # Run formatters and linters
-black .
-flake8 .
-isort .
-```
+- black .
+- flake8 .
+- isort .
+
