@@ -1,6 +1,8 @@
 import logging
 from typing import BinaryIO
 
+from django.conf import settings
+
 import clamd
 
 
@@ -18,14 +20,18 @@ def is_file_clean(file: BinaryIO) -> bool:
     file.seek(0)  # rewind before streaming
 
     try:
-        cd = clamd.ClamdNetworkSocket(host="clamav", port=3310, timeout=10)
+        cd = clamd.ClamdNetworkSocket(
+            host=settings.CLAMAV_HOST,
+            port=settings.CLAMAV_PORT,
+            timeout=settings.CLAMAV_TIMEOUT,
+        )
     except Exception as exc:
         logger.warning("Could not connect to clamd: %s – allowing upload", exc)
         return True  # fail‑open on connection error
 
     try:
         result = cd.instream(file)
-        logger.debug("ClamAV scan result: %s", result)
+        logger.info("ClamAV scan result: %s", result)
     except Exception as exc:
         logger.warning("Error while streaming file to clamd: %s – allowing upload", exc)
         return True  # fail‑open on streaming error
