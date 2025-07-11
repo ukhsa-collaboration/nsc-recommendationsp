@@ -109,6 +109,7 @@ STORAGES = {
 - `npm audit` and `pip audit`
 - `black` (Code formatter)
 - `flake8` (Linter and style checker)
+- `Synk` and `retire.js`
 
 ---
 
