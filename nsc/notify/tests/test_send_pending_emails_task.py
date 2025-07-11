@@ -89,3 +89,21 @@ def test_notify_service_returns_an_error_error_is_logged_and_email_is_not_update
         mock_logger.error.assert_called_once_with(
             f"Failed to send email {email.id}, response: {json.dumps({'errors': [{'error': 'Some Error'}]})}"
         )
+
+
+def test_too_many_attempts_status_set():
+    email = Email(attempts=101)  # Simulate exceeding the threshold
+    email.send()
+    assert email.status == Email.STATUS.too_many_attempts
+
+
+def test_done_includes_too_many_attempts():
+    # Create test emails with different statuses
+    email1 = Email(status=Email.STATUS.too_many_attempts)
+    email2 = Email(status=Email.STATUS.delivered)
+    email3 = Email(status=Email.STATUS.temporary_failure)
+    queryset = Email.objects.all()
+    done_emails = queryset.done()
+    assert email1 in done_emails
+    assert email2 in done_emails
+    assert email3 not in done_emails
