@@ -84,7 +84,7 @@ Run the following tools to check code quality and run tests:
 
 ```
 # Run tests
-pytest
+    pytest
 
 # Run formatters and linters
 black .
