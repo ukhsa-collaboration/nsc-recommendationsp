@@ -34,7 +34,7 @@ This document outlines the major upgrade of this project:
 | django-storages| 1.12.3  | 1.14.2      | Minor 🔻       |
 | notifications-python-client| 6.3.0  | 10.0.1  | Major 🔺|
 | django-ratelimit|   -    |   4.1.0     |  Added  ✅     |
-| clamd      |  -          |             |  Added  ✅     |
+| clamd      |  -          |   1.0.2     |  Added  ✅     |
 
 
 ---
@@ -110,6 +110,7 @@ STORAGES = {
 - `black` (Code formatter)
 - `flake8` (Linter and style checker)
 - `Synk` and `retire.js`
+-  isort (Ordering imports)
 
 ---
 
