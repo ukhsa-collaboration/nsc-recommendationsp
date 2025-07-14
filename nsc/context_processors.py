@@ -1,7 +1,6 @@
 """
 Global context processors
 """
-
 import logging
 import socket
 

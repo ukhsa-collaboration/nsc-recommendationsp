@@ -50,18 +50,6 @@ class RatelimitExceptionMixin:
                 cache.set(cache_key, 1, timeout=RATE_LIMIT_HIT_COUNT_TTL)
                 hit_count = 1
 
-            # Optional logging
-            logger.info(
-                {
-                    "ip": client_ip,
-                    "user_agent": user_agent,
-                    "path": request.path,
-                    "hit_count": hit_count,
-                    "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD,
-                    "cache_key": cache_key,
-                }
-            )
-
             # Custom rate limit threshold check
             if hit_count > RATE_LIMIT_THRESHOLD:
                 return handle_rate_limit_exceeded(request, hit_count)
