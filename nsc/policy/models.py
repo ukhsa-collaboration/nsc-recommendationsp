@@ -218,7 +218,7 @@ class Policy(TimeStampedModel):
 
     def get_email_context(self, **extra):
         return {
-            "policy url": f"* [{self.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())})",
+            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
             "policy": self.name,
             **extra,
         }
