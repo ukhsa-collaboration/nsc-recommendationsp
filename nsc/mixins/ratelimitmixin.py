@@ -41,7 +41,6 @@ class RatelimitExceptionMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.method == "POST":
             client_ip = get_client_ip(request)
-            user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
             cache_key = f"hitcount:{client_ip}:{request.path}"  # noqa
 
             try:
