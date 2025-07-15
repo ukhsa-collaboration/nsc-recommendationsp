@@ -217,8 +217,10 @@ class Policy(TimeStampedModel):
         return ", ".join(map(lambda a: str(self.AGE_GROUPS[a]), self.ages))
 
     def get_email_context(self, **extra):
+        url = urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())
         return {
-            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
+            "policy url": url,
+            "policy url markdown": f"* [{self.name}]({url})",
             "policy": self.name,
             **extra,
         }
