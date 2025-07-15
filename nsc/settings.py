@@ -182,7 +182,6 @@ class Common(Configuration):
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
-        "nsc.header_debug_middleware.HeaderDebugMiddleware",
         "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
     ]
 
