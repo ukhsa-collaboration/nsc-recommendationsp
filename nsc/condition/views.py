@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView, TemplateView
 
+from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 from nsc.notify.models import Email
 from nsc.policy.models import Policy
 from nsc.review.models import Review
@@ -80,7 +81,7 @@ class ConsultationView(ConsultationMixin, TemplateView):
         )
 
 
-class PublicCommentView(ConsultationMixin, FormView):
+class PublicCommentView(RatelimitExceptionMixin, ConsultationMixin, FormView):
     template_name = "policy/public/public_comment.html"
     form_class = PublicCommentForm
 
@@ -116,24 +117,24 @@ class PublicCommentView(ConsultationMixin, FormView):
                     ],
                     "alternatives comment": form.cleaned_data["comment_alternatives"],
                     "other comment": form.cleaned_data["comment_other"],
-                    "affected comment present": "yes"
-                    if form.cleaned_data["comment_affected"]
-                    else "no",
-                    "evidence comment present": "yes"
-                    if form.cleaned_data["comment_evidence"]
-                    else "no",
-                    "discussion comment present": "yes"
-                    if form.cleaned_data["comment_discussion"]
-                    else "no",
-                    "recommendation comment present": "yes"
-                    if form.cleaned_data["comment_recommendation"]
-                    else "no",
-                    "alternatives comment present": "yes"
-                    if form.cleaned_data["comment_alternatives"]
-                    else "no",
-                    "other comment present": "yes"
-                    if form.cleaned_data["comment_other"]
-                    else "no",
+                    "affected comment present": (
+                        "yes" if form.cleaned_data["comment_affected"] else "no"
+                    ),
+                    "evidence comment present": (
+                        "yes" if form.cleaned_data["comment_evidence"] else "no"
+                    ),
+                    "discussion comment present": (
+                        "yes" if form.cleaned_data["comment_discussion"] else "no"
+                    ),
+                    "recommendation comment present": (
+                        "yes" if form.cleaned_data["comment_recommendation"] else "no"
+                    ),
+                    "alternatives comment present": (
+                        "yes" if form.cleaned_data["comment_alternatives"] else "no"
+                    ),
+                    "other comment present": (
+                        "yes" if form.cleaned_data["comment_other"] else "no"
+                    ),
                 },
             )
 
@@ -158,7 +159,7 @@ class PublicCommentSubmittedView(ConsultationMixin, TemplateView):
         )
 
 
-class StakeholderCommentView(ConsultationMixin, FormView):
+class StakeholderCommentView(RatelimitExceptionMixin, ConsultationMixin, FormView):
     template_name = "policy/public/stakeholder_comment.html"
     form_class = StakeholderCommentForm
 

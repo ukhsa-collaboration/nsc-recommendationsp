@@ -53,7 +53,7 @@ def get_env(name, default=NotSet, required=False, cast=str):
             return default
 
         if value is None and required:
-            raise ValueError(f"{name} not found in env")
+            raise ValueError(f"{name} not found in env")  # noqa
 
         return cast(value)
 
@@ -81,7 +81,7 @@ def get_secret(*name, default=NotSet, required=True, cast=str):
         if not SECRET_DIR:
             if required:
                 raise ValueError(
-                    f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"
+                    f"Secret {name} not found: DJANGO_SECRET_DIR not set in env"  # noqa
                 )
             else:
                 return default
@@ -135,9 +135,12 @@ class Common(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
-    # Comma separated list of hosts; for exmaple:
+    # Comma separated list of hosts; for example:
     #   DJANGO_ALLOWED_HOSTS=host1.example.com,host2.example.com
     ALLOWED_HOSTS = get_env("DJANGO_ALLOWED_HOSTS", cast=csv_to_list, default=["*"])
+
+    # String containing ip ranges allowed to access django-admin
+    DJANGO_ADMIN_IP_RANGES = get_env("DJANGO_ADMIN_IP_RANGES", "")
 
     INSTALLED_APPS = [
         "django.contrib.admin",
@@ -179,6 +182,7 @@ class Common(Configuration):
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
+        "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -210,6 +214,11 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
+    REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+    CLAMAV_HOST = get_env("CLAMAV_HOST", default="clamav")
+    CLAMAV_PORT = get_env("CLAMAV_PORT", default=3310, cast=int)
+    CLAMAV_TIMEOUT = get_env("CLAMAV_TIMEOUT", default=10, cast=int)
 
     @property
     def DATABASES(self):
@@ -227,7 +236,14 @@ class Common(Configuration):
             }
         }
 
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+    @property
+    def CACHES(self):
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
+            }
+        }
 
     # Password validation
     # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -306,6 +322,31 @@ class Common(Configuration):
                 "level": "INFO",
                 "propagate": False,
             },
+            "nsc.ip_restriction_middleware": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.notify": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.mixins.ratelimitmixin": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.header_debug_middleware": {
+                "level": "INFO",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "nsc.utils.virus_scanner": {
+                "handlers": ["console"],
+                "level": "DEBUG",
+                "propagate": False,
+            },
         },
     }
 
@@ -358,8 +399,15 @@ class Common(Configuration):
     )
     HOTJAR_ID = get_secret("tracking", "hotjar-id", required=False, default=None)
 
+    FORM_SUBMIT_LIMIT_PER_DAY = get_env(
+        "FORM_SUBMIT_LIMIT_PER_DAY", default=25, cast=int
+    )
+    RATE_LIMIT_HIT_COUNT_TTL = get_env(
+        "RATE_LIMIT_HIT_COUNT_TTL", default=86400, cast=int
+    )
+
     # Settings for celery
-    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"  # noqa
     CELERY_ACCEPT_CONTENT = ["json"]
     CELERYD_WORKER_HIJACK_ROOT_LOGGER = False
 
@@ -461,7 +509,7 @@ class Webpack:
         value = environ.get("WEBPACK_DEV_URL")
         if value:
             return value
-        return f"//{self.WEBPACK_DEV_HOST}:{self.WEBPACK_DEV_PORT}/static/"
+        return f"//{self.WEBPACK_DEV_HOST}:{self.WEBPACK_DEV_PORT}/static/"  # noqa
 
     @property
     def LOGGING(self):
@@ -498,7 +546,7 @@ class Dev(Webpack, Common):
 
     @property
     def EMAIL_ROOT_DOMAIN(self):
-        return f"http://{self.MAIN_DOMAIN}"
+        return f"http://{self.MAIN_DOMAIN}"  # noqa
 
     # Settings for the GDS Notify service for sending emails.
     PHE_COMMUNICATIONS_EMAIL = "phecomms@example.com"
@@ -542,7 +590,12 @@ class Test(Dev):
     Default test settings
     """
 
-    pass
+    # Override cache to use dummy cache for tests (no Redis needed)
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
 
 
 class Build(Common):
@@ -578,8 +631,8 @@ class Deployed(Build):
     # Prevent client-side JS from accessing the session cookie.
     SESSION_COOKIE_HTTPONLY = True
 
-    # Sets the maximum age of a session (4 hours in seconds)
-    SESSION_COOKIE_AGE = 4 * 60 * 60
+    # Sets the maximum age of a session (15 min in seconds)
+    SESSION_COOKIE_AGE = 900
 
     # Add preload directive to the Strict-Transport-Security header
     SECURE_HSTS_PRELOAD = True
@@ -595,10 +648,13 @@ class Deployed(Build):
     SECURE_REFERRER_POLICY = "same-origin"
 
     # Sets HTTP Strict Transport Security header on all responses.
-    SECURE_HSTS_SECONDS = 3600  # Seconds
+    SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
 
+    USE_X_FORWARDED_HOST = True
     # Sets up treating connections from the load balancer as secure
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    RATELIMIT_USE_X_FORWARDED_FOR = True
 
     # Some deployed settings are no longer env vars - collect from the secret store
     SECRET_KEY = get_secret("django", "secret-key")
@@ -619,11 +675,11 @@ class Deployed(Build):
 
     @property
     def AWS_S3_ENDPOINT_URL(self):
-        return f"http://{self.AWS_BUCKET_DOMAIN}"
+        return f"http://{self.AWS_BUCKET_DOMAIN}"  # noqa
 
     @property
     def MEDIA_URL(self):
-        return f"https://{self.MEDIA_HOST_DOMAIN}/"
+        return f"https://{self.MEDIA_HOST_DOMAIN}/"  # noqa
 
     @property
     def AWS_S3_CUSTOM_DOMAIN(self):
@@ -636,14 +692,21 @@ class Deployed(Build):
     #     "CacheControl": "max-age=%d" % values.IntegerValue(26*60*60),
     # }
 
-    DEFAULT_FILE_STORAGE = "nsc.storage.MediaStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "nsc.storage.MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
     @property
     def CACHES(self):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",  # noqa
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -652,7 +715,7 @@ class Deployed(Build):
             },
             "session": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/2",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/2",  # noqa
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -688,7 +751,7 @@ class Deployed(Build):
 
     @property
     def EMAIL_ROOT_DOMAIN(self):
-        return f"https://{self.MAIN_DOMAIN}"
+        return f"https://{self.MAIN_DOMAIN}"  # noqa
 
     # sentry settings
     SENTRY_DSN = get_secret("sentry", "dsn")
@@ -747,7 +810,7 @@ class Demo(Build):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",
+                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/1",  # noqa
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",

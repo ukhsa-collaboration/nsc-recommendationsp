@@ -3,6 +3,7 @@ Scraper extracting the documents associated with the latest review, if
 available, for each condition on the NSC legacy web site.
 
 """
+
 import json
 import os
 import re

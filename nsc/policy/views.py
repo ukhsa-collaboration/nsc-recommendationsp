@@ -78,7 +78,9 @@ class PolicyAddMixin(ReviewManagerRequiredMixin):
     markdown_guide = False
 
     def get_success_url(self):
-        return reverse(f"policy:add:{self.next_section}", args=(self.object.slug,))
+        return reverse(
+            f"policy:add:{self.next_section}", args=(self.object.slug,)  # noqa
+        )
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(

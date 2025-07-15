@@ -114,8 +114,11 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     response = django_app.get(f"{url}?{policies_url_args}")
 
     form = response.forms[1]
+
     form["email"] = "foo@example.com"
     form["email_confirmation"] = "foo@example.com"
+    form.set("policies", [str(p.id) for p in selected_policies + new_policies])
+
     response = form.submit()
 
     sub = Subscription.objects.first()
@@ -124,11 +127,9 @@ def test_subscription_already_exists_for_email_new_policies_are_added(
     assert set(sub.policies.values_list("id", flat=True)) == {
         s.id for s in chain(selected_policies, new_policies)
     }
-    assert (
-        response.location
-        == reverse(
+    assert response.url.rstrip("/") == (
+        reverse(
             "subscription:public-complete",
             kwargs={"token": get_object_signature(sub), "pk": sub.id},
-        )
-        + "#"
+        ).rstrip("/")
     )

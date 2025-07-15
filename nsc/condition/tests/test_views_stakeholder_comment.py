@@ -1,3 +1,5 @@
+from urllib.parse import urlsplit
+
 from django.conf import settings
 from django.urls import reverse
 
@@ -13,10 +15,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def response(review_in_consultation, django_app):
+def response(review_in_consultation, client):
     policy = review_in_consultation.policies.first()
     url = reverse("condition:stakeholder-comment", kwargs={"slug": policy.slug})
-    return django_app.get(url)
+    return client.get(url)
 
 
 @pytest.fixture
@@ -28,7 +30,7 @@ def test_page(response):
     """
     Test the consultation page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
 
 
 def test_back_link(response, dom):
@@ -60,29 +62,34 @@ def test_submission_form_link(response):
             "review:review-document-download",
             kwargs={"slug": review.slug, "doc_type": "submission_form"},
         )
-        in response.text
+        in response.content.decode()
     )
 
 
-def test_submit(response):
-    form = response.forms[1]
+def test_submit(response, client):
+    condition = response.context["condition"]
 
-    form["name"] = "name"
-    form["email"] = "email@email.com"
-    form["role"] = "role"
-    form["organisation"] = "organisation"
-    form["behalf"] = True
-    form["publish"] = True
-    form["comment"] = "comment"
-    form["condition"] = response.context["condition"].pk
+    url = reverse("condition:stakeholder-comment", kwargs={"slug": condition.slug})
+    form_data = {
+        "name": "name",
+        "email": "email@email.com",
+        "role": "role",
+        "organisation": "organisation",
+        "behalf": True,
+        "publish": True,
+        "comment": "comment",
+        "condition": condition.pk,
+    }
 
-    result = form.submit()
+    result = client.post(url, form_data)
+    assert result.status_code == 302
 
-    assert result.status == "302 Found"
-    assert result.url == reverse(
-        "condition:stakeholder-comment-submitted",
-        args=(response.context["condition"].slug,),
+    expected = reverse(
+        "condition:stakeholder-comment-submitted", args=(condition.slug,)
     )
+    actual = result.url
+    assert urlsplit(actual)._replace(fragment="") == urlsplit(expected)
+
     assert (
         Email.objects.filter(
             address=settings.CONSULTATION_COMMENT_ADDRESS,

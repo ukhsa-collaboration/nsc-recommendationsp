@@ -117,7 +117,7 @@ class Review(TimeStampedModel):
         Email, related_name="publish_notification_reviews", blank=True
     )
 
-    published = models.NullBooleanField()
+    published = models.BooleanField(null=True, blank=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -412,10 +412,13 @@ class Review(TimeStampedModel):
             policy.send_open_consultation_notifications(
                 self.open_consultation_notifications,
                 {
+                    "policy": policy.name if policy.name else "",
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
-                    if self.consultation_end
-                    else "",
+                    "consultation end date": (
+                        self.consultation_end.strftime("%d %B %Y")
+                        if self.consultation_end
+                        else ""
+                    ),
                 },
             )
 
@@ -432,9 +435,11 @@ class Review(TimeStampedModel):
                 self.decision_published_notifications,
                 {
                     "review manager full name": self.user.get_full_name(),
-                    "consultation end date": self.consultation_end.strftime("%d %B %Y")
-                    if self.consultation_end
-                    else "",
+                    "consultation end date": (
+                        self.consultation_end.strftime("%d %B %Y")
+                        if self.consultation_end
+                        else ""
+                    ),
                 },
             )
 
@@ -461,7 +466,7 @@ class SummaryDraft(TimeStampedModel):
 
 
 class ReviewRecommendation(TimeStampedModel):
-    recommendation = models.NullBooleanField()
+    recommendation = models.BooleanField(null=True, blank=True)
     policy = models.ForeignKey(
         "policy.Policy", on_delete=models.CASCADE, related_name="review_recommendations"
     )

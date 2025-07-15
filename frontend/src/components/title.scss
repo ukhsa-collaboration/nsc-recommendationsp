@@ -1,4 +1,5 @@
-@import "~govuk-frontend/govuk/helpers/media-queries";
+@use "govuk-frontend/dist/govuk/helpers/media-queries"; //added disted here
+@use "govuk-frontend/dist/govuk" as govuk;
 
 .title-with-button {
   .govuk-grid-column-three-quarters,
@@ -9,7 +10,7 @@
   .button-container {
     text-align: left;
 
-    @include govuk-media-query($from: tablet) {
+    @include govuk.govuk-media-query($from: tablet) {
       text-align: right;
     }
   }

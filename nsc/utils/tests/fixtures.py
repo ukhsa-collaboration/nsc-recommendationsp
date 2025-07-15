@@ -33,10 +33,11 @@ def non_user():
 
 
 @pytest.fixture()
-def test_access_forbidden(non_user, django_app):
+def test_access_forbidden(non_user, client):
     def _test_access_forbidden(url):
-        response = django_app.get(url, user=non_user, expect_errors=True)
-        assert response.status == "403 Forbidden"
+        client.force_login(non_user)
+        response = client.get(url, expect_errors=True)
+        assert response.status_code == 403
 
     return _test_access_forbidden
 

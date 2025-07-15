@@ -20,12 +20,12 @@ def valid_data():
         "subject": "subject",
         "message": "message",
         "email": "foo@example.com",
+        "backup_email": "",
     }
 
 
 @pytest.fixture
 def form(django_app):
-    # use `forms[1]` since there is not the cookies form on the page
     return django_app.get(reverse("support:contact")).forms[1]
 
 

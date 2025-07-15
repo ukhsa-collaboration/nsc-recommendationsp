@@ -3,6 +3,7 @@ Scraper extracting the latest reviews for each condition on the legacy
 web site.
 
 """
+
 import calendar
 import datetime
 import json

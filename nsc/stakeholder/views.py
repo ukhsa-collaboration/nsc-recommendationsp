@@ -164,9 +164,9 @@ class StakeholderExport(ReviewManagerRequiredMixin, StakeholderFilterMixin, Form
         Export stakeholders - format depending on form.
         """
         response = HttpResponse(content_type="text/csv")
-        response[
-            "Content-Disposition"
-        ] = f'attachment; filename="stakeholders{get_today().isoformat()}.csv"'
+        response["Content-Disposition"] = (
+            f'attachment; filename="stakeholders{get_today().isoformat()}.csv"'  # noqa
+        )
         writer = csv.writer(response)
 
         if form.cleaned_data["export_type"] == "individual":

@@ -3,8 +3,8 @@ import logging
 from datetime import timedelta
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import JSONField
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
@@ -37,6 +37,9 @@ class EmailQuerySet(models.QuerySet):
     def technical_failure(self):
         return self.filter(status=Email.STATUS.technical_failure)
 
+    def too_many_attempts(self):
+        return self.filter(status=Email.STATUS.technical_failure)
+
     def to_send(self):
         return self.filter(
             status__in=[
@@ -48,7 +51,11 @@ class EmailQuerySet(models.QuerySet):
 
     def done(self):
         return self.filter(
-            status__in=[Email.STATUS.delivered, Email.STATUS.permanent_failure]
+            status__in=[
+                Email.STATUS.delivered,
+                Email.STATUS.permanent_failure,
+                Email.STATUS.too_many_attempts,
+            ]
         )
 
     def stale(self):
@@ -80,6 +87,11 @@ class Email(TimeStampedModel):
         ("permanent-failure", "permanent_failure", _("Permanent Failure")),
         ("temporary-failure", "temporary_failure", _("Temporary Failure")),
         ("technical-failure", "technical_failure", _("Technical Failure")),
+        (
+            "too-many-attempts",
+            "too_many_attempts",
+            _("Gave up after too many attempts"),
+        ),
     )
 
     notify_id = models.CharField(max_length=50, default="", blank=True, editable=False)
@@ -96,7 +108,14 @@ class Email(TimeStampedModel):
     objects = EmailQuerySet.as_manager()
 
     def send(self):
-        self.attempts += 1
+        if self.attempts > 100:
+            self.status = self.STATUS.too_many_attempts
+            self.save()
+            return
+        else:
+            # Safety valve to prevent us from sending forever in case any subsequent errors cause the final self.save() to fail (or not get called)
+            self.attempts += 1
+            self.save()
 
         logger.info(f"sending email: {self.id}")
         resp = send_email(

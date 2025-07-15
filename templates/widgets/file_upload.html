@@ -3,10 +3,10 @@
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          <a class="govuk-link" href="{% url 'document:download' pk=document.id %}">{{ document.name }}</a>
+          <a class="govuk-link" href="{% url 'document:download' uuid=document.uuid %}">{{ document.name }}</a>
         </dt>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'document:delete' pk=document.id %}?next={{ request.build_absolute_uri|urlencode }}">
+          <a class="govuk-link" href="{% url 'document:delete' uuid=document.uuid %}?next={{ request.build_absolute_uri|urlencode }}">
             Delete<span class="govuk-visually-hidden"> {{ document.name }}</span>
           </a>
         </dd>

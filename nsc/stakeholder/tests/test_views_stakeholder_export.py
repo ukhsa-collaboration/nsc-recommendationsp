@@ -119,7 +119,7 @@ def test_export_mailto(url, erm_user, django_app):
 
     response = django_app.get(url, user=erm_user)
 
-    assert "mailto:1@email.com;2@email.com" in response.text
+    assert "mailto:1@email.com;2@email.com" in response.content.decode()
 
 
 def test_export_mailto__exceeds(url, erm_user, django_app):
@@ -133,7 +133,7 @@ def test_export_mailto__exceeds(url, erm_user, django_app):
     )
 
     response = django_app.get(url, user=erm_user)
-    bs = bs4.BeautifulSoup(response.text)
+    bs = bs4.BeautifulSoup(response.content.decode())
 
     mail_link = bs.find("a", attrs={"id": "export-mailto-link"})
     copy_field = bs.find("div", attrs={"id": "mailto-copy-field"})
@@ -152,7 +152,7 @@ def test_export_mailto__does_not_exceeds(url, erm_user, django_app):
     )
 
     response = django_app.get(url, user=erm_user)
-    bs = bs4.BeautifulSoup(response.text)
+    bs = bs4.BeautifulSoup(response.content.decode())
 
     mail_link = bs.find("a", attrs={"id": "export-mailto-link"})
     copy_field = bs.find("div", attrs={"id": "mailto-copy-field"})
@@ -186,7 +186,7 @@ def test_export_conditions(url, erm_user, django_app):
     other_instance.policies.add(baker.make(Policy, name="condition 2"))
 
     response = django_app.get(url, user=erm_user)
-    form = response.forms[1]
+    form = response.forms[2]
     form["export_type"] = "conditions"
     result = form.submit()
 
@@ -272,7 +272,7 @@ def test_export_individual(url, erm_user, django_app):
     )
 
     response = django_app.get(url, user=erm_user)
-    form = response.forms[1]
+    form = response.forms[2]
     form["export_type"] = "individual"
     result = form.submit()
 
@@ -310,7 +310,7 @@ def test_export_conditions_query_count(
 
     response = django_app.get(url, user=erm_user)
     with django_assert_num_queries(7):  # 3 for export, 4 for session
-        form = response.forms[1]
+        form = response.forms[2]
         form["export_type"] = "conditions"
         form.submit()
 
@@ -328,6 +328,6 @@ def test_export_individual_query_count(
 
     response = django_app.get(url, user=erm_user)
     with django_assert_num_queries(8):  # 4 for export, 4 for session
-        form = response.forms[1]
+        form = response.forms[2]
         form["export_type"] = "individual"
         form.submit()

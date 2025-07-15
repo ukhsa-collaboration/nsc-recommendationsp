@@ -61,60 +61,95 @@ def test_search_form_blank(erm_user, django_app):
     """
     Test that the fields in the search form are initially blank.
     """
-    form = django_app.get(stakeholder_list_url, user=erm_user).forms[1]
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+    # Find the form with both 'name' and 'condition' fields
+    form = [
+        f for f in page.forms.values() if "name" in f.fields and "condition" in f.fields
+    ][0]
+
     assert form["name"].value == ""
     assert form["condition"].value == ""
 
 
-def test_search_on_stakeholder_name(erm_user, django_app_form):
+def test_search_on_stakeholder_name(erm_user, django_app):
     """
     Test the list of stakeholders can be filtered by the stakeholder name.
     """
-    baker.make(Policy, name="name")
-    response = django_app_form(stakeholder_list_url, name="other", user=erm_user)
+    # Create a Stakeholder and associate it with a Policy
+    instance = baker.make(Stakeholder)
+    instance.policies.add(baker.make(Policy))
+
+    # Load the page as the erm_user
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+
+    # Find the form with the "name" field
+    form = [f for f in page.forms.values() if "name" in f.fields][0]
+
+    # Fill out the form and submit
+    form["name"] = "other"
+    response = form.submit()
+
+    # Assert the correct filtering
     assert not response.context["object_list"]
 
 
-def test_search_on_condition_name(erm_user, django_app_form):
+def test_search_on_condition_name(erm_user, django_app):
     """
     Test the list of stakeholders can be filtered by the name of the condition
     they are interested in.
     """
     instance = baker.make(Stakeholder)
     instance.policies.add(baker.make(Policy))
-    response = django_app_form(stakeholder_list_url, condition="Other", user=erm_user)
+
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+
+    # Select the correct form by field name
+    form = [f for f in page.forms.values() if "condition" in f.fields][0]
+    form["condition"] = "Other"
+
+    response = form.submit()
+
     assert not response.context["object_list"]
 
 
-def test_search_on_stakeholder_country(erm_user, django_app_form):
+def test_search_on_stakeholder_country(erm_user, django_app):
     """
     Test the list of stakeholders can be filtered by the stakeholder country.
     """
     expected = baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_ENGLAND])
     baker.make(Stakeholder, countries=[Stakeholder.COUNTRY_NORTHERN_IRELAND])
-    response = django_app_form(
-        stakeholder_list_url, country=Stakeholder.COUNTRY_ENGLAND, user=erm_user
-    )
+
+    # Get the page and select the correct form (with a "country" field)
+    page = django_app.get(stakeholder_list_url, user=erm_user)
+    form = [f for f in page.forms.values() if "country" in f.fields][0]
+    form["country"] = Stakeholder.COUNTRY_ENGLAND
+
+    response = form.submit()
 
     assert len(response.context["object_list"]) == 1
     assert response.context["object_list"][0].pk == expected.pk
 
 
-def test_search_form_shows_name_term(erm_user, django_app_form):
+def test_search_form_shows_name_term(erm_user, django_app):
     """
     Test when the search results are shown the form shows the entered stakeholder name.
     """
-    form = django_app_form(stakeholder_list_url, name="name", user=erm_user).forms[1]
+    page = django_app.get(stakeholder_list_url, params={"name": "name"}, user=erm_user)
+    # Find the correct form by field name
+    form = [f for f in page.forms.values() if "name" in f.fields][0]
     assert form["name"].value == "name"
     assert form["condition"].value == ""
 
 
-def test_search_form_shows_condition_term(erm_user, django_app_form):
+def test_search_form_shows_condition_term(erm_user, django_app):
     """
     Test when the search results are shown the form shows the selected condition.
     """
-    form = django_app_form(
-        stakeholder_list_url, condition="other", user=erm_user
-    ).forms[1]
+    # Load the page with the search param in the URL
+    page = django_app.get(
+        stakeholder_list_url, params={"condition": "other"}, user=erm_user
+    )
+    # Select the form containing the 'condition' field
+    form = [f for f in page.forms.values() if "condition" in f.fields][1]
     assert form["name"].value == ""
     assert form["condition"].value == "other"

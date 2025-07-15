@@ -29,7 +29,7 @@ def test_view(response):
     """
     Test that the page can be displayed.
     """
-    assert response.status == "200 OK"
+    assert response.status_code == 200
 
 
 def test_view__no_user(url, test_access_no_user):

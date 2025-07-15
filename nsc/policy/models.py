@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urljoin
 
 from django.apps import apps
@@ -20,6 +21,9 @@ from nsc.review.models import Review
 from nsc.utils.datetime import get_today
 from nsc.utils.forms import ChoiceArrayField
 from nsc.utils.markdown import convert
+
+
+logger = logging.getLogger(__name__)
 
 
 class PolicyQuerySet(models.QuerySet):
@@ -108,8 +112,8 @@ class Policy(TimeStampedModel):
     condition_type = models.CharField(choices=CONDITION_TYPES, max_length=8, null=True)
 
     is_active = models.BooleanField(verbose_name=_("is_active"), default=True)
-    recommendation = models.NullBooleanField(
-        verbose_name=_("recommendation"), default=None
+    recommendation = models.BooleanField(
+        verbose_name=_("recommendation"), null=True, blank=True, default=None
     )
 
     next_review = models.DateField(verbose_name=_("next review"), null=True, blank=True)
@@ -214,7 +218,7 @@ class Policy(TimeStampedModel):
 
     def get_email_context(self, **extra):
         return {
-            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
+            "policy url": f"[{self.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())})",
             "policy": self.name,
             **extra,
         }
@@ -249,11 +253,14 @@ class Policy(TimeStampedModel):
     def send_open_consultation_notifications(
         self, review_notification_relation, extra_context
     ):
+
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
             extra_context,
         )
+        logger.info("Sending open consultation notifications for policy")
+        logger.info(extra_context)
 
     def send_decision_notifications(self, review_notification_relation, extra_context):
         self.send_notifications(

@@ -35,7 +35,7 @@ def test_signature_is_incorrect_result_is_not_found(django_app, make_subscriptio
         kwargs={"token": get_object_signature(sub1), "pk": sub2.id},
     )
 
-    assert django_app.get(url, expect_errors=True).status_code == 404
+    assert django_app.get(url, expect_errors=True).status == "404 Not Found"
 
 
 def test_signature_is_correct_result_is_found(django_app, make_subscription):
@@ -46,7 +46,7 @@ def test_signature_is_correct_result_is_found(django_app, make_subscription):
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
-    assert django_app.get(url).status_code == 200
+    assert django_app.get(url).status == "200 OK"
 
 
 def test_subscription_is_updated(django_app, make_subscription, make_policy):
@@ -61,7 +61,7 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
         kwargs={"token": get_object_signature(sub), "pk": sub.id},
     )
 
-    response = django_app.get(url)
+    response = django_app.get(url, expect_errors=True)
 
     form = response.forms[1]
     form["policies"] = [p.id for p in chain(selected_policies, new_selected_policies)]
