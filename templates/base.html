@@ -118,14 +118,7 @@
       </div>
       <div class="govuk-grid-column-one-quarter" style="text-align: right;">
         {% if user.is_authenticated %}
-<<<<<<< HEAD
           <input type="submit" value="Logout" class="govuk-button" name="logout" onclick="azureAdLogout()">
-=======
-        <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" class="govuk-button" name="logout">
-        </form>
->>>>>>> develop
         {% endif %}
       </div>
     </div>
