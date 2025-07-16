@@ -42,8 +42,9 @@
     function azureAdLogout() {
       sessionStorage.clear();
       localStorage.removeItem('access_token');
-      const tenantId = "{{ settings.ACTIVE_DIRECTORY_TENANT_ID }}";  // If using Django templates
-      const redirectUri = window.location.origin + "/admin/";  // or "/"
+
+      const tenantId = "{{ TENANT_ID }}";
+      const redirectUri = window.location.origin + "/admin/";
 
       const logoutUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`;
       window.location.href = logoutUrl;

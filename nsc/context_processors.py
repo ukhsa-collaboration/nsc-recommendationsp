@@ -56,10 +56,7 @@ def cookie_banner(request):
         "COOKIES_REJECTED": request.COOKIES.get("useTrackingDisabled", None) == "1",
     }
 
-def global_settings(request):
-    """
-    Expose Django settings to templates. Be cautious not to expose sensitive settings!
-    """
+def tenant_id(request):
     return {
-        "settings": settings,
+        "TENANT_ID": settings.ACTIVE_DIRECTORY_TENANT_ID
     }
