@@ -200,7 +200,7 @@ class Common(Configuration):
                     "django.contrib.messages.context_processors.messages",
                     "nsc.context_processors.tracking_ids",
                     "nsc.context_processors.cookie_banner",
-                    "nsc.context_processors.tenant_id"
+                    "nsc.context_processors.tenant_id",
                 ]
             },
         }
