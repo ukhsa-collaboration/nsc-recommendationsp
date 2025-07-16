@@ -55,3 +55,9 @@ def cookie_banner(request):
         "COOKIE_BANNER_HIDDEN": "cookieBannerHidden" in request.COOKIES,
         "COOKIES_REJECTED": request.COOKIES.get("useTrackingDisabled", None) == "1",
     }
+
+
+def tenant_id(request):
+    return {
+        "TENANT_ID": settings.ACTIVE_DIRECTORY_TENANT_ID
+    }
