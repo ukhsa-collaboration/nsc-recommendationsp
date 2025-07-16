@@ -26,6 +26,8 @@
 
   <script>
     function azureAdLogout() {
+      sessionStorage.clear();
+      localStorage.removeItem('access_token');
       const tenantId = "{{ settings.ACTIVE_DIRECTORY_TENANT_ID }}";  // If using Django templates
       const redirectUri = window.location.origin + "/admin/";  // or "/"
 
