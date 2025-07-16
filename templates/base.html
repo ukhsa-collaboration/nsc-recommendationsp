@@ -19,9 +19,21 @@
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','{{ GTM_PROPERTY_ID }}');
     }
+
   </script>
   <!-- End Google Tag Manager -->
   {% endif %}
+
+  <script>
+    function azureAdLogout() {
+      const tenantId = "{{ settings.ACTIVE_DIRECTORY_TENANT_ID }}";  // If using Django templates
+      const redirectUri = window.location.origin + "/admin/";  // or "/"
+
+      const logoutUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+      window.location.href = logoutUrl;
+    }
+  </script>
 
   {% if HOTJAR_ID %}
   <script>
@@ -105,10 +117,13 @@
       </div>
       <div class="govuk-grid-column-one-quarter" style="text-align: right;">
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" class="govuk-button" name="logout">
-        </form>
+        <div>
+          <input type="submit" value="Logout" class="govuk-button" name="logout" onclick="azureAdLogout()">
+        </div>
+        <!-- <form method="post" action="{% url 'logout' %}"> -->
+          <!-- {% csrf_token %} -->
+      
+        <!-- </form> -->
         {% endif %}
       </div>
     </div>
