@@ -38,6 +38,19 @@
   </script>
   {% endif %}
 
+  <script>
+    function azureAdLogout() {
+      sessionStorage.clear();
+      localStorage.removeItem('access_token');
+
+      const tenantId = "{{ TENANT_ID }}";
+      const redirectUri = window.location.origin + "/admin/";
+
+      const logoutUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`;
+      window.location.href = logoutUrl;
+    }
+  </script>
+
   <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{% static "govuk/rebrand/images/favicon.ico" %}" type="image/x-icon">
   <link rel="mask-icon" href="{% static "govuk/images/govuk-icon-mask.svg" %}" color="#0b0c0c">
   <link rel="apple-touch-icon" sizes="180x180" href="{% static "govuk/rebrand/images/govuk-icon-180.png" %}">
@@ -105,10 +118,7 @@
       </div>
       <div class="govuk-grid-column-one-quarter" style="text-align: right;">
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" class="govuk-button" name="logout">
-        </form>
+          <input type="submit" value="Logout" class="govuk-button" name="logout" onclick="azureAdLogout()">
         {% endif %}
       </div>
     </div>

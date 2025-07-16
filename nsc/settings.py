@@ -200,6 +200,7 @@ class Common(Configuration):
                     "django.contrib.messages.context_processors.messages",
                     "nsc.context_processors.tracking_ids",
                     "nsc.context_processors.cookie_banner",
+                    "nsc.context_processors.tenant_id"
                 ]
             },
         }
@@ -240,9 +241,9 @@ class Common(Configuration):
     def CACHES(self):
         return {
             "default": {
-                "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0",  # noqa: E231
-            }
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "unique-snowflake",  # Can be any unique string
+        }
         }
 
     # Password validation
