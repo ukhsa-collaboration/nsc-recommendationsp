@@ -58,4 +58,6 @@ def cookie_banner(request):
 
 
 def tenant_id(request):
-    return {"TENANT_ID": settings.ACTIVE_DIRECTORY_TENANT_ID}
+    return {
+        "TENANT_ID": settings.ACTIVE_DIRECTORY_TENANT_ID
+    }
