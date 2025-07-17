@@ -40,36 +40,36 @@
 
   <script>
       function azureAdLogout(event) {
-        if (event) event.preventDefault();
+  if (event) event.preventDefault();
 
-        const tenantId = "{{ TENANT_ID }}";
-        const redirectUri = window.location.origin + "/";
-        const azureLogoutUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`;
+  const tenantId = "{{ TENANT_ID }}";
+  const redirectUri = window.location.origin + "/";
+  const azureLogoutUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`;
 
-        const logoutEndpoint = `${window.location.origin}/logout/`;
-        // First, log out of Django server-side
-        fetch(logoutEndpoint, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': getCookie('csrftoken'),
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include' // Include session cookie
-        })
-        .then(response => {
-          // Clear client-side storage (optional)
-          sessionStorage.clear();
-          localStorage.removeItem('access_token');
+  const logoutEndpoint = `${window.location.origin}/logout/`;
+  // First, log out of Django server-side
+  fetch(logoutEndpoint, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCookie('csrftoken'),
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include' // Include session cookie
+  })
+  .then(response => {
+    // Clear client-side storage (optional)
+    sessionStorage.clear();
+    localStorage.removeItem('access_token');
 
-          // Redirect to Azure logout
-          window.location.href = azureLogoutUrl;
-        })
-        .catch(error => {
-          console.error('Logout failed', error);
-          // Still attempt to redirect
-          window.location.href = azureLogoutUrl;
-        });
-      }
+    // Redirect to Azure logout
+    window.location.href = azureLogoutUrl;
+  })
+  .catch(error => {
+    console.error('Logout failed', error);
+    // Still attempt to redirect
+    window.location.href = azureLogoutUrl;
+  });
+}
 
 // Utility to read CSRF token from cookie
 function getCookie(name) {
@@ -147,10 +147,9 @@ function getCookie(name) {
       </div>
       <div class="govuk-grid-column-one-quarter" style="text-align: right;">
         {% if user.is_authenticated and '/admin' in request.path %}
-        <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" class="govuk-button" name="logout">
-        </form>
+          <div>
+            <a href="#" class="govuk-button" onclick="azureAdLogout(); return false;">Logout</a>
+          </div>
         {% endif %}
       </div>
     </div>
