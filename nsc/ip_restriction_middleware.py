@@ -35,13 +35,11 @@ class AdminIPRestrictionMiddleware:
         admin_prefixes = ["/django-admin/", "/admin/"]
         if any(request.path.startswith(prefix) for prefix in admin_prefixes):
             ip = self.get_incoming_ip(request)
-            logger.info(f"User attempted to access {request.path} from IP: {ip}")
             if not self.is_allowed_ip(ip):
                 logger.warning(
                     f"403 Forbidden: IP {ip} not allowed to access django-admin."
                 )
                 return HttpResponseForbidden("403 Forbidden: IP not allowed.")
-            logger.info(f"Access to django-admin granted for IP: {ip}")
         return self.get_response(request)
 
     def is_allowed_ip(self, ip):
@@ -55,7 +53,6 @@ class AdminIPRestrictionMiddleware:
 
     def get_incoming_ip(self, request):
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
-        logger.info(f"X-Forwarded-For header: {x_forwarded_for}")
         if x_forwarded_for:
             return x_forwarded_for.split(",")[0].strip()
         fallback_ip = request.META.get("REMOTE_ADDR", "")

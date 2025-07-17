@@ -259,8 +259,6 @@ class Policy(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
             extra_context,
         )
-        logger.info("Sending open consultation notifications for policy")
-        logger.info(extra_context)
 
     def send_decision_notifications(self, review_notification_relation, extra_context):
         self.send_notifications(
