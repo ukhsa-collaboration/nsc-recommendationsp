@@ -22,6 +22,11 @@ urlpatterns = [
         name="feedback",
     ),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(next_page="/django-admin/login/"),
+        name="logout",
+    ),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
     path(r"document/", include("nsc.document.urls", namespace="document")),
     path(r"stakeholder/", include("nsc.stakeholder.urls", namespace="stakeholder")),
