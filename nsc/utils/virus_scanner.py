@@ -31,7 +31,6 @@ def is_file_clean(file: BinaryIO) -> bool:
 
     try:
         result = cd.instream(file)
-        logger.info("ClamAV scan result: %s", result)
     except Exception as exc:
         logger.warning("Error while streaming file to clamd: %s – allowing upload", exc)
         return True  # fail‑open on streaming error
