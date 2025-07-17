@@ -60,7 +60,7 @@ def test_search_field_blank(erm_user, django_app):
     """
     Test that search field is initially blank.
     """
-    form = django_app.get(policy_list_url, user=erm_user).forms[2]
+    form = django_app.get(policy_list_url, user=erm_user).forms[1]
     assert form["name"].value == ""
 
 
@@ -68,7 +68,7 @@ def test_search_on_condition_name(erm_user, django_app):
     """
     Test the list of policies can be filtered by the condition name.
     """
-    form = django_app.get(policy_list_url, user=erm_user).forms[2]
+    form = django_app.get(policy_list_url, user=erm_user).forms[1]
     form["name"] = "other"
     response = form.submit()
     assert not response.context["object_list"]
@@ -98,7 +98,7 @@ def test_search_on_recommendation(erm_user, django_app):
     page = django_app.get(policy_list_url, user=erm_user)
 
     # Find the correct form
-    form = page.forms[2]
+    form = page.forms[1]
     form["recommendation"] = "yes"
 
     # Submit the form and check results
@@ -116,12 +116,12 @@ def test_search_on_include_archived(erm_user, django_app):
     expected = baker.make(Policy, name="name", archived=True)
 
     page = django_app.get(policy_list_url, user=erm_user)
-    filter_form = page.forms[2]
+    filter_form = page.forms[1]
     response = filter_form.submit()
     object_list = response.context.get("object_list") or []
     assert not object_list
 
-    filter_form = page.forms[2]
+    filter_form = page.forms[1]
     filter_form["archived"] = "on"
     response = filter_form.submit()
     object_list = response.context.get("object_list") or []

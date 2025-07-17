@@ -51,7 +51,7 @@ def test_success_url(stakeholder, response):
     """
     Test saving a contact returns to the stakeholder detail page.
     """
-    form = response.forms[2]
+    form = response.forms[1]
     form["name"] = "Name"
     form["email"] = "john@example.com"
     actual = form.submit().follow()
@@ -63,7 +63,7 @@ def test_contact_created(stakeholder, response):
     Test that the contact object is created and added to the stakeholder.
     """
     assert stakeholder.contacts.count() == 0
-    form = response.forms[2]
+    form = response.forms[1]
     form["name"] = "Name"
     form["email"] = "john@example.com"
     form.submit().follow()

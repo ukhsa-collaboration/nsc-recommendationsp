@@ -2,53 +2,96 @@
 #
 # See README for setup and usage instructions
 #
-version: '3'
+version: "3.1"
+
+volumes:
+  clamav-scan:        # shared scratch space (optional)
+  pgdata:             # database files
 
 services:
-  postgres:
-    image: postgres
+  # ────────────────────────────────
+  # Virus scanner
+  # ────────────────────────────────
+  clamav:
+    image: clamav/clamav:stable      # or pin to a SHA
+    restart: unless-stopped
+    platform: linux/amd64            # remove if not on Apple Silicon
     ports:
-      - "5433:5433"
-      - "5432:5432"
+      - "3310:3310"
     volumes:
-      - "../db:/db"
-      - "../backup:/backup"
-      - ".:/project"
-    environment:
-      POSTGRES_PASSWORD: nsc
-      POSTGRES_USER: nsc
-      PGDATA: /db
+      - clamav-scan:/scan
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --version || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # ────────────────────────────────
+  # Database
+  # ────────────────────────────────
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nsc
+      POSTGRES_PASSWORD: nsc
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # ────────────────────────────────
+  # Redis
+  # ────────────────────────────────
   redis:
-    image: redis
+    image: redis:7
+    restart: unless-stopped
     ports:
       - "6379:6379"
 
+  # ────────────────────────────────
+  # Front‑end (Webpack / Vite / etc.)
+  # ────────────────────────────────
   frontend:
     build:
-      context: ./
-      dockerfile: "./dev-docker/frontend/Dockerfile"
+      context: .
+      dockerfile: dev-docker/frontend/Dockerfile
     environment:
-    - FRONTEND_MODE=watch
+      FRONTEND_MODE: watch
+    volumes:
+      - .:/project
     ports:
       - "8080:8080"
-    volumes:
-      - ".:/project"
+    depends_on:
+      redis:
+        condition: service_started
 
+  # ────────────────────────────────
+  # Django application
+  # ────────────────────────────────
   django:
     build:
-      context: ./
-      dockerfile: "./dev-docker/django/Dockerfile"
+      context: .
+      dockerfile: dev-docker/django/Dockerfile
     environment:
       DJANGO_CONFIGURATION: Dev
       DATABASE_HOST: postgres
       REDIS_SERVICE_HOST: redis
       WEBPACK_DEV_HOST: static
-      WEBPACK_DEV_URL: http://{host}:8080/
+      WEBPACK_DEV_URL: "http://{host}:8080/"
+      # ── GOV.UK Notify settings ──
+      NOTIFY_SERVICE_ENABLED: "true"
+      NOTIFY_SERVICE_API_KEY: "testguestkey-04e9cfec-122d-4464-8836-b727424bb10c-9f09523b-cb5a-4084-8275-77e919cd8ee7"
+    volumes:
+      - .:/project
+      - clamav-scan:/scan
     ports:
       - "8000:8000"
-    volumes:
-      - ".:/project"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      clamav:
+        condition: service_healthy

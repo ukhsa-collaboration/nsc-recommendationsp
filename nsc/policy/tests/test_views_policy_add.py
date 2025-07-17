@@ -35,7 +35,7 @@ def test_add_start_view__incorrect_permission(test_access_forbidden):
 def test_add_start_view__created(erm_user, django_app):
     url = reverse("policy:add:start")
     start = django_app.get(url, user=erm_user)
-    start_form = start.forms[2]
+    start_form = start.forms[1]
 
     start_form["name"] = "name"
     start_form["condition_type"] = Policy.CONDITION_TYPES.general
@@ -77,7 +77,7 @@ def test_add_summary_view__updated(policy, erm_user, django_app):
     summary = django_app.get(
         reverse("policy:add:summary", args=(policy.slug,)), user=erm_user
     )
-    summary_form = summary.forms[2]
+    summary_form = summary.forms[1]
 
     summary_form["summary"] = "summary"
     summary_form["background"] = "background"
@@ -115,7 +115,7 @@ def test_add_recommendation_view__updated(policy, erm_user, django_app):
     summary = django_app.get(
         reverse("policy:add:recommendation", args=(policy.slug,)), user=erm_user
     )
-    summary_form = summary.forms[2]
+    summary_form = summary.forms[1]
 
     summary_form["recommendation"] = True
     summary_form["next_review"] = get_today().year

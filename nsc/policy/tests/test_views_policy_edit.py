@@ -53,14 +53,14 @@ def test_preview_page(erm_user, django_app):
     year = str(today().year + 1)
 
     edit_page = django_app.get(instance.get_edit_url(), user=erm_user)
-    edit_form = edit_page.forms[2]
+    edit_form = edit_page.forms[1]
     edit_form["next_review"] = year
     edit_form["condition_type"] = Policy.CONDITION_TYPES.general
     edit_form["ages"] = [Policy.AGE_GROUPS.antenatal]
     edit_form["condition"] = "# updated"
 
     preview_page = edit_form.submit(name="preview")
-    preview_form = preview_page.forms[2]
+    preview_form = preview_page.forms[1]
     assert preview_form["next_review"].attrs["type"] == "hidden"
     assert preview_form["next_review"].value == year
     assert preview_form["condition"].attrs["type"] == "hidden"
@@ -76,7 +76,7 @@ def test_changes_are_published(erm_user, django_app):
     instance = baker.make(Policy, condition="# heading", next_review=None)
 
     edit_page = django_app.get(instance.get_edit_url(), user=erm_user)
-    edit_form = edit_page.forms[2]
+    edit_form = edit_page.forms[1]
     edit_form["next_review"] = today().year
     edit_form["condition_type"] = Policy.CONDITION_TYPES.general
     edit_form["ages"] = [Policy.AGE_GROUPS.antenatal]
@@ -87,7 +87,7 @@ def test_changes_are_published(erm_user, django_app):
     instance.refresh_from_db()
     assert instance.condition == "# heading"
 
-    preview_form = preview_page.forms[2]
+    preview_form = preview_page.forms[1]
     preview_form.submit(name="publish")
 
     instance.refresh_from_db()
