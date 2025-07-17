@@ -146,7 +146,7 @@ function getCookie(name) {
         </div>
       </div>
       <div class="govuk-grid-column-one-quarter" style="text-align: right;">
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and '/admin' in request.path %}
           <div>
             <a href="#" class="govuk-button" onclick="azureAdLogout(); return false;">Logout</a>
           </div>
