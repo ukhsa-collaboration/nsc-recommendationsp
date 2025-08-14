@@ -57,7 +57,7 @@ This will start all necessary services using Docker Compose.
 
 ### 5. Local Database Migrations & Setup
 
-Run the following commands inside the backend container (or using `docker exec`):
+Run the following commands inside the backend container nsc-recommendationsp-django-1 (or using `docker exec -it nsc-recommendationsp-django-1 bash`):
 
 - ./manage.py makemigrations
 - ./manage.py migrate
