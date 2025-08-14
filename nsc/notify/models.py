@@ -140,15 +140,15 @@ class Email(TimeStampedModel):
         self.save()
 
     def update_status(self):
-        logger.info(f"Updating email status for email with id {self.id}")
+        logger.info(f"Updating email status {self.status} for email with id {self.id}")
         resp = get_email_status(self.notify_id)
 
         if resp and "status" in resp:
             self.status = resp["status"]
+            self.save()
             logger.info(
                 f"Status for email with id {self.id} (notify id {self.notify_id}) is: {self.status}"
             )
-            self.save()
         else:
             logger.error(
                 f"Failed to get email status {self.id}, response: {json.dumps(resp)}"

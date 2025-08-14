@@ -30,7 +30,7 @@ def send_email(address, template, context=None, reference=None):
             "reference": reference,
         }
         response = client.send_email_notification(**params)
-        logger.info(f"Response from send_email: {response}")
+        logger.info(f"Response status from send_email: {response.status_code}")
         return response
     except APIError as e:
         logger.error(f"Email API error: {e.response.json()}")
