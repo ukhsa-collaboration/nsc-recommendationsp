@@ -28,7 +28,7 @@ def send_email(address, template, context=None, reference=None):
             "reference": reference,
         }
         response = client.send_email_notification(**params)
-        logger.info(f"Successfully received response from send email")
+        logger.info("Successfully received response from send email")
         return response
     except APIError as e:
         logger.error(f"Email API error: {e.response.json()}")
@@ -41,7 +41,7 @@ def get_email_status(notify_id):
         return
     try:
         response = client.get_notification_by_id(notify_id)
-        logger.info(f"Successfully received response from get notification by id")
+        logger.info("Successfully received response from get notification by id")
         return response
     except APIError as e:
         logger.error(f"Get email status from notify error: {e}")
