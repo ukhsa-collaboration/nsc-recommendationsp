@@ -215,7 +215,7 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
-    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="redis")
     REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
     CLAMAV_HOST = get_env("CLAMAV_HOST", default="clamav")
     CLAMAV_PORT = get_env("CLAMAV_PORT", default=3310, cast=int)
@@ -352,7 +352,7 @@ class Common(Configuration):
     }
 
     # dont use the get_env function here as the property isn't read into the celery config correctly
-    REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
+    REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "redis")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
 
     # Settings for the GDS Notify service for sending emails.

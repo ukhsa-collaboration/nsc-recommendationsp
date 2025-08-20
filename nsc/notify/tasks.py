@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 @app.task
 def send_pending_emails():
     # limit to the first 3000 as a max of 3000 messages can be sent in a minute
+    logger.info("Sending pending emails")
     for email in Email.objects.to_send()[:3000]:
         try:
             email.send()
@@ -19,6 +20,7 @@ def send_pending_emails():
 
 @app.task
 def update_stale_email_statuses():
+    logger.info("Updating stale email statuses")
     for email in Email.objects.sending().stale().with_notify_id():
         try:
             email.update_status()
