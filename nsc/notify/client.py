@@ -15,9 +15,10 @@ else:
 
 
 def send_email(address, template, context=None, reference=None):
-    logger.info(f"Sending email with reference: {reference}")
     if client is None:
-        logger.warning(f"Email service not enabled - email {reference} not sent")
+        logger.warning(
+            f"Email service not enabled - email not sent to {address} {template} {context}"
+        )
         return
 
     try:
@@ -28,7 +29,6 @@ def send_email(address, template, context=None, reference=None):
             "reference": reference,
         }
         response = client.send_email_notification(**params)
-        logger.info("Successfully received response from send email")
         return response
     except APIError as e:
         logger.error(f"Email API error: {e.response.json()}")
@@ -36,13 +36,10 @@ def send_email(address, template, context=None, reference=None):
 
 
 def get_email_status(notify_id):
-    logger.info(f"Getting email status with notify id: {notify_id}")
     if client is None:
         return
     try:
         response = client.get_notification_by_id(notify_id)
-        logger.info("Successfully received response from get notification by id")
         return response
     except APIError as e:
-        logger.error(f"Get email status from notify error: {e}")
         return e.response.json()

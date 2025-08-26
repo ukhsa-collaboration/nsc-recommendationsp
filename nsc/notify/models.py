@@ -109,7 +109,6 @@ class Email(TimeStampedModel):
 
     def send(self):
         if self.attempts > 100:
-            logger.warning(f"Too many attempts for email with id: {self.id}")
             self.status = self.STATUS.too_many_attempts
             self.save()
             return
@@ -122,13 +121,10 @@ class Email(TimeStampedModel):
         resp = send_email(
             self.address, self.template_id, context=self.context, reference=str(self.id)
         )
-        logger.info(f"response: {resp}")
+
         if resp and "errors" not in resp:
             self.status = self.STATUS.sending
             self.notify_id = resp["id"]
-            logger.info(
-                f"email {self.id} successfully sent to notify --> notify id is {self.notify_id}"
-            )
         else:
             logger.error(
                 f"Failed to send email {self.id}, response: {json.dumps(resp)}"
@@ -140,14 +136,10 @@ class Email(TimeStampedModel):
         self.save()
 
     def update_status(self):
-        logger.info(f"Updating email status for email with id {self.id}")
         resp = get_email_status(self.notify_id)
 
         if resp and "status" in resp:
             self.status = resp["status"]
-            logger.info(
-                f"Status for email with id {self.id} (notify id {self.notify_id}) is: {self.status}"
-            )
             self.save()
         else:
             logger.error(
