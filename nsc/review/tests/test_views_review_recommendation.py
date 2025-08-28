@@ -52,7 +52,7 @@ def test_not_all_recommendations_are_updated_errors_are_raised(
         reverse("review:recommendation", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.forms[2]
+    form = response.forms[1]
     form["recommendation-0-recommendation"] = True
     form.submit()
 
@@ -81,7 +81,7 @@ def test_all_recommendations_are_set_values_are_updated(
         reverse("review:recommendation", kwargs={"slug": review.slug}), user=erm_user
     )
 
-    form = response.forms[2]
+    form = response.forms[1]
     form["recommendation-0-recommendation"] = True
     form["recommendation-1-recommendation"] = False
     form.submit()

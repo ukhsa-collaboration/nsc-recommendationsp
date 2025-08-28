@@ -218,7 +218,7 @@ class Policy(TimeStampedModel):
 
     def get_email_context(self, **extra):
         return {
-            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
+            "policy url": f"[{self.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())})",
             "policy": self.name,
             **extra,
         }
@@ -259,8 +259,6 @@ class Policy(TimeStampedModel):
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
             extra_context,
         )
-        logger.info("Sending open consultation notifications for policy")
-        logger.info(extra_context)
 
     def send_decision_notifications(self, review_notification_relation, extra_context):
         self.send_notifications(

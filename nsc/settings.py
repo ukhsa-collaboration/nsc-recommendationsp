@@ -182,7 +182,6 @@ class Common(Configuration):
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
-        "nsc.header_debug_middleware.HeaderDebugMiddleware",
         "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
     ]
 
@@ -201,6 +200,7 @@ class Common(Configuration):
                     "django.contrib.messages.context_processors.messages",
                     "nsc.context_processors.tracking_ids",
                     "nsc.context_processors.cookie_banner",
+                    "nsc.context_processors.tenant_id",
                 ]
             },
         }
@@ -217,6 +217,9 @@ class Common(Configuration):
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
     REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
     REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+    CLAMAV_HOST = get_env("CLAMAV_HOST", default="clamav")
+    CLAMAV_PORT = get_env("CLAMAV_PORT", default=3310, cast=int)
+    CLAMAV_TIMEOUT = get_env("CLAMAV_TIMEOUT", default=10, cast=int)
 
     @property
     def DATABASES(self):
