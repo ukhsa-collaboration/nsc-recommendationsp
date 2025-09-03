@@ -9,7 +9,7 @@ This README provides a comprehensive guide for developers working on the UK Nati
 
 **Product Name**: NSC Recommendations (Beta)  
 **Commenced**: January 2020  
-**Maintainers**: level3b@ukhsa.govluk  
+**Maintainers**: level3b@ukhsa.gov.uk  
 **Repository**: [GitHub - NSC Recommendations](https://github.com/ukhsa-collaboration/nsc-recommendationsp)
 
 For detailed developer documentation, see the `docs/` directory in the repository.
