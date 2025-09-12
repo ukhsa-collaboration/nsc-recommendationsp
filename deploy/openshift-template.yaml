@@ -367,7 +367,7 @@ objects:
               - "-A"
               - "nsc"
               - "--concurrency"
-              - "2"
+              - "1"
             # Minimal env vars to get the project running - once started, settings will
             # look in the mounted DJANGO_CONFIG_DIR
             env:
