@@ -53,11 +53,21 @@ Ensure the following are installed:
 - Docker & Docker Compose
 - Node.js + Yarn
 
+### Updating environment variables
+
+#### Admin portal vars
+
+In order to allow access to the admin portal /django-admin/ you will need to add your IP address to the dev-docker-compose.yml.default file
+Inside the Django application build process, there is a list of environment variables - one of which is DJANGO_ADMIN_IP_RANGES
+Add your IP to this value.
+
+
 ### 3. Frontend Setup
 
 ```bash
 yarn install
-yarn build
+yarn build - this will run in production mode!
+yarn dev - this will run in development mode!
 ```
 
 ### 4. Docker-Based Local Environment
@@ -69,16 +79,24 @@ docker-compose -f dev-docker-compose.yml up --build
 
 This starts all necessary services using Docker Compose.
 
-### 5. Local Database Migrations & Setup
+### 5. Django setup
 
-Inside the backend container (`nsc-recommendationsp-django-1`) (or using `docker exec -it nsc-recommendationsp-django-1 bash` directlyl from your terminal):
+Install the project into a virtual environment::
+
+    python3.12 -m venv ./venv
+    source ./venv/bin/activate
+    pip install -r requirements-dev.txt
+
+### 6. Local Database Migrations & Setup
+
+Inside the backend container (`nsc-recommendationsp-django-1`) (or using `docker exec -it nsc-recommendationsp-django-1 bash` directly from your terminal):
 
 ```bash
 ./manage.py makemigrations
 ./manage.py migrate
 ```
 
-### 6. Create a Superuser
+### 7. Create a Superuser
 
 ```bash
 ./manage.py createsuperuser
@@ -86,7 +104,9 @@ Inside the backend container (`nsc-recommendationsp-django-1`) (or using `docker
 
 Follow the prompts to set up admin credentials.
 
-### 7. Running Tests & Linting
+You can now use these to log into the admin portal http://8000/django-admin
+
+### 8. Running Tests & Linting
 
 ```bash
 # Run tests

@@ -53,8 +53,8 @@ Django
 
 Install the project into a virtual environment::
 
-    python3.6 -m venv ../venv
-    source ../venv/bin/activate
+    python3.12 -m venv ./venv
+    source ./venv/bin/activate
     pip install -r requirements-dev.txt
 
 Create a superuser and load the basic fixtures::
@@ -108,16 +108,11 @@ existing National Screening Committee `legacy website`_.
 
 Run them in the following order::
 
-    python manage.py runscript generate_legacy_index
-    python manage.py runscript scrape_policies
-    python manage.py runscript scrape_stakeholders
-    python manage.py runscript scrape_latest_reviews
-    python manage.py runscript scrape_latest_review_documents
-
-.. note::
-
-    If running Django using docker, replace ``python`` in the above commands with
-    ``docker-compose -f dev-docker-compose.yml exec django``.
+    docker-compose -f dev-docker-compose.yml exec django python manage.py runscript generate_legacy_index
+    docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_policies
+    docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_stakeholders
+    docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_latest_reviews
+    docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_latest_review_documents
 
 Scraping data from the legacy site is just a temporary measure during the initial
 phases of development.
