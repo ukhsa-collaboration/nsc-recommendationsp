@@ -1,4 +1,5 @@
 from django.urls import path
+from django.shortcuts import redirect
 
 from .views import (
     ConditionDetail,
@@ -12,6 +13,14 @@ from .views import (
 
 
 urlpatterns = [
+    path(
+        r"psychiatric-illness/",
+        lambda request: redirect(
+            "condition:detail",
+            slug="antenatal-and-postnatal-mental-health",
+            permanent=True,
+        ),
+    ),
     path(r"", ConditionList.as_view(), name="list"),
     path(r"<slug:slug>/", ConditionDetail.as_view(), name="detail"),
     path(r"<slug:slug>/consultation/", ConsultationView.as_view(), name="consultation"),
@@ -34,7 +43,7 @@ urlpatterns = [
         r"<slug:slug>/stakeholder/comment/submitted/",
         StakeholderCommentSubmittedView.as_view(),
         name="stakeholder-comment-submitted",
-    ),
+    )
 ]
 
 app_name = "condition"
