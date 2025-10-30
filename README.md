@@ -70,7 +70,11 @@ yarn build - this will run in production mode!
 yarn dev - this will run in development mode!
 ```
 
-### 4. Docker-Based Local Environment
+### 4. Add Docker IP for local admin access to localhost:8000/django-admin
+
+The DJANGO_ADMIN_IP_RANGES is set to the default docker subnet (this can be found looking in docker desktop --> settings --> resources --> network). 
+
+### 5. Docker-Based Local Environment
 
 ```bash
 cp dev-docker-compose.yml.default dev-docker-compose.yml
