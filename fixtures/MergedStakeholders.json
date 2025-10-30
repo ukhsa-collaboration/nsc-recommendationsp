@@ -1,0 +1,12 @@
+[
+  {
+    "SH_Policies": ["Psychiatric illness"],
+    "SH_Is_subscriber": "Y",
+    "SH_Contact_email":"test@example.com"
+  }, 
+  {
+    "SH_Policies": ["PKU", "Scoliosis"],
+    "SH_Is_subscriber": "Y",
+    "SH_Contact_email":"test2@example.com"
+  }
+]

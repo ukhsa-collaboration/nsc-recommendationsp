@@ -5,9 +5,10 @@ web site.
 """
 
 import calendar
-import datetime
+from datetime import datetime
 import json
 import re
+from time import sleep
 
 from django.contrib.auth import get_user_model
 
@@ -53,7 +54,7 @@ def run():
         if review.review_end:
             review.published = True
 
-        review.summary = get_summary(page)
+        review.summary = get_summary(page) 
 
         review.clean()
         review.save()
@@ -72,6 +73,7 @@ def run():
             policy=policy,
             defaults={"recommendation": entry["recommendation"]},
         )
+        sleep(1)
 
     print("Finished")
 
@@ -88,14 +90,20 @@ def get_page(url):
 
 
 def get_last_review_date(node):
-    node = node.find("strong", string="Last review completed")
+    # print(f"💪 {node}")
+    node = node.find("p", string=lambda t: t and 'Date previous review completed:' in t)
 
     if not node:
         return None
 
     try:
-        text = node.find_next("td").text.strip()
-        timestamp = datetime.datetime.strptime(text, "%B %Y")
+        match = re.search(r'\b\d{4}\b', node.get_text())
+        if match:
+            text = match.group()
+        else: 
+            text = str(datetime.today().year)
+            
+        timestamp = datetime.strptime(text, "%Y")
         first, last = calendar.monthrange(timestamp.year, timestamp.month)
         timestamp = timestamp.replace(day=last)
         return timestamp.date()
@@ -104,11 +112,19 @@ def get_last_review_date(node):
 
 
 def get_summary(node):
-    regex = re.compile(r"^Why is screening (not )?recommended by UK NSC\?")
-    node = node.find("h3", string=regex)
-
-    if node:
-        node = node.next_sibling
-        return parse_html(content_nodes(node))
+    regex = re.compile(r".*recommendation.*", re.DOTALL)
+    heading = None
+    # UK NSC screening recommendation
+    array = node.find_all("h2")
+    for item in array:
+        if item.find(string=regex):
+            heading = item
+            break
+        
+    if heading:
+        #FIXME content_nodes will get all sibling nodes up to the next h3 - this will need revising
+        node = heading.find_next_sibling("p")
+        parsed = parse_html(content_nodes(node))
+        return parsed
 
     return ""

@@ -14,7 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-SITE = "https://view-health-screening-recommendations.service.gov.uk/"
+SITE = "https://view-health-screening-recommendations.service.gov.uk"
 TIMESTAMP = timezone.now().isoformat()
 
 
@@ -88,7 +88,7 @@ def get_ages(node):
     elif text == "all ages":
         text = "all"
 
-    return text.split()
+    return text.split(", ")
 
 
 def get_recommendation(node):
