@@ -99,6 +99,11 @@ Inside the backend container (`nsc-recommendationsp-django-1`) (or using `docker
 ./manage.py makemigrations
 ./manage.py migrate
 ```
+### 7. Migration for data 
+`./manage.py makemigrations --empty nsc`
+Update to match change
+See policy migration 8 as example
+#TODO: Add more details
 
 ### 7. Create a Superuser
 
