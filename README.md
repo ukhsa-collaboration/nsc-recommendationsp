@@ -120,7 +120,11 @@ Run the following scraper scripts
 
 Website: https://view-health-screening-recommendations.service.gov.uk/
 
-If the CSS disappears after running these, re-run `yarn build`
+#### Troubleshooting
+- If the CSS disappears after running these, re-run `yarn build`
+- If you run these repeatedly in quick succession the connection might time out (suspected rate limiting). This can be overcome in a couple of ways:
+   - Change the site you are scraping in the first script so that you start at the page for the data you are looking at (e.g. in def_scrape_contents setting the url = `f"{SITE}/?page=5#filter-box"` would mean you scrape data from page 5 and onwards. This makes your legacy_index.json file smaller, and so you will scrape fewer pages in the later scripts)
+   - Make a cup of tea and come back later ☕️
 
 ### 9. Restore data migrations and re-run the migration scripts
 
