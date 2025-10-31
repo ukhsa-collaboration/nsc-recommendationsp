@@ -79,7 +79,7 @@ This is only required for Local Dev! The staging and production databases are al
 
 ##### Migrations to delete:
  *(you will be told when to restore them - hint: It's step 9)*
-- `nsc/policy/migrations/0008_auto_20251030_1655.py`
+- All policy migrations starting at (and including) `nsc/policy/migrations/0008_auto_20251030_1655.py`
 
 ### 6. Docker-Based Local Environment
 
