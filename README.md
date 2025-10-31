@@ -53,28 +53,35 @@ Ensure the following are installed:
 - Docker & Docker Compose
 - Node.js + Yarn
 
-### Updating environment variables
+### 3. Updating environment variables if required
 
-#### Admin portal vars
+In order to update any environment variables, you will need to add them to the dev-docker-compose.yml.default file.
+Inside the Django application build process, there is a list of environment variables.
 
-In order to allow access to the admin portal /django-admin/ you will need to add your IP address to the dev-docker-compose.yml.default file
-Inside the Django application build process, there is a list of environment variables - one of which is DJANGO_ADMIN_IP_RANGES
-Add your IP to this value.
+#### Add Docker IP for local admin access to localhost:8000/django-admin
 
+The DJANGO_ADMIN_IP_RANGES is set to the default docker subnet (this can be found looking in docker desktop --> settings --> resources --> network). If you do not use the default docker subnet you will need to update this.
 
-### 3. Frontend Setup
+### 4. Local setup
 
-```bash
-yarn install
-yarn build - this will run in production mode!
-yarn dev - this will run in development mode!
-```
+Install the project into a virtual environment:
 
-### 4. Add Docker IP for local admin access to localhost:8000/django-admin
+    python3.12 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements-dev.txt
 
-The DJANGO_ADMIN_IP_RANGES is set to the default docker subnet (this can be found looking in docker desktop --> settings --> resources --> network). 
+### 5. Delete data migrations
+This sounds very weird and very janky (because it is!) 🤮. In order to set up your local database, you need to scrape the production website [step 8](#8-initialising-the-database--migrations). However, you cannot scrape the website and save the data to the database without running the migrations. We run into an issue when it comes to running some of the later migrations, as those migrations involve changing data. 
 
-### 5. Docker-Based Local Environment
+If you have not yet populated your database, you cannot change the data, and the migration will fail - but you cannot populate the database without running the migrations (so we're stuck in a circle). To bypass this, below is a table of migration files that need to be deleted before running the migrations, and then restored and the migrations re run. 
+
+This is only required for Local Dev! The staging and production databases are already populated and won't have this issue. This issue only exists when the database is starting empty.
+
+##### Migrations to delete:
+ *(you will be told when to restore them - hint: It's step 9)*
+- `nsc/policy/migrations/0008_auto_20251030_1655.py`
+
+### 6. Docker-Based Local Environment
 
 ```bash
 cp dev-docker-compose.yml.default dev-docker-compose.yml
@@ -83,39 +90,60 @@ docker-compose -f dev-docker-compose.yml up --build
 
 This starts all necessary services using Docker Compose.
 
-### 5. Django setup
+### 7. Frontend Setup
+Ensure you run these inside your virtual environment (venv)
 
-Install the project into a virtual environment::
+✅  `yarn install`
 
-    python3.12 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements-dev.txt
+✅  `yarn build` - this will run in production mode, use this for local development as it most closely resembles production
 
-### 6. Local Database Migrations & Setup
+❌ `yarn dev` - this will run in development mode - this is currently unreliable and requires fixing
 
-Inside the backend container (`nsc-recommendationsp-django-1`) (or using `docker exec -it nsc-recommendationsp-django-1 bash` directly from your terminal):
 
+### 8. Initialising the database & migrations
+
+The first time you run UK NSC locally, there is a set of django-extensions scripts that can be used to scrape data from the
+UK NSC site. 
+
+Run the following scraper scripts
+
+   `docker-compose -f dev-docker-compose.yml exec django python manage.py runscript generate_legacy_index`
+
+   `docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_policies`
+   
+   `docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_stakeholders`
+
+   `docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_latest_reviews`
+   
+   `docker-compose -f dev-docker-compose.yml exec django python manage.py runscript scrape_latest_review_documents`
+
+
+Website: https://view-health-screening-recommendations.service.gov.uk/
+
+If the CSS disappears after running these, re-run `yarn build`
+
+### 9. Restore data migrations and re-run the migration scripts
+
+Restore the migrations listed [here](#migrations-to-delete) from the git history
+
+Run:
 ```bash
-./manage.py makemigrations
+docker exec -it nsc-recommendationsp-django-1 bash
 ./manage.py migrate
 ```
-### 7. Migration for data 
-`./manage.py makemigrations --empty nsc`
-Update to match change
-See policy migration 8 as example
-#TODO: Add more details
 
-### 7. Create a Superuser
+### 10. Create a Superuser
 
 ```bash
+docker exec -it nsc-recommendationsp-django-1 bash
 ./manage.py createsuperuser
 ```
 
 Follow the prompts to set up admin credentials.
 
-You can now use these to log into the admin portal http://8000/django-admin
+You can now use these to log into the admin portal http:localhost/8000/django-admin
 
-### 8. Running Tests & Linting
+### 11. Running Tests & Linting
 
 ```bash
 # Run tests

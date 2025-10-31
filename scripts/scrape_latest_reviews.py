@@ -90,7 +90,6 @@ def get_page(url):
 
 
 def get_last_review_date(node):
-    # print(f"💪 {node}")
     node = node.find("p", string=lambda t: t and 'Date previous review completed:' in t)
 
     if not node:

@@ -33,7 +33,7 @@ def save_data(data):
 
 
 def scrape_contents():
-    url = SITE 
+    url = SITE
     print("Scraping contents...", url)
     results = []
     while url: 
@@ -60,7 +60,6 @@ def scrape_row(node, pk):
     url = get_url(fields[0])
     slug = slugify(name)
     ages = get_ages(fields[1])
-    print(ages, "aaagesss")
     recommendation = get_recommendation(fields[3])
     return {
         "name": name,

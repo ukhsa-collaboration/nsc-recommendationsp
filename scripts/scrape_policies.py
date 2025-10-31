@@ -18,6 +18,7 @@ def run():
     index = load_index()
     for entry in index:
         print(" ", entry["name"])
+
         page = get_page(entry["url"])
 
         try:
@@ -31,8 +32,11 @@ def run():
         obj.ages = entry["ages"]
         obj.condition = get_condition(page)
         obj.keywords = ""
+
         obj.clean()
+
         obj.save()
+
     print("Finished")
 
 
