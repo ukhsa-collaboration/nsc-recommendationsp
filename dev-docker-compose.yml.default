@@ -77,6 +77,8 @@ services:
     environment:
       DJANGO_CONFIGURATION: Dev
       DATABASE_HOST: postgres
+      DJANGO_ADMIN_IP_RANGES: 192.168.65.0/24
+      DJANGO_ADMINS: "User One,user1@example.com;User Two,user2@example.com"
       REDIS_SERVICE_HOST: redis
       WEBPACK_DEV_HOST: static
       WEBPACK_DEV_URL: "http://{host}:8080/"

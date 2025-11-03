@@ -35,3 +35,5 @@ media/
 static_root/
 
 secrets
+
+venv
