@@ -1,5 +1,5 @@
-from django.urls import path
 from django.shortcuts import redirect
+from django.urls import path
 
 from .views import (
     ConditionDetail,
@@ -43,7 +43,7 @@ urlpatterns = [
         r"<slug:slug>/stakeholder/comment/submitted/",
         StakeholderCommentSubmittedView.as_view(),
         name="stakeholder-comment-submitted",
-    )
+    ),
 ]
 
 app_name = "condition"

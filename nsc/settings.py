@@ -210,7 +210,7 @@ class Common(Configuration):
 
     # Database
     # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-    DATABASE_HOST = get_env("DATABASE_HOST", default="localhost") # should this be postgres?
+    DATABASE_HOST = get_env("DATABASE_HOST", default="localhost")
     DATABASE_PORT = get_env("DATABASE_PORT", default=5432, cast=int)
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)

@@ -4,11 +4,11 @@ Generate an initial table of policies by scraping the legacy site.
 """
 
 import json
+import time
+from urllib.parse import urljoin
 
 from django.utils import timezone
 from django.utils.text import slugify
-import time
-from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -20,6 +20,7 @@ TIMESTAMP = timezone.now().isoformat()
 
 def run():
     save_data(scrape_contents())
+
 
 def get_page(url):
     response = requests.get(url)
@@ -36,11 +37,11 @@ def scrape_contents():
     url = SITE
     print("Scraping contents...", url)
     results = []
-    while url: 
+    while url:
         response = get_page(url)
         url = str(response)
         soup = BeautifulSoup(response.text, "lxml")
-        for idx , row in enumerate(scrape_rows(soup)):
+        for idx, row in enumerate(scrape_rows(soup)):
             results.append(scrape_row(row, idx + 1))
         next_link = soup.select_one('a[rel="next"], a:-soup-contains("Next")')
         if next_link and next_link.has_attr("href"):

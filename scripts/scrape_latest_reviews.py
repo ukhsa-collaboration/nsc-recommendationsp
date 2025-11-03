@@ -5,9 +5,9 @@ web site.
 """
 
 import calendar
-from datetime import datetime
 import json
 import re
+from datetime import datetime
 from time import sleep
 
 from django.contrib.auth import get_user_model
@@ -54,7 +54,7 @@ def run():
         if review.review_end:
             review.published = True
 
-        review.summary = get_summary(page) 
+        review.summary = get_summary(page)
 
         review.clean()
         review.save()
@@ -90,18 +90,18 @@ def get_page(url):
 
 
 def get_last_review_date(node):
-    node = node.find("p", string=lambda t: t and 'Date previous review completed:' in t)
+    node = node.find("p", string=lambda t: t and "Date previous review completed:" in t)
 
     if not node:
         return None
 
     try:
-        match = re.search(r'\b\d{4}\b', node.get_text())
+        match = re.search(r"\b\d{4}\b", node.get_text())
         if match:
             text = match.group()
-        else: 
+        else:
             text = str(datetime.today().year)
-            
+
         timestamp = datetime.strptime(text, "%Y")
         first, last = calendar.monthrange(timestamp.year, timestamp.month)
         timestamp = timestamp.replace(day=last)
@@ -119,9 +119,9 @@ def get_summary(node):
         if item.find(string=regex):
             heading = item
             break
-        
+
     if heading:
-        #FIXME content_nodes will get all sibling nodes up to the next h3 - this will need revising
+        # FIXME content_nodes will get all sibling nodes up to the next h3 - this will need revising
         node = heading.find_next_sibling("p")
         parsed = parse_html(content_nodes(node))
         return parsed

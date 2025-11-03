@@ -84,8 +84,7 @@ This is only required for Local Dev! The staging and production databases are al
 ### 6. Docker-Based Local Environment
 
 ```bash
-cp dev-docker-compose.yml.default dev-docker-compose.yml
-docker-compose -f dev-docker-compose.yml up --build
+yarn docker
 ```
 
 This starts all necessary services using Docker Compose.

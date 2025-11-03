@@ -2,13 +2,18 @@
 
 from django.db import migrations
 
+
 def update_psychiatric_illness_policy(apps, schema_editor):
- 
+
     Policy = apps.get_model("policy", "Policy")
-    psychiatric_illness_policy = Policy.objects.get(slug="psychiatric-illness")
-    psychiatric_illness_policy.name = "Antenatal and postnatal mental health"
-    psychiatric_illness_policy.slug = "antenatal-and-postnatal-mental-health"
-    psychiatric_illness_policy.save()
+    try:
+        psychiatric_illness_policy = Policy.objects.get(slug="psychiatric-illness")
+        psychiatric_illness_policy.name = "Antenatal and postnatal mental health"
+        psychiatric_illness_policy.slug = "antenatal-and-postnatal-mental-health"
+        psychiatric_illness_policy.save()
+    except:
+        print("Migration already applied")
+
 
 class Migration(migrations.Migration):
 
