@@ -1,8 +1,8 @@
 [
     {
-        "name": "Abdominal Aortic Aneurysm",
+        "name": "Abdominal aortic aneurysm",
         "slug": "abdominal-aortic-aneurysm",
-        "url": "https://legacyscreening.phe.org.uk/aaa",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/abdominal-aortic-aneurysm/",
         "ages": [
             "adult"
         ],
@@ -10,129 +10,119 @@
         "recommendation": true
     },
     {
-        "name": "Alcohol Misuse",
+        "name": "Alcohol misuse",
         "slug": "alcohol-misuse",
-        "url": "https://legacyscreening.phe.org.uk/alcohol",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/alcohol-misuse/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "ALD",
         "slug": "ald",
-        "url": "https://legacyscreening.phe.org.uk/ald",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/ald/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Amino acid metabolism disorders",
         "slug": "amino-acid-metabolism-disorders",
-        "url": "https://legacyscreening.phe.org.uk/aminoacidmetabolism",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/amino-acid-metabolism-disorders/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Anaemia",
         "slug": "anaemia",
-        "url": "https://legacyscreening.phe.org.uk/anaemia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/anaemia/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Asymptomatic bacteriuria",
         "slug": "asymptomatic-bacteriuria",
-        "url": "https://legacyscreening.phe.org.uk/asymptomaticbacteriuria",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/asymptomatic-bacteriuria/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Atrial Fibrillation",
+        "name": "Atrial fibrillation",
         "slug": "atrial-fibrillation",
-        "url": "https://legacyscreening.phe.org.uk/atrialfibrillation",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/atrial-fibrillation/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Autism",
-        "slug": "autism",
-        "url": "https://legacyscreening.phe.org.uk/autism",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Bacterial vaginosis",
         "slug": "bacterial-vaginosis",
-        "url": "https://legacyscreening.phe.org.uk/bacterialvaginosis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/bacterial-vaginosis/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Biliary atresia",
         "slug": "biliary-atresia",
-        "url": "https://legacyscreening.phe.org.uk/biliaryatresia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/biliary-atresia/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Biotinidase deficiency",
         "slug": "biotinidase-deficiency",
-        "url": "https://legacyscreening.phe.org.uk/biotinidasedeficiency",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/biotinidase-deficiency/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Bladder Cancer",
+        "name": "Bladder cancer",
         "slug": "bladder-cancer",
-        "url": "https://legacyscreening.phe.org.uk/bladdercancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/bladder-cancer/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Blood group & RhD status and red cell alloantibodies",
         "slug": "blood-group-rhd-status-and-red-cell-alloantibodies",
-        "url": "https://legacyscreening.phe.org.uk/alloantibody",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/blood-group-rhd-status-and-red-cell-alloantibodies/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Bowel Cancer",
+        "name": "Bowel cancer",
         "slug": "bowel-cancer",
-        "url": "https://legacyscreening.phe.org.uk/bowelcancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/bowel-cancer/",
         "ages": [
             "adult"
         ],
@@ -140,9 +130,9 @@
         "recommendation": true
     },
     {
-        "name": "Breast Cancer",
+        "name": "Breast cancer",
         "slug": "breast-cancer",
-        "url": "https://legacyscreening.phe.org.uk/breastcancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/breast-cancer/",
         "ages": [
             "adult"
         ],
@@ -150,9 +140,9 @@
         "recommendation": true
     },
     {
-        "name": "Cervical Cancer",
+        "name": "Cervical cancer",
         "slug": "cervical-cancer",
-        "url": "https://legacyscreening.phe.org.uk/cervicalcancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/cervical-cancer/",
         "ages": [
             "adult"
         ],
@@ -162,47 +152,47 @@
     {
         "name": "Chlamydia (adult)",
         "slug": "chlamydia-adult",
-        "url": "https://legacyscreening.phe.org.uk/chlamydia-adult",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/chlamydia-adult/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Chlamydia (pregnancy)",
         "slug": "chlamydia-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/chlamydia-pregnancy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/chlamydia-pregnancy/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Coeliac Disease",
         "slug": "coeliac-disease",
-        "url": "https://legacyscreening.phe.org.uk/coeliacdisease",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/coeliac-disease/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Congenital adrenal hyperplasia",
         "slug": "congenital-adrenal-hyperplasia",
-        "url": "https://legacyscreening.phe.org.uk/congenitaladrenalhyperplasia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/congenital-adrenal-hyperplasia/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Congenital cataracts",
         "slug": "congenital-cataracts",
-        "url": "https://legacyscreening.phe.org.uk/congenitalcataracts",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/congenital-cataracts/",
         "ages": [
             "newborn"
         ],
@@ -212,7 +202,7 @@
     {
         "name": "Congenital heart disease",
         "slug": "congenital-heart-disease",
-        "url": "https://legacyscreening.phe.org.uk/congenitalheartdisease",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/congenital-heart-disease/",
         "ages": [
             "newborn"
         ],
@@ -222,7 +212,7 @@
     {
         "name": "Congenital hypothyroidism",
         "slug": "congenital-hypothyroidism",
-        "url": "https://legacyscreening.phe.org.uk/congenitalhypothyroidism",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/congenital-hypothyroidism/",
         "ages": [
             "newborn"
         ],
@@ -232,17 +222,17 @@
     {
         "name": "COPD",
         "slug": "copd",
-        "url": "https://legacyscreening.phe.org.uk/copd",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/copd/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Cryptorchidism",
         "slug": "cryptorchidism",
-        "url": "https://legacyscreening.phe.org.uk/cryptorchidism",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/cryptorchidism/",
         "ages": [
             "newborn"
         ],
@@ -252,7 +242,7 @@
     {
         "name": "Cystic fibrosis (newborn)",
         "slug": "cystic-fibrosis-newborn",
-        "url": "https://legacyscreening.phe.org.uk/cysticfibrosis-newborn",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/cystic-fibrosis-newborn/",
         "ages": [
             "newborn"
         ],
@@ -262,67 +252,47 @@
     {
         "name": "Cystic fibrosis (pregnancy)",
         "slug": "cystic-fibrosis-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/cysticfibrosis-pregnancy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/cystic-fibrosis-pregnancy/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Cytomegalovirus",
         "slug": "cytomegalovirus",
-        "url": "https://legacyscreening.phe.org.uk/cytomegalovirus",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/cytomegalovirus/",
         "ages": [
-            "antenatal"
+            "all"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Dementia",
         "slug": "dementia",
-        "url": "https://legacyscreening.phe.org.uk/dementia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/dementia/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Dental Disease",
-        "slug": "dental-disease",
-        "url": "https://legacyscreening.phe.org.uk/dental",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Depression",
         "slug": "depression",
-        "url": "https://legacyscreening.phe.org.uk/depression",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/depression/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Development & Behaviour",
-        "slug": "development-behaviour",
-        "url": "https://legacyscreening.phe.org.uk/developmentbehaviour",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Developmental dislocation of the hip",
         "slug": "developmental-dislocation-of-the-hip",
-        "url": "https://legacyscreening.phe.org.uk/hipdislocation",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/developmental-dislocation-of-the-hip/",
         "ages": [
             "newborn"
         ],
@@ -330,19 +300,29 @@
         "recommendation": true
     },
     {
+        "name": "Development & behaviour",
+        "slug": "development-behaviour",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/development-behaviour/",
+        "ages": [
+            "child"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
         "name": "Diabetes",
         "slug": "diabetes",
-        "url": "https://legacyscreening.phe.org.uk/diabetes",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/diabetes/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Diabetic Retinopathy",
+        "name": "Diabetic retinopathy",
         "slug": "diabetic-retinopathy",
-        "url": "https://legacyscreening.phe.org.uk/diabeticretinopathy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/diabetic-retinopathy/",
         "ages": [
             "adult"
         ],
@@ -352,7 +332,7 @@
     {
         "name": "Down's syndrome",
         "slug": "downs-syndrome",
-        "url": "https://legacyscreening.phe.org.uk/downs",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/downs-syndrome/",
         "ages": [
             "antenatal"
         ],
@@ -362,47 +342,67 @@
     {
         "name": "Duchenne muscular dystrophy",
         "slug": "duchenne-muscular-dystrophy",
-        "url": "https://legacyscreening.phe.org.uk/musculardystrophy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/duchenne-muscular-dystrophy/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Familial Hypercholesterolaemia (adult)",
+        "name": "Edwards' syndrome",
+        "slug": "edwards-syndrome",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/edwards-syndrome/",
+        "ages": [
+            "antenatal"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Familial hypercholesterolaemia (adult)",
         "slug": "familial-hypercholesterolaemia-adult",
-        "url": "https://legacyscreening.phe.org.uk/familialhypercholesterolaemia-adult",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/familial-hypercholesterolaemia-adult/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Familial Hypercholesterolaemia (child)",
+        "name": "Familial hypercholesterolaemia (child)",
         "slug": "familial-hypercholesterolaemia-child",
-        "url": "https://legacyscreening.phe.org.uk/familialhypercholesterolaemia-child",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/familial-hypercholesterolaemia-child/",
         "ages": [
             "child"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Fatty-acid oxidation disorders",
         "slug": "fatty-acid-oxidation-disorders",
-        "url": "https://legacyscreening.phe.org.uk/fattyacidoxidation",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/fatty-acid-oxidation-disorders/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Fetal anomalies",
         "slug": "fetal-anomalies",
-        "url": "https://legacyscreening.phe.org.uk/fetalanomalies",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/fetal-anomalies/",
+        "ages": [
+            "antenatal"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Fetal presentation in pregnancy",
+        "slug": "fetal-presentation-in-pregnancy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/fetal-presentation-in-pregnancy/",
         "ages": [
             "antenatal"
         ],
@@ -412,28 +412,28 @@
     {
         "name": "FMAIT",
         "slug": "fmait",
-        "url": "https://legacyscreening.phe.org.uk/thrombocytopenia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/fmait/",
         "ages": [
             "antenatal",
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Fragile X",
         "slug": "fragile-x",
-        "url": "https://legacyscreening.phe.org.uk/fragilex",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/fragile-x/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "GA1",
         "slug": "ga1",
-        "url": "https://legacyscreening.phe.org.uk/ga1",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/ga1/",
         "ages": [
             "newborn"
         ],
@@ -443,67 +443,67 @@
     {
         "name": "Galactosaemia",
         "slug": "galactosaemia",
-        "url": "https://legacyscreening.phe.org.uk/galactosemia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/galactosaemia/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Gaucher disease",
         "slug": "gaucher-disease",
-        "url": "https://legacyscreening.phe.org.uk/gauchers",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/gaucher-disease/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Genital Herpes",
+        "name": "Genital herpes",
         "slug": "genital-herpes",
-        "url": "https://legacyscreening.phe.org.uk/genitalherpes",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/genital-herpes/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Gestational diabetes",
         "slug": "gestational-diabetes",
-        "url": "https://legacyscreening.phe.org.uk/gestational-diabetes",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/gestational-diabetes/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Glaucoma",
         "slug": "glaucoma",
-        "url": "https://legacyscreening.phe.org.uk/glaucoma",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/glaucoma/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Group B Streptococcus",
+        "name": "Group B streptococcus",
         "slug": "group-b-streptococcus",
-        "url": "https://legacyscreening.phe.org.uk/groupbstreptococcus",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/group-b-streptococcus/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Growth",
         "slug": "growth",
-        "url": "https://legacyscreening.phe.org.uk/growth",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/growth/",
         "ages": [
             "child"
         ],
@@ -513,17 +513,17 @@
     {
         "name": "Haemochromatosis",
         "slug": "haemochromatosis",
-        "url": "https://legacyscreening.phe.org.uk/haemochromatosis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/haemochromatosis/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "HCU",
         "slug": "hcu",
-        "url": "https://legacyscreening.phe.org.uk/hcu",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hcu/",
         "ages": [
             "newborn"
         ],
@@ -533,7 +533,7 @@
     {
         "name": "Hearing (child)",
         "slug": "hearing-child",
-        "url": "https://legacyscreening.phe.org.uk/hearing-child",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hearing-child/",
         "ages": [
             "child"
         ],
@@ -541,9 +541,19 @@
         "recommendation": true
     },
     {
+        "name": "Hearing loss (adult)",
+        "slug": "hearing-loss-adult",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hearing-loss-adult/",
+        "ages": [
+            "adult"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
         "name": "Hearing (newborn)",
         "slug": "hearing-newborn",
-        "url": "https://legacyscreening.phe.org.uk/hearing-newborn",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hearing-newborn/",
         "ages": [
             "newborn"
         ],
@@ -551,19 +561,9 @@
         "recommendation": true
     },
     {
-        "name": "Hearing Loss (adult)",
-        "slug": "hearing-loss-adult",
-        "url": "https://legacyscreening.phe.org.uk/hearing-adult",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
         "name": "Hepatitis B",
         "slug": "hepatitis-b",
-        "url": "https://legacyscreening.phe.org.uk/hepatitisb",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hepatitis-b/",
         "ages": [
             "antenatal"
         ],
@@ -573,27 +573,17 @@
     {
         "name": "Hepatitis C (pregnancy)",
         "slug": "hepatitis-c-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/hepatitisc-pregnancy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hepatitis-c-pregnancy/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "HTLV",
-        "slug": "htlv",
-        "url": "https://legacyscreening.phe.org.uk/htlv",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Human immunodeficiency virus",
         "slug": "human-immunodeficiency-virus",
-        "url": "https://legacyscreening.phe.org.uk/hiv",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/human-immunodeficiency-virus/",
         "ages": [
             "antenatal"
         ],
@@ -603,37 +593,27 @@
     {
         "name": "Hypertension (adult)",
         "slug": "hypertension-adult",
-        "url": "https://legacyscreening.phe.org.uk/hypertension-adult",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hypertension-adult/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Hypertension (child)",
         "slug": "hypertension-child",
-        "url": "https://legacyscreening.phe.org.uk/hypertension-child",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/hypertension-child/",
         "ages": [
             "child"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Iron Deficiency Anaemia",
-        "slug": "iron-deficiency-anaemia",
-        "url": "https://legacyscreening.phe.org.uk/irondeficiency",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "IVA",
         "slug": "iva",
-        "url": "https://legacyscreening.phe.org.uk/iva",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/iva/",
         "ages": [
             "newborn"
         ],
@@ -643,57 +623,67 @@
     {
         "name": "Kernicterus",
         "slug": "kernicterus",
-        "url": "https://legacyscreening.phe.org.uk/kernicterus",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/kernicterus/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Kidney disease",
         "slug": "kidney-disease",
-        "url": "https://legacyscreening.phe.org.uk/kidneydisease",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/kidney-disease/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "LCHADD",
         "slug": "lchadd",
-        "url": "https://legacyscreening.phe.org.uk/lchadd",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/lchadd/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Lead Poisoning",
+        "name": "Lead poisoning",
         "slug": "lead-poisoning",
-        "url": "https://legacyscreening.phe.org.uk/leadpoisoning",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/lead-poisoning/",
         "ages": [
             "child"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Lung cancer",
         "slug": "lung-cancer",
-        "url": "https://legacyscreening.phe.org.uk/lungcancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/lung-cancer/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "MCADD",
         "slug": "mcadd",
-        "url": "https://legacyscreening.phe.org.uk/mcadd",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/mcadd/",
+        "ages": [
+            "newborn"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Metachromatic leukodystrophy",
+        "slug": "metachromatic-leukodystrophy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/metachromatic-leukodystrophy/",
         "ages": [
             "newborn"
         ],
@@ -703,17 +693,17 @@
     {
         "name": "MPS I",
         "slug": "mps-i",
-        "url": "https://legacyscreening.phe.org.uk/mps1",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/mps-i/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "MSUD",
         "slug": "msud",
-        "url": "https://legacyscreening.phe.org.uk/msud",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/msud/",
         "ages": [
             "newborn"
         ],
@@ -723,7 +713,7 @@
     {
         "name": "Neural tube defect",
         "slug": "neural-tube-defect",
-        "url": "https://legacyscreening.phe.org.uk/neuraltubedefect",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/neural-tube-defect/",
         "ages": [
             "antenatal"
         ],
@@ -733,97 +723,107 @@
     {
         "name": "Neuroblastoma",
         "slug": "neuroblastoma",
-        "url": "https://legacyscreening.phe.org.uk/neuroblastoma",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/neuroblastoma/",
         "ages": [
             "child"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Obesity",
         "slug": "obesity",
-        "url": "https://legacyscreening.phe.org.uk/obesity",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/obesity/",
         "ages": [
             "child"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Oral Cancer",
+        "name": "Oral cancer",
         "slug": "oral-cancer",
-        "url": "https://legacyscreening.phe.org.uk/oralcancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/oral-cancer/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Organic acid oxidation disorders",
         "slug": "organic-acid-oxidation-disorders",
-        "url": "https://legacyscreening.phe.org.uk/organicacidmetabolism",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/organic-acid-oxidation-disorders/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Osteoporosis",
         "slug": "osteoporosis",
-        "url": "https://legacyscreening.phe.org.uk/osteoporosis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/osteoporosis/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Ovarian cancer",
         "slug": "ovarian-cancer",
-        "url": "https://legacyscreening.phe.org.uk/ovariancancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/ovarian-cancer/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Partner Violence",
+        "name": "Partner violence",
         "slug": "partner-violence",
-        "url": "https://legacyscreening.phe.org.uk/partnerviolence",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/partner-violence/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Partner violence (pregnancy)",
         "slug": "partner-violence-pregnancy",
-        "url": "https://legacyscreening.phe.org.uk/partnerviolence-pregnancy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/partner-violence-pregnancy/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Parvovirus",
         "slug": "parvovirus",
-        "url": "https://legacyscreening.phe.org.uk/parvovirus",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/parvovirus/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
+    },
+    {
+        "name": "Patau's syndrome",
+        "slug": "pataus-syndrome",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/pataus-syndrome/",
+        "ages": [
+            "antenatal"
+        ],
+        "is_active": true,
+        "recommendation": true
     },
     {
         "name": "PKU",
         "slug": "pku",
-        "url": "https://legacyscreening.phe.org.uk/pku",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/pku/",
         "ages": [
             "newborn"
         ],
@@ -833,97 +833,97 @@
     {
         "name": "Placenta praevia",
         "slug": "placenta-praevia",
-        "url": "https://legacyscreening.phe.org.uk/placentapraevia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/placenta-praevia/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Postnatal depression",
         "slug": "postnatal-depression",
-        "url": "https://legacyscreening.phe.org.uk/postnataldepression",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/postnatal-depression/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Pre-eclampsia",
         "slug": "pre-eclampsia",
-        "url": "https://legacyscreening.phe.org.uk/pre-eclampsia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/pre-eclampsia/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Preterm birth",
         "slug": "preterm-birth",
-        "url": "https://legacyscreening.phe.org.uk/pretermbirth",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/preterm-birth/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Prostate Cancer",
+        "name": "Prostate cancer",
         "slug": "prostate-cancer",
-        "url": "https://legacyscreening.phe.org.uk/prostatecancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/prostate-cancer/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Psychiatric illness",
         "slug": "psychiatric-illness",
-        "url": "https://legacyscreening.phe.org.uk/psychiatricillness",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/psychiatric-illness/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Rubella susceptibility",
         "slug": "rubella-susceptibility",
-        "url": "https://legacyscreening.phe.org.uk/rubellasusceptibility",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/rubella-susceptibility/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "SCID",
         "slug": "scid",
-        "url": "https://legacyscreening.phe.org.uk/scid",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/scid/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Scoliosis",
         "slug": "scoliosis",
-        "url": "https://legacyscreening.phe.org.uk/scoliosis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/scoliosis/",
         "ages": [
             "child"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Sickle cell and Thalassaemia",
+        "name": "Sickle cell and thalassaemia",
         "slug": "sickle-cell-and-thalassaemia",
-        "url": "https://legacyscreening.phe.org.uk/sicklecellthalassaemia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/sickle-cell-and-thalassaemia/",
         "ages": [
             "antenatal"
         ],
@@ -931,9 +931,9 @@
         "recommendation": true
     },
     {
-        "name": "Sickle Cell Disease (newborn)",
+        "name": "Sickle cell disease (newborn)",
         "slug": "sickle-cell-disease-newborn",
-        "url": "https://legacyscreening.phe.org.uk/sicklecelldisease",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/sickle-cell-disease-newborn/",
         "ages": [
             "newborn"
         ],
@@ -941,60 +941,30 @@
         "recommendation": true
     },
     {
-        "name": "SMA",
-        "slug": "sma",
-        "url": "https://legacyscreening.phe.org.uk/sma",
+        "name": "Speech & language delay",
+        "slug": "speech-language-delay",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/speech-language-delay/",
+        "ages": [
+            "child"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Spinal muscular atrophy",
+        "slug": "spinal-muscular-atrophy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/sma/",
         "ages": [
             "antenatal",
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Speech & Language Delay",
-        "slug": "speech-language-delay",
-        "url": "https://legacyscreening.phe.org.uk/speechlanguage",
-        "ages": [
-            "child"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Stillbirth",
         "slug": "stillbirth",
-        "url": "https://legacyscreening.phe.org.uk/stillbirth",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Stomach cancer",
-        "slug": "stomach-cancer",
-        "url": "https://legacyscreening.phe.org.uk/stomachcancer",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Sudden Cardiac Death",
-        "slug": "sudden-cardiac-death",
-        "url": "https://legacyscreening.phe.org.uk/suddencardiacdeath",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Syphilis",
-        "slug": "syphilis",
-        "url": "https://legacyscreening.phe.org.uk/syphilis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/stillbirth/",
         "ages": [
             "antenatal"
         ],
@@ -1002,9 +972,29 @@
         "recommendation": true
     },
     {
-        "name": "T18 and T13",
-        "slug": "t18-and-t13",
-        "url": "https://legacyscreening.phe.org.uk/t18andt13",
+        "name": "Stomach cancer",
+        "slug": "stomach-cancer",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/stomach-cancer/",
+        "ages": [
+            "adult"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Sudden cardiac death",
+        "slug": "sudden-cardiac-death",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/sudden-cardiac-death/",
+        "ages": [
+            "adult"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Syphilis",
+        "slug": "syphilis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/syphilis/",
         "ages": [
             "antenatal"
         ],
@@ -1014,77 +1004,67 @@
     {
         "name": "Thrombophilia",
         "slug": "thrombophilia",
-        "url": "https://legacyscreening.phe.org.uk/thrombophilia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/thrombophilia/",
         "ages": [
             "all"
         ],
         "is_active": true,
-        "recommendation": false
-    },
-    {
-        "name": "Thyroid disease",
-        "slug": "thyroid-disease",
-        "url": "https://legacyscreening.phe.org.uk/thyroid",
-        "ages": [
-            "adult"
-        ],
-        "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Toxoplasmosis",
         "slug": "toxoplasmosis",
-        "url": "https://legacyscreening.phe.org.uk/toxoplasmosis",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/toxoplasmosis/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Tyrosinaemia",
-        "slug": "tyrosinaemia",
-        "url": "https://legacyscreening.phe.org.uk/tyrosinaemia",
+        "name": "Tyrosinaemia type 1",
+        "slug": "tyrosinaemia-type-1",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/tyrosinaemia/",
         "ages": [
             "newborn"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Varicella susceptibility",
         "slug": "varicella-susceptibility",
-        "url": "https://legacyscreening.phe.org.uk/varicella",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/varicella-susceptibility/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Vasa praevia",
         "slug": "vasa-praevia",
-        "url": "https://legacyscreening.phe.org.uk/vasapraevia",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/vasa-praevia/",
         "ages": [
             "antenatal"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
         "name": "Vascular risk",
         "slug": "vascular-risk",
-        "url": "https://legacyscreening.phe.org.uk/vascularrisk",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/vascular-risk/",
         "ages": [
             "adult"
         ],
         "is_active": true,
-        "recommendation": false
+        "recommendation": true
     },
     {
-        "name": "Vision Defects",
+        "name": "Vision defects",
         "slug": "vision-defects",
-        "url": "https://legacyscreening.phe.org.uk/vision-child",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/vision-defects/",
         "ages": [
             "child"
         ],
