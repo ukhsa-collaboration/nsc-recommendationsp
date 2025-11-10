@@ -135,7 +135,18 @@ docker exec -it nsc-recommendationsp-django-1 bash
 ./manage.py migrate
 ```
 
-### 10. Create a Superuser
+
+### 10. Make a frontend change via a data migration:
+
+
+To create a data migration (data, not schema), we need to create an empty migration file and then manually populate it with the data that needs changing.
+
+The command to create an empty migration is below:
+
+`./manage.py makemigrations --empty policy/review/notify` keep the name of the folder in which you wish to create a new migration
+
+
+### 11. Create a Superuser
 
 ```bash
 docker exec -it nsc-recommendationsp-django-1 bash
@@ -146,7 +157,7 @@ Follow the prompts to set up admin credentials.
 
 You can now use these to log into the admin portal http:localhost/8000/django-admin
 
-### 11. Running Tests & Linting
+### 12. Running Tests & Linting
 
 ```bash
 # Run tests
