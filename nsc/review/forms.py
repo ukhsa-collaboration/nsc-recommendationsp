@@ -173,8 +173,8 @@ class ReviewDatesForm(forms.ModelForm):
         help_text=mark_safe(
             _(
                 "Select the date of the UK NSC meeting when this consultation will be discussed. "
-                'View <a href="https://www.gov.uk/government/groups/uk-national-screening-'
-                'committee-uk-nsc#meetings">spreadsheet of meeting dates</a> for reference.'
+                'View <a href="https://www.gov.uk/government/collections/uk-nsc-meetings-and-'
+                'minutes">UK NSC meetings and minutes</a> for reference.'
             )
         ),
         widget=forms.HiddenInput(),

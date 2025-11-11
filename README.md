@@ -199,3 +199,12 @@ isort .
   - Admin role used due to login issues with content editor.
   - Evidence Review Managers may need role adjustments.
 
+
+
+### Other Documentation
+
+In the /docs folder there are a series of further READMEs available. 
+
+`data-migrations.rst` will provide information on how to create empty migrations
+
+`development.rst` has further information on development environments 
