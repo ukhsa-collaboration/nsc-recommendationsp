@@ -18,7 +18,9 @@ urlpatterns = [
         r"cookies", TemplateView.as_view(template_name="cookies.html"), name="cookies"
     ),
     path(
-        r"accessibility_statement", TemplateView.as_view(template_name="accessibility_statement.html"), name="accessibility_statement"
+        r"accessibility_statement",
+        TemplateView.as_view(template_name="accessibility_statement.html"),
+        name="accessibility_statement",
     ),
     path(
         r"feedback",
