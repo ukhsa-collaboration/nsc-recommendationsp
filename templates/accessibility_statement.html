@@ -49,27 +49,29 @@
     <p class="govuk-body">
       {% blocktrans %}
       Parts of this website are not fully accessible. For example:
-      <ul class="govuk-list govuk-list--bullet">
-        <li>{% trans "Page regions are not always identified by an ARIA Landmark" %}</li>
-        <li>{% trans "A ‘Skip to Main Content’ link is present but not functional" %}</li>
-        <li>{% trans "Headings are not appropriately structured across the site" %}</li>
-        <li>{% trans "Some field input labels are not announced correctly" %}</li>
-      </ul>
       {% endblocktrans %}
     </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{% trans "Page regions are not always identified by an ARIA Landmark" %}</li>
+      <li>{% trans "A ‘Skip to Main Content’ link is present but not functional" %}</li>
+      <li>{% trans "Headings are not appropriately structured across the site" %}</li>
+      <li>{% trans "Some field input labels are not announced correctly" %}</li>
+    </ul>
    
     <br/>
     <p class="govuk-body">
       {% blocktrans %} 
       PDF documents may not be accessible because:  
-      <ul class="govuk-list govuk-list--bullet">
-        <li>{% trans "They are not marked up correctly" %}</li>
-        <li>{% trans "Text does not always meet minimum contrast requirements" %}</li>
-        <li>{% trans "Links within paragraphs are not always sufficiently visible" %}</li>
-        <li>{% trans "Some images do not have an equivalent text alternative" %}</li>
-      </ul>
       {% endblocktrans %}
     </p> 
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{% trans "They are not marked up correctly" %}</li>
+      <li>{% trans "Text does not always meet minimum contrast requirements" %}</li>
+      <li>{% trans "Links within paragraphs are not always sufficiently visible" %}</li>
+      <li>{% trans "Some images do not have an equivalent text alternative" %}</li>
+    </ul>
 
     <h3 class="govuk-heading-m">{% trans "Feedback and contact information" %}</h3>
 
