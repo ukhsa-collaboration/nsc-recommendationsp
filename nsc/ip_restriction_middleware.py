@@ -19,7 +19,8 @@ class AdminIPRestrictionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         raw_ip_ranges = settings.DJANGO_ADMIN_IP_RANGES.strip()
-
+        print(settings.DJANGO_ADMIN_IP_RANGES, "Django IP address ranges")
+        print(raw_ip_ranges, "Raw IP range")
         if not raw_ip_ranges:
             self.allowed_ips = []
 
