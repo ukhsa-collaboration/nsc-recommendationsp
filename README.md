@@ -82,6 +82,7 @@ This is only required for Local Dev! The staging and production databases are al
 - All policy migrations starting at (and including) `nsc/policy/migrations/0008_auto_20251030_1655.py`
 
 ### 6. Docker-Based Local Environment
+Ensure that you run this command in a separate terminal to the virutal environment - we want the container to be outside of the virtual environment
 
 ```bash
 yarn docker
@@ -199,3 +200,12 @@ isort .
   - Admin role used due to login issues with content editor.
   - Evidence Review Managers may need role adjustments.
 
+
+
+### Other Documentation
+
+In the /docs folder there are a series of further READMEs available. 
+
+`data-migrations.rst` will provide information on how to create empty migrations
+
+`development.rst` has further information on development environments 
