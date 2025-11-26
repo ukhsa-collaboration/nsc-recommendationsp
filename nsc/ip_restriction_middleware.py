@@ -19,7 +19,6 @@ class AdminIPRestrictionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         raw_ip_ranges = settings.DJANGO_ADMIN_IP_RANGES.strip()
-        print(settings.DJANGO_ADMIN_IP_RANGES, "Django IP address ranges")
         print(raw_ip_ranges, "Raw IP range")
         if not raw_ip_ranges:
             self.allowed_ips = []
@@ -36,6 +35,7 @@ class AdminIPRestrictionMiddleware:
         admin_prefixes = ["/django-admin/", "/admin/"]
         if any(request.path.startswith(prefix) for prefix in admin_prefixes):
             ip = self.get_incoming_ip(request)
+            print(ip, "Incoming IP")
             if not self.is_allowed_ip(ip):
                 logger.warning(
                     f"403 Forbidden: IP {ip} not allowed to access django-admin."
