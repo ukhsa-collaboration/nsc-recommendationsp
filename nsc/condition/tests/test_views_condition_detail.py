@@ -20,7 +20,7 @@ def test_detail_view(django_app):
     """
     instance = baker.make(Policy)
     response = django_app.get(instance.get_public_url())
-    assert response.context["policy"] == instance
+    assert response.context["polic"] == instance
 
 
 def test_back_link(django_app):
