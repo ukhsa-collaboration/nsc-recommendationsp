@@ -1,6 +1,7 @@
 from os import path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
+import logging
 
 from django.http import FileResponse, Http404, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
@@ -26,16 +27,15 @@ from .forms import (
 from .models import Review
 
 def csrf_failure(request, reason=""):
-    print(
-        "\nCSRF FAILURE:",
+    logger = logging.getLogger(__name__)
+    logger.warning(
+        "CSRF FAILURE: %s | host=%s | origin=%s | referer=%s | xfh=%s | xfp=%s",
         reason,
-        "| host=", request.get_host(),
-        "| origin=", request.META.get("HTTP_ORIGIN"),
-        "| referer=", request.META.get("HTTP_REFERER"),
-        "| xfh=", request.META.get("HTTP_X_FORWARDED_HOST"),
-        "| xfp=", request.META.get("HTTP_X_FORWARDED_PROTO"),
-        "\n",
-        flush=True,
+        request.get_host(),
+        request.META.get("HTTP_ORIGIN"),
+        request.META.get("HTTP_REFERER"),
+        request.META.get("HTTP_X_FORWARDED_HOST"),
+        request.META.get("HTTP_X_FORWARDED_PROTO"),
     )
     # Reuse Django's default 403 behaviour
     return permission_denied(request, reason=reason)
