@@ -2,10 +2,11 @@ from os import path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
+from django.views.defaults import permission_denied
 
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
@@ -23,6 +24,21 @@ from .forms import (
     ReviewSummaryForm,
 )
 from .models import Review
+
+def csrf_failure(request, reason=""):
+    print(
+        "\nCSRF FAILURE:",
+        reason,
+        "| host=", request.get_host(),
+        "| origin=", request.META.get("HTTP_ORIGIN"),
+        "| referer=", request.META.get("HTTP_REFERER"),
+        "| xfh=", request.META.get("HTTP_X_FORWARDED_HOST"),
+        "| xfp=", request.META.get("HTTP_X_FORWARDED_PROTO"),
+        "\n",
+        flush=True,
+    )
+    # Reuse Django's default 403 behaviour
+    return permission_denied(request, reason=reason)
 
 
 class ReviewDashboardView(ReviewManagerRequiredMixin, generic.TemplateView):
