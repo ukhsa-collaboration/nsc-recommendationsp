@@ -142,6 +142,9 @@ class Common(Configuration):
     # String containing ip ranges allowed to access django-admin
     DJANGO_ADMIN_IP_RANGES = get_env("DJANGO_ADMIN_IP_RANGES", "")
 
+    # Use custom CSRF failure view to log CSRF failures centrally
+    CSRF_FAILURE_VIEW = "nsc.review.views.csrf_failure"
+
     INSTALLED_APPS = [
         "django.contrib.admin",
         "django.contrib.auth",
