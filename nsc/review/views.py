@@ -2,16 +2,22 @@ from os import path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 import logging
+from builtins import any
 
 from django.http import FileResponse, Http404, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django.views.defaults import permission_denied
+from django.core.exceptions import DisallowedHost, ValueError
 
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today
+from django.middleware.csrf import CsrfViewMiddleware
+from django.utils.http import is_same_domain
+from urllib.parse import urlsplit
+
 
 from ..document.models import Document
 from .forms import (
@@ -28,15 +34,37 @@ from .models import Review
 
 def csrf_failure(request, reason=""):
     logger = logging.getLogger(__name__)
-    logger.warning(
-        "CSRF FAILURE: %s | host=%s | origin=%s | referer=%s | xfh=%s | xfp=%s",
-        reason,
-        request.get_host(),
-        request.META.get("HTTP_ORIGIN"),
-        request.META.get("HTTP_REFERER"),
-        request.META.get("HTTP_X_FORWARDED_HOST"),
-        request.META.get("HTTP_X_FORWARDED_PROTO"),
-    )
+    request_origin = request.META["HTTP_ORIGIN"]
+    logger.warning(request_origin, "request origin")
+    try:
+        good_host = request.get_host()
+    except DisallowedHost:
+        logger.warning("DisallowedHost")
+        pass
+    else:
+        good_origin = "%s://%s" % (
+            "https" if request.is_secure() else "http",
+            good_host,
+        )
+        logger.warning(good_origin, "good origin")
+        if request_origin == good_origin:
+            logger.warning("request origin is same as good origin")
+            return True
+    if request_origin in CsrfViewMiddleware.allowed_origins_exact:
+        logger.warning("request origin in self.allows origins exacy")
+        return True
+    try:
+        parsed_origin = urlsplit(request_origin)
+        logger.warning(parsed_origin, "parsed origin")
+    except ValueError:
+        return False
+    parsed_origin_scheme = parsed_origin.scheme
+    parsed_origin_netloc = parsed_origin.netloc
+    is_matched = any(
+        is_same_domain(parsed_origin_netloc, host)
+        for host in CsrfViewMiddleware.allowed_origin_subdomains.get(parsed_origin_scheme, ())
+        )
+    logger.warning(is_matched, "is matched")
     # Reuse Django's default 403 behaviour
     return permission_denied(request, reason=reason)
 
