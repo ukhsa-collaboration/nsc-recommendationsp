@@ -9,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django.views.defaults import permission_denied
-from django.core.exceptions import DisallowedHost, ValueError
+from django.core.exceptions import DisallowedHost
 
 from nsc.permissions import ReviewManagerRequiredMixin
 from nsc.policy.models import Policy
