@@ -7,10 +7,11 @@ from django.middleware.csrf import CsrfViewMiddleware, is_same_domain
 from django.conf import settings
 from urllib.parse import urlsplit
 
-logger = logging.getLogger('django.security.csrf.custom_origin')
+logger = logging.getLogger('django.middleware.csrf')
 
 class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
     def _origin_verified(self, request, origin):
+        logger.debug(f"origin verified called")
         verified = super()._origin_verified(request, origin)
         if verified:
             logger.debug(f"CSRF Origin VERIFIED: {origin} is a trusted origin.")
