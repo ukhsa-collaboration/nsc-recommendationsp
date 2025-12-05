@@ -10,8 +10,9 @@ from urllib.parse import urlsplit
 logger = logging.getLogger('django.middleware.csrf')
 
 class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
-    def _origin_verified(self, request, origin):
+    def _origin_verified(self, request):
         logger.debug(f"origin verified called")
+        origin = request.META.get("HTTP_ORIGIN")
         verified = super()._origin_verified(request, origin)
         if verified:
             logger.debug(f"CSRF Origin VERIFIED: {origin} is a trusted origin.")
