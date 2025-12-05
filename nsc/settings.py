@@ -4,6 +4,8 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
+from django.middleware.csrf import CsrfViewMiddleware
+
 import envdir
 import sentry_sdk
 from celery.schedules import crontab
@@ -142,9 +144,6 @@ class Common(Configuration):
     # String containing ip ranges allowed to access django-admin
     DJANGO_ADMIN_IP_RANGES = get_env("DJANGO_ADMIN_IP_RANGES", "")
 
-    # Use custom CSRF failure view to log CSRF failures centrally
-    CSRF_FAILURE_VIEW = "nsc.review.views.csrf_failure"
-
     INSTALLED_APPS = [
         "django.contrib.admin",
         "django.contrib.auth",
@@ -186,6 +185,7 @@ class Common(Configuration):
         "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
         "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
+        "nsc.middleware.VerboseCsrfViewMiddleware"
     ]
 
     ROOT_URLCONF = "nsc.urls"
@@ -351,6 +351,11 @@ class Common(Configuration):
                 "level": "DEBUG",
                 "propagate": False,
             },
+            "django.middleware.csrf": {
+                "handlers": ["console"],
+                "level": "DEBUG",
+                "propagate": True,
+        },
         },
     }
 
