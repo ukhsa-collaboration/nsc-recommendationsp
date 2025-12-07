@@ -32,6 +32,8 @@ class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
             logger.warning(
                 f"CSRF Origin FAILED: Origin '{origin}' does not match any trusted origins or allowed hosts. "
                 f"Trusted origins: {trusted_origins}. Allowed hosts: {allowed_hosts}."
+                f"Parsed origins: {parsed_origins}. Is matched: {is_matched}."
+                f"Parsed origins scheme: {parsed_origin_scheme}. Parsed origins netloc: {parsed_origin_netloc}."
             )
         return verified
 
