@@ -13,7 +13,7 @@ class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
     def _origin_verified(self, request):
         logger.debug(f"origin verified called")
         origin = request.META.get("HTTP_ORIGIN")
-        verified = super()._origin_verified(request, origin)
+        verified = super()._origin_verified(request)
         if verified:
             logger.debug(f"CSRF Origin VERIFIED: {origin} is a trusted origin.")
         else:
