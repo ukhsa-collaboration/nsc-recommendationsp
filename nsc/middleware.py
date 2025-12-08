@@ -13,6 +13,23 @@ class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
     def _origin_verified(self, request):
         logger.debug(f"origin verified called")
         origin = request.META.get("HTTP_ORIGIN")
+        try:
+            good_host = request.get_host()
+        except DisallowedHost:
+            good_host = "<DisallowedHost>"
+        good_scheme = "https" if request.is_secure() else "http"
+        good_origin = f"{good_scheme}://{good_host}"
+        
+        logger.warning(
+            "CSRF ORIGIN DEBUG: "
+            f"request_origin={origin!r} "
+            f"good_origin={good_origin!r} "
+            f"is_secure={request.is_secure()} "
+            f"HTTP_HOST={request.META.get('HTTP_HOST')!r} "
+            f"X_FORWARDED_HOST={request.META.get('HTTP_X_FORWARDED_HOST')!r} "
+            f"X_FORWARDED_PROTO={request.META.get('HTTP_X_FORWARDED_PROTO')!r}"
+        )
+        
         verified = super()._origin_verified(request)
         if verified:
             logger.debug(f"CSRF Origin VERIFIED: {origin} is a trusted origin.")
