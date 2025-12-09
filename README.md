@@ -136,7 +136,7 @@ docker exec -it nsc-recommendationsp-django-1 bash
 ./manage.py migrate
 ```
 
-### 10. Create a Superuser
+### 10. Create a Superuser 
 
 ```bash
 docker exec -it nsc-recommendationsp-django-1 bash
@@ -145,7 +145,8 @@ docker exec -it nsc-recommendationsp-django-1 bash
 
 Follow the prompts to set up admin credentials.
 
-You can now use these to log into the admin portal http:localhost/8000/django-admin
+You can now use these to log into the admin portal http:localhost/8000/django-admin.
+
 
 ### 11. Running Tests & Linting
 
