@@ -20,16 +20,21 @@ class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
         good_scheme = "https" if request.is_secure() else "http"
         good_origin = f"{good_scheme}://{good_host}"
         
-        logger.warning(
-            "CSRF ORIGIN DEBUG: "
-            f"request_origin={origin!r} "
-            f"good_origin={good_origin!r} "
-            f"is_secure={request.is_secure()} "
-            f"HTTP_HOST={request.META.get('HTTP_HOST')!r} "
-            f"X_FORWARDED_HOST={request.META.get('HTTP_X_FORWARDED_HOST')!r} "
-            f"X_FORWARDED_FOR={request.META.get('HTTP_X_FORWARDED_FOR')!r} "
-            f"X_FORWARDED_PROTO={request.META.get('HTTP_X_FORWARDED_PROTO')!r}"
-        )
+        keys = [
+            "HTTP_HOST",
+            "HTTP_X_FORWARDED_PROTO",
+            "HTTP_X_FORWARDED_FOR",
+            "HTTP_FORWARDED",
+            "HTTP_X_FORWARDED_HOST",
+            "SERVER_NAME",
+            "SERVER_PORT",
+            "REMOTE_ADDR",
+            "wsgi.url_scheme",
+            "REQUEST_SCHEME",
+        ]
+
+        for k in keys:
+            logger.warning(f"{k}: {request.META.get(k)}")
         
         verified = super()._origin_verified(request)
         if verified:
