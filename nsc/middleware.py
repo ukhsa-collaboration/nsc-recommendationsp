@@ -27,6 +27,7 @@ class VerboseCsrfViewMiddleware(CsrfViewMiddleware):
             f"is_secure={request.is_secure()} "
             f"HTTP_HOST={request.META.get('HTTP_HOST')!r} "
             f"X_FORWARDED_HOST={request.META.get('HTTP_X_FORWARDED_HOST')!r} "
+            f"X_FORWARDED_FOR={request.META.get('HTTP_X_FORWARDED_FOR')!r} "
             f"X_FORWARDED_PROTO={request.META.get('HTTP_X_FORWARDED_PROTO')!r}"
         )
         
