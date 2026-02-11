@@ -136,7 +136,7 @@ coverage[toml]==6.2
     # via
     #   -r requirements.in
     #   pytest-cov
-cryptography==44.0.1
+cryptography==46.0.5
     # via
     #   -r requirements.in
     #   authlib
