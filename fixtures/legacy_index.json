@@ -40,9 +40,19 @@
         "recommendation": true
     },
     {
-        "name": "Anaemia",
-        "slug": "anaemia",
-        "url": "https://view-health-screening-recommendations.service.gov.uk/anaemia/",
+        "name": "Iron deficiency anaemia (pregnancy)",
+        "slug": "iron-deficiency-anaemia-pregnancy",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/iron-deficiency-anaemia-pregnancy/",
+        "ages": [
+            "antenatal"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "Antenatal and postnatal mental health",
+        "slug": "antenatal-and-postnatal-mental-health",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/antenatal-and-postnatal-mental-health/",
         "ages": [
             "antenatal"
         ],
@@ -425,7 +435,8 @@
         "slug": "fragile-x",
         "url": "https://view-health-screening-recommendations.service.gov.uk/fragile-x/",
         "ages": [
-            "antenatal"
+            "antenatal",
+            "newborn"
         ],
         "is_active": true,
         "recommendation": true
@@ -574,6 +585,16 @@
         "name": "Hepatitis C (pregnancy)",
         "slug": "hepatitis-c-pregnancy",
         "url": "https://view-health-screening-recommendations.service.gov.uk/hepatitis-c-pregnancy/",
+        "ages": [
+            "antenatal"
+        ],
+        "is_active": true,
+        "recommendation": true
+    },
+    {
+        "name": "HTLV",
+        "slug": "htlv",
+        "url": "https://view-health-screening-recommendations.service.gov.uk/htlv/",
         "ages": [
             "antenatal"
         ],
@@ -785,17 +806,8 @@
         "slug": "partner-violence",
         "url": "https://view-health-screening-recommendations.service.gov.uk/partner-violence/",
         "ages": [
+            "antenatal",
             "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Partner violence (pregnancy)",
-        "slug": "partner-violence-pregnancy",
-        "url": "https://view-health-screening-recommendations.service.gov.uk/partner-violence-pregnancy/",
-        "ages": [
-            "antenatal"
         ],
         "is_active": true,
         "recommendation": true
@@ -841,16 +853,6 @@
         "recommendation": true
     },
     {
-        "name": "Postnatal depression",
-        "slug": "postnatal-depression",
-        "url": "https://view-health-screening-recommendations.service.gov.uk/postnatal-depression/",
-        "ages": [
-            "antenatal"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
         "name": "Pre-eclampsia",
         "slug": "pre-eclampsia",
         "url": "https://view-health-screening-recommendations.service.gov.uk/pre-eclampsia/",
@@ -876,16 +878,6 @@
         "url": "https://view-health-screening-recommendations.service.gov.uk/prostate-cancer/",
         "ages": [
             "adult"
-        ],
-        "is_active": true,
-        "recommendation": true
-    },
-    {
-        "name": "Psychiatric illness",
-        "slug": "psychiatric-illness",
-        "url": "https://view-health-screening-recommendations.service.gov.uk/psychiatric-illness/",
-        "ages": [
-            "antenatal"
         ],
         "is_active": true,
         "recommendation": true
