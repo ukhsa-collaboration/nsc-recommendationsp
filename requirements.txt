@@ -190,7 +190,7 @@ django-redis==5.2.0
     # via -r requirements.in
 django-ratelimit==4.1.0
     # via -r requirements.in
-django-simple-history==3.0.0
+django-simple-history==3.7.0
     # via -r requirements.in
 django-storages==1.14.2
     # via -r requirements.in

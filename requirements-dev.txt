@@ -242,7 +242,7 @@ django-ratelimit==4.1.0
     # via
    
     #   -r requirements-dev.in
-django-simple-history==3.0.0
+django-simple-history==3.7.0
     # via
    
     #   -r requirements-dev.in
