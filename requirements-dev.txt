@@ -33,8 +33,6 @@ beautifulsoup4==4.11.1
     #   webtest
 billiard==4.2.4
     # via celery
-black==24.3.0
-    # via -r requirements-dev.in
 bleach==4.1.0
     # via -r requirements.in
 bleach-whitelist==0.0.11
@@ -69,7 +67,6 @@ clamd==1.0.2
     # via -r requirements.in
 click==8.3.1
     # via
-    #   black
     #   celery
     #   click-didyoumean
     #   click-plugins
@@ -162,8 +159,6 @@ filelock==3.25.0
     # via
     #   cachecontrol
     #   safety
-flake8==6.0.0
-    # via -r requirements-dev.in
 freezegun==1.2.1
     # via -r requirements-dev.in
 gunicorn==23.0.0
@@ -197,8 +192,6 @@ ipython==8.10.0
     # via
     #   -r requirements-dev.in
     #   ipdb
-isort==5.10.1
-    # via -r requirements-dev.in
 jedi==0.19.2
     # via ipython
 jinja2==3.1.6
@@ -225,16 +218,12 @@ marshmallow==4.2.2
     # via safety
 matplotlib-inline==0.2.1
     # via ipython
-mccabe==0.7.0
-    # via flake8
 mdurl==0.1.2
     # via markdown-it-py
 model-bakery==1.20.5
     # via -r requirements-dev.in
 msgpack==1.1.2
     # via cachecontrol
-mypy-extensions==1.1.0
-    # via black
 nltk==3.9.3
     # via
     #   -r requirements-dev.in
@@ -245,7 +234,6 @@ packageurl-python==0.17.6
     # via cyclonedx-python-lib
 packaging==26.0
     # via
-    #   black
     #   bleach
     #   build
     #   dparse
@@ -264,8 +252,6 @@ parso==0.8.6
     # via jedi
 pathlib2==2.3.7.post1
     # via fabric
-pathspec==1.0.4
-    # via black
 pexpect==4.9.0
     # via ipython
 pickleshare==0.7.5
@@ -283,9 +269,7 @@ pip-requirements-parser==32.0.1
 pip-tools==7.4.1
     # via -r requirements-dev.in
 platformdirs==4.9.2
-    # via
-    #   black
-    #   pip-audit
+    # via pip-audit
 pluggy==1.6.0
     # via pytest
 prompt-toolkit==3.0.52
@@ -300,8 +284,6 @@ pure-eval==0.2.3
     # via stack-data
 py-serializable==2.1.0
     # via cyclonedx-python-lib
-pycodestyle==2.10.0
-    # via flake8
 pycparser==3.0
     # via cffi
 pydantic==2.12.5
@@ -310,8 +292,6 @@ pydantic==2.12.5
     #   safety-schemas
 pydantic-core==2.41.5
     # via pydantic
-pyflakes==3.0.1
-    # via flake8
 pygments==2.19.2
     # via
     #   doc8

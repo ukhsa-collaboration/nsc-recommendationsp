@@ -1,0 +1,25 @@
+line-length = 88
+target-version = "py312"
+
+exclude = [
+    ".git",
+    "*/migrations/*",
+    "*/static/CACHE/*",
+    "docs",
+    "node_modules",
+]
+
+[lint]
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[lint.isort]
+known-third-party = ["django"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+lines-after-imports = 2
+force-sort-within-sections = true
+
+[format]
+quote-style = "double"
