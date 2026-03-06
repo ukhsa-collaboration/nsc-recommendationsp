@@ -9,6 +9,7 @@ __pycache__/
 # Ignore dot files except those required for the project
 .*
 !.yarn
+.yarn/install-state.gz
 !.gitignore
 !.gitkeep
 !.nvmrc

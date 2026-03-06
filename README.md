@@ -82,16 +82,22 @@ This is only required for Local Dev! The staging and production databases are al
 - All policy migrations starting at (and including) `nsc/policy/migrations/0008_auto_20251030_1655.py`
 
 ### 6. Docker-Based Local Environment
-Ensure that you run this command in a separate terminal to the virutal environment - we want the container to be outside of the virtual environment
+⚠️ Ensure that you run this command in a separate terminal to the virutal environment (in the root directory and _NOT_ inside the `venv` directory) - we want the container to be outside of the virtual environment ⚠️
 
 ```bash
 yarn docker
 ```
 
-This starts all necessary services using Docker Compose.
+This starts all necessary services using Docker Compose. <br>
+You can confirm that these services are up and running by going into `Docker Desktop` and ensuring the `nsc-recommendationsp` is up and running with the following present: 
+- `clamav-1`
+- `'django-1`
+- `'frontend-1`
+- `postgres-1`
+- `redis-1`
 
 ### 7. Frontend Setup
-Ensure you run these inside your virtual environment (venv)
+While the container is up and running by completing `Step #6` above ^, open a new terminal tab and `cd` into `venv` and then run: 
 
 ✅  `yarn install`
 
