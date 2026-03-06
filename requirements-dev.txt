@@ -357,7 +357,7 @@ safety==3.7.0
     # via -r requirements-dev.in
 safety-schemas==0.0.16
     # via safety
-sentry-sdk==1.45.1
+sentry-sdk==2.54.0
     # via -r requirements.in
 setuptools==82.0.0
     # via

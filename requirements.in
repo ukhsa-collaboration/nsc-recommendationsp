@@ -27,7 +27,7 @@ celery>=5.3
 Authlib==1.6.9
 
 # Monitoring
-sentry-sdk==1.45.1
+sentry-sdk==2.54.0
 
 # Config
 envdir==1.0.1
