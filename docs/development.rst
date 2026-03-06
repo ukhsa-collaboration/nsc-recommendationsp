@@ -2,7 +2,7 @@
 Development
 ===========
 
-This project uses Python 3.6, and specifies its node and yarn versions in ``.nvmrc`` and
+This project uses Python 3.12, and specifies its node and yarn versions in ``.nvmrc`` and
 ``.yvmrc`` respectively.
 
 These commands assume you have checked out the project and are in the root of the
