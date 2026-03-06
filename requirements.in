@@ -36,7 +36,7 @@ envdir==1.0.1
 beautifulsoup4==4.11.1
 bleach==4.1.0
 bleach-whitelist==0.0.11
-markdown==3.8
+markdown==3.10.2
 
 # Notifications
 notifications-python-client==10.0.1
