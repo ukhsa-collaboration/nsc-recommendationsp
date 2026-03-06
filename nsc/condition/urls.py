@@ -21,6 +21,14 @@ urlpatterns = [
             permanent=True,
         ),
     ),
+    path(
+        r"anaemia/",
+        lambda request: redirect(
+            "condition:detail",
+            slug="iron-deficiency-anaemia-pregnancy",
+            permanent=True,
+        ),
+    ),
     path(r"", ConditionList.as_view(), name="list"),
     path(r"<slug:slug>/", ConditionDetail.as_view(), name="detail"),
     path(r"<slug:slug>/consultation/", ConsultationView.as_view(), name="consultation"),
