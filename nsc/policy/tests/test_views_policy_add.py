@@ -2,8 +2,8 @@ import datetime
 
 from django.urls import reverse
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_today

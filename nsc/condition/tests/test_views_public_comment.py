@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.urls import reverse
 
-import pytest
 from bs4 import BeautifulSoup
+import pytest
 
 from nsc.notify.models import Email
 from nsc.subscription.models import Subscription

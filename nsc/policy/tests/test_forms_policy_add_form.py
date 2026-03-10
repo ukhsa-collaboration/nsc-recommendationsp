@@ -1,5 +1,5 @@
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.utils.datetime import get_today
 

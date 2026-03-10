@@ -4,10 +4,10 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-import envdir
-import sentry_sdk
 from celery.schedules import crontab
 from configurations import Configuration
+import envdir
+import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration

@@ -1,9 +1,9 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
-import pytest
 from bs4 import BeautifulSoup
 from model_bakery import baker
+import pytest
 
 from nsc.review.models import Review
 

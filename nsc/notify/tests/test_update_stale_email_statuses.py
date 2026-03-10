@@ -3,8 +3,8 @@ from datetime import timedelta
 from django.conf import settings
 from django.utils.timezone import now
 
-import pytest
 from freezegun import freeze_time
+import pytest
 
 from nsc.notify.models import Email
 from nsc.notify.tasks import update_stale_email_statuses

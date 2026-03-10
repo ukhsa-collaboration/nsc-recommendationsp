@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-import pytest
 from bs4 import BeautifulSoup
+import pytest
 
 
 # All tests require the database

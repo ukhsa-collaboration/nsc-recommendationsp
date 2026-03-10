@@ -16,10 +16,12 @@ ignore = [
 ]
 
 [lint.isort]
-known-third-party = ["django"]
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+section-order = ["future", "standard-library", "django", "third-party", "first-party", "local-folder"]
 lines-after-imports = 2
 force-sort-within-sections = true
+
+[lint.isort.sections]
+django = ["django"]
 
 [format]
 quote-style = "double"

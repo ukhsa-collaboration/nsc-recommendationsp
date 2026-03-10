@@ -1,8 +1,8 @@
 from django.core.cache import cache
 from django.urls import reverse
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from ..models import Document
 

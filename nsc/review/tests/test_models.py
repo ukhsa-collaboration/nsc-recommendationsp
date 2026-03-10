@@ -1,9 +1,9 @@
 from django.core.cache import cache
 from django.urls import reverse
 
-import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
+import pytest
 
 from nsc.document.models import Document, document_path
 from nsc.utils.datetime import from_today, get_today

@@ -1,6 +1,6 @@
-import pytest
 from dateutil.utils import today
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 from nsc.utils.markdown import convert
