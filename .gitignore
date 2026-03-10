@@ -11,8 +11,10 @@ __pycache__/
 !.yarn
 !.gitignore
 !.gitkeep
+!.github
 !.nvmrc
 !.yvmrc
+!.pre-commit-config.yaml
 
 # Development artefacts
 dev-docker-compose.yml
