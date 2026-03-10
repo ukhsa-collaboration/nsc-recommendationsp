@@ -10,7 +10,7 @@ exclude = [
 ]
 
 [lint]
-select = ["E", "F", "W", "I"]
+select = ["E", "F", "W", "I", "TID251"]
 ignore = [
     "E501",  # line too long (handled by formatter)
 ]
@@ -22,6 +22,9 @@ force-sort-within-sections = true
 
 [lint.isort.sections]
 django = ["django"]
+
+[lint.flake8-tidy-imports.banned-api]
+"distutils".msg = "distutils was removed in Python 3.12. Use stdlib alternatives."
 
 [format]
 quote-style = "double"

@@ -10,11 +10,11 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext_lazy
 
 from dateutil.relativedelta import relativedelta
-from distutils.util import strtobool
 from model_utils import Choices
 
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
+from nsc.utils.forms import strtobool
 
 from ..document.models import Document
 from ..policy.formsets import PolicySelectionFormset

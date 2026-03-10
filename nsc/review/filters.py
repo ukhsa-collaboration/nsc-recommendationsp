@@ -1,5 +1,6 @@
-from distutils.util import strtobool
 from django_filters import CharFilter, FilterSet, TypedChoiceFilter
+
+from nsc.utils.forms import strtobool
 
 from .forms import SearchForm
 
