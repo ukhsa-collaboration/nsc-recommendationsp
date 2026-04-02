@@ -80,6 +80,9 @@ def test_subscription_is_updated(django_app, make_subscription, make_policy):
                 response.request.host_url, sub.management_url
             ),
         },
+        one_click_unsubscribe_url=urljoin(
+            response.request.host_url, sub.one_click_unsubscribe_url
+        ),
     ).exists()
     assert (
         response.location
