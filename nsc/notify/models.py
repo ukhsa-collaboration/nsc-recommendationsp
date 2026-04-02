@@ -104,6 +104,7 @@ class Email(TimeStampedModel):
         default=STATUS.pending,
     )
     attempts = models.PositiveSmallIntegerField(default=0)
+    one_click_unsubscribe_url = models.URLField(default="", blank=True)
 
     objects = EmailQuerySet.as_manager()
 
