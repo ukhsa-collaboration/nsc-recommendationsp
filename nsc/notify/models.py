@@ -121,7 +121,11 @@ class Email(TimeStampedModel):
 
         logger.info(f"sending email: {self.id}")
         resp = send_email(
-            self.address, self.template_id, context=self.context, reference=str(self.id)
+            self.address,
+            self.template_id,
+            context=self.context,
+            reference=str(self.id),
+            one_click_unsubscribe_url=self.one_click_unsubscribe_url or None,
         )
 
         if resp and "errors" not in resp:

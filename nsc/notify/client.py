@@ -14,7 +14,9 @@ else:
     client = None
 
 
-def send_email(address, template, context=None, reference=None):
+def send_email(
+    address, template, context=None, reference=None, one_click_unsubscribe_url=None
+):
     logger.info(f"Sending email with reference: {reference}")
     if client is None:
         logger.warning(f"Email service not enabled - email {reference} not sent")
@@ -27,6 +29,8 @@ def send_email(address, template, context=None, reference=None):
             "personalisation": context,
             "reference": reference,
         }
+        if one_click_unsubscribe_url:
+            params["one_click_unsubscribe_url"] = one_click_unsubscribe_url
         response = client.send_email_notification(**params)
         logger.info(
             f"Successfully received response from send email with email reference: {reference}"
