@@ -2,9 +2,16 @@ from itertools import chain
 
 from django.conf import settings
 from django.db import transaction
-from django.http import Http404, HttpResponseRedirect
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseNotAllowed,
+    HttpResponseRedirect,
+)
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import generic
+from django.views.decorators.csrf import csrf_exempt
 
 from nsc.mixins.ratelimitmixin import RatelimitExceptionMixin
 
@@ -174,3 +181,16 @@ class StakeholderSubscriptionStart(generic.CreateView):
 
 class StakeholderSubscriptionComplete(generic.TemplateView):
     template_name = "subscription/stakeholder_subscription_complete.html"
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class OneClickUnsubscribe(generic.View):
+    def post(self, request, pk, token):
+        subscription = Subscription.objects.filter(pk=pk).first()
+        if subscription is None or not check_object(subscription, token):
+            raise Http404()
+        subscription.delete()
+        return HttpResponse(status=200)
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseNotAllowed(["POST"])
