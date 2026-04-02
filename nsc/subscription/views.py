@@ -2,12 +2,7 @@ from itertools import chain
 
 from django.conf import settings
 from django.db import transaction
-from django.http import (
-    Http404,
-    HttpResponse,
-    HttpResponseNotAllowed,
-    HttpResponseRedirect,
-)
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import generic
@@ -191,12 +186,11 @@ class StakeholderSubscriptionComplete(generic.TemplateView):
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OneClickUnsubscribe(generic.View):
+    http_method_names = ["post"]
+
     def post(self, request, pk, token):
         subscription = Subscription.objects.filter(pk=pk).first()
         if subscription is None or not check_object(subscription, token):
             raise Http404()
         subscription.delete()
         return HttpResponse(status=200)
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseNotAllowed(["POST"])
