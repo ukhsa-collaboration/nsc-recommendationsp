@@ -242,6 +242,9 @@ class Policy(TimeStampedModel):
                             reverse("subscription:public-start"),
                         ),
                     },
+                    one_click_unsubscribe_url=urljoin(
+                        settings.EMAIL_ROOT_DOMAIN, sub.one_click_unsubscribe_url
+                    ),
                 )
                 for sub in self.subscriptions.all().exclude(
                     email__in=existing_notification_emails

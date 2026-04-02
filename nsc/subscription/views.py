@@ -112,6 +112,9 @@ class PublicSubscriptionManage(GetObjectFromTokenMixin, generic.UpdateView):
                             )
                         )
                     },
+                    one_click_unsubscribe_url=self.request.build_absolute_uri(
+                        form.instance.one_click_unsubscribe_url
+                    ),
                 )
                 return super().form_valid(form)
         elif "delete" in form.data and self.object.id:
@@ -162,6 +165,9 @@ class PublicSubscriptionEmails(RatelimitExceptionMixin, generic.UpdateView):
                     )
                 ),
             },
+            one_click_unsubscribe_url=self.request.build_absolute_uri(
+                form.instance.one_click_unsubscribe_url
+            ),
         )
 
         return res
