@@ -12,8 +12,9 @@ import os
 import sys
 
 import boto3
-import urllib3
 from botocore.config import Config
+import urllib3
+
 
 # See deploy/backup.py for the rationale on verify=False.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

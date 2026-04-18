@@ -7,23 +7,33 @@
 #       This is handled in openshift
 #
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 USER root
 
-ENV SHELL=/bin/bash
-ENV SRC_ROOT=/opt/app-root/src/
+ENV SHELL=/bin/bash \
+    SRC_ROOT=/opt/app-root/src/ \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 
-RUN mkdir $SRC_ROOT -p
+RUN mkdir -p $SRC_ROOT
 WORKDIR $SRC_ROOT
 
-# install python dependencies
-RUN pip install -U pip
-COPY requirements.txt ${SRC_ROOT}requirements.txt
-RUN pip install --no-cache-dir -r ${SRC_ROOT}requirements.txt
+# Install uv (package manager) via pip (bootstrap only).
+RUN pip install --no-cache-dir uv==0.9.22
 
-# copy the source to the container
-COPY . ${SRC_ROOT}
+# Resolve prod dependencies from the lockfile. Cached as long as
+# pyproject.toml + uv.lock are unchanged.
+COPY pyproject.toml uv.lock $SRC_ROOT
+RUN uv sync --frozen --no-dev --no-install-project
+
+# Copy the source and finalise install (includes the project itself).
+COPY . $SRC_ROOT
+RUN uv sync --frozen --no-dev
+
+# Put the venv on PATH so entrypoint.sh / gunicorn / python resolve
+# to the .venv binaries without needing a "uv run" prefix.
+ENV PATH="${SRC_ROOT}.venv/bin:${PATH}"
 
 RUN DJANGO_CONFIGURATION=Build python manage.py collectstatic --noinput
 

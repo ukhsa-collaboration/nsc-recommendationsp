@@ -1,0 +1,134 @@
+[project]
+name = "nsc-recommendations"
+version = "0.1.0"
+description = "UK National Screening Committee Recommendations"
+requires-python = "==3.13.*"
+dependencies = [
+    # Framework
+    "Django==5.2.12",
+    "django-configurations==2.5.1",
+
+    # Django apps
+    "django-auth-adfs==1.16.0",
+    "django-extensions==4.1",
+    "django-filter==25.1",
+    "django-model-utils==5.0.0",
+    "django-ratelimit==4.1.0",
+    "django-redis==5.4.0",
+    "django-simple-history==3.11.0",
+    "django-storages[s3]==1.14.6",
+
+    # Server
+    "gunicorn==23.0.0",
+    "whitenoise==6.12.0",
+
+    # Database
+    "psycopg2-binary==2.9.10",
+    "hiredis==3.1.0",
+
+    # Task queue
+    "celery>=5.3",
+
+    # Auth
+    "Authlib==1.6.9",
+
+    # Monitoring
+    "sentry-sdk==2.54.0",
+
+    # Config
+    "envdir==1.0.1",
+
+    # HTML/Markup
+    "beautifulsoup4==4.11.1",
+    "bleach==4.1.0",
+    "bleach-whitelist==0.0.11",
+    "markdown==3.10.2",
+
+    # Notifications
+    "notifications-python-client==10.0.1",
+
+    # Virus scanning
+    "clamd==1.0.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest==8.3.5",
+    "pytest-cov==3.0.0",
+    "pytest-django==4.11.0",
+    "model-bakery==1.20.5",
+    "django-webtest==1.9.13",
+    "freezegun==1.5.3",
+    "coverage[toml]==6.2",
+
+    # Code quality
+    "ruff==0.11.7",
+    "pre-commit==4.2.0",
+
+    # Debug
+    "ipython==8.10.0",
+    "ipdb==0.13.9",
+    "django-debug-toolbar==6.2.0",
+
+    # Documentation
+    "sphinx==3.5.4",
+    "sphinx-rtd-theme==1.0.0",
+    "doc8==0.11.2",
+
+    # Deployment
+    "fabric==2.7.0",
+    "invoke==1.7.1",
+
+    # Security
+    "detect-secrets==1.5.0",
+    "pip-audit==2.9.0",
+    "safety==3.7.0",
+
+    # Scripts (one-off data import tools)
+    "html2markdown==0.1.7",
+    "nltk==3.9.3",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+exclude = [
+    ".git",
+    "*/migrations/*",
+    "*/static/CACHE/*",
+    "docs",
+    "node_modules",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "TID251"]
+ignore = [
+    "E501", # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.isort]
+section-order = ["future", "standard-library", "django", "third-party", "first-party", "local-folder"]
+lines-after-imports = 2
+force-sort-within-sections = true
+
+[tool.ruff.lint.isort.sections]
+django = ["django"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"distutils".msg = "distutils was removed in Python 3.12. Use stdlib alternatives."
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["nsc"]
+addopts = "--reuse-db --cov=nsc --cov-report=term --cov-report=html"
+DJANGO_SETTINGS_MODULE = "nsc.settings"
+DJANGO_CONFIGURATION = "Test"
+
+[tool.coverage.run]
+omit = [
+    "*/migrations/*",
+    "nsc/wsgi.py",
+]

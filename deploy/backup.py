@@ -12,18 +12,19 @@ Intended to run as a Kubernetes CronJob. Credentials come from env vars:
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 import logging
 import os
+from pathlib import Path
 import subprocess
 import sys
 import threading
-from datetime import datetime, timedelta, timezone
-from pathlib import Path
 
 import boto3
-import urllib3
 from botocore.config import Config
 from botocore.exceptions import ClientError
+import urllib3
+
 
 # Internal NooBaa endpoint uses a self-signed cert served only within the cluster.
 # Traffic is gated by the allow-openshift-storage NetworkPolicy so the path is
@@ -88,7 +89,11 @@ def main() -> None:
 
     log.info(
         "pg_dump %s@%s:%s/%s -> %s",
-        pg_user, pg_host, pg_port, pg_database, dump_path,
+        pg_user,
+        pg_host,
+        pg_port,
+        pg_database,
+        dump_path,
     )
 
     run_pg_dump(
@@ -154,7 +159,9 @@ def main() -> None:
         sys.exit(1)
 
     if remote_magic != PG_DUMP_MAGIC:
-        log.error("uploaded object magic %r != expected %r", remote_magic, PG_DUMP_MAGIC)
+        log.error(
+            "uploaded object magic %r != expected %r", remote_magic, PG_DUMP_MAGIC
+        )
         delete_key(s3, bucket, key)
         sys.exit(1)
 
@@ -174,15 +181,21 @@ def run_pg_dump(
 ) -> None:
     cmd = [
         "pg_dump",
-        "-h", pg_host,
-        "-p", pg_port,
-        "-U", pg_user,
-        "-d", pg_database,
+        "-h",
+        pg_host,
+        "-p",
+        pg_port,
+        "-U",
+        pg_user,
+        "-d",
+        pg_database,
         "-Fc",
-        "-Z", "9",
+        "-Z",
+        "9",
         "--no-owner",
         "--no-privileges",
-        "--file", str(dump_path),
+        "--file",
+        str(dump_path),
     ]
     proc_env = {**os.environ, "PGPASSWORD": pg_password}
     proc = subprocess.Popen(cmd, stderr=subprocess.PIPE, env=proc_env)
@@ -231,7 +244,8 @@ def prune_old_backups(s3, bucket: str, retention_days: int) -> None:
                     s3.delete_object(Bucket=bucket, Key=obj["Key"])
                     log.info(
                         "pruned old backup s3://%s/%s (age=%s)",
-                        bucket, obj["Key"],
+                        bucket,
+                        obj["Key"],
                         datetime.now(timezone.utc) - obj["LastModified"],
                     )
                     deleted += 1
