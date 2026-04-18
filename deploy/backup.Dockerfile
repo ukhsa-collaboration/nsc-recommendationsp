@@ -6,7 +6,9 @@ RUN python3 -m ensurepip --upgrade \
     && python3 -m pip install --no-cache-dir boto3==1.38.30
 
 COPY backup.py /usr/local/bin/backup.py
-RUN chmod 0755 /usr/local/bin/backup.py
+COPY apply_lifecycle.py /usr/local/bin/apply_lifecycle.py
+RUN chmod 0755 /usr/local/bin/backup.py /usr/local/bin/apply_lifecycle.py
 
 USER 26
+ENV PYTHONDONTWRITEBYTECODE=1
 ENTRYPOINT ["/usr/local/bin/backup.py"]
