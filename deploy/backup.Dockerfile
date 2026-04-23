@@ -9,8 +9,10 @@ COPY backup.py /usr/local/bin/backup.py
 COPY apply_lifecycle.py /usr/local/bin/apply_lifecycle.py
 COPY list_bucket.py /usr/local/bin/list_bucket.py
 COPY restore_verify.py /usr/local/bin/restore_verify.py
+COPY restore_helper.py /usr/local/bin/restore_helper.py
 RUN chmod 0755 /usr/local/bin/backup.py /usr/local/bin/apply_lifecycle.py \
-    /usr/local/bin/list_bucket.py /usr/local/bin/restore_verify.py
+    /usr/local/bin/list_bucket.py /usr/local/bin/restore_verify.py \
+    /usr/local/bin/restore_helper.py
 
 USER 26
 ENV PYTHONDONTWRITEBYTECODE=1
