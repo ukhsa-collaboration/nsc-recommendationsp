@@ -109,12 +109,50 @@ Each heading maps to a numbered script in `scripts/prod-upgrade/`. Run them in o
 
 ## Rollback
 
-*Script:* `./scripts/prod-upgrade/99-rollback.sh uknscr-production`
+*Script:* `./scripts/prod-upgrade/99-rollback.sh uknscr-production <stage>`
 
-TODO: expand after staging rehearsal on Fri. Plan A is VolumeSnapshot restore;
-Plan B is restore from the step-03 dump into a fresh PV; Plan C is pointing
-the DeploymentConfig back to the old image tag (works only if step 06's
-POSTGRESQL_UPGRADE=copy hasn't overwritten the on-disk data dir).
+The rollback strategy depends on *where* the upgrade failed. Important
+context on `POSTGRESQL_UPGRADE=copy` semantics: SCL's init script runs
+`pg_upgrade --link=false` (copy mode) so the old data dir is intact *while
+pg_upgrade runs*, but on success SCL itself does `rm -rf $PGDATA_old &&
+mv $PGDATA_new $PGDATA` and deletes the old cluster. Confirmed by reading
+`/usr/share/container-scripts/postgresql/common.sh`. So rollback paths differ
+between mid-upgrade failure and post-upgrade failure.
+
+### If 06/08/10 exits non-zero (pg_upgrade failed mid-run)
+
+SCL's error handler removes the partial new data dir (`rm -rf $PGDATA_new`).
+The old data dir is still at `$PGDATA` untouched. Recovery:
+
+1. `oc set env dc/postgresql POSTGRESQL_UPGRADE- -n uknscr-production`
+2. `oc set triggers` to remove the failed target tag and restore the source tag
+   (e.g. revert trigger to `openshift/postgresql:12-el8`)
+3. `oc rollout latest dc/postgresql -n uknscr-production`
+4. New pod comes up on source version with intact data dir. Zero data loss.
+
+### If a verify step (07/09/11) fails OR app regression discovered after rollout
+
+pg_upgrade already ran successfully so the old data dir is gone. Path:
+
+1. `./scripts/prod-upgrade/01-scale-down.sh uknscr-production` (app down again)
+2. Scale postgresql DC to 0, delete its PVC, recreate an empty PVC of the
+   same size + storage class (ArgoCD manifest or manual apply).
+3. Revert DC trigger to the source version (`openshift/postgresql:12-el8`).
+4. Scale postgresql DC to 1 -> fresh empty PG 12 pod.
+5. Restore the dump taken by 03-manual-backup.sh using the
+   `restore_helper.py` module (spin a helper pod with PGHOST=postgresql,
+   the dev namespace's postgresql secret, the prod backups bucket creds,
+   and `DUMP_KEY=<name of the step-03 dump>`).
+6. `./scripts/prod-upgrade/12-scale-up.sh uknscr-production`
+7. Verify app loads.
+
+Data loss window = 0 because 03-manual-backup.sh ran after 01-scale-down
++ 02-wait-for-quiet, so no writes happened between the backup and now.
+
+### Catastrophic PVC corruption
+
+If `05-snapshot-pv.sh` succeeded (VolumeSnapshot available), revert the
+PVC from the snapshot; otherwise fall back to the dump-restore path above.
 
 ## Known risks
 
