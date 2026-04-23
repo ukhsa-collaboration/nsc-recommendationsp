@@ -77,18 +77,22 @@ def main() -> int:
     # cross-hop diffs meaningless. A single-scan SELECT count(*) is fine
     # for uknscr-sized DBs (~3.3 MB in prod).
     print("## row counts (exact COUNT(*))")
-    print(
-        _psql(
-            env,
-            "SELECT schemaname, relname, "
-            "(xpath('/row/c/text()', query_to_xml("
-            "format('SELECT count(*) AS c FROM %I.%I', schemaname, relname), "
-            "true, false, '')))[1]::text::bigint AS rows "
-            "FROM pg_stat_user_tables "
-            "WHERE schemaname NOT IN ('pg_catalog','information_schema') "
-            "ORDER BY 1, 2;",
-        ).rstrip(),
+    tables_raw = _psql(
+        env,
+        "SELECT schemaname, relname FROM pg_stat_user_tables "
+        "WHERE schemaname NOT IN ('pg_catalog','information_schema') "
+        "ORDER BY 1, 2;",
     )
+    for line in tables_raw.splitlines():
+        if not line.strip():
+            continue
+        schema, table = line.split("\t", 1)
+        count = _psql(
+            env,
+            # quote_ident() handles mixed-case / reserved-word identifiers.
+            f'SELECT count(*) FROM "{schema}"."{table}";',
+        ).strip()
+        print(f"{schema}\t{table}\t{count}")
     print()
     print("## schema hash (sha256 of pg_dump -s)")
 
