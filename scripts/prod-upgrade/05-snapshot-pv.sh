@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 05 of the prod PG 12->15 upgrade runbook.
+# Step 05 of the prod PG 12->16 upgrade runbook.
 # Take an ODF Ceph RBD VolumeSnapshot of the postgresql PVC. Belt-and-braces alongside the S3 dump.
 # See docs/runbooks/prod-pg-upgrade.md section "05 - PV snapshot".
 #

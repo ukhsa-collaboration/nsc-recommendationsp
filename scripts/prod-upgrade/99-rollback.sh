@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 99 of the prod PG 12->15 upgrade runbook. NOT a numbered step in the happy path.
+# Step 99 of the prod PG 12->16 upgrade runbook. NOT a numbered step in the happy path.
 # Runbook-guided rollback. Invoked manually by the runner if something goes sideways.
 # See docs/runbooks/prod-pg-upgrade.md section "Rollback".
 #

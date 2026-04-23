@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 01 of the prod PG 12->15 upgrade runbook.
+# Step 01 of the prod PG 12->16 upgrade runbook.
 # Scale down celery-beat, celery-worker, and django-webpack so the DB goes quiet.
 # See docs/runbooks/prod-pg-upgrade.md section "01 - Scale down workers".
 #

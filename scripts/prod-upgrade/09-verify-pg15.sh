@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 09 of the prod PG 12->15 upgrade runbook.
+# Step 09 of the prod PG 12->16 upgrade runbook.
 # Verify the PG 15 upgrade. Same shape as step 07 but at the final target version.
 # See docs/runbooks/prod-pg-upgrade.md section "09 - Verify PG 15".
 #

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 08 of the prod PG 12->15 upgrade runbook.
+# Step 08 of the prod PG 12->16 upgrade runbook.
 # Second hop: patch DeploymentConfig image tag 13->15. Same pattern as step 06.
 # See docs/runbooks/prod-pg-upgrade.md section "08 - Upgrade 13 -> 15".
 #

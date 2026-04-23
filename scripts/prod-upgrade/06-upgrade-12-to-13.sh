@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 06 of the prod PG 12->15 upgrade runbook.
+# Step 06 of the prod PG 12->16 upgrade runbook.
 # Patch the postgresql DeploymentConfig image tag 12->13. SCL image auto-upgrades
 # via POSTGRESQL_UPGRADE=copy. Wait for new pod Ready.
 # See docs/runbooks/prod-pg-upgrade.md section "06 - Upgrade 12 -> 13".

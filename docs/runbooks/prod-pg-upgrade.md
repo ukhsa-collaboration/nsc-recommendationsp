@@ -1,4 +1,4 @@
-# Prod PG 12 -> 15 Upgrade Runbook
+# Prod PG 12 -> 16 Upgrade Runbook
 
 **Target date:** 2026-04-30 (contingent on Fri 2026-04-24 staging rehearsal)
 **Author:** Devin Barry
@@ -81,15 +81,29 @@ Each heading maps to a numbered script in `scripts/prod-upgrade/`. Run them in o
 
 ### 09 - Verify PG 15
 
-*Purpose:* Same as step 07 but at the final version.
+*Purpose:* Same as step 07 but at an intermediate version.
 *Script:* `./scripts/prod-upgrade/09-verify-pg15.sh uknscr-production`
 *Proceed if:* TODO
 *Stop if:* TODO
 
-### 10 - Scale back up
+### 10 - Upgrade 15 -> 16
 
-*Purpose:* django-webpack, celery-worker, celery-beat back to replica counts. Maintenance page off.
-*Script:* `./scripts/prod-upgrade/10-scale-up.sh uknscr-production`
+*Purpose:* Final hop to PG 16 (max EOL distance). Same pattern as step 06.
+*Script:* `./scripts/prod-upgrade/10-upgrade-15-to-16.sh uknscr-production`
+*Proceed if:* TODO
+*Stop if:* TODO
+
+### 11 - Verify PG 16
+
+*Purpose:* Same as step 07 but at the final version.
+*Script:* `./scripts/prod-upgrade/11-verify-pg16.sh uknscr-production`
+*Proceed if:* TODO
+*Stop if:* TODO
+
+### 12 - Scale back up
+
+*Purpose:* django-webpack, celery-worker, celery-beat back to replica counts.
+*Script:* `./scripts/prod-upgrade/12-scale-up.sh uknscr-production`
 *Proceed if:* TODO
 *Stop if:* TODO
 

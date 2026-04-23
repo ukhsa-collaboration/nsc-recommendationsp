@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 04 of the prod PG 12->15 upgrade runbook.
+# Step 04 of the prod PG 12->16 upgrade runbook.
 # Restore the just-taken dump into a scratch namespace + ephemeral PG pod. Prove the backup is usable.
 # See docs/runbooks/prod-pg-upgrade.md section "04 - Restore drill".
 #

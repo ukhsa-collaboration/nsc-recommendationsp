@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 07 of the prod PG 12->15 upgrade runbook.
+# Step 07 of the prod PG 12->16 upgrade runbook.
 # Verify the PG 13 upgrade: row counts match pre-upgrade, connection check, log grep for
 # the pg_upgrade-complete line.
 # See docs/runbooks/prod-pg-upgrade.md section "07 - Verify PG 13".

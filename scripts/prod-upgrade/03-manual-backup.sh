@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 03 of the prod PG 12->15 upgrade runbook.
+# Step 03 of the prod PG 12->16 upgrade runbook.
 # Trigger a manual backup NOW (fresh, known-quiet dump). Not relying on the 02:30 UTC daily run.
 # See docs/runbooks/prod-pg-upgrade.md section "03 - Take pre-upgrade backup".
 #

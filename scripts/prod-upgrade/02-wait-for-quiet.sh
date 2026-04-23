@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Step 02 of the prod PG 12->15 upgrade runbook.
+# Step 02 of the prod PG 12->16 upgrade runbook.
 # Poll pg_stat_activity until no active non-idle connections remain.
 # See docs/runbooks/prod-pg-upgrade.md section "02 - Wait for DB to quiesce".
 #
