@@ -139,17 +139,33 @@ def main() -> int:
         "--if-exists",
         "--no-owner",
         "--no-acl",
+        "--no-comments",
         str(local_path),
     ]
     log.info("pg_restore -> %s@%s:%s/%s", pg_user, pg_host, pg_port, pg_database)
     proc = subprocess.run(cmd, env=env, capture_output=True)
-    if proc.returncode != 0:
+
+    # SCL images give us a non-superuser role. pg_dump captures DROP/COMMENT
+    # statements for system-owned extensions (plpgsql) that only the postgres
+    # superuser can execute; pg_restore reports these as errors but the data
+    # and schema still restore correctly. Treat them as benign warnings.
+    benign = (b"must be owner of extension plpgsql",)
+    stderr_bytes = proc.stderr
+    err_lines = [ln for ln in stderr_bytes.split(b"\n") if b"error:" in ln.lower()]
+    fatal_lines = [ln for ln in err_lines if not any(p in ln for p in benign)]
+
+    if proc.returncode != 0 and fatal_lines:
         log.error(
-            "pg_restore exited %d:\n%s",
+            "pg_restore exited %d with fatal errors:\n%s",
             proc.returncode,
-            proc.stderr.decode(errors="replace"),
+            stderr_bytes.decode(errors="replace"),
         )
         return 1
+    if proc.returncode != 0:
+        log.warning(
+            "pg_restore reported %d benign plpgsql-ownership error(s); continuing",
+            len(err_lines),
+        )
 
     log.info("restore complete from s3://%s/%s (%d bytes)", bucket, key, size)
     return 0
