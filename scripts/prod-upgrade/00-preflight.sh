@@ -1,15 +1,91 @@
 #!/usr/bin/env bash
-# Step 00 of the prod PG 12->15 upgrade runbook.
-# Preflight: verify cluster, branch, and image are in the expected state before starting.
+# Step 00 of the prod PG 12->16 upgrade runbook.
+# Preflight: read the current state of the target namespace and snapshot
+# row counts + schema hash so later verify steps have a baseline to diff against.
 # See docs/runbooks/prod-pg-upgrade.md section "00 - Preflight".
 #
-# Usage: scripts/prod-upgrade/00-preflight.sh <namespace>
+# Usage: scripts/prod-upgrade/00-preflight.sh [namespace]
+#   namespace defaults to uknscr-development. uknscr-production prompts for yes.
 #
-# Requires: oc logged in, view access in the namespace.
-# Prereqs:  none (this is the first step).
-# Outputs:  exit 0 if safe to proceed; exit non-zero with diagnostic if not.
+# Outputs: writes /tmp/uknscr-preflight-<ns>-<timestamp>.txt with a row-count
+# snapshot + schema hash for 07-verify-pg13.sh / 09-verify-pg15.sh to read.
 
 set -euo pipefail
 
-echo "TODO: implement this step" >&2
-exit 1
+NAMESPACE="${1:-uknscr-development}"
+
+if [[ "$NAMESPACE" == "uknscr-production" ]]; then
+    read -rp "Preflight against PRODUCTION. Type 'yes' to continue: " confirm
+    [[ "$confirm" == "yes" ]] || { echo "aborted" >&2; exit 1; }
+fi
+
+fail() { echo "FAIL: $*" >&2; exit 1; }
+
+echo "== Preflight: $NAMESPACE =="
+
+oc get ns "$NAMESPACE" >/dev/null 2>&1 || fail "namespace $NAMESPACE not accessible"
+
+POD=$(oc get pod -n "$NAMESPACE" -l deploymentconfig=postgresql \
+    -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}' | awk '{print $1}')
+[[ -n "$POD" ]] || fail "no Running postgresql pod in $NAMESPACE"
+
+IMAGE=$(oc get dc postgresql -n "$NAMESPACE" \
+    -o jsonpath='{.spec.template.spec.containers[0].image}')
+TRIGGER_COUNT=$(oc get dc postgresql -n "$NAMESPACE" \
+    -o jsonpath='{.spec.triggers[?(@.type=="ImageChange")].type}' | wc -w | tr -d ' ')
+
+PGVERSION=$(oc exec -n "$NAMESPACE" "$POD" -- bash -c \
+    'psql -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -tAc "SHOW server_version;"' 2>/dev/null) \
+    || fail "psql connection failed inside pod $POD"
+DBSIZE=$(oc exec -n "$NAMESPACE" "$POD" -- bash -c \
+    'psql -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -tAc \
+    "SELECT pg_size_pretty(pg_database_size(current_database()));"')
+
+PVC_LINE=$(oc exec -n "$NAMESPACE" "$POD" -- df -hP /var/lib/pgsql/data | tail -1)
+PVC_USED_PCT=$(echo "$PVC_LINE" | awk '{sub("%","",$5); print $5}')
+PVC_AVAIL=$(echo "$PVC_LINE" | awk '{print $4}')
+(( PVC_USED_PCT < 50 )) || fail "PVC is ${PVC_USED_PCT}% full; upgrade=copy needs ~2x current DB size free"
+
+# Snapshot row counts + schema hash for later verify diffs
+STAMP=$(date -u +%Y%m%d-%H%M%S)
+SNAPSHOT="/tmp/uknscr-preflight-${NAMESPACE}-${STAMP}.txt"
+{
+    echo "# preflight snapshot"
+    echo "namespace=$NAMESPACE"
+    echo "timestamp=$STAMP"
+    echo "pod=$POD"
+    echo "image=$IMAGE"
+    echo "dc_trigger_count=$TRIGGER_COUNT"
+    echo "pg_version=$PGVERSION"
+    echo "db_size=$DBSIZE"
+    echo "pvc_used_pct=$PVC_USED_PCT"
+    echo "pvc_avail=$PVC_AVAIL"
+    echo ""
+    echo "## row counts (pg_stat_user_tables)"
+    oc exec -n "$NAMESPACE" "$POD" -- bash -c \
+        'psql -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -tAF $'"'"'\t'"'"' \
+        -c "SELECT schemaname, relname, n_live_tup FROM pg_stat_user_tables ORDER BY 1,2;"'
+    echo ""
+    echo "## schema hash (sha256 of pg_dump -s)"
+    oc exec -n "$NAMESPACE" "$POD" -- bash -c \
+        'pg_dump -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -s --no-owner --no-acl 2>/dev/null | sha256sum'
+} > "$SNAPSHOT"
+
+echo "pod:              $POD"
+echo "image:            $IMAGE"
+echo "pg version:       $PGVERSION"
+echo "db size:          $DBSIZE"
+echo "pvc usage:        ${PVC_USED_PCT}% used, $PVC_AVAIL free"
+echo "dc img triggers:  $TRIGGER_COUNT  (upgrade scripts will replace these with a single target-version trigger)"
+echo "snapshot:         $SNAPSHOT"
+
+# Check backup freshness (best-effort; warn only)
+LAST_BACKUP=$(oc get cronjob postgresql-backup -n "$NAMESPACE" \
+    -o jsonpath='{.status.lastSuccessfulTime}' 2>/dev/null || echo "")
+if [[ -n "$LAST_BACKUP" ]]; then
+    echo "last backup:      $LAST_BACKUP"
+else
+    echo "last backup:      UNKNOWN (no postgresql-backup cronjob or no successful runs yet)" >&2
+fi
+
+echo "OK"
