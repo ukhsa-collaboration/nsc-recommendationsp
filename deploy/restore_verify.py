@@ -96,6 +96,11 @@ def main() -> int:
     print()
     print("## schema hash (sha256 of pg_dump -s)")
 
+    # pg_dump has a "newer server than client is unsupported" check. The
+    # postgresql-backup image ships pg_dump from its base (PG 15 today); when
+    # the target is PG 16 pg_dump refuses to run. The schema hash is only a
+    # within-version sanity signal (row counts are the real verify gate), so
+    # surface the failure as a warning, not a fatal error.
     dump = subprocess.run(
         ["pg_dump", "-s", "--no-owner", "--no-acl"],
         capture_output=True,
@@ -103,10 +108,11 @@ def main() -> int:
         check=False,
     )
     if dump.returncode != 0:
-        sys.stderr.write(dump.stderr.decode(errors="replace"))
-        return 1
-    digest = hashlib.sha256(dump.stdout).hexdigest()
-    print(f"{digest}  -")
+        first_line = dump.stderr.decode(errors="replace").splitlines()[:1]
+        print(f"unavailable  -  ({'; '.join(first_line)})")
+    else:
+        digest = hashlib.sha256(dump.stdout).hexdigest()
+        print(f"{digest}  -")
     return 0
 
 
