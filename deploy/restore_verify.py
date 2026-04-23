@@ -71,12 +71,22 @@ def main() -> int:
     version = _psql(env, "SHOW server_version;").strip()
     print(f"pg_version={version}")
     print()
-    print("## row counts (pg_stat_user_tables)")
+    # Exact COUNT(*) per user table. pg_stat_user_tables.n_live_tup is a
+    # statistic populated by ANALYZE; it reads 0 for every table right after
+    # pg_upgrade/pg_restore until autovacuum catches up, which makes
+    # cross-hop diffs meaningless. A single-scan SELECT count(*) is fine
+    # for uknscr-sized DBs (~3.3 MB in prod).
+    print("## row counts (exact COUNT(*))")
     print(
         _psql(
             env,
-            "SELECT schemaname, relname, n_live_tup "
-            "FROM pg_stat_user_tables ORDER BY 1, 2;",
+            "SELECT schemaname, relname, "
+            "(xpath('/row/c/text()', query_to_xml("
+            "format('SELECT count(*) AS c FROM %I.%I', schemaname, relname), "
+            "true, false, '')))[1]::text::bigint AS rows "
+            "FROM pg_stat_user_tables "
+            "WHERE schemaname NOT IN ('pg_catalog','information_schema') "
+            "ORDER BY 1, 2;",
         ).rstrip(),
     )
     print()
