@@ -1,4 +1,4 @@
-FROM quay.io/sclorg/postgresql-15-c9s
+FROM quay.io/sclorg/postgresql-16-c9s
 
 USER 0
 RUN python3 -m ensurepip --upgrade \
