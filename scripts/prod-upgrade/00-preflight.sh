@@ -34,21 +34,48 @@ IMAGE=$(oc get dc postgresql -n "$NAMESPACE" \
 TRIGGER_COUNT=$(oc get dc postgresql -n "$NAMESPACE" \
     -o jsonpath='{.spec.triggers[?(@.type=="ImageChange")].type}' | wc -w | tr -d ' ')
 
-PGVERSION=$(oc exec -n "$NAMESPACE" "$POD" -- bash -c \
-    'psql -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -tAc "SHOW server_version;"' 2>/dev/null) \
-    || fail "psql connection failed inside pod $POD"
 DBSIZE=$(oc exec -n "$NAMESPACE" "$POD" -- bash -c \
     'psql -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -tAc \
-    "SELECT pg_size_pretty(pg_database_size(current_database()));"')
+    "SELECT pg_size_pretty(pg_database_size(current_database()));"' 2>/dev/null) \
+    || fail "psql connection failed inside pod $POD"
 
 PVC_LINE=$(oc exec -n "$NAMESPACE" "$POD" -- df -hP /var/lib/pgsql/data | tail -1)
 PVC_USED_PCT=$(echo "$PVC_LINE" | awk '{sub("%","",$5); print $5}')
 PVC_AVAIL=$(echo "$PVC_LINE" | awk '{print $4}')
 (( PVC_USED_PCT < 50 )) || fail "PVC is ${PVC_USED_PCT}% full; upgrade=copy needs ~2x current DB size free"
 
-# Snapshot row counts + schema hash for later verify diffs
+# Snapshot row counts + schema hash for later verify diffs. We run
+# restore_verify.py via a side pod so the baseline format (exact COUNT(*))
+# matches what 07/09/11 emit. n_live_tup from pg_stat_user_tables would be
+# both stale (autovacuum-driven) on the source and zero post-pg_upgrade,
+# making cross-hop diffs meaningless.
+PGUSER=$(oc get secret postgresql -n "$NAMESPACE" -o jsonpath='{.data.database-user}' | base64 -d)
+PGPASSWORD=$(oc get secret postgresql -n "$NAMESPACE" -o jsonpath='{.data.database-password}' | base64 -d)
+PGDATABASE=$(oc get secret postgresql -n "$NAMESPACE" -o jsonpath='{.data.database-name}' | base64 -d)
+[[ -n "$PGUSER" && -n "$PGPASSWORD" && -n "$PGDATABASE" ]] \
+    || fail "could not read postgresql secret in $NAMESPACE"
+
+VERIFY_IMAGE="image-registry.openshift-image-registry.svc:5000/uknscr-build/postgresql-backup:latest"
+
 STAMP=$(date -u +%Y%m%d-%H%M%S)
 SNAPSHOT="/tmp/uknscr-preflight-${NAMESPACE}-${STAMP}.txt"
+VERIFY_OUT=$(mktemp)
+trap 'rm -f "$VERIFY_OUT"' EXIT
+
+oc run "preflight-${STAMP}" -n "$NAMESPACE" \
+    --rm -i --restart=Never --quiet \
+    --image="$VERIFY_IMAGE" \
+    --env="PGHOST=postgresql" \
+    --env="PGUSER=$PGUSER" \
+    --env="PGPASSWORD=$PGPASSWORD" \
+    --env="PGDATABASE=$PGDATABASE" \
+    --command -- python3 /usr/local/bin/restore_verify.py \
+    > "$VERIFY_OUT" 2>&1 \
+    || { cat "$VERIFY_OUT" >&2; fail "restore_verify failed"; }
+
+PGVERSION=$(grep '^pg_version=' "$VERIFY_OUT" | cut -d= -f2)
+[[ -n "$PGVERSION" ]] || { cat "$VERIFY_OUT" >&2; fail "could not parse pg_version from restore_verify output"; }
+
 {
     echo "# preflight snapshot"
     echo "namespace=$NAMESPACE"
@@ -56,19 +83,11 @@ SNAPSHOT="/tmp/uknscr-preflight-${NAMESPACE}-${STAMP}.txt"
     echo "pod=$POD"
     echo "image=$IMAGE"
     echo "dc_trigger_count=$TRIGGER_COUNT"
-    echo "pg_version=$PGVERSION"
     echo "db_size=$DBSIZE"
     echo "pvc_used_pct=$PVC_USED_PCT"
     echo "pvc_avail=$PVC_AVAIL"
     echo ""
-    echo "## row counts (pg_stat_user_tables)"
-    oc exec -n "$NAMESPACE" "$POD" -- bash -c \
-        'psql -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -tAF $'"'"'\t'"'"' \
-        -c "SELECT schemaname, relname, n_live_tup FROM pg_stat_user_tables ORDER BY 1,2;"'
-    echo ""
-    echo "## schema hash (sha256 of pg_dump -s)"
-    oc exec -n "$NAMESPACE" "$POD" -- bash -c \
-        'pg_dump -U "$POSTGRESQL_USER" -d "$POSTGRESQL_DATABASE" -s --no-owner --no-acl 2>/dev/null | sha256sum'
+    cat "$VERIFY_OUT"
 } > "$SNAPSHOT"
 
 echo "pod:              $POD"
