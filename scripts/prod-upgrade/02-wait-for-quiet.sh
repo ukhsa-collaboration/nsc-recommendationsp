@@ -38,8 +38,7 @@ while :; do
         "psql -U \"\$POSTGRESQL_USER\" -d \"\$POSTGRESQL_DATABASE\" -tAc \"$SQL\"" 2>/dev/null | tr -d ' ')
     if [[ "$n" =~ ^[0-9]+$ ]] && (( n == 0 )); then
         echo "DB quiet: 0 client backends"
-        echo "OK"
-        exit 0
+        break
     fi
     now=$(date +%s)
     if (( now >= deadline )); then
@@ -52,3 +51,15 @@ while :; do
     echo "  $n client connection(s); waiting..."
     sleep 3
 done
+
+# Re-run preflight against the now-quiet DB so the verify baseline reflects
+# the exact row counts at the moment writes stopped. The step-00 baseline
+# was captured while app pods were still up and may include rows written
+# in the seconds between then and scale-down (celery-beat tasks, sessions,
+# request log writes); on prod with live traffic that drift would fail
+# 07/09/11 verify even though the upgrade preserved data.
+# Verify scripts pick the most-recent /tmp/uknscr-preflight-<ns>-*.txt, so
+# this snapshot wins.
+echo
+echo "== Re-baselining (post-quiet) for verify diffs =="
+"$(dirname "$0")/00-preflight.sh" "$NAMESPACE"
