@@ -34,6 +34,11 @@
 
 set -euo pipefail
 
+# Git Bash on Windows otherwise rewrites Unix paths in args to oc.exe
+# (e.g. /var/lib/pgsql/data -> C:/Program Files/Git/var/lib/pgsql/data),
+# breaking remote-pod commands. No effect on Mac/Linux.
+export MSYS_NO_PATHCONV=1
+
 NAMESPACE=""
 DUMP_KEY=""
 while [[ $# -gt 0 ]]; do

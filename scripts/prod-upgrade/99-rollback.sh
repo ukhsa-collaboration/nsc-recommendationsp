@@ -17,6 +17,11 @@
 
 set -euo pipefail
 
+# Git Bash on Windows otherwise rewrites Unix paths in args to oc.exe
+# (e.g. /var/lib/pgsql/data -> C:/Program Files/Git/var/lib/pgsql/data),
+# breaking remote-pod commands. No effect on Mac/Linux.
+export MSYS_NO_PATHCONV=1
+
 usage() {
     sed -n '2,/^$/p' "$0" | sed 's/^# \{0,1\}//'
     exit 2
