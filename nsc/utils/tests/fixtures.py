@@ -7,8 +7,8 @@ from django.core.cache import cache
 from django.test import override_settings
 
 import freezegun
-import pytest
 from model_bakery import baker
+import pytest
 
 
 @pytest.fixture()

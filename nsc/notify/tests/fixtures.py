@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from ..models import Email
 

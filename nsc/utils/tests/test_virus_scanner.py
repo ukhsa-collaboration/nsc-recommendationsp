@@ -13,7 +13,7 @@ def clean_file():
 @pytest.fixture
 def malware_file():
     # EICAR test virus string (not real malware, safe to use for testing)
-    eicar = b"X5O!P%@AP[4\\PZX54(P^)7CC)7}$" b"EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
+    eicar = b"X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
     return io.BytesIO(eicar)
 
 

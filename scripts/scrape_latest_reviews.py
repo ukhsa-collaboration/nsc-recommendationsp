@@ -5,16 +5,16 @@ web site.
 """
 
 import calendar
+from datetime import datetime
 import json
 import re
-from datetime import datetime
 from time import sleep
 
 from django.contrib.auth import get_user_model
 
-import requests
 from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
+import requests
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review, ReviewRecommendation

@@ -4,8 +4,8 @@ import io
 from django.urls import reverse
 
 import bs4
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.contact.models import Contact
 from nsc.policy.models import Policy

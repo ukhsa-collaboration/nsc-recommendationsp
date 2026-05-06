@@ -4,10 +4,10 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-import envdir
-import sentry_sdk
 from celery.schedules import crontab
 from configurations import Configuration
+import envdir
+import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
@@ -152,7 +152,6 @@ class Common(Configuration):
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "django_extensions",
-        "clear_cache",
         "simple_history",
         "storages",
         "django_filters",
@@ -228,7 +227,7 @@ class Common(Configuration):
         """
         return {
             "default": {
-                "ENGINE": "django.db.backends.postgresql_psycopg2",
+                "ENGINE": "django.db.backends.postgresql",
                 "HOST": self.DATABASE_HOST,
                 "PORT": self.DATABASE_PORT,
                 "NAME": self.DATABASE_NAME,
@@ -262,8 +261,6 @@ class Common(Configuration):
 
     USE_I18N = True
 
-    USE_L10N = True
-
     USE_TZ = True
 
     # Static files (CSS, JavaScript, Images)
@@ -277,7 +274,6 @@ class Common(Configuration):
     # Additional locations of static files
     STATICFILES_DIRS = [BASE_DIR / "frontend" / "dist"]
 
-    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     WHITENOISE_ROOT = BASE_DIR / "public"
 
     FIXTURE_DIRS = [BASE_DIR / "fixtures"]
@@ -623,9 +619,6 @@ class Deployed(Build):
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
-    # X-XSS-Protection: 1; mode=block
-    SECURE_BROWSER_XSS_FILTER = True
-
     # Secure session cookie
     SESSION_COOKIE_SECURE = True
 
@@ -711,7 +704,6 @@ class Deployed(Build):
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "PARSER_CLASS": "redis.connection.HiredisParser",
                 },
             },
             "session": {
@@ -720,7 +712,6 @@ class Deployed(Build):
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "PARSER_CLASS": "redis.connection.HiredisParser",
                 },
             },
         }
@@ -815,7 +806,6 @@ class Demo(Build):
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "PARSER_CLASS": "redis.connection.HiredisParser",
                     # See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
                     # 'IGNORE_EXCEPTIONS': True,
                 },

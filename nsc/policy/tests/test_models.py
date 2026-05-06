@@ -1,8 +1,8 @@
 from django.core.cache import cache
 
-import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
+import pytest
 
 from nsc.review.models import Review
 from nsc.utils.datetime import from_today, get_today

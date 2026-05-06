@@ -11,8 +11,8 @@ import tempfile
 
 from django.core.files import File
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 from nsc.document.models import Document
 from nsc.policy.models import Policy

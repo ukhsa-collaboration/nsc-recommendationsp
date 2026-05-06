@@ -6,8 +6,8 @@ from django.contrib.sessions.models import Session
 from django.test.client import RequestFactory
 from django.utils.timezone import now
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.user.backend import UniqueSessionAdfsBackend
 

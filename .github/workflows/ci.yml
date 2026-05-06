@@ -1,18 +1,45 @@
-name: Tests
-
-# Test phe nsc-recommendationsp
+name: CI
 
 on:
   push:
   pull_request:
 
 jobs:
-  test-backend:
-    name: phe nsc-recommendationsp backend
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff==0.11.7
+      - run: ruff check
+      - run: ruff format --check
+
+  smoke:
+    name: Smoke Test (prod deps)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install production dependencies only
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Verify app starts with production deps
+        run: python manage.py check
+        env:
+          DJANGO_CONFIGURATION: Build
+
+  test:
+    name: Test
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:13
+        image: postgres:16
         ports:
           - 5432:5432
         env:
@@ -27,19 +54,16 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: 3.12.2
+          python-version: "3.12"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install setuptools-scm==7.1.0
           pip install -r requirements-dev.txt
       - name: Test
-        run: |
-          pytest
+        run: pytest
         env:
           DJANGO_CONFIGURATION: Test
           DATABASE_ENGINE: postgresql

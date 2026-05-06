@@ -193,7 +193,6 @@ class PolicyAddRecommendationForm(NextReviewToYearMixin, forms.ModelForm):
 
 
 class PolicyEditForm(NextReviewToYearMixin, forms.ModelForm):
-
     next_review = forms.CharField(
         required=False,
         label=_("Date next review expected to open"),

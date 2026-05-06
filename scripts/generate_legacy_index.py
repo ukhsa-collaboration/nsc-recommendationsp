@@ -4,14 +4,13 @@ Generate an initial table of policies by scraping the legacy site.
 """
 
 import json
-import time
 from urllib.parse import urljoin
 
 from django.utils import timezone
 from django.utils.text import slugify
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 
 SITE = "https://view-health-screening-recommendations.service.gov.uk"

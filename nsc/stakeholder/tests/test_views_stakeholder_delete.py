@@ -2,8 +2,8 @@ from urllib.parse import urlparse
 
 from django.urls import reverse
 
-import pytest
 from bs4 import BeautifulSoup
+import pytest
 
 from ..models import Stakeholder
 

@@ -6,8 +6,8 @@ Scraper extracting the list of NSC policies from the legacy web site.
 import json
 import re
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 from nsc.policy.models import Policy
 from scripts.parse import content_nodes, parse_html

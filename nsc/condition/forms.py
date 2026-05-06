@@ -9,7 +9,6 @@ from nsc.policy.models import Policy
 
 
 class SearchForm(forms.Form):
-
     name = forms.CharField(label=_("Condition name"), required=False)
 
     CONSULTATION = Choices(("open", _("Open")), ("closed", _("Closed")))

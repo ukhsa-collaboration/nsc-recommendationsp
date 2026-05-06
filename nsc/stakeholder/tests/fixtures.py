@@ -1,5 +1,5 @@
-import pytest
 from model_bakery import baker
+import pytest
 
 from ..models import Stakeholder
 

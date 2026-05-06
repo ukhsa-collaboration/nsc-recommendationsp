@@ -2,8 +2,8 @@ import random
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.document.models import Document
 from nsc.review.models import Review
@@ -16,9 +16,9 @@ def minimal_pdf():
     https://stackoverflow.com/questions/17279712/what-is-the-smallest-possible-valid-pdf
     """
     return (
-        "%PDF-1.0\x0D"
-        "1 0 obj<</Pages 2 0 R>>endobj 2 0 obj<</Kids[3 0 R]/Count 1>>endobj 3 0 obj<</MediaBox[0 0 3 3]>>endobj\x0D"
-        "trailer<</Root 1 0 R>>\x0D"
+        "%PDF-1.0\x0d"
+        "1 0 obj<</Pages 2 0 R>>endobj 2 0 obj<</Kids[3 0 R]/Count 1>>endobj 3 0 obj<</MediaBox[0 0 3 3]>>endobj\x0d"
+        "trailer<</Root 1 0 R>>\x0d"
         "%EOF"
     )
 

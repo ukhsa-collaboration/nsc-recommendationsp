@@ -1,5 +1,3 @@
-from distutils.util import strtobool
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -16,6 +14,7 @@ from model_utils import Choices
 
 from nsc.stakeholder.models import Stakeholder
 from nsc.utils.datetime import get_today
+from nsc.utils.forms import strtobool
 
 from ..document.models import Document
 from ..policy.formsets import PolicySelectionFormset
@@ -26,7 +25,6 @@ from .models import Review, ReviewRecommendation, SummaryDraft
 
 
 class SearchForm(forms.Form):
-
     REVIEW_STATUS_CHOICES = Choices(
         ("due_for_review", _("Due to be reviewed")),
         ("in_review", _("In review")),
@@ -54,7 +52,6 @@ class SearchForm(forms.Form):
 
 
 class ReviewForm(forms.ModelForm):
-
     name = forms.CharField(
         label=_("Internal product name"),
         help_text=_(
@@ -134,7 +131,6 @@ class ReviewForm(forms.ModelForm):
 
 
 class ReviewDatesForm(forms.ModelForm):
-
     consultation_open = forms.TypedChoiceField(
         label=_("Consultation open date"),
         help_text=_("When do you want to open this consultation?"),
@@ -330,7 +326,6 @@ class ReviewDatesForm(forms.ModelForm):
             data["nsc_meeting_date"] = None
 
         if "consultation_start" in data and "consultation_end" in data:
-
             if bool(data["consultation_start"]) != bool(data["consultation_end"]):
                 if data["consultation_start"]:
                     self.add_error(
@@ -422,7 +417,6 @@ class ReviewDateConfirmationForm(forms.ModelForm):
 
 
 class ReviewStakeholdersForm(forms.ModelForm):
-
     stakeholders = forms.ModelMultipleChoiceField(
         label=_("Stakeholders"),
         queryset=Stakeholder.objects.none(),
@@ -540,7 +534,6 @@ class ReviewSummaryForm(forms.ModelForm):
 
 
 class ReviewHistoryForm(forms.ModelForm):
-
     background = forms.CharField(
         label=_("Upload product history"),
         help_text=_("Use markdown to format the text"),
@@ -622,7 +615,6 @@ class ReviewRecommendationForm(forms.ModelForm):
 
 
 class ReviewPublishForm(forms.ModelForm):
-
     published = forms.BooleanField(
         widget=forms.RadioSelect(choices=Choices((True, _("Yes")), (False, _("No")))),
         error_messages={

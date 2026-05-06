@@ -18,7 +18,6 @@ class YesNoFilter(Filter):
 
 
 class SearchFilter(FilterSet):
-
     name = CharFilter(field_name="name", method="search_name")
     comments = CharFilter(method="in_consultation")
     affects = CharFilter(field_name="ages", lookup_expr="icontains")

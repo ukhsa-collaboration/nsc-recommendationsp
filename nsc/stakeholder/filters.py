@@ -4,7 +4,6 @@ from nsc.stakeholder.models import Stakeholder
 
 
 class SearchFilter(FilterSet):
-
     name = CharFilter(field_name="name", lookup_expr="icontains")
     condition = CharFilter(field_name="policies__name", method="filter_conditions")
     country = ChoiceFilter(

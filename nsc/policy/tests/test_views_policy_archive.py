@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.document.models import DocumentPolicy
 from nsc.policy.models import Policy

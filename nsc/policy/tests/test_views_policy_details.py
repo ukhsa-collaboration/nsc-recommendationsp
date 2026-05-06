@@ -1,9 +1,9 @@
 from django.urls import reverse
 from django.utils.translation import gettext
 
-import pytest
 from bs4 import BeautifulSoup
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review

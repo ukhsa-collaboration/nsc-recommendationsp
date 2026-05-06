@@ -1,6 +1,6 @@
+from datetime import timedelta
 import json
 import logging
-from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
@@ -104,6 +104,7 @@ class Email(TimeStampedModel):
         default=STATUS.pending,
     )
     attempts = models.PositiveSmallIntegerField(default=0)
+    one_click_unsubscribe_url = models.URLField(default="", blank=True)
 
     objects = EmailQuerySet.as_manager()
 
@@ -120,7 +121,11 @@ class Email(TimeStampedModel):
 
         logger.info(f"sending email: {self.id}")
         resp = send_email(
-            self.address, self.template_id, context=self.context, reference=str(self.id)
+            self.address,
+            self.template_id,
+            context=self.context,
+            reference=str(self.id),
+            one_click_unsubscribe_url=self.one_click_unsubscribe_url or None,
         )
 
         if resp and "errors" not in resp:
