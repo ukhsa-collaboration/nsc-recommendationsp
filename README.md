@@ -28,7 +28,7 @@ For detailed developer documentation, see the `docs/` directory in the repositor
 
 - Automatically runs tests on commit.
 - Uses `pytest` for unit testing.
-- Linting tools: `black`, `flake8`, `isort`
+- Linting tools: `ruff`
 - Test coverage: ~96%
 - If this pipeline fails, you will not be able to merge changes
 
@@ -52,6 +52,17 @@ Ensure the following are installed:
 - Python
 - Docker & Docker Compose
 - Node.js + Yarn
+#### Adding python library
+To add a new python library, amend the `requirment-dev.in` or `requirment.in`.
+Then use either `uv` or `pip-compile`.
+Either 
+```shell
+    pip-compile requirement-dev.in
+```
+or
+```shell
+uv pip compile requirement-dev.in -o requirement-dev.txt
+```
 
 ### 3. Updating environment variables if required
 
@@ -64,11 +75,32 @@ The DJANGO_ADMIN_IP_RANGES is set to the default docker subnet (this can be foun
 
 ### 4. Local setup
 
-Install the project into a virtual environment:
+Choose one of the following methods to set up your local development environment:
 
-    python3.12 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements-dev.txt
+#### Option A: The Standard Way (pip)
+This uses Python's built-in virtual environment and standard package manager.
+
+```bash
+# 1. Create the virtual environment
+python3.12 -m venv ./venv
+
+# 2. Activate the virtual environment
+source ./venv/bin/activate
+
+# 3. Install the development dependencies
+pip3 install -r requirements-dev.txt
+```
+
+#### Option B: The Modern Way (uv)
+```shell
+# 1. Create and activate the virtual environment
+uv venv ./venv
+source ./venv/bin/activate
+
+# 2. Install the development dependencies
+uv pip install -r requirements-dev.txt
+```
+
 
 ### 5. Delete data migrations
 This sounds very weird and very janky (because it is!) 🤮. In order to set up your local database, you need to scrape the production website [step 8](#8-initialising-the-database--migrations). However, you cannot scrape the website and save the data to the database without running the migrations. We run into an issue when it comes to running some of the later migrations, as those migrations involve changing data. 
@@ -210,3 +242,10 @@ In the /docs folder there are a series of further READMEs available.
 `data-migrations.rst` will provide information on how to create empty migrations
 
 `development.rst` has further information on development environments 
+
+### Running locally
+
+```shell
+/Users/ali.ebadian/code/ukhsa/nsc-recommendationsp
+((.venv) ) ➜  nsc-recommendationsp git:(develop) ✗ python manage.py runserver 8000
+```
