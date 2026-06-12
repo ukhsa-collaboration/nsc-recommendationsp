@@ -3,8 +3,8 @@ from datetime import date
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 from nsc.utils.datetime import get_date_display

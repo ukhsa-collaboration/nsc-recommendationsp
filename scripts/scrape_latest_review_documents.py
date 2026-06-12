@@ -11,8 +11,8 @@ import tempfile
 
 from django.core.files import File
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 from nsc.document.models import Document
 from nsc.policy.models import Policy
@@ -24,7 +24,9 @@ def run():
     print("Scraping...")
     index = load_index()
     for entry in index:
+        # FIXME - this does not currently work at all
         policy = Policy.objects.get(slug=entry["slug"])
+        # policy_reviews -> do we need to grab the reviews from the database?
         review = policy.reviews.published().first()
 
         if not review:

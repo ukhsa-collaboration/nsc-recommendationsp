@@ -1,7 +1,7 @@
 from django.core.cache import cache
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 

@@ -12,7 +12,6 @@ class ContactQuerySet(models.QuerySet):
 
 
 class Contact(TimeStampedModel):
-
     name = models.CharField(
         verbose_name=_("Name of contact (optional)"),
         max_length=256,

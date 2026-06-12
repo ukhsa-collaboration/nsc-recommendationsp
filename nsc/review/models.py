@@ -57,7 +57,6 @@ class ReviewQuerySet(models.QuerySet):
 
 
 class Review(TimeStampedModel):
-
     STATUS = Choices(
         ("development", _("In review")),
         ("in_consultation", _("In Open consultation")),
@@ -344,7 +343,6 @@ class Review(TimeStampedModel):
         return super(Review, self).save(**kwargs)
 
     def get_email_context(self, **extra):
-
         formatted_start_date = (
             self.consultation_start.strftime("%d %B %Y")
             if self.consultation_start

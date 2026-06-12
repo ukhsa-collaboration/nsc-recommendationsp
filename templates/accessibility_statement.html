@@ -1,0 +1,274 @@
+{% extends "narrow.html" %}
+{% load i18n %}
+
+{% block back %}
+  {% include 'widgets/back_link.html' %}
+{% endblock %}
+
+{% block title %}
+  {% trans "Accessibility Statement" %}
+{% endblock %}
+
+{% block page_title %}Accessibility statement for UK National Screening Committee {% endblock %}
+
+{% block heading %}{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <h2 class="govuk-heading-m">{% trans "Accessibility statement for UK National Screening Committee" %}</h2>
+    <p class="govuk-body">
+    {% blocktrans %}This accessibility statement applies to:
+    <br/>
+    <a href="https://view-health-screening-recommendations.service.gov.uk/">https://view-health-screening-recommendations.service.gov.uk/</a>
+    <br/>
+    <br/>
+    This website is run by the Department for Health and Social Care. 
+    {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "How you should be able to use this website" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      We want as many people as possible to be able to use this website. For example, that means you should be able to:
+      {% endblocktrans %}
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{% trans "Change colours, contrast levels and fonts" %}</li>
+      <li>{% trans "Zoom in up to 300% without the text spilling off the screen" %}</li>
+      <li>{% trans "Navigate most of the website using just a keyboard" %}</li>
+      <li>{% trans "Navigate most of the website using speech recognition software" %}</li>
+      <li>{% trans "Listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)" %}</li>
+    </ul>
+    </p>
+    <p class="govuk-body">
+      We’ve also made the website text as simple as possible to understand.
+      <br/>
+      <br/>
+      <a href="https://mcmw.abilitynet.org.uk/">AbilityNet</a> has advice on making your device easier to use if you have a disability.
+    </p>
+
+    <h3 class="govuk-heading-m">{% trans "How accessible this website is" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      Parts of this website are not fully accessible. For example:
+      {% endblocktrans %}
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{% trans "Page regions are not always identified by an ARIA Landmark" %}</li>
+      <li>{% trans "A ‘Skip to Main Content’ link is present but not functional" %}</li>
+      <li>{% trans "Headings are not appropriately structured across the site" %}</li>
+      <li>{% trans "Some field input labels are not announced correctly" %}</li>
+    </ul>
+   
+    <br/>
+    <p class="govuk-body">
+      {% blocktrans %} 
+      PDF documents may not be accessible because:  
+      {% endblocktrans %}
+    </p> 
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{% trans "They are not marked up correctly" %}</li>
+      <li>{% trans "Text does not always meet minimum contrast requirements" %}</li>
+      <li>{% trans "Links within paragraphs are not always sufficiently visible" %}</li>
+      <li>{% trans "Some images do not have an equivalent text alternative" %}</li>
+    </ul>
+
+    <h3 class="govuk-heading-m">{% trans "Feedback and contact information" %}</h3>
+
+    <p class="govuk-body">
+      {% blocktrans %}
+      If you need information on this website in a different format such as accessible PDF, large print, easy read, audio recording or braille, please email <a href="mailto:uknsc@dhsc.gov.uk">uknsc@dhsc.gov.uk.</a> 
+      <br/>
+      In your message, please include:
+      {% endblocktrans %}
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{% trans "The web address (URL) of the content" %}</li>
+      <li>{% trans "Your email address and name" %}</li>
+      <li>{% trans "The format you need the content in" %}</li>
+    </ul>
+    <p class="govuk-body">
+      {% blocktrans %}
+      We will reply to your request within 10 working days.
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Reporting accessibility problems with this website" %}</h3>
+
+    <p class="govuk-body">
+      {% blocktrans %}
+      If you find any problems not listed on this page or think we are not meeting accessibility requirements, please contact <a href="mailto:uknsc@dhsc.gov.uk">uknsc@dhsc.gov.uk.</a> 
+      {% endblocktrans %}
+    </p>
+ 
+    <h3 class="govuk-heading-m">{% trans "Enforcement procedure" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies 
+      (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). 
+      {% endblocktrans %}
+    </p>
+
+    <h3 class="govuk-heading-m">{% trans "Enforcement procedure: complaints" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      If you submit a complaint and are not happy with our response, please <a href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service (EASS).</a> 
+      {% endblocktrans %}
+    </p>
+
+    <h3 class="govuk-heading-m">{% trans "Technical information about this website’s accessibility" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The Department for Health and Social Care is committed to making its website accessible, 
+      in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018. 
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Content not within the scope of the accessibility regulations" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The accessibility regulations do not require us to resolve accessibility issues with PDFs or other documents 
+      published before 23 September 2018 if they are not essential to providing our services.
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Compliance status" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      This website is not compliant with the 
+      <a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines version 2.2 AA</a> 
+      standard. The non-compliances are listed below.
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Non-accessible content" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The content listed below is non-accessible for the following reasons.
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Non-compliance with the accessibility regulations" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The non-compliances listed below generally fall into 2 categories:
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-s">{% trans "1.	Issues that require web developer support to resolve." %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      A ‘Skip to Main Content’ link or similar is present but not functional within the site to allow keyboard and assistive technology users to bypass repeated navigational components across the site. This fails WCAG 2.2 success criterion 2.4.1 Bypass Blocks. 
+      <br/>
+      We plan to resolve this by: 30 June 2026
+      <br/>
+      <br/>
+      A correctly formed heading structure is not present to facilitate navigation across the site, with skipped or no heading levels present. This fails WCAG 2.2 success criterion 2.4.1 Bypass Blocks. 
+      <br/>
+      We plan to resolve this by:  30 June 2026
+      <br/>
+      <br/>
+      ARIA Landmarks are not used to identify all page content. This may cause content to be missed by screen reader users. This fails WCAG 2.2 success criterion 1.3.1 Info and Relationships.
+      <br/>
+      We plan to resolve this by:  30 June 2026
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-s">{% trans "2.	PDF documents that are not accessible." %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The focus order within PDFs is not logical. Users who rely on keyboard access benefit from a logical, usable focus order. This fails WCAG 2.2 success criterion 2.4.3 Focus Order. 
+      <br/>
+      <br/>
+      Bookmarks are not present within PDF documents, which may cause navigation issues for users with motor or cognitive impairments. This fails WCAG 2.2 success criterion 2.4.5 Multiple Ways. 
+      <br/>
+      <br/>
+      Headings are not nested correctly within PDFs. This could cause confusion for users when navigating. This fails WCAG 2.2 success criterion 2.4.6 Headings and Labels. 
+      <br/>
+      <br/>
+      Some images within PDFs do not have a text alternative, so people using a screen reader cannot access the information. This fails WCAG 2.2 success criterion 1.1.1 Non-text Content.
+      <br/>
+      <br/>
+      Form input fields have a label which is not correctly attributed to the field. Incorrectly associated labels do not provide functionality or information about the form control to screen reader users. This fails WCAG 2.2 success criterion 1.1.1 Non-text Content. 
+      <br/>
+      <br/>
+      PDF content is not marked up appropriately, including the title and the language not being defined. This fails WCAG 2.2 success criterion 1.3.1 Info and Relationships.
+      <br/>
+      <br/>
+      Lists are not appropriately structured and may be announced incorrectly by screen readers. This fails WCAG 2.2 success criterion 1.3.1 Info and Relationships.
+      <br/>
+      <br/>
+      Tables are not marked up correctly within PDFs, including a lack of a table header and tables rows being marked up incorrectly. This fails WCAG 2.2 success criterion 1.3.1 Info and Relationships.
+      <br/>
+      <br/>
+      Presentation tables are present in PDFs but are hidden. This fails WCAG 2.2 success criterion 1.3.1 Info and Relationships.
+      <br/>
+      <br/>
+      Variations in text such as within flow chart diagrams are used to communicate information. This may result in users with visual impairments missing information. This fails WCAG 2.2 success criterion 1.3.1 Info and Relationships.
+      <br/>
+      <br/>
+      Information on the page is communicated only by colour. This may be difficult to understand for users with visual impairments or colour blindness. This fails WCAG 2.2 success criterion 1.4.1 Use of Colour.
+      <br/>
+      <br/>
+      Links within paragraphs of text are not sufficiently differentiated and may be less visible to users with visual impairments. This fails WCAG 2.2 success criterion 1.4.1 Use of Colour. 
+      <br/>
+      <br/>
+      Text within PDFs does not meet sufficient contrast requirements against the page background. This fails WCAG 2.2 success criterion 1.4.3 Contrast (Minimum).
+      <br/>
+      <br/>
+      Images of text are present within PDFs which cannot be resized or styled by browsers. This fails WCAG 2.2 success criterion 1.4.5 Images of Text.
+      <br/>
+      There is not enough contrast between the foreground and background within a graphical object. This includes graphs within PDFs. This fails WCAG 2.2 success criterion 1.4.11 Non-Text Contrast.
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Disproportionate burden" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      We do not intend to recreate accessible versions of all PDF documents that have accessibility problems. We have assessed the cost of fixing the issues and believe that doing so now would be a disproportionate burden within the meaning of the accessibility regulations.
+      <br/>
+      <br/>
+      Converting these documents, where there is little or no evidence of demand, would be a poor use of limited staff time and would represent a disproportionate burden on the organisation in terms of cost. 
+      <br/>
+      <br/>
+      The UK NSC now seeks to ensure that all new documents added the site are accessible by providing accessible document guidance to organisations which it commissions to conduct the screening evidence reviews.
+      <br/>
+      <br/>
+      We will respond to requests for publications in different formats on a case-by-case basis, so accessible versions are available on request.
+      <br/>
+      <br/>
+      <strong>Content that’s not within the scope of the accessibility regulations</strong>
+      {% endblocktrans %}
+    </p>
+    <h5 class="govuk-heading-s">{% trans "PDFs and other documents" %}</h5>
+    <p class="govuk-body">
+      {% blocktrans %}
+      The accessibility regulations do not require us to fix PDFs or other documents published before 23 September 
+      2018 if they’re not essential to providing our services. For example, we do not plan to fix PDF evidence review 
+      documents published before that date.
+      <br/>
+      <br/>
+      Any new PDFs or Word documents we publish should meet accessibility standards.
+      {% endblocktrans %}
+    </p>
+    <h5 class="govuk-heading-s">{% trans "What we’re doing to improve accessibility" %}</h5>
+    <p class="govuk-body">
+      {% blocktrans %}
+      Every UK NSC recommendation page  contains an accessible plain English summary.
+      <br/>
+      <br/>
+      The UK NSC seeks to ensure new documents are accessible by providing accessible document guidance to organisations it commissions to conduct screening evidence reviews.  
+      <br/>
+      <br/>
+      Any user can ask to receive PDF documents in an alternative accessible format by emailing <a href="mailto:uknsc@dhsc.gov.uk">uknsc@dhsc.gov.uk.</a> 
+      <br/>
+      <br/>
+      Planned web developer support began in August 2025. This support will be used to resolve the non-PDF accessibility issues on the site. We plan to resolve most of these by 30 June 2026.
+      
+      {% endblocktrans %}
+    </p>
+    <h3 class="govuk-heading-m">{% trans "Preparation of this accessibility statement" %}</h3>
+    <p class="govuk-body">
+      {% blocktrans %}
+      This statement was prepared on 21/05/2024. It was last reviewed on 19/08/2025.
+      This website was last tested on 29/02/2024. The test was carried out by Zoonou.
+      <br/>
+      <br/>
+      Zoonou used <a href="https://www.w3.org/TR/WCAG-EM">WCAG-EM</a> to define the pages tested and test approach.
+            
+      {% endblocktrans %}
+    </p>
+  </div>
+{% endblock %}

@@ -2,8 +2,8 @@ import random
 
 from django.utils.timezone import now
 
-import pytest
 from model_bakery import baker
+import pytest
 
 
 # A custom ArrayField was used to model the ages field on the Policy model

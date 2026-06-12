@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-import pytest
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review
@@ -48,7 +48,7 @@ def test_review_is_created(erm_user, django_app):
     policy = baker.make(Policy, name="name", slug="name")
     assert policy.reviews.count() == 0
 
-    form = django_app.get(reverse("review:add"), user=erm_user).forms[2]
+    form = django_app.get(reverse("review:add"), user=erm_user).forms[1]
     form["name"] = "Review"
     form["review_type"] = [Review.TYPE.evidence]
     form["policies-TOTAL_FORMS"] = 1

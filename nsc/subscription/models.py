@@ -21,6 +21,13 @@ class Subscription(TimeStampedModel):
             kwargs={"pk": self.pk, "token": get_object_signature(self)},
         )
 
+    @property
+    def one_click_unsubscribe_url(self):
+        return reverse(
+            "subscription:one-click-unsubscribe",
+            kwargs={"pk": self.pk, "token": get_object_signature(self)},
+        )
+
 
 class StakeholderSubscription(TimeStampedModel):
     title = models.CharField(max_length=10)

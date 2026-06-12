@@ -1,8 +1,8 @@
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-import pytest
 from bs4 import BeautifulSoup
+import pytest
 
 from nsc.contact.models import Contact
 from nsc.stakeholder.models import Stakeholder
@@ -104,7 +104,7 @@ def test_success_url__next(erm_user, policy, client):
     """
     client.force_login(erm_user)
 
-    url = f'{reverse("stakeholder:add")}?next=/'
+    url = f"{reverse('stakeholder:add')}?next=/"
 
     post_data = {
         "name": "Name",

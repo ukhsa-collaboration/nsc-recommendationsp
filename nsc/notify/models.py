@@ -1,6 +1,6 @@
+from datetime import timedelta
 import json
 import logging
-from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
@@ -37,6 +37,9 @@ class EmailQuerySet(models.QuerySet):
     def technical_failure(self):
         return self.filter(status=Email.STATUS.technical_failure)
 
+    def too_many_attempts(self):
+        return self.filter(status=Email.STATUS.technical_failure)
+
     def to_send(self):
         return self.filter(
             status__in=[
@@ -48,7 +51,11 @@ class EmailQuerySet(models.QuerySet):
 
     def done(self):
         return self.filter(
-            status__in=[Email.STATUS.delivered, Email.STATUS.permanent_failure]
+            status__in=[
+                Email.STATUS.delivered,
+                Email.STATUS.permanent_failure,
+                Email.STATUS.too_many_attempts,
+            ]
         )
 
     def stale(self):
@@ -80,6 +87,11 @@ class Email(TimeStampedModel):
         ("permanent-failure", "permanent_failure", _("Permanent Failure")),
         ("temporary-failure", "temporary_failure", _("Temporary Failure")),
         ("technical-failure", "technical_failure", _("Technical Failure")),
+        (
+            "too-many-attempts",
+            "too_many_attempts",
+            _("Gave up after too many attempts"),
+        ),
     )
 
     notify_id = models.CharField(max_length=50, default="", blank=True, editable=False)
@@ -92,20 +104,36 @@ class Email(TimeStampedModel):
         default=STATUS.pending,
     )
     attempts = models.PositiveSmallIntegerField(default=0)
+    one_click_unsubscribe_url = models.URLField(default="", blank=True)
 
     objects = EmailQuerySet.as_manager()
 
     def send(self):
-        self.attempts += 1
+        if self.attempts > 100:
+            logger.warning(f"Too many attempts for email with id: {self.id}")
+            self.status = self.STATUS.too_many_attempts
+            self.save()
+            return
+        else:
+            # Safety valve to prevent us from sending forever in case any subsequent errors cause the final self.save() to fail (or not get called)
+            self.attempts += 1
+            self.save()
 
         logger.info(f"sending email: {self.id}")
         resp = send_email(
-            self.address, self.template_id, context=self.context, reference=str(self.id)
+            self.address,
+            self.template_id,
+            context=self.context,
+            reference=str(self.id),
+            one_click_unsubscribe_url=self.one_click_unsubscribe_url or None,
         )
 
         if resp and "errors" not in resp:
             self.status = self.STATUS.sending
             self.notify_id = resp["id"]
+            logger.info(
+                f"email {self.id} successfully sent to notify --> notify id is {self.notify_id}"
+            )
         else:
             logger.error(
                 f"Failed to send email {self.id}, response: {json.dumps(resp)}"
@@ -117,10 +145,14 @@ class Email(TimeStampedModel):
         self.save()
 
     def update_status(self):
+        logger.info(f"Updating email status for email with id {self.id}")
         resp = get_email_status(self.notify_id)
 
         if resp and "status" in resp:
             self.status = resp["status"]
+            logger.info(
+                f"Status for email with id {self.id} (notify id {self.notify_id}) is: {self.status}"
+            )
             self.save()
         else:
             logger.error(

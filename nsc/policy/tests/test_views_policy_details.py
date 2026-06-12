@@ -1,9 +1,9 @@
 from django.urls import reverse
 from django.utils.translation import gettext
 
-import pytest
 from bs4 import BeautifulSoup
 from model_bakery import baker
+import pytest
 
 from nsc.policy.models import Policy
 from nsc.review.models import Review
@@ -60,7 +60,7 @@ def test_back_link_discards_search_results(erm_user, django_app):
     list page.
     """
     instance = baker.make(Policy, name="condition", ages="{child}")
-    form = django_app.get(reverse("policy:list"), user=erm_user).forms[2]
+    form = django_app.get(reverse("policy:list"), user=erm_user).forms[1]
     form["name"] = "condition"
     results = form.submit()
     detail = results.click(href=instance.get_admin_url())

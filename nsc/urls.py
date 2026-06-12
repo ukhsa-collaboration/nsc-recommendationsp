@@ -7,6 +7,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from nsc.review.views import ReviewDashboardView
+from nsc.views import custom_admin_logout
 
 
 admin.autodiscover()
@@ -17,16 +18,17 @@ urlpatterns = [
         r"cookies", TemplateView.as_view(template_name="cookies.html"), name="cookies"
     ),
     path(
+        r"accessibility_statement",
+        TemplateView.as_view(template_name="accessibility_statement.html"),
+        name="accessibility_statement",
+    ),
+    path(
         r"feedback",
         TemplateView.as_view(template_name="feedback.html"),
         name="feedback",
     ),
     path(r"admin/", ReviewDashboardView.as_view(), name="dashboard"),
-    path(
-        "logout/",
-        auth_views.LogoutView.as_view(next_page="/django-admin/login/"),
-        name="logout",
-    ),
+    path(r"django-admin/logout/", custom_admin_logout, name="admin-logout"),
     path(r"contact/", include("nsc.contact.urls", namespace="contact")),
     path(r"document/", include("nsc.document.urls", namespace="document")),
     path(r"stakeholder/", include("nsc.stakeholder.urls", namespace="stakeholder")),

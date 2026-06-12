@@ -41,7 +41,6 @@ class RatelimitExceptionMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.method == "POST":
             client_ip = get_client_ip(request)
-            user_agent = request.META.get("HTTP_USER_AGENT", "unknown")
             cache_key = f"hitcount:{client_ip}:{request.path}"  # noqa
 
             try:
@@ -49,18 +48,6 @@ class RatelimitExceptionMixin:
             except ValueError:
                 cache.set(cache_key, 1, timeout=RATE_LIMIT_HIT_COUNT_TTL)
                 hit_count = 1
-
-            # Optional logging
-            logger.info(
-                {
-                    "ip": client_ip,
-                    "user_agent": user_agent,
-                    "path": request.path,
-                    "hit_count": hit_count,
-                    "RATE_LIMIT_THRESHOLD": RATE_LIMIT_THRESHOLD,
-                    "cache_key": cache_key,
-                }
-            )
 
             # Custom rate limit threshold check
             if hit_count > RATE_LIMIT_THRESHOLD:

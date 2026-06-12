@@ -24,7 +24,6 @@ class ExportForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-
     name = forms.CharField(label=_("Stakeholder name"), required=False)
     condition = forms.CharField(label=_("Condition of interest"), required=False)
     country = forms.ChoiceField(

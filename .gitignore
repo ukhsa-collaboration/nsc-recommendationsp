@@ -8,10 +8,14 @@ __pycache__/
 
 # Ignore dot files except those required for the project
 .*
+!.yarn
 !.gitignore
 !.gitkeep
+!.github
 !.nvmrc
 !.yvmrc
+!.pre-commit-config.yaml
+!.copilotignore
 
 # Development artefacts
 dev-docker-compose.yml
@@ -34,3 +38,5 @@ media/
 static_root/
 
 secrets
+
+venv

@@ -4,10 +4,10 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-import envdir
-import sentry_sdk
 from celery.schedules import crontab
 from configurations import Configuration
+import envdir
+import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
@@ -152,7 +152,6 @@ class Common(Configuration):
         "whitenoise.runserver_nostatic",
         "django.contrib.staticfiles",
         "django_extensions",
-        "clear_cache",
         "simple_history",
         "storages",
         "django_filters",
@@ -182,7 +181,6 @@ class Common(Configuration):
         "simple_history.middleware.HistoryRequestMiddleware",
         "nsc.middleware.redirect_url_fragment",
         "nsc.user.middleware.record_user_session",
-        "nsc.header_debug_middleware.HeaderDebugMiddleware",
         "nsc.ip_restriction_middleware.AdminIPRestrictionMiddleware",
     ]
 
@@ -201,6 +199,7 @@ class Common(Configuration):
                     "django.contrib.messages.context_processors.messages",
                     "nsc.context_processors.tracking_ids",
                     "nsc.context_processors.cookie_banner",
+                    "nsc.context_processors.tenant_id",
                 ]
             },
         }
@@ -215,8 +214,11 @@ class Common(Configuration):
     DATABASE_NAME = get_env("DATABASE_NAME", default=PROJECT_NAME)
     DATABASE_USER = get_env("DATABASE_USER", default=PROJECT_NAME)
     DATABASE_PASSWORD = get_env("DATABASE_PASSWORD", default=PROJECT_NAME)
-    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="localhost")
+    REDIS_HOST = get_env("DJANGO_REDIS_HOST", default="redis")
     REDIS_PORT = get_env("DJANGO_REDIS_PORT", default=6379, cast=int)
+    CLAMAV_HOST = get_env("CLAMAV_HOST", default="clamav")
+    CLAMAV_PORT = get_env("CLAMAV_PORT", default=3310, cast=int)
+    CLAMAV_TIMEOUT = get_env("CLAMAV_TIMEOUT", default=10, cast=int)
 
     @property
     def DATABASES(self):
@@ -225,7 +227,7 @@ class Common(Configuration):
         """
         return {
             "default": {
-                "ENGINE": "django.db.backends.postgresql_psycopg2",
+                "ENGINE": "django.db.backends.postgresql",
                 "HOST": self.DATABASE_HOST,
                 "PORT": self.DATABASE_PORT,
                 "NAME": self.DATABASE_NAME,
@@ -259,8 +261,6 @@ class Common(Configuration):
 
     USE_I18N = True
 
-    USE_L10N = True
-
     USE_TZ = True
 
     # Static files (CSS, JavaScript, Images)
@@ -274,7 +274,6 @@ class Common(Configuration):
     # Additional locations of static files
     STATICFILES_DIRS = [BASE_DIR / "frontend" / "dist"]
 
-    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     WHITENOISE_ROOT = BASE_DIR / "public"
 
     FIXTURE_DIRS = [BASE_DIR / "fixtures"]
@@ -349,7 +348,7 @@ class Common(Configuration):
     }
 
     # dont use the get_env function here as the property isn't read into the celery config correctly
-    REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "127.0.0.1")
+    REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "redis")
     REDIS_PORT = int(environ.get("DJANGO_REDIS_PORT", 6379))
 
     # Settings for the GDS Notify service for sending emails.
@@ -620,9 +619,6 @@ class Deployed(Build):
     #  X-Content-Type-Options: nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
-    # X-XSS-Protection: 1; mode=block
-    SECURE_BROWSER_XSS_FILTER = True
-
     # Secure session cookie
     SESSION_COOKIE_SECURE = True
 
@@ -708,7 +704,6 @@ class Deployed(Build):
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "PARSER_CLASS": "redis.connection.HiredisParser",
                 },
             },
             "session": {
@@ -717,7 +712,6 @@ class Deployed(Build):
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "PARSER_CLASS": "redis.connection.HiredisParser",
                 },
             },
         }
@@ -812,7 +806,6 @@ class Demo(Build):
                 "KEY_PREFIX": "{}_".format(self.PROJECT_ENVIRONMENT_SLUG),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "PARSER_CLASS": "redis.connection.HiredisParser",
                     # See https://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
                     # 'IGNORE_EXCEPTIONS': True,
                 },

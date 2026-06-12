@@ -1,6 +1,6 @@
-import pytest
 from freezegun import freeze_time
 from model_bakery import baker
+import pytest
 
 from nsc.utils.datetime import get_today
 

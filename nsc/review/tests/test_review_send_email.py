@@ -129,6 +129,9 @@ def test_open_review_conditions_have_subscribers_subs_receive_emails(
             }
         ),
         template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
+        one_click_unsubscribe_url=urljoin(
+            settings.EMAIL_ROOT_DOMAIN, expected.one_click_unsubscribe_url
+        ),
     ).exists()
 
 
@@ -209,4 +212,7 @@ def test_decided_review_conditions_have_subscribers_subs_receive_emails(
             }
         ),
         template_id=settings.NOTIFY_TEMPLATE_SUBSCRIBER_DECISION_PUBLISHED,
+        one_click_unsubscribe_url=urljoin(
+            settings.EMAIL_ROOT_DOMAIN, expected.one_click_unsubscribe_url
+        ),
     ).exists()

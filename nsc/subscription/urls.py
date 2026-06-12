@@ -2,6 +2,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from .views import (
+    OneClickUnsubscribe,
     PublicSubscriptionComplete,
     PublicSubscriptionEmails,
     PublicSubscriptionManage,
@@ -34,6 +35,11 @@ urlpatterns = [
             template_name="subscription/public_subscription_deleted.html"
         ),
         name="public-deleted",
+    ),
+    path(
+        "one-click-unsubscribe/<int:pk>/<slug:token>/",
+        OneClickUnsubscribe.as_view(),
+        name="one-click-unsubscribe",
     ),
     path(
         "stakeholder-start/",

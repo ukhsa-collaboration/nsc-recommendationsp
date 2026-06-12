@@ -1,6 +1,6 @@
-import pytest
 from dateutil.relativedelta import relativedelta
 from model_bakery import baker
+import pytest
 
 from nsc.document.models import Document
 from nsc.policy.models import Policy

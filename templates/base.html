@@ -64,7 +64,7 @@
 
   </script>
 
-  <a href="#main-heading" class="govuk-skip-link">Skip to main content</a>
+  <a href="#main-content" class="govuk-skip-link" tabindex="0">Skip to main content</a>
 
   {% include "widgets/cookie_banner.html" %}
 
@@ -104,11 +104,10 @@
         </div>
       </div>
       <div class="govuk-grid-column-one-quarter" style="text-align: right;">
-        {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" class="govuk-button" name="logout">
-        </form>
+        {% if user.is_authenticated and '/admin' in request.path %}
+          <div>
+            <a href="{% url 'admin-logout' %}" class="govuk-button">Logout</a>
+          </div>
         {% endif %}
       </div>
     </div>
@@ -159,6 +158,9 @@
           <ul class="govuk-footer__inline-list">
             <li class="govuk-footer__inline-list-item">
               <a class="govuk-footer__link" href="{% url "cookies" %}">Cookies</a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="{% url "accessibility_statement" %}">Accessibility Statement</a>
             </li>
           </ul>
           <svg role="presentation" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">

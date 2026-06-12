@@ -93,7 +93,6 @@ class PolicyQuerySet(models.QuerySet):
 
 
 class Policy(TimeStampedModel):
-
     AGE_GROUPS = Choices(
         ("antenatal", _("Antenatal")),
         ("newborn", _("Newborn")),
@@ -218,7 +217,7 @@ class Policy(TimeStampedModel):
 
     def get_email_context(self, **extra):
         return {
-            "policy url": urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url()),
+            "policy url": f"[{self.name}]({urljoin(settings.EMAIL_ROOT_DOMAIN, self.get_public_url())})",
             "policy": self.name,
             **extra,
         }
@@ -243,6 +242,9 @@ class Policy(TimeStampedModel):
                             reverse("subscription:public-start"),
                         ),
                     },
+                    one_click_unsubscribe_url=urljoin(
+                        settings.EMAIL_ROOT_DOMAIN, sub.one_click_unsubscribe_url
+                    ),
                 )
                 for sub in self.subscriptions.all().exclude(
                     email__in=existing_notification_emails
@@ -253,14 +255,11 @@ class Policy(TimeStampedModel):
     def send_open_consultation_notifications(
         self, review_notification_relation, extra_context
     ):
-
         self.send_notifications(
             review_notification_relation,
             settings.NOTIFY_TEMPLATE_SUBSCRIBER_CONSULTATION_OPEN,
             extra_context,
         )
-        logger.info("Sending open consultation notifications for policy")
-        logger.info(extra_context)
 
     def send_decision_notifications(self, review_notification_relation, extra_context):
         self.send_notifications(

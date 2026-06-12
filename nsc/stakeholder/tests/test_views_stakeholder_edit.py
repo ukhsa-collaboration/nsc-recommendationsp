@@ -1,8 +1,8 @@
 from django.urls import reverse
 from django.utils.translation import gettext
 
-import pytest
 from bs4 import BeautifulSoup
+import pytest
 
 
 # All tests require the database

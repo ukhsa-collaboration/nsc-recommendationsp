@@ -1,7 +1,7 @@
 import bleach
-import markdown
 from bleach_whitelist import markdown_attrs, markdown_tags
 from bs4 import BeautifulSoup
+import markdown
 
 
 _conversions = {

@@ -66,7 +66,6 @@ class YesNoFilter(Filter):
 
 
 class SearchFilter(FilterSet):
-
     name = CharFilter(
         field_name="name", method="search_name", label=_("Condition name")
     )
