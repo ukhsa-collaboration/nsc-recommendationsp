@@ -133,7 +133,9 @@ def main() -> None:
         dump_path=dump_path,
     )
 
-    log.info("STEP_04_LOCAL_VALIDATE pg_dump command completed, validating local artifact")
+    log.info(
+        "STEP_04_LOCAL_VALIDATE pg_dump command completed, validating local artifact"
+    )
 
     dump_size = dump_path.stat().st_size
     if dump_size == 0:
@@ -173,7 +175,9 @@ def main() -> None:
         dump_path.unlink(missing_ok=True)
         log.info("STEP_05_UPLOAD cleaned up local dump file %s", dump_path)
 
-    log.info("STEP_06_REMOTE_VALIDATE upload complete, validating remote object metadata")
+    log.info(
+        "STEP_06_REMOTE_VALIDATE upload complete, validating remote object metadata"
+    )
     try:
         head = s3.head_object(Bucket=bucket, Key=key)
     except ClientError:
@@ -190,7 +194,9 @@ def main() -> None:
         delete_key(s3, bucket, key)
         sys.exit(1)
 
-    log.info("STEP_06_REMOTE_VALIDATE remote size validation passed: %s bytes", remote_size)
+    log.info(
+        "STEP_06_REMOTE_VALIDATE remote size validation passed: %s bytes", remote_size
+    )
 
     try:
         resp = s3.get_object(
@@ -321,7 +327,9 @@ def prune_old_backups(s3, bucket: str, retention_days: int) -> None:
                     )
                     deleted += 1
                 except ClientError:
-                    log.warning("STEP_08_PRUNE failed to prune s3://%s/%s", bucket, obj["Key"])
+                    log.warning(
+                        "STEP_08_PRUNE failed to prune s3://%s/%s", bucket, obj["Key"]
+                    )
     log.info(
         "STEP_08_PRUNE prune scan complete: pages=%s scanned=%s deleted=%s",
         pages,
@@ -341,7 +349,11 @@ def delete_key(s3, bucket: str, key: str) -> None:
         s3.delete_object(Bucket=bucket, Key=key)
         log.info("STEP_06_REMOTE_VALIDATE deleted bad upload s3://%s/%s", bucket, key)
     except ClientError:
-        log.warning("STEP_06_REMOTE_VALIDATE failed to delete bad upload s3://%s/%s", bucket, key)
+        log.warning(
+            "STEP_06_REMOTE_VALIDATE failed to delete bad upload s3://%s/%s",
+            bucket,
+            key,
+        )
 
 
 if __name__ == "__main__":
