@@ -48,7 +48,7 @@ def get_env(name, default=NotSet, required=False, cast=str):
 
     def _lookup(self):
         value = environ.get(name)
-        print(f"READING CONFIG: name: {name} value: {value}")
+
         if value is None and default is not NotSet:
             return default
 
@@ -94,7 +94,6 @@ def get_secret(*name, default=NotSet, required=True, cast=str):
                 return default
 
         value = file.read_text().strip()
-        print(f"LOOKING UP SECRETS. name:{name}, value: {value}, file: {file} ")
         return cast(value)
 
     return property(_lookup)
